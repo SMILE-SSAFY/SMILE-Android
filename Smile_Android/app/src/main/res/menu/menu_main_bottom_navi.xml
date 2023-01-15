@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/btn_home"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="홈" />
+    <item
+        android:id="@+id/btn_reservation"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="공용" />
+    <item
+        android:id="@+id/btn_community"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="커뮤니티" />
+    <item
+        android:id="@+id/btn_alarm"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="알림" />
+    <item
+        android:id="@+id/btn_mypage"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="마이페이지" />
+</menu>
