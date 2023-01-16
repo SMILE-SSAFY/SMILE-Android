@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }  // spin-kit & Toasty
     }
 }
 rootProject.name = "Smile_Android"
