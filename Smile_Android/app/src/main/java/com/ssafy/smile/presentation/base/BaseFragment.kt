@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.base
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
 import com.ssafy.smile.common.view.CustomDialog
+import es.dmoral.toasty.Toasty
 
 // Fragment의 기본을 작성, 뷰 바인딩 활용
 abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @LayoutRes layoutResId: Int) : Fragment(layoutResId) {
@@ -32,7 +34,16 @@ abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @Lay
         super.onDestroyView()
     }
 
-    // TODO : show SnackBar
+    fun showToast(message: String, type : ToastType?=null, iconEnable : Boolean=true) {
+        when (type){
+            ToastType.CUSTOM -> Toasty.warning(requireContext(), message, Toast.LENGTH_SHORT).show()
+            ToastType.INFO -> Toasty.info(requireContext(), message, Toast.LENGTH_SHORT, iconEnable).show()
+            ToastType.ERROR -> Toasty.error(requireContext(), message, Toast.LENGTH_SHORT, iconEnable).show()
+            ToastType.SUCCESS -> Toasty.success(requireContext(), message, Toast.LENGTH_SHORT, iconEnable).show()
+            ToastType.WARNING -> Toasty.warning(requireContext(), message, Toast.LENGTH_SHORT, iconEnable).show()
+            else -> Toasty.normal(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     // TODO : customDialog - 에러 처리 필요
 
@@ -62,4 +73,5 @@ abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @Lay
 
     // TODO : Dialog 위에 꺼 정리
 
+    enum class ToastType { ERROR, SUCCESS, INFO, WARNING, BASIC, CUSTOM}
 }

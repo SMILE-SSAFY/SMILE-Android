@@ -85,6 +85,9 @@ dependencies {
     // permission Library 추가
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 
+    // cutom toast
+    implementation 'com.github.GrenderG:Toasty:1.3.0'
+
        // TODO : gradle error 찾기 (아래)
 //    // 네이버 map api sdk 추가
 //    // implementation 'com.google.android.gms:play-services-maps:18.0.2'
