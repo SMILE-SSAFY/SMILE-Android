@@ -151,7 +151,7 @@ hs_err_pid*
 # JIRA plugin
 atlassian-ide-plugin.xml
 
-# Mongo Explorer pluginzz
+# Mongo Explorer plugin
 .idea/mongoSettings.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
@@ -164,4 +164,4 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.toptal.com/developers/gitignore/api/android,androidstudio
+# End of https://www.toptal.com/developers/gitignore/api/android,androidstudiod
