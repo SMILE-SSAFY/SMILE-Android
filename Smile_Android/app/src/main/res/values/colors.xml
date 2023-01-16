@@ -5,6 +5,38 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- status bar color -->
+    <color name="statusbar_color">#80000000</color>
+
+    <!-- blue theme colors -->
+    <color name="blue100">#E3E6FF</color>
+    <color name="blue200">#C7CDFF</color>
+    <color name="blue300">#ABB4FF</color>
+    <color name="blue400">#7480FF</color>
+    <color name="blue500">#161B7A</color>
+
+    <!-- dark theme colors -->
+    <color name="dark100">#EAF2F5</color>
+    <color name="dark200">#D6E4EC</color>
+    <color name="dark300">#75838E</color>
+    <color name="dark400">#343C44</color>
+    <color name="dark500">#091020</color>
+
+    <!-- gray theme colors -->
+    <color name="gray100">#FDFDFD</color>
+    <color name="gray200">#FBFBFB</color>
+    <color name="gray300">#F3F3F3</color>
+    <color name="gray400">#D9D9D9</color>
+    <color name="gray500">#A6A6A6</color>
+    <color name="gray600">#5E5E5E</color>
+
+    <!-- other theme colors -->
+    <color name="smile_red">#FF4E4E</color>
+    <color name="smile_green">#3ED45F</color>
+    <color name="smile_yellow">#FFC700</color>
 </resources>

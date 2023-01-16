@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/btn_home"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="홈" />
+        android:id="@+id/menu_map"
+        android:icon="@drawable/ic_map"
+        android:title="Map" />
     <item
-        android:id="@+id/btn_reservation"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="공용" />
+        android:id="@+id/menu_home"
+        android:title="" />
     <item
-        android:id="@+id/btn_community"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="커뮤니티" />
-    <item
-        android:id="@+id/btn_alarm"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="알림" />
-    <item
-        android:id="@+id/btn_mypage"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="마이페이지" />
+        android:id="@+id/menu_mypage"
+        android:icon="@drawable/ic_mypage"
+        android:title="Mypage" />
 </menu>

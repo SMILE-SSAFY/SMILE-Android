@@ -1,69 +1,85 @@
 package com.ssafy.smile.presentation.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.R
-import com.ssafy.smile.databinding.ActivityMainBinding
 import com.ssafy.smile.databinding.FragmentMainBinding
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 
 
 class MainFragment : Fragment() {
 
-    private lateinit var viewbinding : FragmentMainBinding
-    private var mainViewPagerAdapter : MainViewPagerAdapter? = null
+    private lateinit var binding : FragmentMainBinding
+    private lateinit var mainViewPagerAdapter : MainViewPagerAdapter
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            initViewPager()
+        }
+    }
 
     private fun initViewPager(){
-
-        viewbinding.run{
-
+        binding.apply{
             mainViewPagerAdapter = MainViewPagerAdapter(requireActivity())
-            mainhomeViewpager.apply {
-                offscreenPageLimit = 5
+
+            vpMain.apply {
                 adapter = mainViewPagerAdapter
-                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-                    override fun onPageSelected(position: Int) {
-                        super.onPageSelected(position)
-                        mainhomeBottomNavi.selectedItemId = when(position){
-                            0 -> R.id.btn_home
-                            1 -> R.id.btn_reservation
-                            2 -> R.id.btn_community
-                            3 -> R.id.btn_alarm
-                            4 -> R.id.btn_mypage
-                            else -> error("no such position: $position") } } })
                 isUserInputEnabled = false
+                offscreenPageLimit = mainViewPagerAdapter!!.itemCount
+                registerOnPageChangeCallback(PageChangeCallback())
             }
 
+            bnvMain.setOnItemSelectedListener {
+                navigationSelected(it)
+            }
 
-            mainhomeBottomNavi.setOnNavigationItemSelectedListener { itemclicklistener ->
-                when(itemclicklistener.setChecked(true).itemId){
-                    R.id.btn_home -> {
-                        mainhomeViewpager.setCurrentItem(0, false)
-                        return@setOnNavigationItemSelectedListener true
-                    }
-                    R.id.btn_reservation -> {
-                        mainhomeViewpager.setCurrentItem(1, false)
-                        return@setOnNavigationItemSelectedListener true
-                    }
-                    R.id.btn_community -> {
-                        mainhomeViewpager.setCurrentItem(2, false)
-                        return@setOnNavigationItemSelectedListener true
-                    }
-                    R.id.btn_alarm -> {
-                        mainhomeViewpager.setCurrentItem(3, false)
-                        return@setOnNavigationItemSelectedListener true
-                    }
-                    R.id.btn_mypage -> {
-                        mainhomeViewpager.setCurrentItem(4, false)
-                        return@setOnNavigationItemSelectedListener true }
-                    else -> error("no such position!")
+            fabMain.setOnClickListener {
+                vpMain.currentItem = 1
+            }
+        }
+    }
+
+    private inner class PageChangeCallback: ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            binding.apply {
+                bnvMain.selectedItemId = when (position) {
+                    0 -> R.id.menu_map
+                    1 -> R.id.menu_home
+                    2 -> R.id.menu_mypage
+                    else -> error("no such position: $position")
                 }
-                return@setOnNavigationItemSelectedListener false
             }
+        }
+    }
+
+    private fun navigationSelected(item: MenuItem): Boolean {
+        val checked = item.setChecked(true)
+
+        binding.apply {
+            when (checked.itemId) {
+                R.id.menu_map -> {
+                    vpMain.currentItem = 0
+                    return true
+                }
+                R.id.menu_mypage -> {
+                    vpMain.currentItem = 2
+                    return true
+                }
+            }
+            return false
         }
     }
 }
