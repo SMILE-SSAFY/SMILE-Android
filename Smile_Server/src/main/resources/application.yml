@@ -25,11 +25,10 @@ spring:
     datasource:
         url: jdbc:mysql://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P12D102?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
         driver-class-name: org.mariadb.jdbc.Driver
-        username: S08P11D102
-        password: ILwNR4FeeY
+        username: S08P12D102
+        password: XVOdEsS6x3
     flyway:
         enabled: false
     config:
         activate:
             on-profile: local
-

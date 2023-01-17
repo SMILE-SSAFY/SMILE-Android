@@ -1,4 +1,4 @@
-package com.ssafy.api;
+package com.ssafy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class ApiApplication {
 
     public static void main(String[] args) {
+        System.setProperty("spring.config.name", "application,application-real,application-aws");
         SpringApplication.run(ApiApplication.class, args);
     }
 
