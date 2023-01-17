@@ -2,7 +2,6 @@ package com.ssafy.smile.presentation.base
 
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -12,15 +11,13 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.ssafy.smile.common.view.CustomDialog
 
 
-// TODO : baseDialog 만들기 (다 수정 필요)
-abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindingInflater: (layoutInflater:LayoutInflater) -> B) : BottomSheetDialogFragment() {
+abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindingInflater: (layoutInflater:LayoutInflater) -> B)
+    : BottomSheetDialogFragment(), BaseViewImpl {
     private var _binding: B? = null
     val binding get() = _binding?: throw IllegalStateException("binding fail")
 
-    lateinit var mLoadingDialog: CustomDialog
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = bindingInflater.invoke(inflater)
@@ -50,18 +47,6 @@ abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindin
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
-    }
-
-
-    fun showLoadingDialog(context: Context) {
-        mLoadingDialog = CustomDialog(context)
-        mLoadingDialog.show()
-    }
-
-    fun dismissLoadingDialog() {
-        if (mLoadingDialog.isShowing) {
-            mLoadingDialog.dismiss()
-        }
     }
 
     private fun setupRatio(view : View){

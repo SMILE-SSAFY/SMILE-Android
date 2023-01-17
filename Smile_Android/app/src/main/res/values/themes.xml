@@ -187,4 +187,13 @@
         <item name="cornerSize">20dp</item>
     </style>
 
+    <!-- dialog -->
+    <style name="CustomDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">1</item>
+    </style>
+
 </resources>
