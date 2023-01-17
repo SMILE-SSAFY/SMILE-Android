@@ -8,27 +8,25 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.R
+import com.ssafy.smile.common.view.LoadingDialog
 import com.ssafy.smile.databinding.FragmentMainBinding
+import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
+import com.ssafy.smile.presentation.base.BaseFragment
 
 
-class MainFragment : Fragment() {
+class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind, R.layout.fragment_main) {
 
-    private lateinit var binding : FragmentMainBinding
     private lateinit var mainViewPagerAdapter : MainViewPagerAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun initView() {
         binding.apply {
             initViewPager()
         }
     }
+
+    override fun setEvent() {}
+
 
     private fun initViewPager(){
         binding.apply{
@@ -37,7 +35,7 @@ class MainFragment : Fragment() {
             vpMain.apply {
                 adapter = mainViewPagerAdapter
                 isUserInputEnabled = false
-                offscreenPageLimit = mainViewPagerAdapter!!.itemCount
+                offscreenPageLimit = mainViewPagerAdapter.itemCount
                 registerOnPageChangeCallback(PageChangeCallback())
             }
 
@@ -82,4 +80,5 @@ class MainFragment : Fragment() {
             return false
         }
     }
+
 }
