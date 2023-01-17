@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PhotographerDto {
-    private Long userIdx;
+    private Long photographerIdx;
     private String profileImg;
     private String introduction;
     private String account;
