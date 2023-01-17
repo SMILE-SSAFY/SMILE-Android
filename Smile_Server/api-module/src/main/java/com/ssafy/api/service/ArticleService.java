@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.ArticleDetailDto;
 import com.ssafy.api.dto.ArticlePostDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.repository.ArticleRepository;
@@ -17,6 +18,12 @@ public class ArticleService {
         articleRepository.save(article);
         System.out.println(article);
         return article.getId();
+    }
+
+    public ArticleDetailDto findById(Long id){
+        Article article = articleRepository.findById(id).orElseThrow(RuntimeException::new);
+
+        return new ArticleDetailDto(article);
     }
 
 }
