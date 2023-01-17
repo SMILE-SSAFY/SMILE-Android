@@ -11,7 +11,6 @@ class SharedPreferencesUtil (context: Context) {
         private const val SHARED_PREFERENCES_NAME = "Application_Preferences"
         private const val AUTH_TOKEN = "AuthToken"
         private const val FCM_TOKEN = "FCMToken"
-        private const val USER_PROFILE = "UserProfile"
     }
 
     var preferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
