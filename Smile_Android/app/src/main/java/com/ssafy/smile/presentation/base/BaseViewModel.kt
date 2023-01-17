@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ssafy.smile.common.sources.Event
 import java.util.concurrent.TimeUnit
 
 abstract class BaseViewModel : ViewModel() {
@@ -12,6 +13,9 @@ abstract class BaseViewModel : ViewModel() {
     val onBackPressed: LiveData<Any> get() = _onBackPressed
     private var mBackPressedAt = 0L
 
+    private val _error = MutableLiveData<Event<String>>()
+    val error: LiveData<Event<String>> = _error
+
 
     fun onBackPressed() {
         if (mBackPressedAt + TimeUnit.SECONDS.toMillis(2) > System.currentTimeMillis()) {
@@ -20,6 +24,11 @@ abstract class BaseViewModel : ViewModel() {
             _onBackPressed.postValue("\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.")
             mBackPressedAt = System.currentTimeMillis()
         }
+    }
+
+    fun handleError(exception: Throwable) {
+        val message = exception.message ?: ""
+        _error.value = Event(message)
     }
 
 }
