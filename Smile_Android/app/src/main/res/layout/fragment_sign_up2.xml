@@ -1,14 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.user.SignUp2Fragment">
+    tools:context=".presentation.view.user.SignUp1Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/tv_name"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="이름"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/et_name"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:hint="이름 입력"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:text="닉네임"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+
+    <EditText
+        android:id="@+id/et_nickname"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:hint="닉네임 입력"
+        app:layout_constraintEnd_toStartOf="@+id/btn_double_check"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nickname" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_double_check"
+        style="@style/BtnSmallRectangleBlue400Radius8"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:text="중복 확인"
+        app:layout_constraintBottom_toBottomOf="@+id/et_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_nickname"
+        app:layout_constraintTop_toTopOf="@+id/et_nickname" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:text="휴대전화 번호"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_nickname" />
+
+    <EditText
+        android:id="@+id/et_phone"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:hint="'-' 구분 없이 입력"
+        app:layout_constraintEnd_toStartOf="@+id/btn_certification"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_phone" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_certification"
+        style="@style/BtnSmallRectangleBlue400Radius8"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:text="인증하기"
+        app:layout_constraintBottom_toBottomOf="@+id/et_phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_phone"
+        app:layout_constraintTop_toTopOf="@+id/et_phone" />
+
+    <TextView
+        android:id="@+id/tv_certification"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:text="휴대전화 번호"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_phone" />
+
+    <EditText
+        android:id="@+id/et_certification"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:hint="인증 번호 입력"
+        app:layout_constraintEnd_toStartOf="@+id/btn_certification_ok"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_certification" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_certification_ok"
+        style="@style/BtnSmallRectangleBlue400Radius8"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:text="확인"
+        app:layout_constraintBottom_toBottomOf="@+id/et_certification"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_certification"
+        app:layout_constraintTop_toTopOf="@+id/et_certification" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_join"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="가입하기"
+        android:fontFamily="@font/ibm_plex_sans_semi_bold"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        style="@style/BtnLargeRectangleGray400Radius8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
