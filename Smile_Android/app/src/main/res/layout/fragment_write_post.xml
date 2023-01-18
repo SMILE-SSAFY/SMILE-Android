@@ -32,12 +32,11 @@
             app:layout_constraintTop_toBottomOf="@id/tv_picture_title"
             android:layout_marginTop="5dp"
             style="@style/TvT5"
-            android:text="사진은 최대 3장까지 선택가능합니다." />
-        <!-- TODO : 얘 어케 짜지? 로직 생각해보기 -->
+            android:text="사진은 최대 3장까지 선택 가능합니다." />
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/ll_picture_content"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:layout_margin="10dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/tv_picture_explain"
@@ -45,15 +44,18 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_picture_content"
                 android:layout_width="wrap_content"
+                android:layout_marginRight="5dp"
+                android:overScrollMode="never"
                 android:nestedScrollingEnabled="false"
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_rv_picture"
+                tools:listitem="@layout/item_rv_image"
                 android:visibility="visible"/>
             <ImageButton
-                android:layout_width="80dp"
+                android:id="@+id/btn_picture_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_plus"
                 android:background="@drawable/rectangle_blue400_stroke_dotted_radius_8"/>
