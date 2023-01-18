@@ -47,4 +47,40 @@ public class PhotographerService {
         photographerRepository.save(savedPhotographer);
     }
 
+    /**
+     * 작가 프로필 조회
+     *
+     * @param idx
+     * @return 작가 프로필 객체
+     */
+    public PhotographerDto getPhotographer(Long idx){
+        Photographer photographer = photographerRepository.findById(idx)
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        PhotographerDto dto = new PhotographerDto();
+        return dto.of(photographer);
+    }
+
+    /**
+     * 작가 프로필 수정
+     *
+     * @param photographer
+     * @return 수정된 작가 프로필 객체
+     */
+    public PhotographerDto changePhotographer(PhotographerDto photographer){
+        Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerIdx())
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+        // 이미지가 수정이 되었을 때
+        if(photographer.getProfileImg() != null){
+            // TODO: 이미지 삭제 후 등록
+            findPhotographer.updateProfileImg(photographer.getProfileImg());
+        }
+
+        findPhotographer.updateAccount(photographer.getAccount());
+        findPhotographer.updateIntroduction(photographer.getIntroduction());
+        findPhotographer.updatePlaces(photographer.getPlaces());
+
+        PhotographerDto savedPhotographer = new PhotographerDto();
+        return savedPhotographer.of(photographerRepository.save(findPhotographer));
+    }
 }
