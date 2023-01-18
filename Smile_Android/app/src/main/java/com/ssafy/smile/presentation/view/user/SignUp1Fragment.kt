@@ -5,15 +5,20 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentSignUp1Binding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.UserViewModel
 
 
 class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Binding::bind, R.layout.fragment_sign_up1) {
+
+    private val userViewModel by activityViewModels<UserViewModel>()
 
     var idInput = false
     var pwdInput = false
@@ -40,15 +45,16 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             etChangedListener(etPasswordCheck, "pwdChk")
 
             btnDoubleCheck.setOnClickListener {
-                idDoubleCheck = true
+                userViewModel.checkEmail(etId.text.toString())
             }
 
             btnPasswordCheck.setOnClickListener {
                 if (etPassword.text.toString() == etPasswordCheck.text.toString()) {
-                    showToast(requireContext(), "비밀번호가 확인되었습니다", Types.ToastType.SUCCESS)
+                    setPasswordCheckVisibility(View.VISIBLE, View.GONE)
                     pwdDoubleCheck = true
                 } else {
-                    etPasswordCheck.error = "비밀번호가 일치하지 않습니다"
+                    setPasswordCheckVisibility(View.GONE, View.VISIBLE)
+                    pwdDoubleCheck = false
                 }
             }
 
@@ -60,9 +66,51 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                 }
             }
         }
+
+        emailCheckResponseObserver()
     }
 
-    fun etChangedListener(editText: EditText, type: String) {
+    private fun setPasswordCheckVisibility(ok: Int, no: Int) {
+        binding.apply {
+            groupPasswordOk.visibility = ok
+            groupPasswordNo.visibility = no
+        }
+    }
+
+    private fun emailCheckResponseObserver() {
+        userViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Success -> {
+                    idDoubleCheck = if (it.data) {
+                        setIdCheckVisibility(View.VISIBLE, View.GONE)
+                        true
+                    } else {
+                        setIdCheckVisibility(View.GONE, View.VISIBLE)
+                        false
+                    }
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    setIdCheckVisibility(View.GONE, View.GONE)
+                    idDoubleCheck = false
+
+                    showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    setIdCheckVisibility(View.GONE, View.GONE)
+                    idDoubleCheck = false
+                }
+            }
+        }
+    }
+
+    private fun setIdCheckVisibility(ok: Int, no: Int) {
+        binding.apply {
+            groupIdOk.visibility = ok
+            groupIdNo.visibility = no
+        }
+    }
+
+    private fun etChangedListener(editText: EditText, type: String) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
