@@ -16,7 +16,9 @@ import javax.validation.Valid;
 import java.util.Base64;
 
 /**
+ *  유저 관련 Controller
  *
+ * author @서재건
  */
 @Slf4j
 @RestController
@@ -34,8 +36,8 @@ public class UserController {
      * @return header : {"alg":"HS256"}
      * payload : {"sub":"1","role":"USER","index":"1","iat":1673706867,"exp":1676298867}
      */
-    @GetMapping(value = "/hello")
-    public String hello(HttpServletRequest request) {
+    @GetMapping(value = "/token")
+    public String checkToken(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
 
         String[] token_list = token.split("\\.");
@@ -66,7 +68,7 @@ public class UserController {
      * @param loginUserDto // email, password
      * @return token    // jwt token 리턴
      */
-    @GetMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/login")
     public ResponseEntity<TokenRoleDto> login(@RequestBody LoginUserDto loginUserDto) {
         TokenRoleDto tokenRoleDto = userService.login(loginUserDto);
         return ResponseEntity.ok().body(tokenRoleDto);
