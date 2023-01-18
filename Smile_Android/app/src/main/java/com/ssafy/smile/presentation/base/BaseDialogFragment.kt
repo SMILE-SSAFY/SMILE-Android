@@ -4,24 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
+import com.ssafy.smile.common.view.CommonDialog
 import com.ssafy.smile.common.view.LoadingDialog
 
-
-abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @LayoutRes layoutResId: Int)
-    : Fragment(layoutResId), BaseViewImpl {
-
-    override lateinit var mLoadingDialog: LoadingDialog
-
+abstract class BaseDialogFragment<B : ViewBinding>(private val bindingInflater: (layoutInflater: LayoutInflater) -> B)
+    : DialogFragment(), BaseViewImpl  {
     private var _binding: B? = null
     val binding get() = _binding?: throw IllegalStateException("binding fail")
 
+    override lateinit var mLoadingDialog: LoadingDialog
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = bind(super.onCreateView(inflater, container, savedInstanceState)!!)
-        return binding.root
+        _binding = bindingInflater.invoke(inflater)
+        return _binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,4 +35,6 @@ abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @Lay
         _binding = null
         super.onDestroyView()
     }
+
+
 }
