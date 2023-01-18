@@ -32,7 +32,7 @@ public class Photographer implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     @MapsId
     private User user;
@@ -57,4 +57,23 @@ public class Photographer implements Serializable {
     @Type(type="json")
     private List<Places> places;
 
+    public void updateProfileImg(String profileImg){
+        this.profileImg = profileImg;
+    }
+
+    public void updateIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public void updateAccount(String account) {
+        this.account = account;
+    }
+
+    public void updateHeart(int heart) {
+        this.heart = heart;
+    }
+
+    public void updatePlaces(List<Places> places) {
+        this.places = places;
+    }
 }
