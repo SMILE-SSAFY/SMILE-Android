@@ -6,6 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ssafy.smile.presentation.view.home.HomeFragment
 import com.ssafy.smile.presentation.view.map.MapFragment
 import com.ssafy.smile.presentation.view.mypage.MypageFragment
+import com.ssafy.smile.presentation.view.portfolio.WritePostFragment
 
 class MainViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity){
     override fun getItemCount(): Int = 3
@@ -14,7 +15,7 @@ class MainViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(ac
         return when(position){
             0 -> MapFragment()
             1 -> HomeFragment()
-            2 -> MypageFragment()
+            2 -> WritePostFragment()                    // TODO : Revert
             else -> error("no such position: $position")
         }
     }
