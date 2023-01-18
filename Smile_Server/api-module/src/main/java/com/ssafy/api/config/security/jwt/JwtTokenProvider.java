@@ -20,6 +20,7 @@ import java.util.Base64;
 import java.util.Date;
 
 /**
+ * jwt 토큰 생성 관련 함수
  *
  * author @서재건
  */
@@ -36,15 +37,25 @@ public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
+    /**
+     * secreat 키 초기화
+     */
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String index, String role) {
-        Claims claims = Jwts.claims().setSubject(index);
+    /**
+     * 유저 인덱스와 role 기반으로 jwt토큰 생성
+     *
+     * @param id
+     * @param role
+     * @return
+     */
+    public String createToken(String id, String role) {
+        Claims claims = Jwts.claims().setSubject(id);
         claims.put("role", role);
-        claims.put("index", index);
+        claims.put("id", id);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
@@ -55,9 +66,10 @@ public class JwtTokenProvider {
     }
 
     /**
+     * 사용자 정보와 권한을 담은 Authentication 반환
      *
      * @param token
-     * @return
+     * @return authentication
      */
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserIdx(token));
@@ -66,6 +78,7 @@ public class JwtTokenProvider {
 
     /**
      * 토큰에서 유저 idx 추출
+     *
      * @param token
      * @return 유저idx
      */
@@ -88,9 +101,6 @@ public class JwtTokenProvider {
         }
         return null;
     }
-//    public String resolveToken(HttpServletRequest request) {
-//        return request.getHeader("authorization");
-//    }
 
     /**
      * 유효값 검증
@@ -107,7 +117,4 @@ public class JwtTokenProvider {
         }
     }
 
-//    public String getUserRole(String token) {
-//        return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role");
-//    }
 }
