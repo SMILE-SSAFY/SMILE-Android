@@ -7,4 +7,8 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
     override suspend fun checkEmail(email: String): Response<Boolean> {
         return userApiService.checkEmail(email)
     }
+
+    override suspend fun checkNickname(nickname: String): Response<Boolean> {
+        return userApiService.checkNickname(nickname)
+    }
 }
