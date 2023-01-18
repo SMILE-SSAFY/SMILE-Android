@@ -40,4 +40,8 @@ public class PhotographerController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @GetMapping("/{photographerId}")
+    public ResponseEntity<Photographer> getPhotographer(@PathVariable("photographerId") Long idx){
+        return ResponseEntity.ok(photographerService.getPhotographer(idx));
+    }
 }

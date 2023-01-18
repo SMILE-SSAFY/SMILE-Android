@@ -47,4 +47,8 @@ public class PhotographerService {
         photographerRepository.save(savedPhotographer);
     }
 
+    public Photographer getPhotographer(Long idx){
+        return photographerRepository.findById(idx)
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+    }
 }
