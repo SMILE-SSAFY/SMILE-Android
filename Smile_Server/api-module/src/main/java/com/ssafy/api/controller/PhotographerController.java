@@ -41,7 +41,7 @@ public class PhotographerController {
     }
 
     @GetMapping("/{photographerId}")
-    public ResponseEntity<Photographer> getPhotographer(@PathVariable("photographerId") Long idx){
+    public ResponseEntity<PhotographerDto> getPhotographer(@PathVariable("photographerId") Long idx){
         return ResponseEntity.ok(photographerService.getPhotographer(idx));
     }
 }
