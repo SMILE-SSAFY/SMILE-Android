@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner_category">
+        <item>증명사진</item>
+        <item>프로필사진</item>
+        <item>바디프로필사진</item>
+        <item>졸업사진</item>
+        <item>커플사진</item>
+        <item>우정사진</item>
+        <item>가족사진</item>
+        <item>웨딩사진</item>
+        <item>아기사진</item>
+        <item>영정사진</item>
+        <item>보정사진</item>
+        <item>만삭사진</item>
+        <item>파티사진</item>
+        <item>반려동물사진</item>
+        <item>한복사진</item>
+        <item>건축물사진</item>
+        <item>차량사진</item>
+        <item>사물사진</item>
+        <item>풍경사진</item>
+        <item>개인화보사진</item>
+        <item>취업사진</item>
+        <item>단체사진</item>
+    </string-array>
+</resources>
