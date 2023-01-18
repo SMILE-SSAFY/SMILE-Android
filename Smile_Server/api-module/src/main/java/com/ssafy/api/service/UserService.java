@@ -7,6 +7,7 @@ import com.ssafy.api.dto.TokenRoleDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class UserService {
     public TokenRoleDto registerUser(RegisterFormDto registerFormDto) {
 
         log.info("[registerUser] RegisterFormDto 객체 : {}", registerFormDto.toString());
-        User checkingUser = userRepository.findByEmail(registerFormDto.getEmail());
+        User checkingUser = userRepository.findByEmail(registerFormDto.getEmail()).orElse(null);
 
         if (checkingUser == null) {
             User user = User.builder()
@@ -72,12 +73,10 @@ public class UserService {
      * jwt tokenDto
      */
     public TokenRoleDto login(LoginUserDto loginUserDto) {
-        User user = userRepository.findByEmail(loginUserDto.getEmail());
+        User user = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         log.info("user 객체 반환");
 
-        if (user == null) {
-            throw new CustomException(USER_NOT_FOUND);
-        } else if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
             throw new CustomException(INVALID_PASSWORD);
         }
         log.info("유저 존재 및 비밀번호 일치");
