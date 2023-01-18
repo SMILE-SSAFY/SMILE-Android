@@ -48,7 +48,8 @@ public class SecurityConfig {
     }
 
     /**
-     * security config
+     * security 설정
+     * (/api/user/token) 접근 시 "USER" 권한 있어야 함
      *
      * @param http
      * @return
@@ -64,7 +65,7 @@ public class SecurityConfig {
                 .antMatchers("/send-one").permitAll()
                 .antMatchers("/exception/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/api/user/hello").hasRole("USER")
+                .antMatchers("/api/user/token").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
 
