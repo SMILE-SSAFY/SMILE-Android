@@ -11,6 +11,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     val checkEmailResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Boolean>>
         get() = _checkEmailResponseLiveData
 
+    private val _checkNicknameResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Boolean>>()
+    val checkNicknameResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Boolean>>
+        get() = _checkNicknameResponseLiveData
+
     override suspend fun checkEmail(email: String) {
         _checkEmailResponseLiveData.postValue(NetworkUtils.NetworkResponse.Loading())
 
@@ -19,6 +23,17 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
             _checkEmailResponseLiveData.postValue(NetworkUtils.NetworkResponse.Success(response.body()!!))
         } else {
             _checkEmailResponseLiveData.postValue(NetworkUtils.NetworkResponse.Failure(response.errorBody()?.string()!!))
+        }
+    }
+
+    override suspend fun checkNickname(nickname: String) {
+        _checkNicknameResponseLiveData.postValue(NetworkUtils.NetworkResponse.Loading())
+
+        val response = userRemoteDataSource.checkNickname(nickname)
+        if (response.isSuccessful && response.body() != null) {
+            _checkNicknameResponseLiveData.postValue(NetworkUtils.NetworkResponse.Success(response.body()!!))
+        } else {
+            _checkNicknameResponseLiveData.postValue(NetworkUtils.NetworkResponse.Failure(response.errorBody()?.string()!!))
         }
     }
 }
