@@ -1,24 +1,22 @@
 package com.ssafy.core.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
 @Data
-@AllArgsConstructor
-@Builder
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    private Photographer photographer;
 
     private Double latitude;
 
@@ -26,10 +24,18 @@ public class Article {
 
     private String detailAddress;
 
-//    private LocalDateTime createdAt;
+    private Integer heart;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
 
 //    @Enumerated(value = EnumType.STRING)
 //    private Category category;
 
-    private  String photoUrls;
+    private String photoUrls;
+
+    public void whoPost(Photographer photographer){
+        this.photographer = photographer;
+    }
+
 }

@@ -15,7 +15,6 @@ public class ArticleDetailDto {
 
 //    private LocalDateTime createdAt;
 
-//    @Enumerated(value = EnumType.STRING)
 //    private Category category;
 
     private  String photoUrls;
