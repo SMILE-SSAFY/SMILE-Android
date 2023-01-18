@@ -77,7 +77,6 @@ public class PhotographerService {
         }
 
         findPhotographer.updateAccount(photographer.getAccount());
-        findPhotographer.updateHeart(photographer.getHeart());
         findPhotographer.updateIntroduction(photographer.getIntroduction());
         findPhotographer.updatePlaces(photographer.getPlaces());
 

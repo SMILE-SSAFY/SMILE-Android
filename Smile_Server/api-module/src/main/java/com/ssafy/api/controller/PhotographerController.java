@@ -62,7 +62,6 @@ public class PhotographerController {
     // TODO: @RequestPart로 변경
     public ResponseEntity<PhotographerDto> changePhotographer(@PathVariable("photographerId") Long idx, @RequestBody PhotographerDto photographer){
         photographer.setPhotographerIdx(idx);
-        ;
         return ResponseEntity.ok(photographerService.changePhotographer(photographer));
     }
 }
