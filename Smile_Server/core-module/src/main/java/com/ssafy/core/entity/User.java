@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,13 +26,11 @@ import java.util.Collection;
 @Entity
 @Builder
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "member")
 public class User implements UserDetails {
-// FIX: "member" 부분에 unresolved database references in annotations 빨간 경고 있으나 실행은 이상 없음
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +48,6 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    // FIX: "phone_number" unresolved database references in annotations 빨간 경고 있으나 실행은 이상 없음
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
@@ -59,6 +55,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    /**
+     * 유저 role을 통해 권한 생성
+     *
+     * @return authorities  // 권한 리턴
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,36 +68,73 @@ public class User implements UserDetails {
         return authorities;
     }
 
+    /**
+     * 유저 email 반환
+     *
+     * @return email
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
         return this.email;
     }
 
-
+    /**
+     * 유저 password 반환
+     *
+     * @return password
+     */
     @Override
     public String getPassword(){
         return this.password;
     }
 
+    /**
+     * 계정의 만료 여부 리턴
+     * true 만료 안됨
+     * false 만료
+     *
+     * @return true
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * 계정의 잠김 여부 리턴
+     * true 잠기지 않음
+     * false 잠김
+     *
+     * @return true
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * 비밀번호 만료 여부 리턴
+     * true 만료 안됨
+     * false 만료
+     *
+     * @return true
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * 계정의 활성화 여부 리턴
+     * true 활성화
+     * false 비활성화
+     *
+     * @return true
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isEnabled() {
