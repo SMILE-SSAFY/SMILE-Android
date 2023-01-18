@@ -40,11 +40,24 @@ public class PhotographerController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /**
+     * 작가 프로필 조회
+     *
+     * @param idx
+     * @return 작가 프로필 객체
+     */
     @GetMapping("/{photographerId}")
     public ResponseEntity<PhotographerDto> getPhotographer(@PathVariable("photographerId") Long idx){
         return ResponseEntity.ok(photographerService.getPhotographer(idx));
     }
 
+    /**
+     * 작가 프로필 수정
+     *
+     * @param idx
+     * @param photographer
+     * @return 수정된 작가 프로필 객체
+     */
     @PutMapping("/{photographerId}")
     // TODO: @RequestPart로 변경
     public ResponseEntity<PhotographerDto> changePhotographer(@PathVariable("photographerId") Long idx, @RequestBody PhotographerDto photographer){

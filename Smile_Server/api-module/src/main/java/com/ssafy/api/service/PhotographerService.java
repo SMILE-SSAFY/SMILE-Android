@@ -47,6 +47,12 @@ public class PhotographerService {
         photographerRepository.save(savedPhotographer);
     }
 
+    /**
+     * 작가 프로필 조회
+     *
+     * @param idx
+     * @return 작가 프로필 객체
+     */
     public PhotographerDto getPhotographer(Long idx){
         Photographer photographer = photographerRepository.findById(idx)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
@@ -54,6 +60,12 @@ public class PhotographerService {
         return dto.of(photographer);
     }
 
+    /**
+     * 작가 프로필 수정
+     *
+     * @param photographer
+     * @return 수정된 작가 프로필 객체
+     */
     public PhotographerDto changePhotographer(PhotographerDto photographer){
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerIdx())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));

@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * 사진작가 DTO
+ *
+ * author @김정은
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +26,12 @@ public class PhotographerDto {
     private int heart;
     private List<Places> places;
 
+    /**
+     * Photographer Entity에서 Photographer DTO로 변경
+     *
+     * @param photographer  PhotographerEntity
+     * @return 변환된 DTO
+     */
     public PhotographerDto of(Photographer photographer) {
         return PhotographerDto.builder()
                 .photographerIdx(photographer.getId())
