@@ -35,7 +35,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
     }
 
     override fun initView() {
-        (activity as MainActivity).setToolBar(true, true, "회원가입")
+        (activity as MainActivity).setToolBar(isUsed = true, isBackUsed = true, title = "회원가입")
     }
 
     override fun setEvent() {
@@ -60,7 +60,8 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
 
             btnNext.setOnClickListener {
                 if(isValid()) {
-                    findNavController().navigate(R.id.action_signUp1Fragment_to_signUp2Fragment)
+                    val action = SignUp1FragmentDirections.actionSignUp1FragmentToSignUp2Fragment(etId.text.toString(), etPassword.text.toString())
+                    findNavController().navigate(action)
                 } else {
                     showToast(requireContext(), "모든 값을 확인해주세요", Types.ToastType.WARNING)
                 }
