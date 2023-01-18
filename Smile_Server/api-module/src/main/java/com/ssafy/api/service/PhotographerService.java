@@ -11,6 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 작가 프로필 관련 클래스
+ *
+ * author @김정은
+ */
 @Service
 @Slf4j
 public class PhotographerService {
@@ -20,12 +25,17 @@ public class PhotographerService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * 작가 등록
+     *
+     * @param photographer
+     */
     public void addPhotographer(PhotographerDto photographer){
-        User user = userRepository.findById(photographer.getUserIdx())
+        User user = userRepository.findById(photographer.getPhotographerIdx())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Photographer savedPhotographer = Photographer.builder()
-                .id(photographer.getUserIdx())
+                .id(photographer.getPhotographerIdx())
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
