@@ -53,4 +53,23 @@ public class PhotographerService {
         PhotographerDto dto = new PhotographerDto();
         return dto.of(photographer);
     }
+
+    public PhotographerDto changePhotographer(PhotographerDto photographer){
+        Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerIdx())
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+        // 이미지가 수정이 되었을 때
+        if(photographer.getProfileImg() != null){
+            // TODO: 이미지 삭제 후 등록
+            findPhotographer.updateProfileImg(photographer.getProfileImg());
+        }
+
+        findPhotographer.updateAccount(photographer.getAccount());
+        findPhotographer.updateHeart(photographer.getHeart());
+        findPhotographer.updateIntroduction(photographer.getIntroduction());
+        findPhotographer.updatePlaces(photographer.getPlaces());
+
+        PhotographerDto savedPhotographer = new PhotographerDto();
+        return savedPhotographer.of(photographerRepository.save(findPhotographer));
+    }
 }
