@@ -11,6 +11,7 @@ class SharedPreferencesUtil (context: Context) {
         private const val SHARED_PREFERENCES_NAME = "Application_Preferences"
         private const val AUTH_TOKEN = "AuthToken"
         private const val FCM_TOKEN = "FCMToken"
+        private const val ROLE = "Role"
     }
 
     var preferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -48,6 +49,22 @@ class SharedPreferencesUtil (context: Context) {
             apply()
         }
         Application.fcmToken = Application.sharedPreferences.getFCMToken()
+    }
+
+    fun putRole(role: String) {
+        preferences.edit {
+            putString(ROLE, role)
+            apply()
+        }
+    }
+
+    fun getRole(): String? = preferences.getString(ROLE, null)
+
+    fun removeRole() {
+        preferences.edit {
+            remove(ROLE)
+            apply()
+        }
     }
 
 }

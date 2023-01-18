@@ -6,10 +6,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentSignUp2Binding
+import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.UserViewModel
@@ -17,6 +21,7 @@ import com.ssafy.smile.presentation.viewmodel.UserViewModel
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
     private val userViewModel by activityViewModels<UserViewModel>()
+    private val args: SignUp1FragmentArgs by navArgs()
 
     var nameInput = false
     var nicknameInput = false
@@ -34,7 +39,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
     }
 
     override fun initView() {
-        (activity as MainActivity).setToolBar(true, true, "회원가입")
+        (activity as MainActivity).setToolBar(isUsed = true, isBackUsed = true, title = "회원가입")
     }
 
     override fun setEvent() {
@@ -45,7 +50,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
             etChangedListener(etCertification, "certification")
 
             btnDoubleCheck.setOnClickListener {
-                userViewModel.checkEmail(etNickname.text.toString())
+                userViewModel.checkNickname(etNickname.text.toString())
             }
 
             btnCertificationOk.setOnClickListener {
@@ -54,7 +59,8 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
             btnJoin.setOnClickListener {
                 if(isValid()) {
-                    // TODO : 회원가입 서버 통신 하고 로그인
+                    val signUpInfo = getSignUpInfo()
+                    userViewModel.signUp(signUpInfo)
                 } else {
                     showToast(requireContext(), "모든 값을 확인해주세요", Types.ToastType.WARNING)
                 }
@@ -62,6 +68,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         }
 
         nicknameCheckResponseObserver()
+        signUpResponseObserver()
     }
 
     private fun nicknameCheckResponseObserver() {
@@ -94,6 +101,22 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         binding.apply {
             groupNicknameOk.visibility = ok
             groupNicknameNo.visibility = no
+        }
+    }
+
+    private fun signUpResponseObserver() {
+        userViewModel.signUpResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Success -> {
+                    SharedPreferencesUtil(requireContext()).putAuthToken(it.data.token)
+                    SharedPreferencesUtil(requireContext()).putRole(it.data.role)
+                    findNavController().navigate(R.id.action_signUp2Fragment_to_mainFragment)
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    showToast(requireContext(), "회원 가입 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {}
+            }
         }
     }
 
@@ -140,6 +163,12 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         binding.btnJoin.apply {
             isClickable = false
             setBackgroundResource(R.drawable.rectangle_gray400_radius_8)
+        }
+    }
+
+    private fun getSignUpInfo(): SignUpDomainDto {
+        binding.apply {
+            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etNickname.text.toString(), etPhone.text.toString())
         }
     }
 }
