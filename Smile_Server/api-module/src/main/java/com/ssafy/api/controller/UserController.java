@@ -1,9 +1,9 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
-import com.ssafy.api.dto.LoginUserDto;
-import com.ssafy.api.dto.RegisterFormDto;
-import com.ssafy.api.dto.TokenRoleDto;
+import com.ssafy.api.dto.User.LoginUserDto;
+import com.ssafy.api.dto.User.RegisterFormDto;
+import com.ssafy.api.dto.User.TokenRoleDto;
 import com.ssafy.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

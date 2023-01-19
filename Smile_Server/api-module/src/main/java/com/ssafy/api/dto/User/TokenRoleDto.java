@@ -1,4 +1,4 @@
-package com.ssafy.api.dto;
+package com.ssafy.api.dto.User;
 
 import com.ssafy.core.code.Role;
 import com.sun.istack.NotNull;

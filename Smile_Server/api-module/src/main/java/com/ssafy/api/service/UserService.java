@@ -1,9 +1,9 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
-import com.ssafy.api.dto.LoginUserDto;
-import com.ssafy.api.dto.RegisterFormDto;
-import com.ssafy.api.dto.TokenRoleDto;
+import com.ssafy.api.dto.User.LoginUserDto;
+import com.ssafy.api.dto.User.RegisterFormDto;
+import com.ssafy.api.dto.User.TokenRoleDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
