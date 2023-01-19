@@ -22,6 +22,9 @@ import java.util.UUID;
 @Component
 @Service
 public class S3UploaderService {
+    /***
+     * @author 신민철
+     */
     private final UploadService s3Service;
     private final AmazonS3Client amazonS3Client;
 
@@ -31,7 +34,7 @@ public class S3UploaderService {
     /***
      *
      * @param multipartFile
-     * @return
+     * @return 파일이름리스트
      * @throws IOException
      *
      * 파일을 여러개 받아서 하나씩 사이즈, 이름 , 컨텐트타입을 비교하고 업로드 함
