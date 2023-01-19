@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.view.home.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:fontFamily="@font/ibm_plex_sans_semi_bold"
-        android:textSize="24sp"
-        android:textColor="@color/blue400"
-        android:text="hello home fragment" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tv_toolbar_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TvH3"
+            android:textColor="@color/black"
+            android:text="주소"/>
+        <ImageView
+            android:id="@+id/iv_toolbar_address_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_search_address"/>
+    </androidx.appcompat.widget.Toolbar>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

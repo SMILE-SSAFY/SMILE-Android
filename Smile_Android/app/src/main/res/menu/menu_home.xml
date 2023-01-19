@@ -1,0 +1,16 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="검색"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_portfolio"
+        android:icon="@drawable/ic_logo_smile"
+        android:title="포트폴리오"
+        app:showAsAction="always"/>
+
+</menu>
