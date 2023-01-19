@@ -92,4 +92,16 @@ public class UserService {
                 .role(user.getRole())
                 .build();
     }
+
+    /**
+     * 이메일이 중복이면 에러를 던진다.
+     *
+     * @param email
+     * @throws HAS_EMAIL 이메일이 존재할 때 에러 발생
+     */
+    public void checkEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomException(ErrorCode.HAS_EMAIL);
+        }
+    }
 }
