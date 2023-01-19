@@ -1,11 +1,11 @@
 package com.ssafy.core.entity;
 
-import com.sun.istack.NotNull;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -42,25 +42,26 @@ public class Photographer implements Serializable {
     @MapsId
     private User user;
 
-    @NotNull
-    @Column(name = "profile_img")
+    @Column(name = "profile_img", nullable = false)
     private String profileImg;
 
-    @NotNull
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String introduction;
 
-    @NotNull
-    @Column(length = 14)
+    @Column(length = 14, nullable = false)
     private String account;
 
-    @NotNull
+    @Column(nullable = false)
+    @ColumnDefault("0")
     private int heart;
 
-    @NotNull
-    @Column(name = "places", columnDefinition = "longtext")
+    @Column(columnDefinition = "longtext", nullable = false)
     @Type(type="json")
     private List<Places> places;
+
+    @Column(columnDefinition = "longtext", nullable = false)
+    @Type(type="json")
+    private List<Categories> categories;
 
     /**
      * 프로필 이미지 변경
@@ -105,5 +106,14 @@ public class Photographer implements Serializable {
      */
     public void updatePlaces(List<Places> places) {
         this.places = places;
+    }
+
+    /**
+     * 프로필 카테고리 정보 변경
+     *
+     * @param categories
+     */
+    public void updateCategories(List<Categories> categories){
+        this.categories = categories;
     }
 }
