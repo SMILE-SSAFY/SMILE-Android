@@ -1,31 +1,34 @@
 package com.ssafy.smile.presentation.view.splash
 
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
+import android.view.animation.AnimationUtils
 import androidx.navigation.fragment.findNavController
 import com.ssafy.smile.R
 import com.ssafy.smile.databinding.FragmentSplashBinding
 import com.ssafy.smile.presentation.base.BaseFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::bind, R.id.splashFragment) {
-    private lateinit var viewbinding : FragmentSplashBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewbinding = FragmentSplashBinding.inflate(inflater, container, false)
-        return viewbinding.root
-    }
+class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::bind, R.layout.fragment_splash) {
 
     override fun initView() { }
 
     override fun setEvent() {
-        Handler(Looper.getMainLooper()).postDelayed({
+        val scope = CoroutineScope(Dispatchers.Main)
+
+        scope.launch {
+            delay(3000)
+
+            val splashAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_splash)
+            binding.apply {
+                ivLogo.visibility = View.VISIBLE
+                binding.ivLogo.startAnimation(splashAnim)
+            }
+
+            delay(1200)
             findNavController().navigate(R.id.action_splashFragment_to_signUp1Fragment)
-        }, 1000)
+        }
     }
 }
