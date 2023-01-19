@@ -11,12 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * 작가 프로필 관련 클래스
  *
  * author @김정은
  */
 @Service
+@Transactional
 @Slf4j
 public class PhotographerService {
     @Autowired
@@ -29,13 +32,13 @@ public class PhotographerService {
      * 작가 등록
      *
      * @param photographer
+     * @throws USER_NOT_FOUND 유저를 찾을 수 없을 때 에러
      */
     public void addPhotographer(PhotographerDto photographer){
         User user = userRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Photographer savedPhotographer = Photographer.builder()
-                .id(photographer.getPhotographerId())
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
@@ -53,6 +56,7 @@ public class PhotographerService {
      *
      * @param idx
      * @return 작가 프로필 객체
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
     public PhotographerDto getPhotographer(Long idx){
         Photographer photographer = photographerRepository.findById(idx)
@@ -66,6 +70,7 @@ public class PhotographerService {
      *
      * @param photographer
      * @return 수정된 작가 프로필 객체
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
     public PhotographerDto changePhotographer(PhotographerDto photographer){
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
@@ -83,5 +88,21 @@ public class PhotographerService {
 
         PhotographerDto savedPhotographer = new PhotographerDto();
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
+    }
+
+    /**
+     * 사진 작가 프로필 삭제
+     *
+     * @param userId 사진작가 인덱스 번호
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
+     */
+    public void removePhotographer(Long userId){
+        Photographer findPhotographer = photographerRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+        if(!findPhotographer.getProfileImg().isEmpty()) {
+            // TODO: 이미지 삭제
+        }
+        photographerRepository.delete(findPhotographer);
     }
 }
