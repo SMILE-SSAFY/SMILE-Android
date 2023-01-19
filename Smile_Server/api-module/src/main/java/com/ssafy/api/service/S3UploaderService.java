@@ -28,7 +28,14 @@ public class S3UploaderService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    //Multipart file to File 하고 업로드 S3
+    /***
+     *
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     *
+     * 파일을 여러개 받아서 하나씩 사이즈, 이름 , 컨텐트타입을 비교하고 업로드 함
+     */
     public String upload(List<MultipartFile> multipartFile) throws IOException {
         List<String> fileNameList = new ArrayList<>();
 
@@ -50,14 +57,30 @@ public class S3UploaderService {
         return fileNameString;
     }
 
+    /***
+     *
+     * @param fileName
+     *
+     * s3에 업로드 되어 있는 파일 삭제
+     */
     public void deleteFile(String fileName){
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
+    /***
+     *
+     * @param originalFileName
+     * @return 새로운 파일네임 부여
+     */
     private String createFileName(String originalFileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
     }
 
+    /***
+     *
+     * @param fileName
+     * @return 파일 형식 체크
+     */
     private String getFileExtension(String fileName) {
         try {
             return fileName.substring(fileName.lastIndexOf("."));

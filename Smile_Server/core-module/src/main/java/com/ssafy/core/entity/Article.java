@@ -28,13 +28,12 @@ public class Article {
 
     private String detailAddress;
 
-    private Integer heart;
+//    private Integer heart;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
-//    @ManyToOne
-//    private Categories categories;
+    private String category;
 
     private String photoUrls;
 
