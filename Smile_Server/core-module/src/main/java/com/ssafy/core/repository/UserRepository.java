@@ -22,22 +22,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     /**
-     * 유저 테이블 내 같은 이메일 존재 유무
-     * true 존재
-     * false 없음
+     * 유저 테이블 내 이메일 중복 체크
      *
      * @param email
-     * @return boolean
+     * @return
+     * true 존재
+     * false 없음
      */
     boolean existsByEmail(String email);
 
-    /**
-     * 유저 테이블 내 같은 닉네임 존재 유무
-     * true 존재
-     * false 없음
-     *
-     * @param nickname
-     * @return boolean
-     */
-    boolean existsByNickname(String nickname);
 }

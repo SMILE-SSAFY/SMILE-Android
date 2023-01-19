@@ -1,9 +1,10 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
-import com.ssafy.api.dto.LoginUserDto;
-import com.ssafy.api.dto.RegisterFormDto;
-import com.ssafy.api.dto.TokenRoleDto;
+import com.ssafy.api.dto.User.LoginUserDto;
+import com.ssafy.api.dto.User.MessageFormDto;
+import com.ssafy.api.dto.User.RegisterFormDto;
+import com.ssafy.api.dto.User.TokenRoleDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
@@ -11,9 +12,12 @@ import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.model.Message;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Random;
 
 import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
 import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
@@ -50,7 +54,6 @@ public class UserService {
                 .email(registerFormDto.getEmail())
                 .password(passwordEncoder.encode(registerFormDto.getPassword()))
                 .name(registerFormDto.getName())
-                .nickname(registerFormDto.getNickname())
                 .phoneNumber(registerFormDto.getPhoneNumber())
                 .role(Role.USER)
                 .build();
@@ -92,4 +95,60 @@ public class UserService {
                 .role(user.getRole())
                 .build();
     }
+
+    /**
+     * 이메일이 중복이면 에러를 던진다.
+     *
+     * @param email
+     * @throws HAS_EMAIL 이메일이 존재할 때 에러 발생
+     */
+    public void checkEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomException(ErrorCode.HAS_EMAIL);
+        }
+    }
+
+    /**
+     * 4자리 난수 생성
+     *
+     * @return randomNumber //난수 4자리
+     */
+    public String createRandomNumber() {
+        Random random = new Random();
+        int createNum = 0;
+        String ranNum = "";
+        int letter = 4;
+        String randomNumber = "";
+
+        for (int i = 0; i < letter; i++) {
+            createNum = random.nextInt(9);
+            ranNum = Integer.toString(createNum);
+            randomNumber += ranNum;
+        }
+        return randomNumber;
+    }
+
+    /**
+     * 메세지 폼 생성하고 난수와 메세지 폼 반환
+     *
+     * @param fromNumber
+     * @param phoneNumber
+     * @return MessageFormDto
+     * Message message, String randomNumber
+     */
+    public MessageFormDto createMessageForm(String fromNumber, String phoneNumber) {
+        String randomNumber = createRandomNumber();
+
+        Message message = new Message();
+        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+        message.setFrom(fromNumber);
+        message.setTo(phoneNumber);
+        message.setText("인증번호 [" + randomNumber + "]를 입력하세요.");
+
+        return MessageFormDto.builder()
+                .message(message)
+                .randomNumber(randomNumber)
+                .build();
+    }
+
 }
