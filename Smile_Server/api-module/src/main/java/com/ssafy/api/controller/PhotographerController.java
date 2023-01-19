@@ -52,7 +52,6 @@ public class PhotographerController {
     /**
      * 작가 프로필 조회
      *
-     * @param idx
      * @return 작가 프로필 객체
      */
     @GetMapping
@@ -65,7 +64,6 @@ public class PhotographerController {
     /**
      * 작가 프로필 수정
      *
-     * @param idx
      * @param photographer
      * @return 수정된 작가 프로필 객체
      */
