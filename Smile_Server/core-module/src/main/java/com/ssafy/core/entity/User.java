@@ -50,9 +50,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String nickname;
-
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
