@@ -11,17 +11,29 @@ import org.springframework.stereotype.Service;
 
 import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
 
+/**
+ * JwtTokenProvider 내에서 사용할 loadUserByUsername 오버라이드 위한 클래스
+ *
+ * author @서재건
+ */
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * 유저 id로 유저 반환
+     *
+     * @param userId
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
-    public UserDetails loadUserByUsername(String userIdx) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = null;
         try {
-            user = userRepository.findById(Long.valueOf(userIdx)).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+            user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         } catch (Exception e) {
             e.printStackTrace();
         }
