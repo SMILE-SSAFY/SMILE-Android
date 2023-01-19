@@ -4,6 +4,11 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * 회원가입 Dto
+ *
+ * author @서재건
+ */
 @Builder
 @Data
 public class RegisterFormDto {
