@@ -11,12 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * 작가 프로필 관련 클래스
  *
  * author @김정은
  */
 @Service
+@Transactional
 @Slf4j
 public class PhotographerService {
     @Autowired
@@ -35,7 +38,6 @@ public class PhotographerService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Photographer savedPhotographer = Photographer.builder()
-                .id(photographer.getPhotographerId())
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
@@ -83,5 +85,15 @@ public class PhotographerService {
 
         PhotographerDto savedPhotographer = new PhotographerDto();
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
+    }
+
+    public void removePhotographer(Long userId){
+        Photographer findPhotographer = photographerRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+        if(!findPhotographer.getProfileImg().isEmpty()) {
+            // TODO: 이미지 삭제
+        }
+        photographerRepository.delete(findPhotographer);
     }
 }
