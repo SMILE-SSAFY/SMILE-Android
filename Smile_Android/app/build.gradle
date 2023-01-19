@@ -66,8 +66,8 @@ dependencies {
     // https://github.com/square/retrofit
     // https://github.com/square/retrofit/tree/master/retrofit-converters/gson
     // okhttp3 추가
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
 
     // material design 추가
     implementation 'com.google.android.material:material:1.6.1'

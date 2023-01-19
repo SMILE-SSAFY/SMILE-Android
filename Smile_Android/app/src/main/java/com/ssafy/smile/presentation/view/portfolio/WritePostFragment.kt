@@ -1,24 +1,27 @@
 package com.ssafy.smile.presentation.view.portfolio
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import androidx.navigation.NavArgs
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.ImageUtils
+import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
 import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
+import com.ssafy.smile.data.remote.model.ArticlePostReq
+import com.ssafy.smile.data.remote.model.Post
 import com.ssafy.smile.databinding.FragmentWritePostBinding
+import com.ssafy.smile.domain.model.Address
+import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.ImageRvAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import java.io.FileNotFoundException
+import com.ssafy.smile.presentation.viewmodel.portfolio.WritePostViewModel
+import java.io.File
 import kotlin.math.abs
 
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
+    private val viewModel : WritePostViewModel by viewModels()
 
     private lateinit var imageRvAdapter: ImageRvAdapter
     private val spinnerAdapter: ArrayAdapter<String> by lazy {
@@ -30,23 +33,20 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         mainActivity.setToolBar(isUsed = true, isBackUsed = true, title = "게시글 업로드")
         setRvAdapter()
         setSpinnerAdapter()
+        setObserver()
+        setButtonDisable()
     }
 
     override fun setEvent() {
-        binding.apply {
-            btnPictureContent.setOnClickListener {
-                actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount)){
-                    imageRvAdapter.setListData(ArrayList(it))
-                }
-            }
-        }
+        setClickListener()
     }
 
     private fun setRvAdapter(){
         imageRvAdapter = ImageRvAdapter(requireContext()).apply {
             setItemClickListener(object : ImageRvAdapter.ItemClickListener{
-                override fun onClickBtnDelete(view: View, position: Int, dto: Uri) {
+                override fun onClickBtnDelete(view: View, position: Int, dto: File) {
                     deleteItem(position)
+                    viewModel.uploadImageData(getImageData())
                 }
             })
         }
@@ -59,8 +59,74 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         binding.apply {
             tvCategoryContent.setAdapter(spinnerAdapter)
             tvCategoryContent.setOnItemClickListener { _, _, _, _ ->
-                showToast(requireContext(), tvCategoryContent.text.toString())
+                viewModel.uploadCategoryData(getCategoryData())
             }
+        }
+    }
+    private fun setObserver(){
+        viewModel.run {
+            postDataResponse.observe(viewLifecycleOwner){
+                when (it){
+                    true -> setButtonEnable()
+                    false -> setButtonDisable()
+                }
+            }
+            postUploadResponse.observe(viewLifecycleOwner){
+                when(it){
+                    is NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
+                    is NetworkResponse.Success -> {
+                        dismissLoadingDialog()
+                        showToast(requireContext(), "게시글이 정상적으로 등록되었습니다.", Types.ToastType.SUCCESS, true)
+                        findNavController().navigate(R.id.action_writePostFragment_pop)
+                    }
+                    is NetworkResponse.Failure -> {
+                        Log.d("스마일", "setObserver: ${it.errorCode}")
+                        dismissLoadingDialog()
+                        showToast(requireContext(), "게시글 등록에 실패했습니다. 잠시 후 시도해주세요.", Types.ToastType.ERROR, true)
+                    }
+                }
+            }
+        }
+    }
+    private fun setClickListener(){
+        binding.apply {
+            btnPictureContent.setOnClickListener {
+                actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount)){
+                    val fileList = it.map { uri -> ImageUtils.getImageFileFromUri(requireContext(), uri) }
+                    imageRvAdapter.setListData(ArrayList(fileList))
+                    viewModel.uploadImageData(getImageData())
+                }
+            }
+
+            btnSearch.setOnClickListener {
+                val tempAddress = getAddressData()
+                viewModel.uploadAddressData(tempAddress)
+            }
+            tvCategoryContent.setOnItemClickListener { _, _, _, _ ->
+                viewModel.uploadCategoryData(tvCategoryContent.text.toString())
+            }
+            btnUpload.setOnClickListener {
+                viewModel.uploadPost()
+            }
+        }
+    }
+
+    private fun getImageData() = imageRvAdapter.getListData()
+    private fun getAddressData() = Address("임시 주소", 0.0f, 0.0f) // TODO : 주소록 연결
+    private fun getCategoryData() = binding.tvCategoryContent.text.toString()
+
+    private fun setButtonEnable() {
+        binding.btnUpload.apply {
+            isClickable = true
+            setBackgroundResource(R.drawable.rectangle_blue400_radius_8)
+        }
+    }
+    private fun setButtonDisable() {
+        binding.btnUpload.apply {
+            isClickable = false
+            setBackgroundResource(R.drawable.rectangle_gray400_radius_8)
         }
     }
 

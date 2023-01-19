@@ -12,8 +12,7 @@ import com.ssafy.smile.MainActivity
 import com.ssafy.smile.common.view.LoadingDialog
 
 
-abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @LayoutRes layoutResId: Int)
-    : Fragment(layoutResId), BaseViewImpl {
+abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @LayoutRes layoutResId: Int) : Fragment(layoutResId), BaseViewImpl {
 
     override lateinit var mLoadingDialog: LoadingDialog
     lateinit var mainActivity : MainActivity
