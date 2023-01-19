@@ -33,45 +33,6 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
     <TextView
-        android:id="@+id/tv_nickname"
-        style="@style/TvT2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="닉네임"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
-
-    <EditText
-        android:id="@+id/et_nickname"
-        style="@style/Et1DirOutlined"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:hint="닉네임 입력"
-        app:layout_constraintEnd_toStartOf="@+id/btn_double_check"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_nickname" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_double_check"
-        style="@style/BtnSmallRectangleBlue400Radius8"
-        android:layout_width="70dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="20dp"
-        android:text="중복 확인"
-        app:layout_constraintBottom_toBottomOf="@+id/et_nickname"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/et_nickname"
-        app:layout_constraintTop_toTopOf="@+id/et_nickname" />
-
-    <TextView
         android:id="@+id/tv_phone"
         style="@style/TvT2"
         android:layout_width="wrap_content"
@@ -81,7 +42,7 @@
         android:text="휴대전화 번호"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_nickname" />
+        app:layout_constraintTop_toBottomOf="@+id/et_name" />
 
     <EditText
         android:id="@+id/et_phone"
@@ -164,63 +125,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_nickname_check_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_check"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_nickname" />
-
-    <TextView
-        android:id="@+id/tv_nickname_check_ok"
-        style="@style/TvT5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="사용 가능한 닉네임입니다"
-        android:textColor="@color/smile_green"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_nickname_check_ok"
-        app:layout_constraintStart_toEndOf="@+id/iv_nickname_check_ok"
-        app:layout_constraintTop_toTopOf="@+id/iv_nickname_check_ok" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_nickname_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="iv_nickname_check_ok,tv_nickname_check_ok" />
-
-    <ImageView
-        android:id="@+id/iv_nickname_check_no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_cancel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_nickname" />
-
-    <TextView
-        android:id="@+id/tv_nickname_check_no"
-        style="@style/TvT5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="이미 사용중인 닉네임입니다"
-        android:textColor="@color/smile_red"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_nickname_check_no"
-        app:layout_constraintStart_toEndOf="@+id/iv_nickname_check_no"
-        app:layout_constraintTop_toTopOf="@+id/iv_nickname_check_no" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_nickname_no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="tv_nickname_check_no,iv_nickname_check_no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

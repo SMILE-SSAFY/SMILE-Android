@@ -6,8 +6,7 @@ data class SignUpRequestDto(
     val email: String = "",
     val password: String = "",
     val name: String = "",
-    val nickname: String = "",
     val phoneNumber: String = ""
 ){
-    fun toSignUpDomainDto(): SignUpDomainDto = SignUpDomainDto(email, password, name, nickname, phoneNumber)
+    fun toSignUpDomainDto(): SignUpDomainDto = SignUpDomainDto(email, password, name, phoneNumber)
 }

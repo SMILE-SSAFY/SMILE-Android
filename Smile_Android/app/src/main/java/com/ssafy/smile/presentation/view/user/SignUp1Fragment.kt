@@ -82,7 +82,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
         userViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    idDoubleCheck = if (it.data) {
+                    idDoubleCheck = if (it.data == "OK") {
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
                         true
                     } else {
