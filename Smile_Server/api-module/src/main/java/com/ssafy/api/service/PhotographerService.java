@@ -32,6 +32,7 @@ public class PhotographerService {
      * 작가 등록
      *
      * @param photographer
+     * @throws USER_NOT_FOUND 유저를 찾을 수 없을 때 에러
      */
     public void addPhotographer(PhotographerDto photographer){
         User user = userRepository.findById(photographer.getPhotographerId())
@@ -55,6 +56,7 @@ public class PhotographerService {
      *
      * @param idx
      * @return 작가 프로필 객체
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
     public PhotographerDto getPhotographer(Long idx){
         Photographer photographer = photographerRepository.findById(idx)
@@ -68,6 +70,7 @@ public class PhotographerService {
      *
      * @param photographer
      * @return 수정된 작가 프로필 객체
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
     public PhotographerDto changePhotographer(PhotographerDto photographer){
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
@@ -91,6 +94,7 @@ public class PhotographerService {
      * 사진 작가 프로필 삭제
      *
      * @param userId 사진작가 인덱스 번호
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
     public void removePhotographer(Long userId){
         Photographer findPhotographer = photographerRepository.findById(userId)
