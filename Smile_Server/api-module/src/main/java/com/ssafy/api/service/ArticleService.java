@@ -96,7 +96,7 @@ public class ArticleService {
         List<Article> articleList = articleRepository.findByUserId(userId);
         List<ArticleListDto> articleListDtoList = new ArrayList<>();
         boolean isMe = false;
-        if (loggedInUser == user){
+        if (loggedInUser.getId() == user.getId()){
             isMe = true;
         }
 
