@@ -29,6 +29,8 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     private var phoneCertCheck = false
 
+    var phoneCertNumber: Int? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -46,8 +48,25 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
             etChangedListener(etPhone, "phone")
             etChangedListener(etCertification, "certification")
 
+            btnCertification.setOnClickListener {
+                val phoneNumber = etPhone.text.toString()
+                if(phoneNumber.isNotEmpty()) {
+                    userViewModel.checkPhoneNumber(phoneNumber)
+                }
+            }
+
             btnCertificationOk.setOnClickListener {
-                phoneCertCheck = true
+                if(phoneCertNumber != null) {
+                    phoneCertCheck = if (phoneCertNumber == etCertification.text.toString().toInt()) {
+                        setPhoneNumberCheckVisibility(View.VISIBLE, View.GONE)
+                        true
+                    } else {
+                        setPhoneNumberCheckVisibility(View.GONE, View.VISIBLE)
+                        false
+                    }
+                } else {
+                    showToast(requireContext(), "인증 번호를 입력해주세요", Types.ToastType.WARNING)
+                }
             }
 
             btnJoin.setOnClickListener {
@@ -60,6 +79,33 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
             }
         }
         signUpResponseObserver()
+        checkPhoneNumberResponseObserver()
+    }
+
+    private fun checkPhoneNumberResponseObserver() {
+        userViewModel.phoneNumberCheckResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Success -> {
+                    phoneCertNumber = it.data
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    showToast(requireContext(), "휴대전화 인증 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    setPhoneNumberCheckVisibility(View.GONE, View.GONE)
+                    phoneCertCheck = false
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    setPhoneNumberCheckVisibility(View.GONE, View.GONE)
+                    phoneCertCheck = false
+                }
+            }
+        }
+    }
+
+    private fun setPhoneNumberCheckVisibility(ok: Int, no: Int) {
+        binding.apply {
+            groupPhoneOk.visibility = ok
+            groupPhoneNo.visibility = no
+        }
     }
 
     private fun signUpResponseObserver() {

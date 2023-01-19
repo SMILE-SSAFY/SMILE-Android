@@ -14,6 +14,7 @@ import com.ssafy.smile.databinding.FragmentSignUp1Binding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.UserViewModel
+import java.util.regex.Pattern
 
 
 class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Binding::bind, R.layout.fragment_sign_up1) {
@@ -114,7 +115,14 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
     private fun etChangedListener(editText: EditText, type: String) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                if (type == "id") {
+                    val email = binding.etId.text.toString()
+                    if (!checkEmailRule(email)) {
+                        binding.etId.error = "올바른 이메일 주소를 입력해주세요"
+                    }
+                }
+            }
             override fun afterTextChanged(editable: Editable) {
                 if (editable.isNotEmpty()) {
                     when(type) {
@@ -154,5 +162,12 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             isClickable = false
             setBackgroundResource(R.drawable.rectangle_gray400_radius_8)
         }
+    }
+
+    private fun checkEmailRule(email: String): Boolean {
+        val rule = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        val pattern = Pattern.compile(rule)
+
+        return pattern.matcher(email).find()
     }
 }

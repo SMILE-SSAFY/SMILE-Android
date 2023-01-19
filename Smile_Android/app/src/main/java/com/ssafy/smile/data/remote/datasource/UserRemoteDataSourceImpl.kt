@@ -13,4 +13,8 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
     override suspend fun signUp(signUpDto: SignUpRequestDto): Response<SignUpResponseDto> {
         return userApiService.signUp(signUpDto)
     }
+
+    override suspend fun checkPhoneNumber(phoneNumber: String): Response<Int> {
+        return userApiService.checkPhoneNumber(phoneNumber)
+    }
 }
