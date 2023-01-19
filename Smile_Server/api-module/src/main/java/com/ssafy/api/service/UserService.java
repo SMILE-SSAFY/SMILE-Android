@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
 import com.ssafy.api.dto.User.LoginUserDto;
+import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
 import com.ssafy.api.dto.User.TokenRoleDto;
 import com.ssafy.core.code.Role;
@@ -11,9 +12,12 @@ import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.model.Message;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Random;
 
 import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
 import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
@@ -50,7 +54,6 @@ public class UserService {
                 .email(registerFormDto.getEmail())
                 .password(passwordEncoder.encode(registerFormDto.getPassword()))
                 .name(registerFormDto.getName())
-                .nickname(registerFormDto.getNickname())
                 .phoneNumber(registerFormDto.getPhoneNumber())
                 .role(Role.USER)
                 .build();
@@ -104,4 +107,5 @@ public class UserService {
             throw new CustomException(ErrorCode.HAS_EMAIL);
         }
     }
+
 }
