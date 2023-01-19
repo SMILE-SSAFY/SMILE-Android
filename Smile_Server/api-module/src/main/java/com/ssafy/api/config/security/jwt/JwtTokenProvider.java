@@ -82,7 +82,7 @@ public class JwtTokenProvider {
      * @param token
      * @return 유저idx
      */
-    private String getUserIdx(String token) {
+    public String getUserIdx(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
