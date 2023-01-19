@@ -40,22 +40,25 @@ public class UserService {
     public TokenRoleDto registerUser(RegisterFormDto registerFormDto) {
 
         log.info("[registerUser] RegisterFormDto 객체 : {}", registerFormDto.toString());
-        User checkingUser = userRepository.findByEmail(registerFormDto.getEmail()).orElse(null);
 
-        if (checkingUser == null) {
-            User user = User.builder()
-                    .email(registerFormDto.getEmail())
-                    .password(passwordEncoder.encode(registerFormDto.getPassword()))
-                    .name(registerFormDto.getName())
-                    .nickname(registerFormDto.getNickname())
-                    .phoneNumber(registerFormDto.getPhoneNumber())
-                    .role(Role.USER)
-                    .build();
-            log.info("[registerUser] User 객체 : {}", user.toString());
-
-            User savedUser = userRepository.save(user);
-            log.info("[registerUser] 회원등록 완료");
+        // 이메일이 존재할 때 에러 발생
+        if (userRepository.findByEmail(registerFormDto.getEmail()).isPresent()) {
+            throw new CustomException(ErrorCode.IS_REGISTERED);
         }
+
+        User user = User.builder()
+                .email(registerFormDto.getEmail())
+                .password(passwordEncoder.encode(registerFormDto.getPassword()))
+                .name(registerFormDto.getName())
+                .nickname(registerFormDto.getNickname())
+                .phoneNumber(registerFormDto.getPhoneNumber())
+                .role(Role.USER)
+                .build();
+        log.info("[registerUser] User 객체 : {}", user.toString());
+
+        User savedUser = userRepository.save(user);
+        log.info("[registerUser] 회원등록 완료");
+
 
         LoginUserDto loginUserDto = LoginUserDto.builder()
                 .email(registerFormDto.getEmail())
