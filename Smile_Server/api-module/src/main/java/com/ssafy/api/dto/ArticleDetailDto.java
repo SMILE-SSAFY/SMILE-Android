@@ -1,8 +1,10 @@
 package com.ssafy.api.dto;
 
 import com.ssafy.core.entity.Article;
+import com.ssafy.core.entity.Categories;
 import lombok.Data;
 
+import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,7 +23,7 @@ public class ArticleDetailDto {
 
     private LocalDateTime createdAt;
 
-//    private Category category;
+//    private String category;
 
     private  String photoUrls;
     //repository를 통해 조회한 객체를 dto로 변환

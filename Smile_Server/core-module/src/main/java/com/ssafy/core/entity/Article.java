@@ -33,8 +33,8 @@ public class Article {
     @CreatedDate
     private LocalDateTime createdAt;
 
-//    @Enumerated(value = EnumType.STRING)
-//    private Category category;
+//    @ManyToOne
+//    private Categories categories;
 
     private String photoUrls;
 

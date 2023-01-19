@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("")
+@RequestMapping("/api/article")
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
@@ -30,13 +30,12 @@ public class ArticleController {
      * @param multipartFile
      * @throws IOException
      */
-    @PostMapping("/api/article")
-    public ResponseEntity<HttpStatus> uploadImage(@RequestPart(value="ArticlePostReq") ArticlePostDto articlePostDto,
-                            @RequestPart(value="image") List<MultipartFile> multipartFile
-                            ) throws IOException {
+    @PostMapping()
+    public ResponseEntity<HttpStatus> uploadImage(
+            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto,
+            @RequestPart("image") List<MultipartFile> multipartFile) throws IOException {
         String fileName = s3UploaderService.upload(multipartFile);
         articleService.postArticle(fileName, articlePostDto);
-        System.out.println(fileName);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
@@ -45,7 +44,7 @@ public class ArticleController {
      * @param photographerId
      * @return ArticleBoardDto
      */
-    @GetMapping("/api/article/list/{photographerId}")
+    @GetMapping("/list/{photographerId}")
     @ResponseBody
     public ResponseEntity<?> getArticleList(@PathVariable("photographerId") Long photographerId){
         ArticleBoardDto articleBoardDto = articleService.getArticleList(photographerId);
@@ -57,7 +56,7 @@ public class ArticleController {
      * @param articleId
      * @return ArticleDetailDto
      */
-    @GetMapping("/api/article/{articleId}")
+    @GetMapping("/{articleId}")
     @ResponseBody
     public ResponseEntity<ArticleDetailDto> getArticleDetail(@PathVariable("articleId") Long articleId){
         return ResponseEntity.ok(articleService.getArticleDetail(articleId));
@@ -68,10 +67,10 @@ public class ArticleController {
      * @param articleId
      * @return delete + articleId
      */
-    @DeleteMapping("/api/article/{article-id}")
-    public String deleteArticle(@PathVariable("article-id") Long articleId){
+    @DeleteMapping("/{articleId}")
+    public ResponseEntity<?> deleteArticle(@PathVariable("articleId") Long articleId){
         articleService.DeletePost(articleId);
-        return "delete " + articleId;
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }
