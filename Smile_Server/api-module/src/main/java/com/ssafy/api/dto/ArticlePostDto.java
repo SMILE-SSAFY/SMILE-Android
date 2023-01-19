@@ -19,6 +19,8 @@ public class ArticlePostDto {
 
     private String detailAddress;
 
+    private String category;
+
     private LocalDateTime createdAt;
 
     public Article toEntity(){
@@ -27,6 +29,7 @@ public class ArticlePostDto {
                 .longitude(longitude)
                 .detailAddress(detailAddress)
                 .createdAt(createdAt)
+                .category(category)
                 .build();
     }
 }

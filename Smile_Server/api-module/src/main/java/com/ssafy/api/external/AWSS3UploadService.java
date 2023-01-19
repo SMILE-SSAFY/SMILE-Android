@@ -13,14 +13,31 @@ import java.io.InputStream;
 @Component
 @RequiredArgsConstructor
 public class AWSS3UploadService implements UploadService {
+    /***
+     *
+     */
     private final AmazonS3 amazonS3;
     private final S3Component s3Component;
 
+    /***
+     *
+     * @param inputStream
+     * @param objectMetadata
+     * @param fileName
+     *
+     * awss3에 파일을 올리는 method
+     */
     @Override
     public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName) {
         amazonS3.putObject(new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
+
+    /***
+     *
+     * @param fileName
+     * @return fileUrl
+     */
     @Override
     public String getFileUrl(String fileName) {
         return amazonS3.getUrl(s3Component.getBucket(), fileName).toString();

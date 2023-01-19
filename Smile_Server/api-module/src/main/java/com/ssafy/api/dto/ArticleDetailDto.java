@@ -23,7 +23,7 @@ public class ArticleDetailDto {
 
     private LocalDateTime createdAt;
 
-//    private String category;
+    private String category;
 
     private  String photoUrls;
     //repository를 통해 조회한 객체를 dto로 변환
@@ -34,5 +34,6 @@ public class ArticleDetailDto {
         this.createdAt = article.getCreatedAt();
         this.detailAddress = article.getDetailAddress();
         this.photoUrls = article.getPhotoUrls();
+        this.category = article.getCategory();
     }
 }
