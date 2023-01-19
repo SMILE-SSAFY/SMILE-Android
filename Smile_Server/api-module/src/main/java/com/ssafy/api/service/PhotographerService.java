@@ -87,6 +87,11 @@ public class PhotographerService {
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
     }
 
+    /**
+     * 사진 작가 프로필 삭제
+     *
+     * @param userId 사진작가 인덱스 번호
+     */
     public void removePhotographer(Long userId){
         Photographer findPhotographer = photographerRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
