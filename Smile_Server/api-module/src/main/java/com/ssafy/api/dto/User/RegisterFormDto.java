@@ -1,4 +1,4 @@
-package com.ssafy.api.dto;
+package com.ssafy.api.dto.User;
 
 import com.sun.istack.NotNull;
 import lombok.Builder;
