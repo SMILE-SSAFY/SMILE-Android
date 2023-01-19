@@ -125,6 +125,9 @@
         android:name="com.ssafy.smile.presentation.view.portfolio.PortfolioFragment"
         android:label="fragment_portfolio"
         tools:layout="@layout/fragment_portfolio" >
+        <argument
+            android:name="articleId"
+            app:argType="long" />
         <action
             android:id="@+id/action_portfolioFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
@@ -136,7 +139,11 @@
             app:destination="@id/writePostFragment" />
         <action
             android:id="@+id/action_portfolioFragment_to_postDetailFragment"
-            app:destination="@id/postDetailFragment" />
+            app:destination="@id/postDetailFragment">
+            <argument
+                android:name="articleId"
+                app:argType="long" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
