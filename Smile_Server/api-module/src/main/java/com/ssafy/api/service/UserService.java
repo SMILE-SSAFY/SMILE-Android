@@ -108,4 +108,47 @@ public class UserService {
         }
     }
 
+    /**
+     * 4자리 난수 생성
+     *
+     * @return randomNumber //난수 4자리
+     */
+    public String createRandomNumber() {
+        Random random = new Random();
+        int createNum = 0;
+        String ranNum = "";
+        int letter = 4;
+        String randomNumber = "";
+
+        for (int i = 0; i < letter; i++) {
+            createNum = random.nextInt(9);
+            ranNum = Integer.toString(createNum);
+            randomNumber += ranNum;
+        }
+        return randomNumber;
+    }
+
+    /**
+     * 메세지 폼 생성하고 난수와 메세지 폼 반환
+     *
+     * @param fromNumber
+     * @param phoneNumber
+     * @return MessageFormDto
+     * Message message, String randomNumber
+     */
+    public MessageFormDto createMessageForm(String fromNumber, String phoneNumber) {
+        String randomNumber = createRandomNumber();
+
+        Message message = new Message();
+        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+        message.setFrom(fromNumber);
+        message.setTo(phoneNumber);
+        message.setText("인증번호 [" + randomNumber + "]를 입력하세요.");
+
+        return MessageFormDto.builder()
+                .message(message)
+                .randomNumber(randomNumber)
+                .build();
+    }
+
 }
