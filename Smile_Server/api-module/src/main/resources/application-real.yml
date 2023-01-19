@@ -14,7 +14,7 @@ spring:
     include: aws
   # Random Key
   jwt:
-    secret: secretKey
+    secret: DvqcGn8mnFjqSL4a
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true

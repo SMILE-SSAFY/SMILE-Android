@@ -37,5 +37,4 @@ abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @Lay
         _binding = null
         super.onDestroyView()
     }
-
 }
