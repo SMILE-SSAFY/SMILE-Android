@@ -30,24 +30,19 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
 
     /**
-     * header로 오는 token에서 정보 추출
+     * 토큰으로부터 userId를 추출
      *
      * @param request
-     * @return header : {"alg":"HS256"}
-     * payload : {"sub":"1","role":"USER","index":"1","iat":1673706867,"exp":1676298867}
+     * @return userId 값 리턴
      */
-    @GetMapping(value = "/token")
-    public String checkToken(HttpServletRequest request) {
+    @GetMapping("/userId")
+    public Long getUserId(HttpServletRequest request){
         String token = jwtTokenProvider.resolveToken(request);
+        log.info(token);
+        log.info(jwtTokenProvider.getUserIdx(token));
+        String userId = jwtTokenProvider.getUserIdx(token);
 
-        String[] token_list = token.split("\\.");
-        log.info("token_list size : {}", token_list.length);
-
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String header = new String(decoder.decode(token_list[0]));
-        String payload = new String(decoder.decode(token_list[1]));
-
-        return "header : " + header + "\n" + "payload : " + payload;
+        return Long.valueOf(userId);
     }
 
     /**
