@@ -13,19 +13,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <TextView
-            android:id="@+id/tv_toolbar_address"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_search_address"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TvH3"
-            android:textColor="@color/black"
-            android:text="주소"/>
-        <ImageView
-            android:id="@+id/iv_toolbar_address_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_search_address"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_toolbar_address"
+                style="@style/TvH3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="주소"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/iv_toolbar_address_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_address"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_toolbar_address"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
