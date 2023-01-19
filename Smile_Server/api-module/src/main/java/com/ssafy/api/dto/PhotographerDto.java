@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PhotographerDto {
-    private Long photographerIdx;
+    private Long photographerId;
     private String profileImg;
     private String introduction;
     private String account;
@@ -34,7 +34,7 @@ public class PhotographerDto {
      */
     public PhotographerDto of(Photographer photographer) {
         return PhotographerDto.builder()
-                .photographerIdx(photographer.getId())
+                .photographerId(photographer.getId())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 작가 관련 Controller
  *
@@ -61,7 +63,7 @@ public class PhotographerController {
     @PutMapping("/{photographerId}")
     // TODO: @RequestPart로 변경
     public ResponseEntity<PhotographerDto> changePhotographer(@PathVariable("photographerId") Long idx, @RequestBody PhotographerDto photographer){
-        photographer.setPhotographerIdx(idx);
+        photographer.setPhotographerId(idx);
         return ResponseEntity.ok(photographerService.changePhotographer(photographer));
     }
 }
