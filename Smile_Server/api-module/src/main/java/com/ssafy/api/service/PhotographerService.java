@@ -42,6 +42,7 @@ public class PhotographerService {
                 .account(photographer.getAccount())
                 .heart(photographer.getHeart())
                 .places(photographer.getPlaces())
+                .categories(photographer.getCategories())
                 .build();
 
         photographerRepository.save(savedPhotographer);
