@@ -31,17 +31,18 @@ public class PhotographerService {
      * @param photographer
      */
     public void addPhotographer(PhotographerDto photographer){
-        User user = userRepository.findById(photographer.getPhotographerIdx())
+        User user = userRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Photographer savedPhotographer = Photographer.builder()
-                .id(photographer.getPhotographerIdx())
+                .id(photographer.getPhotographerId())
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
                 .heart(photographer.getHeart())
                 .places(photographer.getPlaces())
+                .categories(photographer.getCategories())
                 .build();
 
         photographerRepository.save(savedPhotographer);
@@ -67,7 +68,7 @@ public class PhotographerService {
      * @return 수정된 작가 프로필 객체
      */
     public PhotographerDto changePhotographer(PhotographerDto photographer){
-        Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerIdx())
+        Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
         // 이미지가 수정이 되었을 때
