@@ -7,6 +7,7 @@ build/
 
 ### File ###
 /**/src/main/resources/application-aws.yml
+/**/src/main/resources/application-coolsms.yml
 
 ### STS ###
 .apt_generated
