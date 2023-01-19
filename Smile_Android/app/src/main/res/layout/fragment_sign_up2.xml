@@ -110,6 +110,50 @@
         app:layout_constraintStart_toEndOf="@+id/et_certification"
         app:layout_constraintTop_toTopOf="@+id/et_certification" />
 
+    <ImageView
+        android:id="@+id/iv_phone_check_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_check"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_certification" />
+
+    <TextView
+        android:id="@+id/tv_phone_check_ok"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="인증 되었습니다"
+        android:textColor="@color/smile_green"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_phone_check_ok"
+        app:layout_constraintStart_toEndOf="@+id/iv_phone_check_ok"
+        app:layout_constraintTop_toTopOf="@+id/iv_phone_check_ok" />
+
+    <ImageView
+        android:id="@+id/iv_phone_check_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_certification" />
+
+    <TextView
+        android:id="@+id/tv_phone_check_no"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="인증 번호가 틀렸습니다. 다시 입력해주세요."
+        android:textColor="@color/smile_red"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_phone_check_no"
+        app:layout_constraintStart_toEndOf="@+id/iv_phone_check_no"
+        app:layout_constraintTop_toTopOf="@+id/iv_phone_check_no" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_join"
         style="@style/BtnLargeRectangleGray400Radius8"
@@ -125,5 +169,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_phone_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_phone_check_ok, tv_phone_check_ok" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_phone_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_phone_check_no,iv_phone_check_no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

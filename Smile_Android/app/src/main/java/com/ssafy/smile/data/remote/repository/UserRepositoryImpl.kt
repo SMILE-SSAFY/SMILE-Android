@@ -19,6 +19,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     val signUpResponseLiveData: LiveData<NetworkUtils.NetworkResponse<SignUpResponseDto>>
         get() = _signUpResponseLiveData
 
+    private val _checkPhoneNumberResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Int>>()
+    val checkPhoneNumberResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Int>>
+        get() = _checkPhoneNumberResponseLiveData
+
     override suspend fun checkEmail(email: String) {
         _checkEmailResponseLiveData.postValue(NetworkUtils.NetworkResponse.Loading())
 
@@ -40,6 +44,18 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
         } else {
             _signUpResponseLiveData.postValue(NetworkUtils.NetworkResponse.Failure(response.errorBody()?.string()!!))
             Log.d(TAG, "checkEmail Error: $response")
+        }
+    }
+
+    override suspend fun checkPhoneNumber(phoneNumber: String) {
+        _checkPhoneNumberResponseLiveData.postValue(NetworkUtils.NetworkResponse.Loading())
+
+        val response = userRemoteDataSource.checkPhoneNumber(phoneNumber)
+        if (response.isSuccessful && response.body() != null) {
+            _checkPhoneNumberResponseLiveData.postValue(NetworkUtils.NetworkResponse.Success(response.body()!!))
+        } else {
+            _checkPhoneNumberResponseLiveData.postValue(NetworkUtils.NetworkResponse.Failure(response.errorBody()?.string()!!))
+            Log.d(TAG, "checkPhoneNumber Error: $response")
         }
     }
 }

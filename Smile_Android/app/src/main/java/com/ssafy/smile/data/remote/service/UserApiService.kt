@@ -14,4 +14,7 @@ interface UserApiService {
 
     @POST("/api/user/register")
     suspend fun signUp(@Body signUpDto: SignUpRequestDto): Response<SignUpResponseDto>
+
+    @GET("/api/user/check/phone/{phoneNumber}")
+    suspend fun checkPhoneNumber(@Path("phoneNumber") phoneNumber: String): Response<Int>
 }
