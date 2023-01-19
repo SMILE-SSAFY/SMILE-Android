@@ -1,5 +1,6 @@
 package com.ssafy.api.dto;
 
+import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Places;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PhotographerDto {
-    private Long photographerIdx;
+    private Long photographerId;
+    private String name;
     private String profileImg;
     private String introduction;
     private String account;
     private int heart;
     private List<Places> places;
+    private List<Categories> categories;
 
     /**
      * Photographer Entity에서 Photographer DTO로 변경
@@ -34,12 +37,14 @@ public class PhotographerDto {
      */
     public PhotographerDto of(Photographer photographer) {
         return PhotographerDto.builder()
-                .photographerIdx(photographer.getId())
+                .photographerId(photographer.getId())
+                .name(photographer.getUser().getName())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
                 .heart(photographer.getHeart())
                 .places(photographer.getPlaces())
+                .categories(photographer.getCategories())
                 .build();
     }
 }
