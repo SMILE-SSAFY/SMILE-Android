@@ -21,7 +21,11 @@ public enum ErrorCode {
     ALREADY_CANCELED(HttpStatus.NOT_FOUND, "이미 취소된 예약입니다."),
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약을 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+    FAIL_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다."),
+    FAIL_AUTHORIZATION(HttpStatus.FORBIDDEN, "권한이 없는 요청입니다."),
+    IS_REGISTERED(HttpStatus.BAD_REQUEST, "이미 가입한 유저입니다.")
     ;
+
 
     private final HttpStatus httpStatus;
     private final String message;
