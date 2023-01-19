@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.ssafy.smile.Application
-import com.ssafy.smile.domain.model.Role
+import com.ssafy.smile.domain.model.Types
 
 
 class SharedPreferencesUtil (context: Context) {
@@ -52,7 +52,7 @@ class SharedPreferencesUtil (context: Context) {
         Application.fcmToken = Application.sharedPreferences.getFCMToken()
     }
 
-    fun putRole(role: Role) {
+    fun putRole(role: Types.Role) {
         preferences.edit {
             putString(ROLE, role.toString())
             apply()
