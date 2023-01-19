@@ -1,5 +1,7 @@
 package com.ssafy.core.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,13 +12,15 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Data
+@Builder
+@AllArgsConstructor
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private Photographer photographer;
+    private User user;
 
     private Double latitude;
 
@@ -34,8 +38,8 @@ public class Article {
 
     private String photoUrls;
 
-    public void whoPost(Photographer photographer){
-        this.photographer = photographer;
+    public void whoPost(User user){
+        this.user = user;
     }
 
 }

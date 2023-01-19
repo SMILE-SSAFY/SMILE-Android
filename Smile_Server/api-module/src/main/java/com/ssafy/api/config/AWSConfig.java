@@ -14,6 +14,7 @@ public class AWSConfig {
     /**
      * aws 접속값 설정
      * aws yml은 집에 갔어요
+     *
      */
 
     @Value("${cloud.aws.credentials.accessKey}")

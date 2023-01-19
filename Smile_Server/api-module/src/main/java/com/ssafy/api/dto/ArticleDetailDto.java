@@ -3,8 +3,14 @@ package com.ssafy.api.dto;
 import com.ssafy.core.entity.Article;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ArticleDetailDto {
+    /***
+     * 게시글 상세정보를 반환하는 Dto
+     *
+     */
     private Long id;
 
     private Double latitude;
@@ -13,7 +19,7 @@ public class ArticleDetailDto {
 
     private String detailAddress;
 
-//    private LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
 //    private Category category;
 
@@ -23,6 +29,7 @@ public class ArticleDetailDto {
         this.id = article.getId();
         this.latitude = article.getLatitude();
         this.longitude = article.getLongitude();
+        this.createdAt = article.getCreatedAt();
         this.detailAddress = article.getDetailAddress();
         this.photoUrls = article.getPhotoUrls();
     }
