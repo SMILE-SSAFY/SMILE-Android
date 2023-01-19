@@ -24,11 +24,9 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
     private val args: SignUp1FragmentArgs by navArgs()
 
     var nameInput = false
-    var nicknameInput = false
     var phoneInput = false
     var phoneCertInput = false
 
-    private var nicknameDoubleCheck = false
     private var phoneCertCheck = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,13 +43,8 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
     override fun setEvent() {
         binding.apply {
             etChangedListener(etName, "name")
-            etChangedListener(etNickname, "nickname")
             etChangedListener(etPhone, "phone")
             etChangedListener(etCertification, "certification")
-
-            btnDoubleCheck.setOnClickListener {
-                userViewModel.checkNickname(etNickname.text.toString())
-            }
 
             btnCertificationOk.setOnClickListener {
                 phoneCertCheck = true
@@ -66,42 +59,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 }
             }
         }
-
-        nicknameCheckResponseObserver()
         signUpResponseObserver()
-    }
-
-    private fun nicknameCheckResponseObserver() {
-        userViewModel.nicknameCheckResponse.observe(viewLifecycleOwner) {
-            when(it) {
-                is NetworkUtils.NetworkResponse.Success -> {
-                    nicknameDoubleCheck = if (it.data) {
-                        setNicknameCheckVisibility(View.VISIBLE, View.GONE)
-                        true
-                    } else {
-                        setNicknameCheckVisibility(View.GONE, View.VISIBLE)
-                        false
-                    }
-                }
-                is NetworkUtils.NetworkResponse.Failure -> {
-                    setNicknameCheckVisibility(View.GONE, View.GONE)
-                    nicknameDoubleCheck = false
-
-                    showToast(requireContext(), "닉네임 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                }
-                is NetworkUtils.NetworkResponse.Loading -> {
-                    setNicknameCheckVisibility(View.GONE, View.GONE)
-                    nicknameDoubleCheck = false
-                }
-            }
-        }
-    }
-
-    private fun setNicknameCheckVisibility(ok: Int, no: Int) {
-        binding.apply {
-            groupNicknameOk.visibility = ok
-            groupNicknameNo.visibility = no
-        }
     }
 
     private fun signUpResponseObserver() {
@@ -128,7 +86,6 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 if (editable.isNotEmpty()) {
                     when(type) {
                         "name" -> nameInput = true
-                        "nickname" -> nicknameInput = true
                         "phone" -> phoneInput = true
                         "certification" -> phoneCertInput = true
                         else -> {}
@@ -145,11 +102,11 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
     }
 
     private fun isValid(): Boolean {
-        return nicknameDoubleCheck && phoneCertCheck
+        return phoneCertCheck
     }
 
     private fun isAllInput(): Boolean {
-        return nameInput && nicknameInput && phoneInput && phoneCertInput
+        return nameInput && phoneInput && phoneCertInput
     }
 
     private fun setButtonEnable() {
@@ -168,7 +125,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     private fun getSignUpInfo(): SignUpDomainDto {
         binding.apply {
-            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etNickname.text.toString(), etPhone.text.toString())
+            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etPhone.text.toString())
         }
     }
 }
