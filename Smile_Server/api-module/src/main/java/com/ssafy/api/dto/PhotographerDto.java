@@ -1,5 +1,6 @@
 package com.ssafy.api.dto;
 
+import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Places;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class PhotographerDto {
     private String account;
     private int heart;
     private List<Places> places;
+    private List<Categories> categories;
 
     /**
      * Photographer Entity에서 Photographer DTO로 변경
@@ -42,6 +44,7 @@ public class PhotographerDto {
                 .account(photographer.getAccount())
                 .heart(photographer.getHeart())
                 .places(photographer.getPlaces())
+                .categories(photographer.getCategories())
                 .build();
     }
 }
