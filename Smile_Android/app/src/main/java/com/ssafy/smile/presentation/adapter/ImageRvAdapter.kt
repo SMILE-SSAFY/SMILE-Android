@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ssafy.smile.databinding.ItemRvImageBinding
+import java.io.File
 
 class ImageRvAdapter(private val context: Context) : RecyclerView.Adapter<ImageRvAdapter.Holder>() {
-    private val itemList : ArrayList<Uri> = arrayListOf()
+    private val itemList : ArrayList<File> = arrayListOf()
+    fun getListData() = itemList
 
-    fun setListData(dataList: ArrayList<Uri>){
+    fun setListData(dataList: ArrayList<File>){
         itemList.addAll(dataList)
         notifyDataSetChanged()
     }
@@ -24,7 +26,7 @@ class ImageRvAdapter(private val context: Context) : RecyclerView.Adapter<ImageR
     }
 
     inner class Holder(private val binding: ItemRvImageBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bindInfo(position: Int, dto: Uri){
+        fun bindInfo(position: Int, dto: File){
             Glide.with(context).load(dto).into(binding.ivImageImg)
             binding.btnImageClose.setOnClickListener { itemClickListener.onClickBtnDelete(it, position, itemList[position]) }
         }
@@ -45,7 +47,7 @@ class ImageRvAdapter(private val context: Context) : RecyclerView.Adapter<ImageR
     override fun getItemCount(): Int = itemList.size
 
     interface ItemClickListener{
-        fun onClickBtnDelete(view: View, position: Int, dto:Uri)
+        fun onClickBtnDelete(view: View, position: Int, dto:File)
     }
 
     private lateinit var itemClickListener: ItemClickListener

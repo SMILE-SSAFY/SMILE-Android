@@ -110,7 +110,7 @@
                 android:src="@drawable/ic_location"
                 android:textSize="11sp"
                 android:fontFamily="@font/ibm_plex_sans_semi_bold"
-                style="@style/BtnLargeRectangleGray400Radius8" />
+                style="@style/BtnLargeRectangleBlue400Radius8" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -152,6 +152,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="100dp"
         android:text="업로드"
         android:fontFamily="@font/ibm_plex_sans_semi_bold"
         android:textColor="@color/white"

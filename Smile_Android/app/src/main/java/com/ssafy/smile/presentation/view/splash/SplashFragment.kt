@@ -13,13 +13,7 @@ import com.ssafy.smile.R
 import com.ssafy.smile.databinding.FragmentSplashBinding
 import com.ssafy.smile.presentation.base.BaseFragment
 
-class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::bind, R.id.splashFragment) {
-    private lateinit var viewbinding : FragmentSplashBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewbinding = FragmentSplashBinding.inflate(inflater, container, false)
-        return viewbinding.root
-    }
+class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::bind, R.layout.fragment_splash) {
 
     override fun initView() { }
 
