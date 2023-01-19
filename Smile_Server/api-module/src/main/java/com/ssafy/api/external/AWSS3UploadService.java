@@ -14,7 +14,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class AWSS3UploadService implements UploadService {
     /***
-     *
+     * @author 신민철
      */
     private final AmazonS3 amazonS3;
     private final S3Component s3Component;

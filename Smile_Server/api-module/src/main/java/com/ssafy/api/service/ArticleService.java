@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class ArticleService {
+    /***
+     * @author: 신민철
+     */
     @Autowired
     private ArticleRepository articleRepository;
     @Autowired
@@ -39,6 +43,7 @@ public class ArticleService {
      * @param fileName
      * @param articlePostDto
      * user 정보와 articlePostDto를 받아와 articleRepository에 save
+     * @throws PHOTOGRAPHER_NOT_FOUND
      */
     public void postArticle(String fileName, ArticlePostDto articlePostDto){
         Article article = articlePostDto.toEntity();
@@ -55,6 +60,7 @@ public class ArticleService {
      *
      * @param id 게시글 id
      * @return 게시글상세정보
+     * @throws ARTICLE_NOT_FOUND
      */
     public ArticleDetailDto getArticleDetail(Long id){
         Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
@@ -64,7 +70,7 @@ public class ArticleService {
     /***
      *
      * @param id 게시글 id
-     * @throws
+     * @throws ARTICLE_NOT_FOUND
      */
     public void DeletePost(Long id){
         Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
@@ -83,11 +89,12 @@ public class ArticleService {
     /***
      *
      * @param userId
-     * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article
-     * @throws
+     * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article 게시글 전체조회
+     *
+     * @throws UsernameNotFoundException
      */
 
-    public ArticleBoardDto getArticleList(Long userId){
+    public ArticleBoardDto getArticleList(Long userId) throws UsernameNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails) principal).getUsername();
         User loggedInUser = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
