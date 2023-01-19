@@ -20,6 +20,7 @@ import java.util.List;
 @Builder
 public class PhotographerDto {
     private Long photographerId;
+    private String name;
     private String profileImg;
     private String introduction;
     private String account;
@@ -35,6 +36,7 @@ public class PhotographerDto {
     public PhotographerDto of(Photographer photographer) {
         return PhotographerDto.builder()
                 .photographerId(photographer.getId())
+                .name(photographer.getUser().getName())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
