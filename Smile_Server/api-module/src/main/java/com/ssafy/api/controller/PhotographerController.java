@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,5 +75,18 @@ public class PhotographerController {
         User user = (User)authentication.getPrincipal();
         photographer.setPhotographerId(user.getId());
         return ResponseEntity.ok(photographerService.changePhotographer(photographer));
+    }
+
+    /**
+     * 작가 프로필 삭제
+     *
+     * @return 삭제 성공 시 OK
+     */
+    @DeleteMapping
+    public ResponseEntity<HttpStatus> removePhotographer(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        photographerService.removePhotographer(user.getId());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
