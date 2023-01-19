@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
+/**
+ * 유저 Entity
+ *
+ * author @서재건
+ */
 @Entity
 @Builder
 @Getter

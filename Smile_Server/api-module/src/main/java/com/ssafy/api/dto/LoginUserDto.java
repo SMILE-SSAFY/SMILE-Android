@@ -4,6 +4,11 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 로그인 Dto
+ *
+ * author @서재건
+ */
 @Builder
 @Getter
 @Setter

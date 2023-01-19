@@ -13,9 +13,31 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    public Optional<User> findByEmail(String email);
+    /**
+     * 유저 이메일로 유저 반환
+     *
+     * @param email
+     * @return Optional<User>
+     */
+    Optional<User> findByEmail(String email);
 
+    /**
+     * 유저 테이블 내 같은 이메일 존재 유무
+     * true 존재
+     * false 없음
+     *
+     * @param email
+     * @return boolean
+     */
     boolean existsByEmail(String email);
 
+    /**
+     * 유저 테이블 내 같은 닉네임 존재 유무
+     * true 존재
+     * false 없음
+     *
+     * @param nickname
+     * @return boolean
+     */
     boolean existsByNickname(String nickname);
 }
