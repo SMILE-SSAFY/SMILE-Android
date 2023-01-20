@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
 import com.ssafy.api.dto.Kakao.KakaoProfileDto;
-import com.ssafy.api.dto.Kakao.OAuthTokenDto;
+import com.ssafy.api.dto.Kakao.KakaoTokenDto;
 import com.ssafy.api.dto.User.LoginUserDto;
 import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
@@ -185,10 +185,10 @@ public class UserService {
         ResponseEntity<String> TokenResponse = kakaoTokenResponse(code);
         log.info("kakao TokenResponse : {}", TokenResponse.getBody().toString());
 
-        OAuthTokenDto oAuthTokenDto = oAuthToken(TokenResponse);
-        log.info("카카오 엑세트 토큰 : {}", oAuthTokenDto.getAccess_token());
+        KakaoTokenDto kakaoTokenDto = oAuthToken(TokenResponse);
+        log.info("카카오 엑세트 토큰 : {}", kakaoTokenDto.getAccess_token());
 
-        ResponseEntity<String> profileResponse = kakaoProfileResponse(oAuthTokenDto);
+        ResponseEntity<String> profileResponse = kakaoProfileResponse(kakaoTokenDto);
         log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
 
         KakaoProfileDto kakaoProfileDto = kakaoProfile(profileResponse);
@@ -255,36 +255,36 @@ public class UserService {
      * @return
      * 토큰 dto (oAuthTokenDto) 반환
      */
-    public OAuthTokenDto oAuthToken(ResponseEntity<String> response) {
+    public KakaoTokenDto oAuthToken(ResponseEntity<String> response) {
         ObjectMapper objectMapper = new ObjectMapper();
-        OAuthTokenDto oAuthTokenDto = null;
+        KakaoTokenDto kakaoTokenDto = null;
         try {
-            oAuthTokenDto = objectMapper.readValue(response.getBody(), OAuthTokenDto.class);
+            kakaoTokenDto = objectMapper.readValue(response.getBody(), KakaoTokenDto.class);
         } catch (JsonMappingException e) {
-            log.info("OAuthTokenDto 매핑 Error");
+            log.info("KakaoTokenDto 매핑 Error");
             throw new RuntimeException(e);
         } catch (JsonProcessingException e) {
 
             throw new RuntimeException(e);
         }
-        return oAuthTokenDto;
+        return kakaoTokenDto;
     }
 
     /**
      * 카카오에서 발급한 토큰을 통해 회원 정보가 담긴 response를 받는다.
      *
-     * @param oAuthTokenDto     // 카카오에서 발급한 토큰
+     * @param kakaoTokenDto     // 카카오에서 발급한 토큰
      * @return
      * 요청한 회원 정보가 담긴 response 반환
      */
-    public ResponseEntity<String> kakaoProfileResponse(OAuthTokenDto oAuthTokenDto) {
+    public ResponseEntity<String> kakaoProfileResponse(KakaoTokenDto kakaoTokenDto) {
         // POST방식으로 key=value 데이터를 요청(카카오쪽으로)
         RestTemplate rt = new RestTemplate();
         rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         //HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + oAuthTokenDto.getAccess_token());
+        headers.add("Authorization", "Bearer " + kakaoTokenDto.getAccess_token());
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
