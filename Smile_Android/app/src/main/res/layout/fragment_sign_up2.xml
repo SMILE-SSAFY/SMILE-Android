@@ -72,6 +72,36 @@
         app:layout_constraintTop_toTopOf="@+id/et_phone" />
 
     <TextView
+        android:id="@+id/tv_time_text"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:text="인증 유효 시간 : "
+        android:textColor="@color/blue400"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_phone" />
+
+    <TextView
+        android:id="@+id/tv_timer"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/blue400"
+        app:layout_constraintStart_toEndOf="@+id/tv_time_text"
+        app:layout_constraintTop_toBottomOf="@+id/et_phone" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_time_text,tv_timer" />
+
+    <TextView
         android:id="@+id/tv_certification"
         style="@style/TvT2"
         android:layout_width="wrap_content"
@@ -154,6 +184,20 @@
         app:layout_constraintStart_toEndOf="@+id/iv_phone_check_no"
         app:layout_constraintTop_toTopOf="@+id/iv_phone_check_no" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_phone_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_phone_check_ok, tv_phone_check_ok" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_phone_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_phone_check_no,iv_phone_check_no" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_join"
         style="@style/BtnLargeRectangleGray400Radius8"
@@ -169,19 +213,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_phone_ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="iv_phone_check_ok, tv_phone_check_ok" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_phone_no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="tv_phone_check_no,iv_phone_check_no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
