@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.UserRemoteDataSource
-import com.ssafy.smile.data.remote.model.SignUpResponseDto
+import com.ssafy.smile.data.remote.model.UserResponseDto
+import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.repository.UserRepository
 import com.ssafy.smile.presentation.base.BaseRepository
@@ -14,13 +15,17 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     val checkEmailResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
         get() = _checkEmailResponseLiveData
 
-    private val _signUpResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<SignUpResponseDto>>()
-    val signUpResponseLiveData: LiveData<NetworkUtils.NetworkResponse<SignUpResponseDto>>
+    private val _signUpResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
+    val signUpResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _signUpResponseLiveData
 
     private val _checkPhoneNumberResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Int>>()
     val checkPhoneNumberResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Int>>
         get() = _checkPhoneNumberResponseLiveData
+
+    private val _loginResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
+    val loginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
+        get() = _loginResponseLiveData
 
     override suspend fun checkEmail(email: String) {
         safeApiCall(_checkEmailResponseLiveData) {
@@ -37,6 +42,12 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     override suspend fun checkPhoneNumber(phoneNumber: String) {
         safeApiCall(_checkPhoneNumberResponseLiveData) {
             userRemoteDataSource.checkPhoneNumber(phoneNumber)
+        }
+    }
+
+    override suspend fun login(loginDomainDto: LoginDomainDto) {
+        safeApiCall(_loginResponseLiveData) {
+            userRemoteDataSource.login(loginDomainDto.toLoginRequestDto())
         }
     }
 }
