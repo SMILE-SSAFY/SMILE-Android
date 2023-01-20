@@ -97,7 +97,7 @@ public class UserController {
      * @param loginUserDto // email, password
      * @return token    // jwt token 리턴
      */
-    @GetMapping(value = "/login")
+    @PostMapping(value = "/login")
     public ResponseEntity<TokenRoleDto> login(@RequestBody LoginUserDto loginUserDto) {
         TokenRoleDto tokenRoleDto = userService.login(loginUserDto);
         return ResponseEntity.ok().body(tokenRoleDto);
