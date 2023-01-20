@@ -5,7 +5,9 @@ import com.ssafy.api.dto.User.LoginUserDto;
 import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
 import com.ssafy.api.dto.User.TokenRoleDto;
+import com.ssafy.api.dto.User.UserDto;
 import com.ssafy.api.service.UserService;
+import com.ssafy.core.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
- *  유저 관련 Controller
- *
+ * 유저 관련 Controller
  * author @서재건
  */
 @Slf4j
@@ -70,7 +73,7 @@ public class UserController {
      * @return userId 값 리턴
      */
     @GetMapping("/userId")
-    public Long getUserId(HttpServletRequest request){
+    public Long getUserId(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         log.info(token);
         log.info(jwtTokenProvider.getUserIdx(token));
@@ -118,7 +121,7 @@ public class UserController {
     /**
      * 난수 생성 후 수신인한테 문자 발송 및 난수 리턴
      *
-     * @param phoneNumber   // 수신인의 번호
+     * @param phoneNumber // 수신인의 번호
      * @return randomNumber // 4자리 난수 리턴
      */
     @GetMapping("/check/phone/{phoneNumber}")
@@ -133,4 +136,17 @@ public class UserController {
         return randomNumber;
     }
 
+    /**
+     * 토큰에서 유저 정보 조회
+     *
+     * @return userDto
+     * id, name, role
+     */
+    @GetMapping
+    public UserDto getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        UserDto userDto = new UserDto();
+        return userDto.of(user);
+    }
 }
