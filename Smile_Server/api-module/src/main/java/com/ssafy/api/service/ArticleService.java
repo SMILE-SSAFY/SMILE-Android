@@ -130,6 +130,14 @@ public class ArticleService {
                 .build();
     }
 
+    /***
+     *
+     * @param articleId
+     * @param multipartFiles
+     * @param articlePostDto
+     * @return 수정한 게시글
+     * @throws IOException
+     */
     public ArticleDetailDto updateArticle(Long articleId, List<MultipartFile> multipartFiles, ArticlePostDto articlePostDto) throws IOException {
 
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
