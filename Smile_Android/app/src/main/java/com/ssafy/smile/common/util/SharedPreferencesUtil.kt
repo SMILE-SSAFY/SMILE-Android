@@ -52,9 +52,9 @@ class SharedPreferencesUtil (context: Context) {
         Application.fcmToken = Application.sharedPreferences.getFCMToken()
     }
 
-    fun putRole(role: Types.Role) {
+    fun putRole(role: String) {
         preferences.edit {
-            putString(ROLE, role.toString())
+            putString(ROLE, role)
             apply()
         }
     }
