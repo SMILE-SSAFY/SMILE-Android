@@ -56,11 +56,13 @@ public class PhotographerController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
-        // 파일 업로드
-        String fileName = s3UploaderService.upload(multipartFile);
+        if(!multipartFile.isEmpty()) {
+            // 파일 업로드
+            String fileName = s3UploaderService.upload(multipartFile);
+            photographer.setProfileImg(fileName);
+        }
 
         photographer.setPhotographerId(user.getId());
-        photographer.setProfileImg(fileName);
         photographerService.addPhotographer(photographer);
         return ResponseEntity.ok(HttpStatus.OK);
     }
