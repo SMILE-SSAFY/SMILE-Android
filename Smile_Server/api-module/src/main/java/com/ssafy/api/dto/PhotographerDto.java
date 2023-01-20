@@ -28,6 +28,7 @@ public class PhotographerDto {
     private int heart;
     private List<Places> places;
     private List<Categories> categories;
+    private boolean isDeleted;
 
     /**
      * Photographer Entity에서 Photographer DTO로 변경
