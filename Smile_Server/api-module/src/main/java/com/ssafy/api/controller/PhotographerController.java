@@ -83,15 +83,17 @@ public class PhotographerController {
      * 작가 프로필 수정
      *
      * @param photographer
+     * @param multipartFile
      * @return 수정된 작가 프로필 객체
      */
     @PutMapping
-    // TODO: @RequestPart로 변경
-    public ResponseEntity<PhotographerDto> changePhotographer(@RequestBody PhotographerDto photographer){
+    public ResponseEntity<PhotographerDto> changePhotographer(@RequestPart("Photographer") PhotographerDto photographer,
+                                                              @RequestPart("image") MultipartFile multipartFile) throws IOException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
+
         photographer.setPhotographerId(user.getId());
-        return ResponseEntity.ok(photographerService.changePhotographer(photographer));
+        return ResponseEntity.ok(photographerService.changePhotographer(multipartFile, photographer));
     }
 
 
