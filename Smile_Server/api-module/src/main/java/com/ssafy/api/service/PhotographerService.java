@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.PhotographerDto;
+import com.ssafy.api.dto.Photographer.PhotographerReqDto;
+import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
@@ -39,7 +40,7 @@ public class PhotographerService {
      * @param photographer
      * @throws USER_NOT_FOUND 유저를 찾을 수 없을 때 에러
      */
-    public void addPhotographer(PhotographerDto photographer){
+    public void addPhotographer(PhotographerReqDto photographer){
         User user = userRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -48,7 +49,6 @@ public class PhotographerService {
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
-                .heart(photographer.getHeart())
                 .places(photographer.getPlaces())
                 .categories(photographer.getCategories())
                 .build();
@@ -63,10 +63,10 @@ public class PhotographerService {
      * @return 작가 프로필 객체
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public PhotographerDto getPhotographer(Long idx){
+    public PhotographerResDto getPhotographer(Long idx){
         Photographer photographer = photographerRepository.findById(idx)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        PhotographerDto dto = new PhotographerDto();
+        PhotographerResDto dto = new PhotographerResDto();
         return dto.of(photographer);
     }
 
@@ -79,7 +79,7 @@ public class PhotographerService {
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      * @throws IOException
      */
-    public PhotographerDto changePhotographer(MultipartFile file, PhotographerDto photographer) throws IOException {
+    public PhotographerResDto changePhotographer(MultipartFile file, PhotographerReqDto photographer) throws IOException {
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
@@ -105,7 +105,7 @@ public class PhotographerService {
         findPhotographer.updatePlaces(photographer.getPlaces());
         findPhotographer.updateCategories(photographer.getCategories());
 
-        PhotographerDto savedPhotographer = new PhotographerDto();
+        PhotographerResDto savedPhotographer = new PhotographerResDto();
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
     }
 
