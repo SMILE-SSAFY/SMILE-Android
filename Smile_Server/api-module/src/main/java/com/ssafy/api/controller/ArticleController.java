@@ -1,16 +1,18 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.dto.ArticleDetailDto;
-import com.ssafy.api.dto.ArticleBoardDto;
-import com.ssafy.api.dto.ArticlePostDto;
+import com.ssafy.api.dto.article.ArticleDetailDto;
+import com.ssafy.api.dto.article.ArticleBoardDto;
+import com.ssafy.api.dto.article.ArticlePostDto;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.api.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/article")
+@Slf4j
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
@@ -69,8 +72,28 @@ public class ArticleController {
      */
     @DeleteMapping("/{articleId}")
     public ResponseEntity<?> deleteArticle(@PathVariable("articleId") Long articleId){
-        articleService.DeletePost(articleId);
+        articleService.deletePost(articleId);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /***
+     *
+     * 게시글 수정
+     * @param articleId
+     * @param articlePostDto
+     * @param multipartFile
+     * @return 수정한 게시글 디테일
+     * @throws IOException
+     *
+     *
+     */
+    @PutMapping("/{articleId}")
+    public ResponseEntity<?> updateArticle(
+            @PathVariable("articleId") Long articleId,
+            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto,
+            @RequestPart("image") List<MultipartFile> multipartFile) throws IOException{
+
+        return ResponseEntity.ok(articleService.updateArticle(articleId, multipartFile, articlePostDto));
     }
 
 }
