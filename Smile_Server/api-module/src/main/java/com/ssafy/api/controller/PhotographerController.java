@@ -2,8 +2,10 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
+import com.ssafy.api.dto.ArticlePostDto;
 import com.ssafy.api.dto.PhotographerDto;
 import com.ssafy.api.service.PhotographerService;
+import com.ssafy.api.service.S3UploaderService;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +20,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 작가 관련 Controller
@@ -34,17 +40,28 @@ public class PhotographerController {
 
     @Autowired
     private PhotographerService photographerService;
+    @Autowired
+    private S3UploaderService s3UploaderService;
 
     /**
      * 작가 프로필 등록
      *
      * @param photographer
+     * @param multipartFile
      * @return 정상일 때 OK
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> registPhotographer(@RequestBody PhotographerDto photographer){
+    public ResponseEntity<HttpStatus> registPhotographer(@RequestPart("Photographer") PhotographerDto photographer,
+                                                         @RequestPart("image") MultipartFile multipartFile) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
+
+        if(!multipartFile.isEmpty()) {
+            // 파일 업로드
+            String fileName = s3UploaderService.upload(multipartFile);
+            photographer.setProfileImg(fileName);
+        }
+
         photographer.setPhotographerId(user.getId());
         photographerService.addPhotographer(photographer);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -76,6 +93,7 @@ public class PhotographerController {
         photographer.setPhotographerId(user.getId());
         return ResponseEntity.ok(photographerService.changePhotographer(photographer));
     }
+
 
     /**
      * 작가 프로필 삭제

@@ -23,13 +23,30 @@ import java.util.UUID;
 @Service
 public class S3UploaderService {
     /***
-     * @author 신민철
+     * author @신민철
+     * author @김정은
      */
     private final UploadService s3Service;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public String upload(MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+        String newFileName = createFileName(fileName);
+
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Service.uploadFile(inputStream, objectMetadata, newFileName);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생 했습니다 (%s).", file.getOriginalFilename()));
+        }
+
+        return newFileName;
+    }
 
     /***
      *
