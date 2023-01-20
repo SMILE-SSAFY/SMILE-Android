@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.view.user
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
@@ -17,6 +18,7 @@ import com.ssafy.smile.presentation.viewmodel.UserViewModel
 import java.util.regex.Pattern
 
 
+private const val TAG = "SignUp1Fragment_스마일"
 class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Binding::bind, R.layout.fragment_sign_up1) {
 
     private val userViewModel by activityViewModels<UserViewModel>()
@@ -50,12 +52,12 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             }
 
             btnPasswordCheck.setOnClickListener {
-                if (etPassword.text.toString() == etPasswordCheck.text.toString()) {
+                pwdDoubleCheck = if (etPassword.text.toString() == etPasswordCheck.text.toString()) {
                     setPasswordCheckVisibility(View.VISIBLE, View.GONE)
-                    pwdDoubleCheck = true
+                    true
                 } else {
                     setPasswordCheckVisibility(View.GONE, View.VISIBLE)
-                    pwdDoubleCheck = false
+                    false
                 }
             }
 
@@ -87,15 +89,17 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
                         true
                     } else {
-                        setIdCheckVisibility(View.GONE, View.VISIBLE)
                         false
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    setIdCheckVisibility(View.GONE, View.GONE)
                     idDoubleCheck = false
-
-                    showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    if (it.errorCode == 400) {
+                        setIdCheckVisibility(View.GONE, View.VISIBLE)
+                    } else {
+                        setIdCheckVisibility(View.GONE, View.GONE)
+                        showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     setIdCheckVisibility(View.GONE, View.GONE)
@@ -120,6 +124,11 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                     val email = binding.etId.text.toString()
                     if (!checkEmailRule(email)) {
                         binding.etId.error = "올바른 이메일 주소를 입력해주세요"
+                    }
+                } else if (type == "pwd") {
+                    val password = binding.etPassword.text.toString()
+                    if (!checkPasswordRule(password)) {
+                        binding.etPassword.error = "비밀번호 규칙에 맞게 입력해주세요"
                     }
                 }
             }
@@ -169,5 +178,12 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
         val pattern = Pattern.compile(rule)
 
         return pattern.matcher(email).find()
+    }
+
+    private fun checkPasswordRule(password: String): Boolean {
+        val rule = "^.{8,20}$"
+        val pattern = Pattern.compile(rule)
+
+        return pattern.matcher(password).find()
     }
 }

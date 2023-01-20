@@ -1,8 +1,10 @@
 package com.ssafy.smile.presentation.view.user
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
@@ -10,14 +12,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.EventUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
+import com.ssafy.smile.common.util.setOnSingleClickListener
 import com.ssafy.smile.databinding.FragmentSignUp2Binding
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.UserViewModel
 
+private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
     private val userViewModel by activityViewModels<UserViewModel>()
@@ -51,6 +56,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
             btnCertification.setOnClickListener {
                 val phoneNumber = etPhone.text.toString()
                 if(phoneNumber.isNotEmpty()) {
+                    startTimer()
                     userViewModel.checkPhoneNumber(phoneNumber)
                 }
             }
@@ -69,7 +75,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 }
             }
 
-            btnJoin.setOnClickListener {
+            btnJoin.setOnSingleClickListener {
                 if(isValid()) {
                     val signUpInfo = getSignUpInfo()
                     userViewModel.signUp(signUpInfo)
@@ -80,6 +86,23 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         }
         signUpResponseObserver()
         checkPhoneNumberResponseObserver()
+    }
+
+    private fun startTimer() {
+        binding.apply {
+            groupTimer.visibility = View.VISIBLE
+
+            object : CountDownTimer(180000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val secondsUntilFinished = millisUntilFinished / 1000
+                    tvTimer.text = "${secondsUntilFinished / 60}:${secondsUntilFinished % 60}"
+                }
+                override fun onFinish() {
+                    tvTimer.visibility = View.GONE
+                    tvTimeText.text = "인증 시간이 만료되었습니다. 다시 시도해주세요"
+                }
+            }.start()
+        }
     }
 
     private fun checkPhoneNumberResponseObserver() {
@@ -114,9 +137,12 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 is NetworkUtils.NetworkResponse.Success -> {
                     SharedPreferencesUtil(requireContext()).putAuthToken(it.data.token)
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
-                    findNavController().navigate(R.id.action_signUp2Fragment_to_mainFragment)
+                    if(findNavController().currentDestination?.id == R.id.signUp2Fragment) {
+                        findNavController().navigate(R.id.action_signUp2Fragment_to_mainFragment)
+                    }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    Log.d(TAG, "signUpResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "회원 가입 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {}
