@@ -23,7 +23,8 @@ import java.util.UUID;
 @Service
 public class S3UploaderService {
     /***
-     * @author 신민철
+     * author @신민철
+     * author @김정은
      */
     private final UploadService s3Service;
     private final AmazonS3Client amazonS3Client;
