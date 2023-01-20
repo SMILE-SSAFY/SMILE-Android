@@ -76,13 +76,24 @@ public class ArticleController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /***
+     *
+     * 게시글 수정
+     * @param articleId
+     * @param articlePostDto
+     * @param multipartFile
+     * @return 수정한 게시글 디테일
+     * @throws IOException
+     *
+     *
+     */
     @PutMapping("/{articleId}")
     public ResponseEntity<?> updateArticle(
             @PathVariable("articleId") Long articleId,
             @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto,
             @RequestPart("image") List<MultipartFile> multipartFile) throws IOException{
-        articleService.updateArticle(articleId, multipartFile, articlePostDto);
-        return ResponseEntity.ok(articleService.getArticleDetail(articleId));
+
+        return ResponseEntity.ok(articleService.updateArticle(articleId, multipartFile, articlePostDto));
     }
 
 }
