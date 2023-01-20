@@ -10,11 +10,11 @@ import retrofit2.http.Path
 
 interface UserApiService {
     @GET("/api/user/check/email/{email}")
-    suspend fun checkEmail(@Path("email") email: String): Response<Boolean>
-
-    @GET("/api/user/check/nickname/{nickname}")
-    suspend fun checkNickname(@Path("nickname") nickname: String): Response<Boolean>
+    suspend fun checkEmail(@Path("email") email: String): Response<String>
 
     @POST("/api/user/register")
     suspend fun signUp(@Body signUpDto: SignUpRequestDto): Response<SignUpResponseDto>
+
+    @GET("/api/user/check/phone/{phoneNumber}")
+    suspend fun checkPhoneNumber(@Path("phoneNumber") phoneNumber: String): Response<Int>
 }

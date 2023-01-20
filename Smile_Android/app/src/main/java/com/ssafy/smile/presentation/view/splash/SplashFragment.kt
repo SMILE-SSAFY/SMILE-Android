@@ -28,7 +28,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
             }
 
             delay(1200)
-            findNavController().navigate(R.id.action_splashFragment_to_logInFragment)
+            findNavController().navigate(R.id.action_splashFragment_to_signUp1Fragment)
         }
     }
 }

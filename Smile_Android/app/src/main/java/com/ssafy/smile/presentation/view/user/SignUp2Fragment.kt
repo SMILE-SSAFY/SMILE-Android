@@ -1,8 +1,10 @@
 package com.ssafy.smile.presentation.view.user
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
@@ -10,26 +12,29 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.EventUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
+import com.ssafy.smile.common.util.setOnSingleClickListener
 import com.ssafy.smile.databinding.FragmentSignUp2Binding
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.UserViewModel
 
+private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
     private val userViewModel by activityViewModels<UserViewModel>()
     private val args: SignUp1FragmentArgs by navArgs()
 
     var nameInput = false
-    var nicknameInput = false
     var phoneInput = false
     var phoneCertInput = false
 
-    private var nicknameDoubleCheck = false
     private var phoneCertCheck = false
+
+    var phoneCertNumber: Int? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,19 +50,32 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
     override fun setEvent() {
         binding.apply {
             etChangedListener(etName, "name")
-            etChangedListener(etNickname, "nickname")
             etChangedListener(etPhone, "phone")
             etChangedListener(etCertification, "certification")
 
-            btnDoubleCheck.setOnClickListener {
-                userViewModel.checkNickname(etNickname.text.toString())
+            btnCertification.setOnClickListener {
+                val phoneNumber = etPhone.text.toString()
+                if(phoneNumber.isNotEmpty()) {
+                    startTimer()
+                    userViewModel.checkPhoneNumber(phoneNumber)
+                }
             }
 
             btnCertificationOk.setOnClickListener {
-                phoneCertCheck = true
+                if(phoneCertNumber != null) {
+                    phoneCertCheck = if (phoneCertNumber == etCertification.text.toString().toInt()) {
+                        setPhoneNumberCheckVisibility(View.VISIBLE, View.GONE)
+                        true
+                    } else {
+                        setPhoneNumberCheckVisibility(View.GONE, View.VISIBLE)
+                        false
+                    }
+                } else {
+                    showToast(requireContext(), "인증 번호를 입력해주세요", Types.ToastType.WARNING)
+                }
             }
 
-            btnJoin.setOnClickListener {
+            btnJoin.setOnSingleClickListener {
                 if(isValid()) {
                     val signUpInfo = getSignUpInfo()
                     userViewModel.signUp(signUpInfo)
@@ -66,41 +84,50 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 }
             }
         }
-
-        nicknameCheckResponseObserver()
         signUpResponseObserver()
+        checkPhoneNumberResponseObserver()
     }
 
-    private fun nicknameCheckResponseObserver() {
-        userViewModel.nicknameCheckResponse.observe(viewLifecycleOwner) {
+    private fun startTimer() {
+        binding.apply {
+            groupTimer.visibility = View.VISIBLE
+
+            object : CountDownTimer(180000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val secondsUntilFinished = millisUntilFinished / 1000
+                    tvTimer.text = "${secondsUntilFinished / 60}:${secondsUntilFinished % 60}"
+                }
+                override fun onFinish() {
+                    tvTimer.visibility = View.GONE
+                    tvTimeText.text = "인증 시간이 만료되었습니다. 다시 시도해주세요"
+                }
+            }.start()
+        }
+    }
+
+    private fun checkPhoneNumberResponseObserver() {
+        userViewModel.phoneNumberCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    nicknameDoubleCheck = if (it.data) {
-                        setNicknameCheckVisibility(View.VISIBLE, View.GONE)
-                        true
-                    } else {
-                        setNicknameCheckVisibility(View.GONE, View.VISIBLE)
-                        false
-                    }
+                    phoneCertNumber = it.data
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    setNicknameCheckVisibility(View.GONE, View.GONE)
-                    nicknameDoubleCheck = false
-
-                    showToast(requireContext(), "닉네임 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "휴대전화 인증 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    setPhoneNumberCheckVisibility(View.GONE, View.GONE)
+                    phoneCertCheck = false
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    setNicknameCheckVisibility(View.GONE, View.GONE)
-                    nicknameDoubleCheck = false
+                    setPhoneNumberCheckVisibility(View.GONE, View.GONE)
+                    phoneCertCheck = false
                 }
             }
         }
     }
 
-    private fun setNicknameCheckVisibility(ok: Int, no: Int) {
+    private fun setPhoneNumberCheckVisibility(ok: Int, no: Int) {
         binding.apply {
-            groupNicknameOk.visibility = ok
-            groupNicknameNo.visibility = no
+            groupPhoneOk.visibility = ok
+            groupPhoneNo.visibility = no
         }
     }
 
@@ -110,9 +137,12 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 is NetworkUtils.NetworkResponse.Success -> {
                     SharedPreferencesUtil(requireContext()).putAuthToken(it.data.token)
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
-                    findNavController().navigate(R.id.action_signUp2Fragment_to_mainFragment)
+                    if(findNavController().currentDestination?.id == R.id.signUp2Fragment) {
+                        findNavController().navigate(R.id.action_signUp2Fragment_to_mainFragment)
+                    }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    Log.d(TAG, "signUpResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "회원 가입 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {}
@@ -128,7 +158,6 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 if (editable.isNotEmpty()) {
                     when(type) {
                         "name" -> nameInput = true
-                        "nickname" -> nicknameInput = true
                         "phone" -> phoneInput = true
                         "certification" -> phoneCertInput = true
                         else -> {}
@@ -145,11 +174,11 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
     }
 
     private fun isValid(): Boolean {
-        return nicknameDoubleCheck && phoneCertCheck
+        return phoneCertCheck
     }
 
     private fun isAllInput(): Boolean {
-        return nameInput && nicknameInput && phoneInput && phoneCertInput
+        return nameInput && phoneInput && phoneCertInput
     }
 
     private fun setButtonEnable() {
@@ -168,7 +197,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     private fun getSignUpInfo(): SignUpDomainDto {
         binding.apply {
-            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etNickname.text.toString(), etPhone.text.toString())
+            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etPhone.text.toString())
         }
     }
 }
