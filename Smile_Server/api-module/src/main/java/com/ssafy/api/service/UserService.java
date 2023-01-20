@@ -37,7 +37,9 @@ import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
 import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
 
 /**
+ * 유저 관련 기능 클래스
  *
+ * author @서재건
  */
 @Slf4j
 @Service
