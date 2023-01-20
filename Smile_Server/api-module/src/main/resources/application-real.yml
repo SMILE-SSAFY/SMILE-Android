@@ -11,10 +11,12 @@ logging:
 spring:
   profiles:
     active: real
-    include: aws
+    include:
+      - aws
+      - coolsms
   # Random Key
   jwt:
-    secret: secretKey
+    secret: DvqcGn8mnFjqSL4a
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true
