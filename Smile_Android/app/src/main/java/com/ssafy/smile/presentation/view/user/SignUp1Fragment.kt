@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.view.user
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
@@ -14,8 +15,10 @@ import com.ssafy.smile.databinding.FragmentSignUp1Binding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.UserViewModel
+import java.util.regex.Pattern
 
 
+private const val TAG = "SignUp1Fragment_스마일"
 class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Binding::bind, R.layout.fragment_sign_up1) {
 
     private val userViewModel by activityViewModels<UserViewModel>()
@@ -49,12 +52,12 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             }
 
             btnPasswordCheck.setOnClickListener {
-                if (etPassword.text.toString() == etPasswordCheck.text.toString()) {
+                pwdDoubleCheck = if (etPassword.text.toString() == etPasswordCheck.text.toString()) {
                     setPasswordCheckVisibility(View.VISIBLE, View.GONE)
-                    pwdDoubleCheck = true
+                    true
                 } else {
                     setPasswordCheckVisibility(View.GONE, View.VISIBLE)
-                    pwdDoubleCheck = false
+                    false
                 }
             }
 
@@ -82,19 +85,21 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
         userViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    idDoubleCheck = if (it.data) {
+                    idDoubleCheck = if (it.data == "OK") {
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
                         true
                     } else {
-                        setIdCheckVisibility(View.GONE, View.VISIBLE)
                         false
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    setIdCheckVisibility(View.GONE, View.GONE)
                     idDoubleCheck = false
-
-                    showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    if (it.errorCode == 400) {
+                        setIdCheckVisibility(View.GONE, View.VISIBLE)
+                    } else {
+                        setIdCheckVisibility(View.GONE, View.GONE)
+                        showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     setIdCheckVisibility(View.GONE, View.GONE)
@@ -114,7 +119,19 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
     private fun etChangedListener(editText: EditText, type: String) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                if (type == "id") {
+                    val email = binding.etId.text.toString()
+                    if (!checkEmailRule(email)) {
+                        binding.etId.error = "올바른 이메일 주소를 입력해주세요"
+                    }
+                } else if (type == "pwd") {
+                    val password = binding.etPassword.text.toString()
+                    if (!checkPasswordRule(password)) {
+                        binding.etPassword.error = "비밀번호 규칙에 맞게 입력해주세요"
+                    }
+                }
+            }
             override fun afterTextChanged(editable: Editable) {
                 if (editable.isNotEmpty()) {
                     when(type) {
@@ -154,5 +171,19 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             isClickable = false
             setBackgroundResource(R.drawable.rectangle_gray400_radius_8)
         }
+    }
+
+    private fun checkEmailRule(email: String): Boolean {
+        val rule = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        val pattern = Pattern.compile(rule)
+
+        return pattern.matcher(email).find()
+    }
+
+    private fun checkPasswordRule(password: String): Boolean {
+        val rule = "^.{8,20}$"
+        val pattern = Pattern.compile(rule)
+
+        return pattern.matcher(password).find()
     }
 }

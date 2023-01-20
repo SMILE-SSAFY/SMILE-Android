@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.naver.maps.map.widget.LogoView
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.SignUpResponseDto
@@ -13,16 +14,16 @@ class UserViewModel: BaseViewModel() {
     private val userRepository = Application.repositoryInstances.getUserRepository()
 
     // 이메일 중복 여부 결과를 관리하는 LiveData
-    val emailCheckResponse: LiveData<NetworkUtils.NetworkResponse<Boolean>>
+    val emailCheckResponse: LiveData<NetworkUtils.NetworkResponse<String>>
         get() = userRepository.checkEmailResponseLiveData
-
-    // 닉네임 중복 여부 결과를 관리하는 LiveData
-    val nicknameCheckResponse: LiveData<NetworkUtils.NetworkResponse<Boolean>>
-        get() = userRepository.checkNicknameResponseLiveData
 
     // 회원가입 결과를 관리하는 LiveData
     val signUpResponse: LiveData<NetworkUtils.NetworkResponse<SignUpResponseDto>>
         get() = userRepository.signUpResponseLiveData
+
+    // 핸드폰 인증 번호를 관리하는 LiveData
+    val phoneNumberCheckResponse: LiveData<NetworkUtils.NetworkResponse<Int>>
+        get() = userRepository.checkPhoneNumberResponseLiveData
 
     // 이메일 중복 여부 확인을 수행하는 함수
     fun checkEmail(email: String) {
@@ -31,17 +32,17 @@ class UserViewModel: BaseViewModel() {
         }
     }
 
-    // 닉네임 중복 여부 확인을 수행하는 함수
-    fun checkNickname(nickname: String) {
-        viewModelScope.launch {
-            userRepository.checkNickname(nickname)
-        }
-    }
-
     // 회원가입을 수행하는 함수
     fun signUp(signUpDomainDto: SignUpDomainDto) {
         viewModelScope.launch {
             userRepository.signUp(signUpDomainDto)
+        }
+    }
+
+    // 핸드폰 인증을 수행하는 함수
+    fun checkPhoneNumber(phoneNumber: String) {
+        viewModelScope.launch {
+            userRepository.checkPhoneNumber(phoneNumber)
         }
     }
 }
