@@ -10,8 +10,10 @@ import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 
 /**
  * 작가 프로필 관련 클래스
@@ -27,6 +29,9 @@ public class PhotographerService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private S3UploaderService s3UploaderService;
 
     /**
      * 작가 등록
@@ -68,23 +73,37 @@ public class PhotographerService {
     /**
      * 작가 프로필 수정
      *
+     * @param file 이미지 파일
      * @param photographer
      * @return 수정된 작가 프로필 객체
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
+     * @throws IOException
      */
-    public PhotographerDto changePhotographer(PhotographerDto photographer){
+    public PhotographerDto changePhotographer(MultipartFile file, PhotographerDto photographer) throws IOException {
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
-        // 이미지가 수정이 되었을 때
-        if(photographer.getProfileImg() != null){
-            // TODO: 이미지 삭제 후 등록
-            findPhotographer.updateProfileImg(photographer.getProfileImg());
+        log.info(photographer.getProfileImg());
+        log.info(findPhotographer.getProfileImg());
+
+        if(!photographer.isDeleted()){
+            if (!file.isEmpty()) {  // 이미지가 수정되었을 때
+                // 이미지 삭제
+                s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
+                String fileName = s3UploaderService.upload(file);
+                photographer.setProfileImg(fileName);
+            } else {    // 이미지가 수정되지 않았을 때
+                photographer.setProfileImg(findPhotographer.getProfileImg());
+            }
+        } else {    // 이미지가 삭제되었을 때
+            s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
 
+        findPhotographer.updateProfileImg(photographer.getProfileImg());
         findPhotographer.updateAccount(photographer.getAccount());
         findPhotographer.updateIntroduction(photographer.getIntroduction());
         findPhotographer.updatePlaces(photographer.getPlaces());
+        findPhotographer.updateCategories(photographer.getCategories());
 
         PhotographerDto savedPhotographer = new PhotographerDto();
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
@@ -100,8 +119,9 @@ public class PhotographerService {
         Photographer findPhotographer = photographerRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
-        if(!findPhotographer.getProfileImg().isEmpty()) {
-            // TODO: 이미지 삭제
+        // 이미지 삭제
+        if(findPhotographer.getProfileImg() != null) {
+            s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
         photographerRepository.delete(findPhotographer);
     }
