@@ -11,13 +11,13 @@ import javax.inject.Singleton
 
 object OkhttpClientInstances {
 
-    private val interceptor = Interceptor { chain ->
-        val accessToken = SharedPreferencesUtil(Application().applicationContext).getAuthToken()
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", accessToken)
-            .build()
-        chain.proceed(request)
-    }
+//    private val interceptor = Interceptor { chain ->
+//        val accessToken = SharedPreferencesUtil(Application().applicationContext).getAuthToken()
+//        val request = chain.request().newBuilder()
+//            .addHeader("Authorization", accessToken)
+//            .build()
+//        chain.proceed(request)
+//    }
 
     @Singleton
     private val okhttpClient : OkHttpClient = OkHttpClient
@@ -25,7 +25,7 @@ object OkhttpClientInstances {
         .readTimeout(10, TimeUnit.SECONDS)
         .connectTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
-        .addInterceptor(interceptor)
+//        .addInterceptor(interceptor)
         .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
         .build()
 

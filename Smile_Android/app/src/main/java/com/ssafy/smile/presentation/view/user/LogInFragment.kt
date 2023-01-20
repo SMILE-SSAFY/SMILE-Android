@@ -26,11 +26,6 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
             btnLogin.setOnClickListener {
                 if (checkValid()) {
                     val loginInfo = getLoginInfo()
-
-                    if (cbAutoLogin.isChecked) {
-                        //TODO : 자동 로그인 구현
-                    }
-
                     userViewModel.login(loginInfo)
                 }
             }
@@ -50,7 +45,8 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
         userViewModel.loginResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    SharedPreferencesUtil(requireContext()).putAuthToken(it.data.token)
+                    SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
+                    SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
                     findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
                 }
