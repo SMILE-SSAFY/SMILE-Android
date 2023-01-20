@@ -2,6 +2,12 @@ package com.ssafy.api.dto.Kakao;
 
 import lombok.Data;
 
+/**
+ * 카카오에서 제공하는 유저 정보에 대한 Dto
+ * email, kakao nickname
+ *
+ * author @서재건
+ */
 @Data
 public class KakaoProfileDto {
 
