@@ -22,7 +22,7 @@ spring:
     generate-ddl: true
     hibernate:
       # create(new table), update(add new column), none(nothing)
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true

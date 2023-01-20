@@ -2,7 +2,6 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
-import com.ssafy.api.dto.ArticlePostDto;
 import com.ssafy.api.dto.PhotographerDto;
 import com.ssafy.api.service.PhotographerService;
 import com.ssafy.api.service.S3UploaderService;

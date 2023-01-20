@@ -3,8 +3,8 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleBoardDto;
 import com.ssafy.api.dto.article.ArticlePostDto;
+import com.ssafy.api.dto.article.ArticlePostTestDto;
 import com.ssafy.api.service.ArticleService;
-import com.ssafy.api.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +24,18 @@ import java.util.List;
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
-    @Autowired
-    private S3UploaderService s3UploaderService;
 
     /***
      * 게시글 등록
-     * @param articlePostDto
-     * @param multipartFile
+     * @param articlePostTestDto
      * @throws IOException
      */
     @PostMapping()
-    public ResponseEntity<HttpStatus> uploadImage(
-            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto,
-            @RequestPart("image") List<MultipartFile> multipartFile) throws IOException {
-        String fileName = s3UploaderService.upload(multipartFile);
-        articleService.postArticle(fileName, articlePostDto);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public ResponseEntity<HttpStatus> uploadImage(ArticlePostTestDto articlePostTestDto) throws IOException {
+        log.info(articlePostTestDto.toString());
+        articleService.postArticle(articlePostTestDto);
+        log.info(articlePostTestDto.toString());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /***

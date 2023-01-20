@@ -1,9 +1,6 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.article.ArticleBoardDto;
-import com.ssafy.api.dto.article.ArticleDetailDto;
-import com.ssafy.api.dto.article.ArticleListDto;
-import com.ssafy.api.dto.article.ArticlePostDto;
+import com.ssafy.api.dto.article.*;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
@@ -47,15 +44,18 @@ public class ArticleService {
      * user 정보와 articlePostDto를 받아와 articleRepository에 save
      * @throws PHOTOGRAPHER_NOT_FOUND
      */
-    public void postArticle(String fileName, ArticlePostDto articlePostDto){
-        Article article = articlePostDto.toEntity();
+    public void postArticle(ArticlePostTestDto dto) throws IOException{
+        List<MultipartFile> images = dto.getImageList();
+        log.info(images.get(0).toString());
+        String fileName = s3UploaderService.upload(images);
+        Article article = dto.toEntity();
         article.setPhotoUrls(fileName);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails) principal).getUsername();
         User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         article.whoPost(user);
         articleRepository.save(article);
-        System.out.println(article);
+        log.info(article.toString());
     }
 
     /***
@@ -165,5 +165,7 @@ public class ArticleService {
         }
         return new ArticleDetailDto(article);
     }
+
+
 
 }
