@@ -31,6 +31,22 @@ public class S3UploaderService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    public String upload(MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+        String newFileName = createFileName(fileName);
+
+        try (InputStream inputStream = file.getInputStream()) {
+            s3Service.uploadFile(inputStream, objectMetadata, newFileName);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생 했습니다 (%s).", file.getOriginalFilename()));
+        }
+
+        return newFileName;
+    }
+
     /***
      *
      * @param multipartFile
