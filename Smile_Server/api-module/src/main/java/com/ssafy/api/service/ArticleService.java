@@ -1,9 +1,9 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.ArticleBoardDto;
-import com.ssafy.api.dto.ArticleDetailDto;
-import com.ssafy.api.dto.ArticleListDto;
-import com.ssafy.api.dto.ArticlePostDto;
+import com.ssafy.api.dto.article.ArticleBoardDto;
+import com.ssafy.api.dto.article.ArticleDetailDto;
+import com.ssafy.api.dto.article.ArticleListDto;
+import com.ssafy.api.dto.article.ArticlePostDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
@@ -18,7 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,11 +74,11 @@ public class ArticleService {
      * @param id 게시글 id
      * @throws ARTICLE_NOT_FOUND
      */
-    public void DeletePost(Long id){
+    public void deletePost(Long id){
         Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((UserDetails) principal).getUsername();
-        User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
         if (article.getUser().getId() == user.getId()){
             String photoUriList = article.getPhotoUrls();
             photoUriList = photoUriList.replace("[","").replace("]","");
@@ -126,6 +128,34 @@ public class ArticleService {
                 .places(photographer.getPlaces())
                 .articles(articleListDtoList)
                 .build();
+    }
+
+    public ArticleDetailDto updateArticle(Long articleId, List<MultipartFile> multipartFiles, ArticlePostDto articlePostDto) throws IOException {
+
+        Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
+        if (article.getUser().getId() == user.getId()){
+            // 이미지 지우기
+            String photoUriList = article.getPhotoUrls();
+            photoUriList = photoUriList.replace("[","").replace("]","");
+            List<String> photoUrls = new ArrayList<String>(Arrays.asList(photoUriList.split(",")));
+            photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
+
+            //새로운 이미지 업로드
+            String fileName = s3UploaderService.upload(multipartFiles);
+
+            // 나머지 수정
+            article.setCategory(articlePostDto.getCategory());
+            article.setLatitude(articlePostDto.getLatitude());
+            article.setLongitude(articlePostDto.getLongitude());
+            article.setDetailAddress(articlePostDto.getDetailAddress());
+            article.setPhotoUrls(fileName);
+            articleRepository.save(article);
+
+        }
+        return new ArticleDetailDto(article);
     }
 
 }
