@@ -43,7 +43,7 @@ public class Photographer implements Serializable {
     @MapsId
     private User user;
 
-    @Column(name = "profile_img", nullable = false)
+    @Column(name = "profile_img")
     private String profileImg;
 
     @Column(length = 100, nullable = false)
