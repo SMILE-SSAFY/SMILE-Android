@@ -48,11 +48,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray400"/>
+
     <include
         android:id="@+id/layout_myPage_photographer"
         layout="@layout/layout_my_page_photographer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

@@ -37,6 +37,7 @@ interface BaseViewImpl : BaseView {
         dialog.setOnDismissListener { lifecycleOwner?.lifecycle?.removeObserver(observer) }
     }
 
+
     override fun showToast(context: Context, message: String, type : Types.ToastType?, iconEnable : Boolean) {
         when (type){
             Types.ToastType.CUSTOM -> Toasty.warning(context, message, Toast.LENGTH_SHORT).show()

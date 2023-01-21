@@ -17,12 +17,12 @@
         android:paddingHorizontal="20dp"
         android:fontFamily="@font/ibm_plex_sans_medium"/>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_photographer_register"
+        android:id="@+id/cl_photographer_write_portfolio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground">
         <TextView
-            android:id="@+id/tv_photographer_register"
+            android:id="@+id/tv_photographer_write_portfolio"
             style="@style/TvT2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,14 +36,14 @@
             android:textColor="@color/dark400"
             android:fontFamily="@font/ibm_plex_sans_medium"/>
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/sm_photographer_register"
+            android:id="@+id/sm_photographer_write_portfolio"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:enabled="false"
+            android:clickable="false"
             android:scaleX="1"
             android:scaleY="1"
-            app:layout_constraintTop_toTopOf="@id/tv_photographer_register"
-            app:layout_constraintBottom_toBottomOf="@id/tv_photographer_register"
+            app:layout_constraintTop_toTopOf="@id/tv_photographer_write_portfolio"
+            app:layout_constraintBottom_toBottomOf="@id/tv_photographer_write_portfolio"
             app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
