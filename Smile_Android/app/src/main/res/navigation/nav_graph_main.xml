@@ -125,9 +125,9 @@ app:startDestination="@id/mainFragment">
     tools:layout="@layout/fragment_photographer_reservation_list" />
 <fragment
     android:id="@+id/writePortfolioFragment"
-    android:name="com.ssafy.smile.presentation.view.mypage.WritePortfolioFragment"
+    android:name="com.ssafy.smile.presentation.view.mypage.PhotographerWriteFragment"
     android:label="fragment_write_portfolio"
-    tools:layout="@layout/fragment_write_portfolio" >
+    tools:layout="@layout/fragment_write_photographer_portfolio" >
     <action
         android:id="@+id/action_writePortfolioFragment_to_selectProfilePhotoFragment"
         app:destination="@id/selectProfilePhotoFragment" />
