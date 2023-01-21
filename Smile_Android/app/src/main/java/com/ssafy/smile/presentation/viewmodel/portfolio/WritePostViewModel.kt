@@ -7,20 +7,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.data.remote.model.Post
 import com.ssafy.smile.domain.model.Address
 import com.ssafy.smile.domain.model.PostDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
+import okio.Buffer
 import java.io.File
+import java.io.IOException
 
-
+private const val TAG = "WritePostViewModel_스마일"
 class WritePostViewModel : BaseViewModel() {
     private val portfolioRepository = Application.repositoryInstances.getPortfolioRepository()
 
@@ -44,13 +42,14 @@ class WritePostViewModel : BaseViewModel() {
         _postDataResponse.postValue(checkData())
     }
     private fun checkData() : Boolean {
-        if (postData.images==null || postData.address==null || postData.category==null) return false
+        if (postData.images.isNullOrEmpty() || postData.address==null || postData.category==null) return false
         return true
     }
 
     fun uploadPost() = viewModelScope.launch(Dispatchers.IO){
         val token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJpZCI6IjEiLCJpYXQiOjE2NzQyOTM2MDEsImV4cCI6MTY3Njg4NTYwMX0.-6CkwSW7-AveynO0Oi961P8dyhIkJ8x-QcoYmSsZwTY"
         val post = postData.toPost()
+        makeImageList(post.image)
         portfolioRepository.uploadPost(
             "Bearer $token",
             post.ArticlePostReq.latitude,
@@ -63,12 +62,24 @@ class WritePostViewModel : BaseViewModel() {
 
     private fun makeImageList(images: List<File>): List<MultipartBody.Part> {
         val imageList = arrayListOf<MultipartBody.Part>()
-        for (file in images) {
+        for (i in images.indices) {
+            val file = images[i]
+            Log.d(TAG, "check: ${file.absoluteFile}, ${file.isFile}, ${file.absolutePath}, ${file.name}")
             val fileBody: RequestBody = file.convertToRequestBody()
-            val part = MultipartBody.Part.createFormData("imageList", "", fileBody)
+            Log.d(TAG, bodyToString(fileBody).toString())
+            val part = MultipartBody.Part.createFormData("imageList", "image$i.jpg", fileBody)
+            Log.d(TAG, "check: ${fileBody.contentType()}")
             imageList.add(part)
         }
         return imageList
+    }
+
+    private fun bodyToString(request: RequestBody): String? {
+        return try {
+            val buffer = Buffer()
+            request.writeTo(buffer)
+            buffer.readUtf8()
+        } catch (e: IOException) { "did not work" }
     }
 
 
