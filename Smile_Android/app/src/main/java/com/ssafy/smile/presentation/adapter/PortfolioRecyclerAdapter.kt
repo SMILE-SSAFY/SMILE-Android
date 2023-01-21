@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ssafy.smile.data.remote.model.Article
 import com.ssafy.smile.databinding.RecyclerPortfolioPostItemBinding
-import com.ssafy.smile.domain.model.Article
 
 private const val TAG = "PortfolioRecyclerAdapte_스마일"
 class PortfolioRecyclerAdapter(val context: Context, val datas: MutableList<Article>): RecyclerView.Adapter<PortfolioRecyclerAdapter.PortfolioRecyclerViewHolder>() {
