@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/statusbar_color</item>
         <!-- Customize your theme here. -->
+        <!-- switch/toggle -->
+        <item name="switchStyle">@style/Widget.App.Switch</item>
     </style>
 
     <!-- button -->
@@ -170,7 +172,7 @@
     </style>
 
 
-    <!-- bottomsheet -->
+    <!-- bottomSheet -->
     <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
         <item name="android:windowIsFloating">false</item>
@@ -194,6 +196,15 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">1</item>
+    </style>
+
+    <!-- switch/toggle -->
+    <style name="Widget.App.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorOnSurface">@color/blue100</item>
+        <item name="colorSecondary">@color/blue400</item>
     </style>
 
 </resources>
