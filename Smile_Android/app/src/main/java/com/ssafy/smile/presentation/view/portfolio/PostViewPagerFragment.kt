@@ -4,8 +4,8 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.data.remote.model.Article
 import com.ssafy.smile.databinding.FragmentPostViewPagerBinding
-import com.ssafy.smile.domain.model.Article
 import com.ssafy.smile.presentation.adapter.PortfolioRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 
