@@ -82,7 +82,6 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
                         findNavController().navigate(R.id.action_writePostFragment_pop)
                     }
                     is NetworkResponse.Failure -> {
-                        Log.d("스마일", "setObserver: ${it.errorCode}")
                         dismissLoadingDialog()
                         showToast(requireContext(), "게시글 등록에 실패했습니다. 잠시 후 시도해주세요.", Types.ToastType.ERROR, true)
                     }

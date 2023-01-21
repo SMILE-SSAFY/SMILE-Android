@@ -5,5 +5,7 @@
     android:padding="10dp"
     android:maxLines="1"
     android:ellipsize="end"
-    android:textAppearance="@style/TvH6">
+    android:textSize="16sp"
+    android:textColor="@color/black_87"
+    android:fontFamily="@font/ibm_plex_sans_regular">
 </TextView>
