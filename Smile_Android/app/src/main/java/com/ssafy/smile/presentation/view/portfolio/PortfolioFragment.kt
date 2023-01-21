@@ -1,11 +1,13 @@
 package com.ssafy.smile.presentation.view.portfolio
 
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.data.remote.model.Place
 import com.ssafy.smile.databinding.FragmentPortfolioBinding
 import com.ssafy.smile.domain.model.PortfolioDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -62,16 +64,22 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
     private fun setPhotographerInfo(portfolioDomainDto: PortfolioDomainDto) {
         binding.apply {
             setButtons(portfolioDomainDto.isMe, portfolioDomainDto.isLike)
-
-            tvCategory.text = portfolioDomainDto.categoryName.toString()
-            tvName.text = portfolioDomainDto.name
-            tvPlace.text = portfolioDomainDto.place.toString()
+            tvCategory.text = portfolioDomainDto.categoryName
+            tvName.text = portfolioDomainDto.photographerName
+            tvPlace.text = portfolioDomainDto.place
+            tvPrice.text = portfolioDomainDto.categoryPrice
             tvIntroduction.text = portfolioDomainDto.introduction
         }
     }
 
     private fun setButtons(isMe: Boolean, isLike: Boolean) {
-        //TODO : 내 포트폴리오인지 여부에 따라 버튼 분기 처리
+        binding.apply {
+            if (isMe) {
+                btnWritePost.visibility = View.VISIBLE
+            } else {
+                btnReservation.visibility = View.VISIBLE
+            }
+        }
         //TODO: 좋아요 여부에 따라서 버튼 변경
     }
 }
