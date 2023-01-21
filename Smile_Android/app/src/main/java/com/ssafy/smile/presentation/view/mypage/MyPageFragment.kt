@@ -18,9 +18,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
 
     private fun setObserver(){
-        viewModel.apply {
-
-        }
+        viewModel.apply {  }
     }
 
     private fun setClickListener(){
