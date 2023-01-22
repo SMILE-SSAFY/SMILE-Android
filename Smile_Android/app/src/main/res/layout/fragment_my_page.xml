@@ -7,29 +7,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".presentation.view.home.HomeFragment">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tb_myPage"
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/layout_common_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tv_toolbar"
-                style="@style/TvH3"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="마이페이지"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="wrap_content" />
     <include
         android:id="@+id/layout_myPage_profile"
         layout="@layout/layout_my_page_profile"
@@ -48,7 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray400"/>
-
     <include
         android:id="@+id/layout_myPage_photographer"
         layout="@layout/layout_my_page_photographer"

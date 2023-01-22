@@ -51,7 +51,7 @@ app:startDestination="@id/mainFragment">
         app:destination="@id/photographerReservationList" />
     <action
         android:id="@+id/action_mainFragment_to_writePortfolioFragment"
-        app:destination="@id/writePortfolioFragment" />
+        app:destination="@id/writePortfolioFragment" /> <!-- TODO : Animation 추가 -->
     <action
         android:id="@+id/action_mainFragment_to_portfolioFragment"
         app:destination="@id/portfolioFragment" />
@@ -131,6 +131,10 @@ app:startDestination="@id/mainFragment">
     <action
         android:id="@+id/action_writePortfolioFragment_to_selectProfilePhotoFragment"
         app:destination="@id/selectProfilePhotoFragment" />
+    <action
+        android:id="@+id/action_writePortfolioFragment_pop"
+        app:popUpTo="@id/writePortfolioFragment"
+        app:popUpToInclusive="true" />
 </fragment>
 <fragment
     android:id="@+id/setAddressFragment"

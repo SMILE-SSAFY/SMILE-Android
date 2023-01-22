@@ -13,29 +13,16 @@ import kotlinx.coroutines.launch
 class MyPageViewModel() : BaseViewModel() {
     private val photographerRepository = Application.repositoryInstances.getPhotographerRepository()
 
-    val registerPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
-        get() = photographerRepository.registerPhotographerInfoResponseLiveData
 
     val getPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
         get() = photographerRepository.getPhotographerInfoResponseLiveData
-
-    val modifyPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
-        get() = photographerRepository.modifyPhotographerInfoResponseLiveData
 
     val deletePhotographerResponse: LiveData<NetworkUtils.NetworkResponse<String>>
         get() = photographerRepository.deletePhotographerInfoResponseLiveData
 
 
-    fun registerPhotographerInfo(photographerRequestDto: PhotographerRequestDto) = viewModelScope.launch{
-        photographerRepository.registerPhotographerInfo(photographerRequestDto)
-    }
-
     fun getPhotographerInfo() = viewModelScope.launch{
         photographerRepository.getPhotographerInfo()
-    }
-
-    fun modifyPhotographerInfo(photographerRequestDto: PhotographerRequestDto) = viewModelScope.launch{
-        photographerRepository.modifyPhotographerInfo(photographerRequestDto)
     }
 
     fun deletePhotographerInfo() = viewModelScope.launch{

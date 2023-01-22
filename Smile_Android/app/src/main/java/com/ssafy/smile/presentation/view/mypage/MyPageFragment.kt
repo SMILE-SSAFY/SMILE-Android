@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.view.mypage
 
-import android.app.ProgressDialog.show
+
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ssafy.smile.R
@@ -10,17 +11,21 @@ import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.mypage.MyPageViewModel
 
+
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
     private val viewModel : MyPageViewModel by viewModels()
 
     override fun initView() {
+        initToolbar()
         setObserver()
     }
-
     override fun setEvent() {
         setClickListener()
     }
-
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("마이페이지", false)
+    }
     private fun setObserver(){
         viewModel.apply {  }
     }
