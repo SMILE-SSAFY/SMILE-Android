@@ -45,7 +45,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 }
                 tvPhotographerReservation.setOnClickListener {  }
                 tvPhotographerPortfolio.setOnClickListener {  }
-                tvPhotographerMonthTax.setOnClickListener {  }
             }
             layoutMyPageUser.apply {
                 tvUserChangePassword.setOnClickListener {  }
