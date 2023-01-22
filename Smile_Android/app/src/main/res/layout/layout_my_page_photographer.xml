@@ -69,22 +69,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:paddingVertical="8dp"
-            android:paddingHorizontal="20dp"
-            android:text="작가 포트폴리오 정보"
-            android:textSize="12sp"
-            android:textColor="@color/dark400"
-            android:fontFamily="@font/ibm_plex_sans_medium"/>
-        <TextView
-            android:id="@+id/tv_photographer_month_tax"
-            style="@style/TvT2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
             android:paddingTop="8dp"
             android:paddingBottom="15dp"
             android:paddingHorizontal="20dp"
-            android:text="월말 정산 내역"
+            android:text="작가 포트폴리오 정보"
             android:textSize="12sp"
             android:textColor="@color/dark400"
             android:fontFamily="@font/ibm_plex_sans_medium"/>

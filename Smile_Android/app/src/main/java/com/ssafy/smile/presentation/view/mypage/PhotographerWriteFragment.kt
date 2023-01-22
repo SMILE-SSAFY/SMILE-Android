@@ -21,7 +21,7 @@ class PhotographerWriteFragment : BaseFragment<FragmentWritePhotographerPortfoli
     }
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("회원정보수정", true) {
+        toolbar.initToolbar("작가 포트폴리오 정보", true) {
             findNavController().navigate(R.id.action_writePortfolioFragment_pop)
         }
     }

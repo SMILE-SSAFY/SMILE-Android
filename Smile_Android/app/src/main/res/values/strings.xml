@@ -2,7 +2,6 @@
     <string name="app_name">Smile_Android</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="TvH1">48sp</string>
-    <string name="TvH4">18sp</string>
-    <string name="TvT1">18sp</string>
+    <!-- MyPage - photographer write portfolio -->
+    <string name="hint_photographer_introduce">작가님을 소개할 내용을 작성해주세요 :) </string>
 </resources>

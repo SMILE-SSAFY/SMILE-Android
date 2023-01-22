@@ -6,5 +6,5 @@ data class PhotographerRequestDto(
     val introduction: String,
     val profileImg: String,
     val category : CategoryDto,
-    val places : List<AddressDto>
+    val places : List<PlaceDto>
 )
