@@ -15,11 +15,6 @@
         android:layout_height="wrap_content"
         android:text="카테고리&amp;가격 설정"
         android:layout_marginHorizontal="3dp"/>
-    <include
-        android:id="@+id/default_photographer_category"
-        layout="@layout/item_photographer_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_photographer_category"
         android:layout_height="0dp"
