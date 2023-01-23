@@ -15,11 +15,6 @@
         android:layout_height="wrap_content"
         android:text="활동 지역 설정"
         android:layout_marginHorizontal="3dp"/>
-    <include
-        android:id="@+id/default_photographer_place"
-        layout="@layout/item_photographer_place"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_photographer_place"
         android:layout_height="0dp"
