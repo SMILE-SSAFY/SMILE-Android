@@ -2,7 +2,7 @@ package com.ssafy.smile.domain.model
 
 import com.ssafy.smile.common.util.getString
 
-data class PlaceDto (
+data class PlaceDomainDto (
     var isEmpty:Boolean = true,
     var first : String?=null,
     var second : String?=null,

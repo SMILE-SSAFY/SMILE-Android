@@ -2,30 +2,35 @@ package com.ssafy.smile.presentation.view.mypage
 
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
+import com.bumptech.glide.Glide
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.getString
+import com.ssafy.smile.RegisterPortFolioGraphArgs
 import com.ssafy.smile.databinding.FragmentWritePhotographerPortfolioBinding
 import com.ssafy.smile.domain.model.CategoryDto
-import com.ssafy.smile.domain.model.PlaceDto
+import com.ssafy.smile.domain.model.PlaceDomainDto
 import com.ssafy.smile.domain.model.Spinners
 import com.ssafy.smile.presentation.adapter.CategoryRVAdapter
 import com.ssafy.smile.presentation.adapter.PlaceRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteViewModel
 
-
 // TODO : 빈칸 체크 & 동적 리사이클러뷰 View 다듬기
 class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographerPortfolioBinding>
     (FragmentWritePhotographerPortfolioBinding::bind, R.layout.fragment_write_photographer_portfolio) {
-    private val viewModel : PhotographerWriteViewModel by viewModels()
+    private val navArgs : RegisterPortFolioGraphArgs by navArgs()
+    private val viewModel : PhotographerWriteViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
     private lateinit var categoryRVAdapter: CategoryRVAdapter
     private lateinit var placeRVAdapter : PlaceRVAdapter
 
+    //private val photographerResponseDto = PhotographerResponseDto()
 
     override fun initView() {
+        if (navArgs.photographerResponseDto!=null) {
+            // TODO : 가져와서 Setting (수정하기 시나리오의 경우)
+        }
         initToolbar()
         initAdapter()
         setObserver()
@@ -42,12 +47,18 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
     }
 
     private fun setObserver(){
-        viewModel.apply {  }
+        viewModel.apply {
+            profileImageResponse.observe(viewLifecycleOwner){
+                Glide.with(binding.imagePhotographerProfile)
+                    .load(it)
+                    .into(binding.imagePhotographerProfile)
+            }
+        }
     }
     private fun setClickListener(){
         binding.apply {
             btnPhotographerProfileChange.setOnClickListener {
-                
+                findNavController().navigate(R.id.action_writePortfolioFragment_to_photographerProfileFragment)
             }
             layoutPhotographerCategory.btnAdd.setOnClickListener {
                 categoryRVAdapter.addData()
@@ -72,12 +83,12 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
         }.also { binding.layoutPhotographerCategory.rvPhotographerCategory.adapter = it }
         placeRVAdapter = PlaceRVAdapter(binding.layoutPhotographerPlace.btnAdd).apply {
             setItemClickListener(object :PlaceRVAdapter.ItemClickListener{
-                override fun onClickBtnDelete(view: View, position: Int, dto: PlaceDto) {
+                override fun onClickBtnDelete(view: View, position: Int, dto: PlaceDomainDto) {
                     placeRVAdapter.deleteItem(position)
                 }
             })
         }.also { binding.layoutPhotographerPlace.rvPhotographerPlace.adapter = it }
-        placeRVAdapter.setListData(arrayListOf<PlaceDto>(PlaceDto(true,"서울특별시", "강남구", "서울특별시 강남구")))
+        placeRVAdapter.setListData(arrayListOf<PlaceDomainDto>(PlaceDomainDto(true,"서울특별시", "강남구", "서울특별시 강남구")))
 
         binding.layoutPhotographerAccount.apply {
             tvPhotographerAccount.setAdapter(Spinners.getSelectedArrayAdapter(requireContext(), R.array.spinner_account))

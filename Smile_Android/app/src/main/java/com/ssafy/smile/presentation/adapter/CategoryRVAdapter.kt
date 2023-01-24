@@ -1,16 +1,21 @@
 package com.ssafy.smile.presentation.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.getString
-import com.ssafy.smile.common.util.setOnCurrentTextWatchListener
+import com.ssafy.smile.common.util.makeComma
 import com.ssafy.smile.databinding.ItemPhotographerCategoryBinding
 import com.ssafy.smile.domain.model.CategoryDto
 import com.ssafy.smile.domain.model.Spinners
+import java.lang.ref.WeakReference
 
 
 class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) : RecyclerView.Adapter<CategoryRVAdapter.Holder>() {
@@ -53,7 +58,6 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
             itemView.tag = dto
         }
     }
-
     interface ItemClickListener{
         fun onClickBtnDelete(view: View, position: Int, dto:CategoryDto)
     }
@@ -71,10 +75,50 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
                     }
                     setText(dto.categoryName)
                 }
-                etPhotographerCategoryPrice.setOnCurrentTextWatchListener()
+                etPhotographerCategoryPrice.apply {
+                    setText(dto.categoryPrice)
+//                    doOnTextChanged { charSequence, _, _, _ ->
+//                        if (charSequence!=null){
+//                            val price = charSequence.replace("""[,원]""".toRegex(), "").toInt()
+//                            val formatted: String = price.makeComma()
+//                            itemList[position].categoryPrice = price.toString()
+//                            setText(formatted)
+//                        }
+//                    }
+                     //addTextChangedListener(OnCurrentTextWatcher(position, this))
+                }
+                etPhotographerCategoryDetail.apply {
+                    setText(dto.description)
+//                    doOnTextChanged { charSequence, _, _, _ ->
+//                        itemList[position].description = charSequence.toString()
+//                    }
+                }
+                if (position==0) btnDelete.visibility = View.INVISIBLE
+                else btnDelete.visibility = View.VISIBLE
                 btnDelete.setOnClickListener { itemClickListener.onClickBtnDelete(it, position, dto) }
             }
         }
     }
+
+    inner class OnCurrentTextWatcher(private val position: Int, editText: EditText?) : TextWatcher {
+        private val editTextWeakReference: WeakReference<EditText>
+        init { editTextWeakReference = WeakReference<EditText>(editText) }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        override fun afterTextChanged(editable: Editable) {
+            val editText: EditText = editTextWeakReference.get() ?: return
+            val s = editable.toString()
+            if (s.isEmpty()) return
+            editText.removeTextChangedListener(this)
+            val price = s.replace("""[,원]""".toRegex(), "").toInt()
+            val formatted: String = price.makeComma()
+            editText.setText(formatted)
+            editText.setSelection(formatted.length)
+            editText.addTextChangedListener(this)
+            itemList[position].categoryPrice = price.toString()
+        }
+    }
+
 
 }

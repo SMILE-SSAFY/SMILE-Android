@@ -1,6 +1,5 @@
 package com.ssafy.smile.presentation.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,36 +8,36 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.getString
 import com.ssafy.smile.databinding.ItemPhotographerPlaceBinding
-import com.ssafy.smile.domain.model.PlaceDto
+import com.ssafy.smile.domain.model.PlaceDomainDto
 import com.ssafy.smile.domain.model.Spinners
 import com.ssafy.smile.domain.model.Types
 
 
 class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : RecyclerView.Adapter<PlaceRVAdapter.Holder>() {
-    private val itemList : ArrayList<PlaceDto> = arrayListOf()
+    private val itemList : ArrayList<PlaceDomainDto> = arrayListOf()
 
-    fun getListData() : ArrayList<PlaceDto> = itemList
+    fun getListData() : ArrayList<PlaceDomainDto> = itemList
 
-    fun setListData(dataList: ArrayList<PlaceDto>){
+    fun setListData(dataList: ArrayList<PlaceDomainDto>){
         itemList.addAll(dataList)
         notifyDataSetChanged()
     }
 
     fun addData() {
         if (itemCount<=limit){
-            itemList.add(PlaceDto())
+            itemList.add(PlaceDomainDto())
             notifyDataSetChanged()
         }
     }
 
     fun deleteItem(index: Int){
         itemList.removeAt(index)
-        notifyDataSetChanged()
-        notifyItemRangeChanged(index, itemList.size)
+        notifyItemRemoved(index)
+        notifyItemRangeChanged(index, itemCount-index)
     }
 
     override fun getItemCount(): Int {
-        if (itemList.isEmpty()) itemList.add(PlaceDto())
+        if (itemList.isEmpty()) itemList.add(PlaceDomainDto())
         else if (itemList.size==limit) addBtnView.visibility = View.GONE
         else addBtnView.visibility = View.VISIBLE
         return itemList.size
@@ -57,15 +56,16 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
     }
 
     interface ItemClickListener{
-        fun onClickBtnDelete(view: View, position: Int, dto:PlaceDto)
+        fun onClickBtnDelete(view: View, position: Int, dto:PlaceDomainDto)
     }
     private lateinit var itemClickListener: ItemClickListener
     fun setItemClickListener(itemClickListener: ItemClickListener){ this.itemClickListener = itemClickListener }
 
 
     inner class Holder(private val binding: ItemPhotographerPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bindInfo(position: Int, dto: PlaceDto) {
+        fun bindInfo(position: Int, dto: PlaceDomainDto) {
             binding.apply {
+
                 tvPhotographerPlaceFirst.run {
                     setOnItemClickListener { _, _, _, _ ->
                         val resource = Spinners.getSelectedPlaceArrayResource(this.getString())
@@ -91,6 +91,8 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
                         setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, resource))
                     }
                 }
+                if (position==0) btnDelete.visibility = View.INVISIBLE
+                else btnDelete.visibility = View.VISIBLE
                 btnDelete.setOnClickListener { itemClickListener.onClickBtnDelete(it, position, dto) }
             }
         }
