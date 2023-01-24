@@ -37,7 +37,7 @@ android {
         enabled = true
     }
     dataBinding{
-        enabled = false
+        enabled = true
     }
 }
 
@@ -114,5 +114,8 @@ dependencies {
 
     // toasty Library 추가
     implementation 'com.github.GrenderG:Toasty:1.3.0'
+
+    // multiple ImagePicker Library 추가
+    implementation 'io.github.ParkSangGwon:tedimagepicker:1.4.0'
 
 }

@@ -22,9 +22,10 @@ fun View.setOnSingleClickListener(onSingleClick: (View) -> Unit) {
     setOnClickListener(singleClickListener)
 }
 
-fun EditText.setOnCurrentTextWatchListener(){
-    this.addTextChangedListener(EventUtils.OnCurrentTextWatchListener(this))
-}
-
 fun EditText.getString() = this.text.toString().trim()
 fun String?.getString() = this.toString().trim()
+
+fun Int.makeComma():String{
+    val comma = DecimalFormat("#,###")
+    return "${comma.format(this)}원"
+}
