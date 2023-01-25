@@ -21,14 +21,11 @@ public class ArticlePostDto {
 
     private String category;
 
-    private LocalDateTime createdAt;
-
     public Article toEntity(){
         return Article.builder()
                 .latitude(latitude)
                 .longitude(longitude)
                 .detailAddress(detailAddress)
-                .createdAt(createdAt)
                 .category(category)
                 .build();
     }
