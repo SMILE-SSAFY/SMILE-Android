@@ -16,11 +16,27 @@ class LikeRepositoryImpl(private val likeRemoteDataSource: LikeRemoteDataSource)
     val photographerLikeCancelResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _photographerLikeCancelResponseLiveData
 
+    private val _postLikeResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
+    val postLikeResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = _postLikeResponseLiveData
+
+    private val _postLikeCancelResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
+    val postLikeCancelResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = _postLikeCancelResponseLiveData
+
     override suspend fun photographerLike(photographerId: Long) {
         likeRemoteDataSource.photographerLike(photographerId)
     }
 
     override suspend fun photographerLikeCancel(photographerId: Long) {
         likeRemoteDataSource.photographerLikeCancel(photographerId)
+    }
+
+    override suspend fun postLike(articleId: Long) {
+        likeRemoteDataSource.postLike(articleId)
+    }
+
+    override suspend fun postLikeCancel(articleId: Long) {
+        likeRemoteDataSource.postLikeCancel(articleId)
     }
 }

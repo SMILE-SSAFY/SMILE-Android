@@ -77,18 +77,21 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         binding.apply {
             likeViewModel.photographerLikeResponse.observe(viewLifecycleOwner) {
                 when(it) {
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         ctvLike.toggle()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        // TODO: error code 물어보기
+                        dismissLoadingDialog()
                         if (it.errorCode == 400) {
                             showToast(requireContext(), "이미 좋아요를 누른 작가입니다.")
                         } else {
                             showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                         }
                     }
-                    is NetworkUtils.NetworkResponse.Loading -> {}
                 }
             }
         }
@@ -98,7 +101,11 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         binding.apply {
             likeViewModel.photographerLikeCancelResponse.observe(viewLifecycleOwner) {
                 when(it) {
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         ctvLike.toggle()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
@@ -109,7 +116,6 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                             showToast(requireContext(), "작가 좋아요 취소 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                         }
                     }
-                    is NetworkUtils.NetworkResponse.Loading -> {}
                 }
             }
         }
