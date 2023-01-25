@@ -78,123 +78,130 @@ app:startDestination="@id/splashFragment">
                 app:argType="string" />
         </action>
     </fragment>
-<fragment
-    android:id="@+id/signUp2Fragment"
-    android:name="com.ssafy.smile.presentation.view.user.SignUp2Fragment"
-    android:label="fragment_sign_up2"
-    tools:layout="@layout/fragment_sign_up2" >
-    <action
-        android:id="@+id/action_signUp2Fragment_to_mainFragment"
-        app:destination="@id/mainFragment" />
-</fragment>
-<fragment
-    android:id="@+id/findAddressFragment"
-    android:name="com.ssafy.smile.presentation.view.home.FindAddressFragment"
-    android:label="fragment_find_address"
-    tools:layout="@layout/fragment_find_address" >
-    <action
-        android:id="@+id/action_findAddressFragment_to_setAddressFragment"
-        app:destination="@id/setAddressFragment" />
-</fragment>
-<fragment
-    android:id="@+id/searchResultFragment"
-    android:name="com.ssafy.smile.presentation.view.home.SearchResultFragment"
-    android:label="fragment_search_result"
-    tools:layout="@layout/fragment_search_result" >
-    <action
-        android:id="@+id/action_searchResultFragment_to_portfolioFragment"
-        app:destination="@id/portfolioFragment" />
-    <action
-        android:id="@+id/action_searchResultFragment_to_postDetailFragment"
-        app:destination="@id/postDetailFragment" />
-</fragment>
-<fragment
-    android:id="@+id/customerReservationListFragment"
-    android:name="com.ssafy.smile.presentation.view.mypage.CustomerReservationListFragment"
-    android:label="fragment_customer_reservation_list"
-    tools:layout="@layout/fragment_customer_reservation_list" />
-<fragment
-    android:id="@+id/myInterestFragment"
-    android:name="com.ssafy.smile.presentation.view.mypage.MyInterestFragment"
-    android:label="fragment_my_interest"
-    tools:layout="@layout/fragment_my_interest" />
-<fragment
-    android:id="@+id/photographerReservationList"
-    android:name="com.ssafy.smile.presentation.view.mypage.PhotographerReservationListFragment"
-    android:label="fragment_photographer_reservation_list"
-    tools:layout="@layout/fragment_photographer_reservation_list" />
-<fragment
-    android:id="@+id/writePortfolioFragment"
-    android:name="com.ssafy.smile.presentation.view.mypage.WritePortfolioFragment"
-    android:label="fragment_write_portfolio"
-    tools:layout="@layout/fragment_write_portfolio" >
-    <action
-        android:id="@+id/action_writePortfolioFragment_to_selectProfilePhotoFragment"
-        app:destination="@id/selectProfilePhotoFragment" />
-</fragment>
-<fragment
-    android:id="@+id/setAddressFragment"
-    android:name="com.ssafy.smile.presentation.view.home.SetAddressFragment"
-    android:label="fragment_set_address"
-    tools:layout="@layout/fragment_set_address" />
-<fragment
-    android:id="@+id/portfolioFragment"
-    android:name="com.ssafy.smile.presentation.view.portfolio.PortfolioFragment"
-    android:label="fragment_portfolio"
-    tools:layout="@layout/fragment_portfolio" >
-    <action
-        android:id="@+id/action_portfolioFragment_to_reviewFragment"
-        app:destination="@id/reviewFragment" />
-    <action
-        android:id="@+id/action_portfolioFragment_to_reservationFragment"
-        app:destination="@id/reservationFragment" />
-    <action
-        android:id="@+id/action_portfolioFragment_to_writePostFragment"
-        app:destination="@id/writePostFragment" />
-    <action
-        android:id="@+id/action_portfolioFragment_to_postDetailFragment"
-        app:destination="@id/postDetailFragment" />
-</fragment>
-<fragment
-    android:id="@+id/reviewFragment"
-    android:name="com.ssafy.smile.presentation.view.portfolio.ReviewFragment"
-    android:label="fragment_review"
-    tools:layout="@layout/fragment_review" />
-<fragment
-    android:id="@+id/reservationFragment"
-    android:name="com.ssafy.smile.presentation.view.portfolio.ReservationFragment"
-    android:label="fragment_reservation"
-    tools:layout="@layout/fragment_reservation" >
-    <action
-        android:id="@+id/action_reservationFragment_to_reservationResultFragment"
-        app:destination="@id/reservationResultFragment" />
-</fragment>
-<fragment
-    android:id="@+id/reservationResultFragment"
-    android:name="com.ssafy.smile.presentation.view.portfolio.ReservationResultFragment"
-    android:label="fragment_reservation_result"
-    tools:layout="@layout/fragment_reservation_result" />
-<fragment
-    android:id="@+id/writePostFragment"
-    android:name="com.ssafy.smile.presentation.view.portfolio.WritePostFragment"
-    android:label="fragment_write_post"
-    tools:layout="@layout/fragment_write_post" >
-    <action
-        android:id="@+id/action_writePostFragment_to_findAddressFragment"
-        app:destination="@id/findAddressFragment" />
-</fragment>
-<fragment
-    android:id="@+id/postDetailFragment"
-    android:name="com.ssafy.smile.presentation.view.portfolio.PostDetailFragment"
-    android:label="fragment_post_detail"
-    tools:layout="@layout/fragment_post_detail" >
-    <action
-        android:id="@+id/action_postDetailFragment_to_portfolioFragment"
-        app:destination="@id/portfolioFragment" />
-</fragment>
-<fragment
-    android:id="@+id/selectProfilePhotoFragment"
-    android:name="com.ssafy.smile.presentation.view.mypage.SelectProfilePhotoFragment"
-    android:label="fragment_select_profile_photo"
-    tools:layout="@layout/fragment_select_profile_photo" />
+    <fragment
+        android:id="@+id/signUp2Fragment"
+        android:name="com.ssafy.smile.presentation.view.user.SignUp2Fragment"
+        android:label="fragment_sign_up2"
+        tools:layout="@layout/fragment_sign_up2">
+        <action
+            android:id="@+id/action_signUp2Fragment_to_mainFragment"
+            app:destination="@id/mainFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/findAddressFragment"
+        android:name="com.ssafy.smile.presentation.view.home.FindAddressFragment"
+        android:label="fragment_find_address"
+        tools:layout="@layout/fragment_find_address" >
+        <action
+            android:id="@+id/action_findAddressFragment_to_setAddressFragment"
+            app:destination="@id/setAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="com.ssafy.smile.presentation.view.home.SearchResultFragment"
+        android:label="fragment_search_result"
+        tools:layout="@layout/fragment_search_result" >
+        <action
+            android:id="@+id/action_searchResultFragment_to_portfolioFragment"
+            app:destination="@id/portfolioFragment" />
+        <action
+            android:id="@+id/action_searchResultFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerReservationListFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.CustomerReservationListFragment"
+        android:label="fragment_customer_reservation_list"
+        tools:layout="@layout/fragment_customer_reservation_list" />
+    <fragment
+        android:id="@+id/myInterestFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.MyInterestFragment"
+        android:label="fragment_my_interest"
+        tools:layout="@layout/fragment_my_interest" />
+    <fragment
+        android:id="@+id/photographerReservationList"
+        android:name="com.ssafy.smile.presentation.view.mypage.PhotographerReservationListFragment"
+        android:label="fragment_photographer_reservation_list"
+        tools:layout="@layout/fragment_photographer_reservation_list" />
+    <fragment
+        android:id="@+id/writePortfolioFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.WritePortfolioFragment"
+        android:label="fragment_write_portfolio"
+        tools:layout="@layout/fragment_write_portfolio" >
+        <action
+            android:id="@+id/action_writePortfolioFragment_to_selectProfilePhotoFragment"
+            app:destination="@id/selectProfilePhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setAddressFragment"
+        android:name="com.ssafy.smile.presentation.view.home.SetAddressFragment"
+        android:label="fragment_set_address"
+        tools:layout="@layout/fragment_set_address" />
+    <fragment
+        android:id="@+id/portfolioFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.PortfolioFragment"
+        android:label="fragment_portfolio"
+        tools:layout="@layout/fragment_portfolio" >
+        <argument
+            android:name="articleId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_portfolioFragment_to_reviewFragment"
+            app:destination="@id/reviewFragment" />
+        <action
+            android:id="@+id/action_portfolioFragment_to_reservationFragment"
+            app:destination="@id/reservationFragment" />
+        <action
+            android:id="@+id/action_portfolioFragment_to_writePostFragment"
+            app:destination="@id/writePostFragment" />
+        <action
+            android:id="@+id/action_portfolioFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment">
+            <argument
+                android:name="articleId"
+                app:argType="long" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.ReviewFragment"
+        android:label="fragment_review"
+        tools:layout="@layout/fragment_review" />
+    <fragment
+        android:id="@+id/reservationFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.ReservationFragment"
+        android:label="fragment_reservation"
+        tools:layout="@layout/fragment_reservation" >
+        <action
+            android:id="@+id/action_reservationFragment_to_reservationResultFragment"
+            app:destination="@id/reservationResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservationResultFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.ReservationResultFragment"
+        android:label="fragment_reservation_result"
+        tools:layout="@layout/fragment_reservation_result" />
+    <fragment
+        android:id="@+id/writePostFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.WritePostFragment"
+        android:label="fragment_write_post"
+        tools:layout="@layout/fragment_write_post" >
+        <action
+            android:id="@+id/action_writePostFragment_to_findAddressFragment"
+            app:destination="@id/findAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.PostDetailFragment"
+        android:label="fragment_post_detail"
+        tools:layout="@layout/fragment_post_detail" >
+        <action
+            android:id="@+id/action_postDetailFragment_to_portfolioFragment"
+            app:destination="@id/portfolioFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectProfilePhotoFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.SelectProfilePhotoFragment"
+        android:label="fragment_select_profile_photo"
+        tools:layout="@layout/fragment_select_profile_photo" />
 </navigation>
