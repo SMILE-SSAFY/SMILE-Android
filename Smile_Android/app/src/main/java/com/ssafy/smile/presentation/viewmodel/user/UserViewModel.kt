@@ -29,6 +29,10 @@ class UserViewModel: BaseViewModel() {
     val loginResponse: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = userRepository.loginResponseLiveData
 
+    // 카카오 로그인 결과를 관리하는 LiveData
+    val kakaoLoginResponse: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
+        get() = userRepository.kakaoLoginResponseLiveData
+
     // 이메일 중복 여부 확인을 수행하는 함수
     fun checkEmail(email: String) {
         viewModelScope.launch {
@@ -54,6 +58,13 @@ class UserViewModel: BaseViewModel() {
     fun login(loginDomainDto: LoginDomainDto) {
         viewModelScope.launch {
             userRepository.login(loginDomainDto)
+        }
+    }
+
+    // 카카오 로그인을 수행하는 함수
+    fun kakaoLogin(token: String) {
+        viewModelScope.launch {
+            userRepository.kakaoLogin(token)
         }
     }
 }
