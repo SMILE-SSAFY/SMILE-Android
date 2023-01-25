@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.PortfolioRemoteDataSource
-import com.ssafy.smile.data.remote.model.Article
 import com.ssafy.smile.data.remote.model.ArticleResponseDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
 import com.ssafy.smile.domain.repository.PortfolioRepository
 import com.ssafy.smile.presentation.base.BaseRepository
-import retrofit2.Response
 
 class PortfolioRepositoryImpl(private val portfolioRemoteDataSource: PortfolioRemoteDataSource): BaseRepository(), PortfolioRepository {
     private val _getPortfolioResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<PortfolioResponseDto>>()

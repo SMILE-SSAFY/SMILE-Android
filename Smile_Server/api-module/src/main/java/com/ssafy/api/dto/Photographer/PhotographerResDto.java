@@ -1,4 +1,4 @@
-package com.ssafy.api.dto;
+package com.ssafy.api.dto.Photographer;
 
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PhotographerDto {
+public class PhotographerResDto {
     private Long photographerId;
     private String name;
     private String profileImg;
@@ -35,8 +35,8 @@ public class PhotographerDto {
      * @param photographer  PhotographerEntity
      * @return 변환된 DTO
      */
-    public PhotographerDto of(Photographer photographer) {
-        return PhotographerDto.builder()
+    public PhotographerResDto of(Photographer photographer) {
+        return PhotographerResDto.builder()
                 .photographerId(photographer.getId())
                 .name(photographer.getUser().getName())
                 .profileImg(photographer.getProfileImg())

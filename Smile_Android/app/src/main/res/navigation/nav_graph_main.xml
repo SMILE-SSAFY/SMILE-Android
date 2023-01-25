@@ -1,75 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_group"
-    app:startDestination="@id/splashFragment">
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/nav_group"
+app:startDestination="@id/splashFragment">
 
-    <fragment
-        android:id="@+id/splashFragment"
-        android:name="com.ssafy.smile.presentation.view.splash.SplashFragment"
-        android:label="SplashFragment"
-        tools:layout="@layout/fragment_splash" >
-        <action
-            android:id="@+id/action_splashFragment_to_logInFragment"
-            app:destination="@id/logInFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/logInFragment"
-        android:name="com.ssafy.smile.presentation.view.user.LogInFragment"
-        android:label="fragment_log_in"
-        tools:layout="@layout/fragment_log_in" >
-        <action
-            android:id="@+id/action_logInFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-        <action
-            android:id="@+id/action_logInFragment_to_signUp1Fragment"
-            app:destination="@id/signUp1Fragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.ssafy.smile.presentation.view.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_findAddressFragment"
-            app:destination="@id/findAddressFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_searchResultFragment"
-            app:destination="@id/searchResultFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_customerReservationListFragment"
-            app:destination="@id/customerReservationListFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_myInterestFragment"
-            app:destination="@id/myInterestFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_photographerReservationList"
-            app:destination="@id/photographerReservationList" />
-        <action
-            android:id="@+id/action_mainFragment_to_writePortfolioFragment"
-            app:destination="@id/writePortfolioFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_portfolioFragment"
-            app:destination="@id/portfolioFragment" />
-    </fragment>
+<fragment
+    android:id="@+id/splashFragment"
+    android:name="com.ssafy.smile.presentation.view.splash.SplashFragment"
+    android:label="SplashFragment"
+    tools:layout="@layout/fragment_splash" >
+    <action
+        android:id="@+id/action_splashFragment_to_logInFragment"
+        app:destination="@id/logInFragment" />
+    <action
+        android:id="@+id/action_splashFragment_to_mainFragment"
+        app:destination="@id/mainFragment" />
+</fragment>
+<fragment
+    android:id="@+id/logInFragment"
+    android:name="com.ssafy.smile.presentation.view.user.LogInFragment"
+    android:label="fragment_log_in"
+    tools:layout="@layout/fragment_log_in" >
+    <action
+        android:id="@+id/action_logInFragment_to_mainFragment"
+        app:destination="@id/mainFragment" />
+    <action
+        android:id="@+id/action_logInFragment_to_signUp1Fragment"
+        app:destination="@id/signUp1Fragment" />
+</fragment>
+<fragment
+    android:id="@+id/mainFragment"
+    android:name="com.ssafy.smile.presentation.view.MainFragment"
+    android:label="fragment_main"
+    tools:layout="@layout/fragment_main" >
+    <action
+        android:id="@+id/action_mainFragment_to_findAddressFragment"
+        app:destination="@id/findAddressFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_searchResultFragment"
+        app:destination="@id/searchResultFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_customerReservationListFragment"
+        app:destination="@id/customerReservationListFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_myInterestFragment"
+        app:destination="@id/myInterestFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_photographerReservationList"
+        app:destination="@id/photographerReservationList" />
+    <action
+        android:id="@+id/action_mainFragment_to_writePortfolioFragment"
+        app:destination="@id/writePortfolioFragment" />
+    <action
+        android:id="@+id/action_mainFragment_to_portfolioFragment"
+        app:destination="@id/portfolioFragment" />
+</fragment>
     <fragment
         android:id="@+id/signUp1Fragment"
         android:name="com.ssafy.smile.presentation.view.user.SignUp1Fragment"
         android:label="fragment_sign_up1"
         tools:layout="@layout/fragment_sign_up1" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
         <action
             android:id="@+id/action_signUp1Fragment_to_signUp2Fragment"
-            app:destination="@id/signUp2Fragment" />
+            app:destination="@id/signUp2Fragment">
+            <argument
+                android:name="id"
+                app:argType="string" />
+            <argument
+                android:name="password"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/signUp2Fragment"
         android:name="com.ssafy.smile.presentation.view.user.SignUp2Fragment"
         android:label="fragment_sign_up2"
-        tools:layout="@layout/fragment_sign_up2" />
+        tools:layout="@layout/fragment_sign_up2">
+        <action
+            android:id="@+id/action_signUp2Fragment_to_mainFragment"
+            app:destination="@id/mainFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/findAddressFragment"
         android:name="com.ssafy.smile.presentation.view.home.FindAddressFragment"

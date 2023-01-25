@@ -7,6 +7,8 @@ build/
 
 ### File ###
 /**/src/main/resources/application-aws.yml
+/**/src/main/resources/application-coolsms.yml
+/**/src/main/resources/application-kakao.yml
 
 ### STS ###
 .apt_generated
