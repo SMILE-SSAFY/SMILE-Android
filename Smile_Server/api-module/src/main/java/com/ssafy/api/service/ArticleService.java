@@ -2,15 +2,16 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.dto.article.*;
 import com.ssafy.core.entity.Article;
+import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.ArticleHeartRepository;
 import com.ssafy.core.repository.ArticleRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,34 +30,35 @@ public class ArticleService {
     /***
      * @author: 신민철
      */
-    @Autowired
-    private ArticleRepository articleRepository;
-    @Autowired
-    private S3UploaderService s3UploaderService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PhotographerRepository photographerRepository;
+    private final ArticleRepository articleRepository;
+    private final S3UploaderService s3UploaderService;
+    private final UserRepository userRepository;
+    private final PhotographerRepository photographerRepository;
+    private final ArticleHeartRepository articleHeartRepository;
+
+    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository) {
+        this.articleRepository = articleRepository;
+        this.s3UploaderService = s3UploaderService;
+        this.userRepository = userRepository;
+        this.photographerRepository = photographerRepository;
+        this.articleHeartRepository = articleHeartRepository;
+    }
 
     /***
      *
-     * @param fileName
-     * @param articlePostDto
+     * @param dto
      * user 정보와 articlePostDto를 받아와 articleRepository에 save
      * @throws PHOTOGRAPHER_NOT_FOUND
      */
     public void postArticle(ArticlePostTestDto dto) throws IOException{
         List<MultipartFile> images = dto.getImageList();
-        log.info(images.get(0).toString());
         String fileName = s3UploaderService.upload(images);
         Article article = dto.toEntity();
         article.setPhotoUrls(fileName);
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        article.setCreatedAt(LocalDateTime.now());
+        User user = getLogInUser();
         article.whoPost(user);
         articleRepository.save(article);
-        log.info(article.toString());
     }
 
     /***
@@ -156,10 +159,9 @@ public class ArticleService {
     public ArticleDetailDto updateArticle(Long articleId, List<MultipartFile> multipartFiles, ArticlePostDto articlePostDto) throws IOException {
 
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
-        if (article.getUser().getId() == user.getId()){
+        User logInUser = getLogInUser();
+        Boolean isME = isME(logInUser, article.getUser());
+        if (isME){
             // 이미지 지우기
             String photoUriList = article.getPhotoUrls();
             photoUriList = photoUriList.replace("[","").replace("]","");
@@ -178,9 +180,55 @@ public class ArticleService {
             articleRepository.save(article);
 
         }
-        return new ArticleDetailDto(article);
+        return ArticleDetailDto.builder()
+                .id(articleId)
+                .isME(isME)
+                .detailAddress(article.getDetailAddress())
+                .category(article.getCategory())
+                .createdAt(article.getCreatedAt())
+                .photoUrls(article.getPhotoUrls())
+                .build();
     }
 
 
+    public ArticleHeartDto heartArticle(Long articleId){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Boolean isHeart = !isNotHearted(user, article);
+        if(!isHeart){
+            articleHeartRepository.save(new ArticleHeart(user, article));
+        } else {
+           Long id = articleHeartRepository.findByUserAndArticle(user, article).orElseThrow().getId();
+           articleHeartRepository.deleteById(id);
+        }
+
+        return ArticleHeartDto.builder()
+                .articleId(articleId)
+                .isHeart(!isHeart)
+                .build();
+    }
+
+    private boolean isNotHearted(User user, Article article){
+        return articleHeartRepository.findByUserAndArticle(user, article).isEmpty();
+    }
+
+    private boolean isME(User user, User logInUser){
+        if (logInUser.getId() == user.getId()){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private User getLogInUser(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+        User logInUser = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        return logInUser;
+    }
 
 }

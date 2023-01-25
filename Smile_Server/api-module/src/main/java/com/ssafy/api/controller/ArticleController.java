@@ -1,9 +1,6 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.dto.article.ArticleDetailDto;
-import com.ssafy.api.dto.article.ArticleBoardDto;
-import com.ssafy.api.dto.article.ArticlePostDto;
-import com.ssafy.api.dto.article.ArticlePostTestDto;
+import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,6 +94,14 @@ public class ArticleController {
             @RequestPart("image") List<MultipartFile> multipartFile) throws IOException{
 
         return ResponseEntity.ok(articleService.updateArticle(articleId, multipartFile, articlePostDto));
+    }
+
+    @PostMapping("/heart/{articleId}")
+    public ResponseEntity<?> heartArticle(
+            @PathVariable("articleId") Long articleId
+    ){
+        ArticleHeartDto articleHeartDto = articleService.heartArticle(articleId);
+        return new ResponseEntity<>(articleHeartDto, HttpStatus.OK);
     }
 
 }
