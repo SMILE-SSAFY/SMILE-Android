@@ -7,21 +7,23 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.ssafy.smile.common.view.LoadingDialog
+import com.ssafy.smile.R
 
 
 abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindingInflater: (layoutInflater:LayoutInflater) -> B)
     : BottomSheetDialogFragment(), BaseViewImpl {
-
-    override lateinit var mLoadingDialog: LoadingDialog
-
     private var _binding: B? = null
     val binding get() = _binding?: throw IllegalStateException("binding fail")
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = bindingInflater.invoke(inflater)
@@ -32,9 +34,7 @@ abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindin
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         dialog.setOnShowListener {
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet!!)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            setupRatio(bottomSheet)
+            setupRatio(bottomSheet!!)
         }
         return dialog
     }

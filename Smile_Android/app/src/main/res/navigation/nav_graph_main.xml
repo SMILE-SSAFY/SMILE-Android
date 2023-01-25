@@ -144,7 +144,7 @@ app:startDestination="@id/splashFragment">
         android:label="fragment_portfolio"
         tools:layout="@layout/fragment_portfolio" >
         <argument
-            android:name="articleId"
+            android:name="postId"
             app:argType="long" />
         <action
             android:id="@+id/action_portfolioFragment_to_reviewFragment"
@@ -159,7 +159,7 @@ app:startDestination="@id/splashFragment">
             android:id="@+id/action_portfolioFragment_to_postDetailFragment"
             app:destination="@id/postDetailFragment">
             <argument
-                android:name="articleId"
+                android:name="postId"
                 app:argType="long" />
         </action>
     </fragment>
@@ -200,10 +200,26 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.PostDetailFragment"
         android:label="fragment_post_detail"
         tools:layout="@layout/fragment_post_detail" >
+        <argument
+            android:name="postId"
+            app:argType="long" />
         <action
             android:id="@+id/action_postDetailFragment_to_portfolioFragment"
             app:destination="@id/portfolioFragment" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_postEditBottomSheetDialogFragment"
+            app:destination="@id/postEditBottomSheetDialogFragment">
+            <argument
+                android:name="postId"
+                app:argType="long" />
+        </action>
     </fragment>
+    <dialog
+        android:id="@+id/postEditBottomSheetDialogFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.PostEditBottomSheetDialogFragment"
+        android:label="fragment_post_edit_bottom_sheet_dialog"
+        tools:layout="@layout/fragment_post_edit_bottom_sheet_dialog" >
+    </dialog>
     <navigation
         android:id="@+id/registerPortFolioGraph"
         app:startDestination="@id/writePortfolioFragment">

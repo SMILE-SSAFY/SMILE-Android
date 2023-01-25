@@ -11,4 +11,12 @@ class LikeRemoteDataSourceImpl(private val likeApiService: LikeApiService): Like
     override suspend fun photographerLikeCancel(photographerId: Long): Response<Any> {
         return likeApiService.photographerLikeCancel(photographerId)
     }
+
+    override suspend fun postLike(articleId: Long): Response<Any> {
+        return likeApiService.postLike(articleId)
+    }
+
+    override suspend fun postLikeCancel(articleId: Long): Response<Any> {
+        return likeApiService.postLikeCancel(articleId)
+    }
 }

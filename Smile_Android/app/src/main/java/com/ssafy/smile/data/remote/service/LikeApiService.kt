@@ -11,4 +11,10 @@ interface LikeApiService {
 
     @DELETE("/api/photographer/heart/{photographerId}")
     suspend fun photographerLikeCancel(@Path("photographerId") photographerId: Long): Response<Any>
+
+    @POST("/api/article/heart/{articleId}")
+    suspend fun postLike(@Path("articleId") articleId: Long): Response<Any>
+
+    @DELETE("/api/article/heart/{articleId}")
+    suspend fun postLikeCancel(@Path("articleId") articleId: Long): Response<Any>
 }

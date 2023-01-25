@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.PortfolioRemoteDataSource
-import com.ssafy.smile.data.remote.model.ArticleResponseDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
+import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.domain.repository.PortfolioRepository
 import com.ssafy.smile.presentation.base.BaseRepository
 import okhttp3.MultipartBody
@@ -17,10 +17,10 @@ class PortfolioRepositoryImpl(private val portfolioRemoteDataSource: PortfolioRe
     val getPortfolioResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PortfolioResponseDto>>
         get() = _getPortfolioResponseLiveData
 
-    private val _geArticlesResponseLiveData =
-        MutableLiveData<NetworkUtils.NetworkResponse<ArticleResponseDto>>()
-    val geArticlesResponseLiveData: LiveData<NetworkUtils.NetworkResponse<ArticleResponseDto>>
-        get() = _geArticlesResponseLiveData
+    private val _getPostsResponseLiveData =
+        MutableLiveData<NetworkUtils.NetworkResponse<PostListResponseDto>>()
+    val getPostsResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PostListResponseDto>>
+        get() = _getPostsResponseLiveData
 
     private val _postUploadResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
     val postUploadResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
@@ -30,8 +30,8 @@ class PortfolioRepositoryImpl(private val portfolioRemoteDataSource: PortfolioRe
         portfolioRemoteDataSource.getPortfolio(photographerId)
     }
 
-    override suspend fun getArticles(photographerId: Long) {
-        portfolioRemoteDataSource.getArticles(photographerId)
+    override suspend fun getPosts(photographerId: Long) {
+        portfolioRemoteDataSource.getPosts(photographerId)
     }
 
     override suspend fun uploadPost(images: MutableMap<String, RequestBody>){
