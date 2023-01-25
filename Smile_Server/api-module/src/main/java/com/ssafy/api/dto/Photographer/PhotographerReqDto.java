@@ -1,8 +1,5 @@
 package com.ssafy.api.dto.Photographer;
 
-import com.ssafy.core.entity.Categories;
-import com.ssafy.core.entity.Photographer;
-import com.ssafy.core.entity.Places;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +21,7 @@ public class PhotographerReqDto {
     private String profileImg;
     private String introduction;
     private String account;
-    private List<Places> places;
-    private List<Categories> categories;
+    private List<PlacesReqDto> places;
+    private List<CategoriesReqDto> categories;
     private boolean isDeleted;
 }
