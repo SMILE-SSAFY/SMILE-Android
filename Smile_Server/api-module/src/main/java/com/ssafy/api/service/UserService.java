@@ -248,6 +248,11 @@ public class UserService {
     }
 
 
+    /**
+     * token에서 유저 정보 조회 후 회원 탈퇴
+     *
+     * @param request
+     */
     public void removeUser(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
