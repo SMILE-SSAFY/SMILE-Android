@@ -3,7 +3,6 @@ package com.ssafy.smile.presentation.view.user
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
@@ -14,7 +13,7 @@ import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentSignUp1Binding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
 import java.util.regex.Pattern
 
 
