@@ -1,18 +1,13 @@
 package com.ssafy.api.dto.Kakao;
 
-import lombok.Data;
+import lombok.Getter;
 
 /**
- * 카카오에서 제공하는 토큰 Dto
+ * 모바일에서 넘겨주는 kakao access token
  *
  * author @서재건
  */
-@Data
+@Getter
 public class KakaoTokenDto {
-    private String access_token;
-    private String token_type;
-    private String refresh_token;
-    private int expires_in;
-    private String scope;
-    private int refresh_token_expires_in;
+    private String token;
 }

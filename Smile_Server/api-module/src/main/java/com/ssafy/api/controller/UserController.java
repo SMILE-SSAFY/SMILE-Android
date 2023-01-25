@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
+import com.ssafy.api.dto.Kakao.KakaoTokenDto;
 import com.ssafy.api.dto.User.LoginUserDto;
 import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -132,5 +132,17 @@ public class UserController {
         User user = (User)authentication.getPrincipal();
         UserDto userDto = new UserDto();
         return ResponseEntity.ok().body(userDto);
+    }
+
+    /**
+     * access 토큰을 받아서 회원가입 및 로그인 진행
+     *
+     * @param kakaoTokenDto
+     * @return token    // login을 통한 jwt token 리턴
+     */
+    @PostMapping("/sns")
+    public ResponseEntity<TokenRoleDto> kakaoLogin(@RequestBody KakaoTokenDto kakaoTokenDto) {
+        TokenRoleDto tokenRoleDto = userService.kakaoLogin(kakaoTokenDto.getToken());
+        return ResponseEntity.ok().body(tokenRoleDto);
     }
 }

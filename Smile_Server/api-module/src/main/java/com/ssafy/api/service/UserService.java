@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
 import com.ssafy.api.dto.Kakao.KakaoProfileDto;
-import com.ssafy.api.dto.Kakao.KakaoTokenDto;
 import com.ssafy.api.dto.User.LoginUserDto;
 import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
@@ -27,7 +26,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -179,18 +177,13 @@ public class UserService {
     /**
      * 카카오 로그인을 통해 회원가입 하고 로그인하여 jwt 토큰을 발행한다.
      *
-     * @param code  //인가 코드
+     * @param token  // 모바일에서 넘겨준 Bearer 포함 accessToken
      * @return
      * 카카오로부터 받은 정보로 회원 가입 후 로그인 진행하여 jwt 토큰 리턴
      */
-    public TokenRoleDto kakaoLogin(String code) {
-        ResponseEntity<String> TokenResponse = kakaoTokenResponse(code);
-        log.info("kakao TokenResponse : {}", TokenResponse.getBody().toString());
+    public TokenRoleDto kakaoLogin(String accessToken) {
 
-        KakaoTokenDto kakaoTokenDto = oAuthToken(TokenResponse);
-        log.info("카카오 엑세트 토큰 : {}", kakaoTokenDto.getAccess_token());
-
-        ResponseEntity<String> profileResponse = kakaoProfileResponse(kakaoTokenDto);
+        ResponseEntity<String> profileResponse = kakaoProfileResponse(accessToken);
         log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
 
         KakaoProfileDto kakaoProfileDto = kakaoProfile(profileResponse);
@@ -210,83 +203,20 @@ public class UserService {
     }
 
     /**
-     * 인가 코드를 통하여 카카오에 토큰 정보 응답 받기
+     * 모바일에서 넘겨준  access 토큰을 통해 회원 정보가 담긴 response를 받는다.
      *
-     * @param code  //인가 코드
-     * @return
-     * 카카오에서 응답해준 토큰 정보가 담긴 response
-     */
-    public ResponseEntity<String> kakaoTokenResponse(String code) {
-        log.info("code : {}", code);
-        // POST 방식으로 key=value 데이터를 요청(카카오쪽으로)
-        RestTemplate rt = new RestTemplate();
-        rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-
-        log.info("RestTemplate 통과");
-        //HttpHeader 오브젝트 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        log.info("HttpHeaders 통과");
-        //HttpBody 오브젝트 생성
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
-        params.add("code", code);
-        log.info("MultiValueMap 생성");
-
-        //HttpHeader와 HttpBody를 하나의 오브젝트에 담기
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
-        log.info("kakao 쪽으로 요청");
-        //Http 요청하기 - POST방식으로 - 그리고 response 변수의 응답 받음
-        ResponseEntity<String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
-                kakaoTokenRequest,
-                String.class
-        );
-        return response;
-    }
-
-    /**
-     * response를 객체화 하여 OAuthTokenDto에 담는다.
-     *
-     * @param response  // 토큰 정보가 담긴 response
-     * @return
-     * 토큰 dto (oAuthTokenDto) 반환
-     */
-    public KakaoTokenDto oAuthToken(ResponseEntity<String> response) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoTokenDto kakaoTokenDto = null;
-        try {
-            kakaoTokenDto = objectMapper.readValue(response.getBody(), KakaoTokenDto.class);
-        } catch (JsonMappingException e) {
-            log.info("KakaoTokenDto 매핑 Error");
-            throw new RuntimeException(e);
-        } catch (JsonProcessingException e) {
-
-            throw new RuntimeException(e);
-        }
-        return kakaoTokenDto;
-    }
-
-    /**
-     * 카카오에서 발급한 토큰을 통해 회원 정보가 담긴 response를 받는다.
-     *
-     * @param kakaoTokenDto     // 카카오에서 발급한 토큰
+     * @param accessToken
      * @return
      * 요청한 회원 정보가 담긴 response 반환
      */
-    public ResponseEntity<String> kakaoProfileResponse(KakaoTokenDto kakaoTokenDto) {
+    public ResponseEntity<String> kakaoProfileResponse(String accessToken) {
         // POST방식으로 key=value 데이터를 요청(카카오쪽으로)
         RestTemplate rt = new RestTemplate();
         rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         //HttpHeader 오브젝트 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + kakaoTokenDto.getAccess_token());
+        headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
