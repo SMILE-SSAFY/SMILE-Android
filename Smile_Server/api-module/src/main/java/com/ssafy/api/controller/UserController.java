@@ -67,22 +67,6 @@ public class UserController {
     }
 
     /**
-     * 토큰으로부터 userId를 추출
-     *
-     * @param request
-     * @return userId 값 리턴
-     */
-    @GetMapping("/userId")
-    public Long getUserId(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        log.info(token);
-        log.info(jwtTokenProvider.getUserIdx(token));
-        String userId = jwtTokenProvider.getUserIdx(token);
-
-        return Long.valueOf(userId);
-    }
-
-    /**
      * 회원가입 후 로그인 진행
      *
      * @param registerFormDto // email, password, name, nickname, phoneNumber
@@ -125,7 +109,7 @@ public class UserController {
      * @return randomNumber // 4자리 난수 리턴
      */
     @GetMapping("/check/phone/{phoneNumber}")
-    public String sendMessage(@PathVariable String phoneNumber) {
+    public ResponseEntity<String> sendMessage(@PathVariable String phoneNumber) {
         MessageFormDto messageFormDto = userService.createMessageForm(fromNumber, phoneNumber);
         String randomNumber = messageFormDto.getRandomNumber();
 
@@ -133,7 +117,7 @@ public class UserController {
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(messageFormDto.getMessage()));
         log.info("메세지 전송 완료");
 
-        return randomNumber;
+        return ResponseEntity.ok().body(randomNumber);
     }
 
     /**
@@ -143,10 +127,10 @@ public class UserController {
      * id, name, role
      */
     @GetMapping
-    public UserDto getUser() {
+    public ResponseEntity<UserDto> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         UserDto userDto = new UserDto();
-        return userDto.of(user);
+        return ResponseEntity.ok().body(userDto);
     }
 }
