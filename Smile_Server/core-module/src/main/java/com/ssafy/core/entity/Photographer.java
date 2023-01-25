@@ -52,10 +52,6 @@ public class Photographer implements Serializable {
     @Column(length = 14, nullable = false)
     private String account;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private int heart;
-
     @Column(columnDefinition = "longtext", nullable = false)
     @Type(type="json")
     private List<Places> places;
@@ -89,15 +85,6 @@ public class Photographer implements Serializable {
      */
     public void updateAccount(String account) {
         this.account = account;
-    }
-
-    /**
-     * 프로필 좋아요 변경
-     *
-     * @param heart
-     */
-    public void updateHeart(int heart) {
-        this.heart = heart;
     }
 
     /**

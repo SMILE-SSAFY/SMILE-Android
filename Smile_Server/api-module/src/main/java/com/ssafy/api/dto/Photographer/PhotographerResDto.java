@@ -25,7 +25,6 @@ public class PhotographerResDto {
     private String profileImg;
     private String introduction;
     private String account;
-    private int heart;
     private List<Places> places;
     private List<Categories> categories;
 
@@ -42,7 +41,6 @@ public class PhotographerResDto {
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
-                .heart(photographer.getHeart())
                 .places(photographer.getPlaces())
                 .categories(photographer.getCategories())
                 .build();
