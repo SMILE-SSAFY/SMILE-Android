@@ -1,13 +1,15 @@
 package com.ssafy.api.dto.Photographer;
 
-import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
-import com.ssafy.core.entity.Places;
+import com.ssafy.core.entity.PhotographerNCategories;
+import com.ssafy.core.entity.PhotographerNPlaces;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +27,8 @@ public class PhotographerResDto {
     private String profileImg;
     private String introduction;
     private String account;
-    private List<Places> places;
-    private List<Categories> categories;
+    private List<PlacesResDto> places;
+    private List<CategoriesResDto> categories;
 
     /**
      * Photographer Entity에서 Photographer DTO로 변경
@@ -35,14 +37,31 @@ public class PhotographerResDto {
      * @return 변환된 DTO
      */
     public PhotographerResDto of(Photographer photographer) {
+        // 활동지역
+        List<PlacesResDto> places = new ArrayList<>();
+        for(PhotographerNPlaces place : photographer.getPlaces()){
+            places.add(PlacesResDto.builder()
+                    .first(place.getPlaces().getFirst())
+                    .second(place.getPlaces().getSecond()).build());
+        }
+        // 카테고리
+        List<CategoriesResDto> categories = new ArrayList<>();
+        for(PhotographerNCategories category : photographer.getCategories()){
+            categories.add(CategoriesResDto.builder()
+                    .name(category.getCategory().getName())
+                    .price(category.getPrice())
+                    .description(category.getDescription())
+                    .build());
+        }
+
         return PhotographerResDto.builder()
                 .photographerId(photographer.getId())
                 .name(photographer.getUser().getName())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
-                .places(photographer.getPlaces())
-                .categories(photographer.getCategories())
+                .places(places)
+                .categories(categories)
                 .build();
     }
 }
