@@ -1,11 +1,7 @@
 package com.ssafy.smile.data
 
 
-import android.provider.ContactsContract.CommonDataKinds.Photo
-import com.ssafy.smile.data.remote.service.LikeApiService
-import com.ssafy.smile.data.remote.service.PhotographerApiService
-import com.ssafy.smile.data.remote.service.PortfolioApiService
-import com.ssafy.smile.data.remote.service.UserApiService
+import com.ssafy.smile.data.remote.service.*
 import javax.inject.Singleton
 
 @Singleton
@@ -21,10 +17,13 @@ class ServiceInstances(retrofitInstances : RetrofitInstances) {
     @Singleton
     private val photographerApiService : PhotographerApiService = retrofitInstances.getRetrofit().create(PhotographerApiService::class.java)
 
+    @Singleton
+    private val postApiService: PostApiService = retrofitInstances.getRetrofit().create(PostApiService::class.java)
+
     fun getUserApiService() : UserApiService = userApiService
     fun getPortfolioApiService(): PortfolioApiService = portfolioApiService
     fun getLikeApiService(): LikeApiService = likeApiService
     fun getPhotographerApiService() : PhotographerApiService = photographerApiService
-
+    fun getPostApiService(): PostApiService = postApiService
 
 }

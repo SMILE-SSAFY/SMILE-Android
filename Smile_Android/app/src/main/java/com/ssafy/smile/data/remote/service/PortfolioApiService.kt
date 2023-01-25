@@ -3,19 +3,16 @@ package com.ssafy.smile.data.remote.service
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
-
-import com.ssafy.smile.data.remote.model.ArticleResponseDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
+import com.ssafy.smile.data.remote.model.PostListResponseDto
 import retrofit2.Response
 
 interface PortfolioApiService {
     @GET("/api/article/photographer/{photographerId}")
-    suspend fun getPortfolio(
-        @Path("photographerId") photographerId: Long
-    ): Response<PortfolioResponseDto>
+    suspend fun getPortfolio(@Path("photographerId") photographerId: Long): Response<PortfolioResponseDto>
 
     @GET("/api/article/list/{photographerId}")
-    suspend fun getArticles(@Path("photographerId") photographerId: Long): Response<ArticleResponseDto>
+    suspend fun getPosts(@Path("photographerId") photographerId: Long): Response<PostListResponseDto>
 
     @Multipart
     @POST("/api/article")
