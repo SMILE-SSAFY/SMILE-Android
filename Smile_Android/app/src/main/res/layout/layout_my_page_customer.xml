@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_customer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:orientation="vertical">
+    <TextView
+        android:text="나의 내역"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="20dp"
+        android:fontFamily="@font/ibm_plex_sans_medium"/>
+    <TextView
+        android:id="@+id/tv_customer_reservation"
+        style="@style/TvT2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="20dp"
+        android:text="예약/결제 내역"
+        android:textSize="14sp"
+        android:textColor="@color/dark400"
+        android:fontFamily="@font/ibm_plex_sans_medium"/>
+    <TextView
+        android:id="@+id/tv_customer_interest"
+        style="@style/TvT2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:paddingTop="8dp"
+        android:paddingBottom="15dp"
+        android:paddingHorizontal="20dp"
+        android:text="나의 관심"
+        android:textSize="14sp"
+        android:textColor="@color/dark400"
+        android:fontFamily="@font/ibm_plex_sans_medium"/>
+</LinearLayout>

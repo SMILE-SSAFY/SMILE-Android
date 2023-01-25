@@ -11,10 +11,14 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.ssafy.smile.common.view.LoadingDialog
 
 
 abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindingInflater: (layoutInflater:LayoutInflater) -> B)
     : BottomSheetDialogFragment(), BaseViewImpl {
+
+    override lateinit var mLoadingDialog: LoadingDialog
+
     private var _binding: B? = null
     val binding get() = _binding?: throw IllegalStateException("binding fail")
 
@@ -55,7 +59,7 @@ abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindin
         view.layoutParams = layoutParams
     }
 
-    private fun getBottomSheetDialogDefaultHeight(): Int { return getWindowHeight() * 90 / 100 }
+    private fun getBottomSheetDialogDefaultHeight(): Int { return getWindowHeight() * 35 / 100 }
 
     private fun getWindowHeight(): Int {
         val displayMetrics = DisplayMetrics()

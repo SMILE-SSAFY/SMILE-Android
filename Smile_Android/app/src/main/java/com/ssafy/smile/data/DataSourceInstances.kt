@@ -1,6 +1,7 @@
 package com.ssafy.smile.data
 
 import com.ssafy.smile.data.remote.datasource.ExampleRemoteDataSourceImpl
+import com.ssafy.smile.data.remote.datasource.PhotographerRemoteDataSourceImpl
 import com.ssafy.smile.data.remote.datasource.UserRemoteDataSourceImpl
 import com.ssafy.smile.data.remote.service.ExampleApiService
 import javax.inject.Singleton
@@ -14,7 +15,11 @@ class DataSourceInstances(serviceInstances: ServiceInstances) {
     @Singleton
     private val userRemoteDataSourceImpl : UserRemoteDataSourceImpl = UserRemoteDataSourceImpl(serviceInstances.getUserApiService())
 
+    @Singleton
+    private val photographerRemoteDataSourceImpl : PhotographerRemoteDataSourceImpl = PhotographerRemoteDataSourceImpl(serviceInstances.getPhotographerApiService())
+
     fun getExampleRemoteDataSource() : ExampleRemoteDataSourceImpl = exampleRemoteDataSourceImpl
     fun getUserRemoteDataSource(): UserRemoteDataSourceImpl = userRemoteDataSourceImpl
+    fun getPhotographerRemoteDataSource() : PhotographerRemoteDataSourceImpl = photographerRemoteDataSourceImpl
 
 }
