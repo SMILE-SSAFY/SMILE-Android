@@ -1,7 +1,7 @@
 package com.ssafy.smile.data.remote.datasource
 
-import com.ssafy.smile.data.remote.model.ArticleResponseDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
+import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.data.remote.service.PortfolioApiService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -12,8 +12,8 @@ class PortfolioRemoteDataSourceImpl(private val portfolioApiService: PortfolioAp
         return portfolioApiService.getPortfolio(photographerId)
     }
 
-    override suspend fun getArticles(photographerId: Long): Response<ArticleResponseDto> {
-        return portfolioApiService.getArticles(photographerId)
+    override suspend fun getPosts(photographerId: Long): Response<PostListResponseDto> {
+        return portfolioApiService.getPosts(photographerId)
     }
     override suspend fun uploadPost(images: MutableMap<String, RequestBody>) : Response<Any>{
         return portfolioApiService.uploadPost(images)
