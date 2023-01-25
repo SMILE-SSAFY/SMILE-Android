@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * 유저 관련 Controller
@@ -64,22 +64,6 @@ public class UserController {
         this.jwtTokenProvider = jwtTokenProvider;
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
-    }
-
-    /**
-     * 토큰으로부터 userId를 추출
-     *
-     * @param request
-     * @return userId 값 리턴
-     */
-    @GetMapping("/userId")
-    public Long getUserId(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        log.info(token);
-        log.info(jwtTokenProvider.getUserIdx(token));
-        String userId = jwtTokenProvider.getUserIdx(token);
-
-        return Long.valueOf(userId);
     }
 
     /**
@@ -125,7 +109,7 @@ public class UserController {
      * @return randomNumber // 4자리 난수 리턴
      */
     @GetMapping("/check/phone/{phoneNumber}")
-    public String sendMessage(@PathVariable String phoneNumber) {
+    public ResponseEntity<String> sendMessage(@PathVariable String phoneNumber) {
         MessageFormDto messageFormDto = userService.createMessageForm(fromNumber, phoneNumber);
         String randomNumber = messageFormDto.getRandomNumber();
 
@@ -133,7 +117,7 @@ public class UserController {
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(messageFormDto.getMessage()));
         log.info("메세지 전송 완료");
 
-        return randomNumber;
+        return ResponseEntity.ok().body(randomNumber);
     }
 
     /**
@@ -143,10 +127,22 @@ public class UserController {
      * id, name, role
      */
     @GetMapping
-    public UserDto getUser() {
+    public ResponseEntity<UserDto> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         UserDto userDto = new UserDto();
-        return userDto.of(user);
+        return ResponseEntity.ok().body(userDto);
+    }
+
+    /**
+     * access 토큰을 받아서 회원가입 및 로그인 진행
+     *
+     * @param param
+     * @return token    // login을 통한 jwt token 리턴
+     */
+    @PostMapping("/sns")
+    public ResponseEntity<TokenRoleDto> kakaoLogin(@RequestBody Map<String, String> param) {
+        TokenRoleDto tokenRoleDto = userService.kakaoLogin(param.get("token"));
+        return ResponseEntity.ok().body(tokenRoleDto);
     }
 }
