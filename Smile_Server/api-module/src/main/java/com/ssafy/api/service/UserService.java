@@ -262,4 +262,16 @@ public class UserService {
         log.info("DB에 저장된 userId : {}", user.getId());
         userRepository.deleteById(userId);
     }
+
+    /**
+     * jwt 토큰을 통한 user 정보 조회
+     *
+     * @param request
+     * @return user
+     */
+    public User getUser(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
 }

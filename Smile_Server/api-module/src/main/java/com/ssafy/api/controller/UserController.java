@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -129,11 +127,10 @@ public class UserController {
      * id, name, role
      */
     @GetMapping
-    public ResponseEntity<UserDto> getUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+    public ResponseEntity<UserDto> getUser(HttpServletRequest request) {
+        User user = userService.getUser(request);
         UserDto userDto = new UserDto();
-        return ResponseEntity.ok().body(userDto);
+        return ResponseEntity.ok().body(userDto.of(user));
     }
 
     /**
