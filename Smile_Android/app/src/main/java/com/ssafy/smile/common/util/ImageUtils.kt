@@ -7,14 +7,17 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 object ImageUtils {
 
+
     fun getImageFileFromUri(context: Context, uri:Uri, quality: Int=50) : File {
-        val path = context.contentResolver.getPathFromURI(uri)      // TODO : 사용?
+        val path = context.contentResolver.getPathFromURI(uri)
         val resizedBitmap = resizeImage(context, uri)
         return resizedBitmap?.run {
             convertBitmapToFile(path, context, quality)
@@ -36,7 +39,7 @@ object ImageUtils {
         return path
     }
 
-    private fun resizeImage(context: Context, imageUri:Uri, resize:Pair<Int, Int> = Pair(1024, 1024)): Bitmap? {
+    fun resizeImage(context: Context, imageUri:Uri, resize:Pair<Int, Int> = Pair(1024, 1024)): Bitmap? {
         return BitmapFactory.Options().run{
             inJustDecodeBounds = true
             BitmapFactory.decodeStream(context.contentResolver.openInputStream(imageUri), null, this)
@@ -59,7 +62,8 @@ object ImageUtils {
         return inSampleSize
     }
 
-    private fun Bitmap.convertBitmapToFile(path:String, context: Context, quality:Int): File? {
+
+    fun Bitmap.convertBitmapToFile(path:String?=null, context: Context, quality:Int=50): File? {
         return try {
             val newFile = createImageFile(context)
             val outputStream = FileOutputStream(newFile)

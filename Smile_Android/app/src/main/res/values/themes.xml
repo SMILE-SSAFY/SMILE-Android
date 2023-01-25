@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/statusbar_color</item>
         <!-- Customize your theme here. -->
+        <!-- switch/toggle -->
+        <item name="switchStyle">@style/Widget.App.Switch</item>
     </style>
 
     <!-- button -->
@@ -98,14 +100,12 @@
         <item name="boxCornerRadiusTopStart">8dp</item>
         <item name="hintEnabled">false</item>
     </style>
-
     <style name="Et4DirOutlined.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:textColorHint">@color/gray400</item>
         <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
-
     <style name="Et1DirOutlined" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/et_underline_blue400</item>
         <item name="android:textColorHint">@color/gray400</item>
@@ -169,7 +169,7 @@
     </style>
 
 
-    <!-- bottomsheet -->
+    <!-- bottomSheet -->
     <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
         <item name="android:windowIsFloating">false</item>
@@ -204,7 +204,12 @@
         <item name="boxCornerRadiusTopEnd">8dp</item>
         <item name="boxCornerRadiusTopStart">8dp</item>
     </style>
-
-
-
+    <!-- switch/toggle -->
+    <style name="Widget.App.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorOnSurface">@color/blue100</item>
+        <item name="colorSecondary">@color/blue400</item>
+    </style>
 </resources>

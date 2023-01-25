@@ -1,6 +1,5 @@
 package com.ssafy.smile.presentation.view.portfolio
 
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
@@ -9,8 +8,6 @@ import com.ssafy.smile.R
 import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
 import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
-import com.ssafy.smile.data.remote.model.ArticlePostReq
-import com.ssafy.smile.data.remote.model.Post
 import com.ssafy.smile.databinding.FragmentWritePostBinding
 import com.ssafy.smile.domain.model.Address
 import com.ssafy.smile.domain.model.Types
@@ -92,7 +89,7 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
     private fun setClickListener(){
         binding.apply {
             btnPictureContent.setOnClickListener {
-                actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount)){
+                actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount), "최대 ${abs(3-imageRvAdapter.itemCount)}장까지 선택 가능합니다."){
                     val fileList = it.map { uri -> ImageUtils.getImageFileFromUri(requireContext(), uri) }
                     imageRvAdapter.setListData(ArrayList(fileList))
                     viewModel.uploadImageData(getImageData())

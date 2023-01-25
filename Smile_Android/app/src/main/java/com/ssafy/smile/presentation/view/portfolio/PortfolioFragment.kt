@@ -13,7 +13,7 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.LikeViewModel
-import com.ssafy.smile.presentation.viewmodel.PortfolioViewModel
+import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
 private const val TAG = "PortfolioFragment_스마일"
 class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortfolioBinding::bind, R.layout.fragment_portfolio) {

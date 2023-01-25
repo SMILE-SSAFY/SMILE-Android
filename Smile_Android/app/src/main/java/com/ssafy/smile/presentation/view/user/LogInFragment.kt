@@ -10,7 +10,7 @@ import com.ssafy.smile.databinding.FragmentLogInBinding
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
 
 private const val TAG = "LogInFragment_스마일"
 class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::bind, R.layout.fragment_log_in) {

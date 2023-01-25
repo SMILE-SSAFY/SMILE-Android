@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_profile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_profile_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:cardCornerRadius="50dp"
+        android:innerRadius="0dp"
+        android:shape="ring">
+        <ImageView
+            android:id="@+id/iv_profile_image"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_profile_default"> <!-- TODO : 이미지 변경 -->
+        </ImageView>
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:id="@+id/ll_profile_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cv_profile_image"
+        android:layout_marginStart="30dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_profile_name"
+            android:text="홍길동"
+            style="@style/TvT1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ibm_plex_sans_medium"
+            android:textColor="@color/black"/>
+        <TextView
+            android:text="님"
+            style="@style/TvT3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:fontFamily="@font/ibm_plex_sans_medium"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <!-- 로그아웃 버튼 -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/ic_logout"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ssafy.smile.Application
 import com.ssafy.smile.common.sources.Event
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
@@ -12,7 +13,6 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 abstract class BaseViewModel : ViewModel() {
-
 
     private val _onBackPressed = MutableLiveData<Any>()
     val onBackPressed: LiveData<Any> get() = _onBackPressed

@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.EventUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.common.util.setOnSingleClickListener
@@ -20,7 +19,7 @@ import com.ssafy.smile.databinding.FragmentSignUp2Binding
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
 
 private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {

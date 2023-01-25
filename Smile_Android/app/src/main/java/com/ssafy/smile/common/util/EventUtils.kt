@@ -1,6 +1,13 @@
 package com.ssafy.smile.common.util
 
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
+import java.text.DecimalFormat
+import java.text.NumberFormat
+
 
 object EventUtils {
 
@@ -21,4 +28,5 @@ object EventUtils {
             return System.currentTimeMillis() - lastClickedTime > CLICK_INTERVAL
         }
     }
+
 }
