@@ -1,22 +1,21 @@
 package com.ssafy.smile.presentation.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
+
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.activity.addCallback
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.R
-import com.ssafy.smile.common.view.LoadingDialog
 import com.ssafy.smile.databinding.FragmentMainBinding
-import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.MainViewModel
 
 
 class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind, R.layout.fragment_main) {
 
+    private val viewModel : MainViewModel by viewModels()
     private lateinit var mainViewPagerAdapter : MainViewPagerAdapter
 
     override fun initView() {
@@ -25,7 +24,16 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
         }
     }
 
-    override fun setEvent() {}
+    override fun setEvent() {
+        viewModel.onBackPressed.observe(viewLifecycleOwner){
+            if (it==true) requireActivity().finish()
+            else showToast(requireContext(), it.toString())
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.onBackPressed()
+        }
+
+    }
 
 
     private fun initViewPager(){

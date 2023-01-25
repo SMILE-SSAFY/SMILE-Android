@@ -47,4 +47,5 @@ interface BaseViewImpl : BaseView {
             else -> Toasty.normal(context, message, Toast.LENGTH_SHORT).show()
         }
     }
+
 }

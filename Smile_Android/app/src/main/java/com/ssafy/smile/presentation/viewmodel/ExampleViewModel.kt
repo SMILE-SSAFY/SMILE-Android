@@ -6,6 +6,5 @@ import com.ssafy.smile.presentation.base.BaseViewModel
 
 class ExampleViewModel : BaseViewModel() {
     private val exampleRepository = repositoryInstances.getExampleRemoteRepository()
-
     // ViewModel 로직
 }
