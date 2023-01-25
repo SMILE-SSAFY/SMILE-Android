@@ -177,7 +177,7 @@ public class UserService {
     /**
      * 카카오 로그인을 통해 회원가입 하고 로그인하여 jwt 토큰을 발행한다.
      *
-     * @param token  // 모바일에서 넘겨준 Bearer 포함 accessToken
+     * @param accessToken
      * @return
      * 카카오로부터 받은 정보로 회원 가입 후 로그인 진행하여 jwt 토큰 리턴
      */
