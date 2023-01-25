@@ -148,6 +148,12 @@ public class UserController {
         return ResponseEntity.ok().body(tokenRoleDto);
     }
 
+    /**
+     * 회원 탈퇴
+     * 
+     * @param request
+     * @return OK
+     */
     @DeleteMapping
     public ResponseEntity<HttpStatus> removeUser(HttpServletRequest request) {
         userService.removeUser(request);
