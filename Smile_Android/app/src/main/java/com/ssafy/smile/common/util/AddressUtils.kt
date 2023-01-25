@@ -9,6 +9,7 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.naver.maps.geometry.LatLng
 import com.ssafy.smile.domain.model.AddressGeo
+import com.ssafy.smile.domain.model.Types.GeoAddress
 import java.io.IOException
 import java.util.*
 
@@ -35,15 +36,15 @@ object AddressUtils {
             val geocoder =  Geocoder(context, Locale.KOREA)
             addressList = geocoder.getFromLocation(lat, lng,1)
         } catch (ioException: IOException) {
-            return AddressGeo(false, AddressGeo.GeoAddress.NETWORK_ERROR)
+            return AddressGeo(false, GeoAddress.NETWORK_ERROR)
         } catch (illegalArgumentException: IllegalArgumentException) {
-            return AddressGeo(false, AddressGeo.GeoAddress.GPS_ERROR)
+            return AddressGeo(false, GeoAddress.GPS_ERROR)
         }
-        return if (addressList == null || addressList.isEmpty()) AddressGeo(false, AddressGeo.GeoAddress.ENCODING_ERROR)
+        return if (addressList == null || addressList.isEmpty()) AddressGeo(false, GeoAddress.ENCODING_ERROR)
         else{
             val address = addressList[0].getAddressLine(0)
-            if (address.contains("대한민국")) AddressGeo(true, AddressGeo.GeoAddress.ADDRESS, address.split("대한민국 ")[1])
-            else AddressGeo(true, AddressGeo.GeoAddress.ADDRESS, addressList[0].getAddressLine(0).toString())
+            if (address.contains("대한민국")) AddressGeo(true, GeoAddress.ADDRESS, address.split("대한민국 ")[1])
+            else AddressGeo(true, GeoAddress.ADDRESS, addressList[0].getAddressLine(0).toString())
         }
     }
 
