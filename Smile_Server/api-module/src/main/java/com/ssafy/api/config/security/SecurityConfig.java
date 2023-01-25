@@ -60,12 +60,10 @@ public class SecurityConfig {
         log.info("[filterChain] 접근");
         http
                 .authorizeRequests()
-                .antMatchers("/api/user/register", "/api/user/login", "api/user/sns").permitAll()
+                .antMatchers("/api/user/register", "/api/user/login", "/api/user/sns").permitAll()
                 .antMatchers( "/api/user/check/**").permitAll()
                 .antMatchers("/send-one").permitAll()
                 .antMatchers("/exception/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/api/user/token").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
 
