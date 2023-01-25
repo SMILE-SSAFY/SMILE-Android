@@ -4,7 +4,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/nav_group"
 app:startDestination="@id/splashFragment">
-
 <fragment
     android:id="@+id/splashFragment"
     android:name="com.ssafy.smile.presentation.view.splash.SplashFragment"
@@ -189,6 +188,10 @@ app:startDestination="@id/splashFragment">
         <action
             android:id="@+id/action_writePostFragment_to_findAddressFragment"
             app:destination="@id/findAddressFragment" />
+        <action
+            android:id="@+id/action_writePostFragment_pop"
+            app:popUpTo="@id/writePostFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/postDetailFragment"
@@ -205,3 +208,4 @@ app:startDestination="@id/splashFragment">
         android:label="fragment_select_profile_photo"
         tools:layout="@layout/fragment_select_profile_photo" />
 </navigation>
+
