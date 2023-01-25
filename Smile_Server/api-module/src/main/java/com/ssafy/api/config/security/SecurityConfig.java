@@ -64,8 +64,6 @@ public class SecurityConfig {
                 .antMatchers( "/api/user/check/**").permitAll()
                 .antMatchers("/send-one").permitAll()
                 .antMatchers("/exception/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/api/user/token").hasAuthority("USER")
                 .anyRequest().authenticated()
                 .and()
 
