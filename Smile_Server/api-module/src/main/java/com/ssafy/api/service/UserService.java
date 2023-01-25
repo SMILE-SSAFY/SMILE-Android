@@ -182,7 +182,7 @@ public class UserService {
      * 카카오로부터 받은 정보로 회원 가입 후 로그인 진행하여 jwt 토큰 리턴
      */
     public TokenRoleDto kakaoLogin(String accessToken) {
-
+        log.info("accessToken : {}", accessToken);
         ResponseEntity<String> profileResponse = kakaoProfileResponse(accessToken);
         log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
 
