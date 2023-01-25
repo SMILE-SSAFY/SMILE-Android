@@ -7,5 +7,5 @@ object Constants {
     // 재건
 //    const val BASE_URL = "http://192.168.100.166:80"
     // 민철
-    const val BASE_URL = "http://192.168.100.164:80"
+//    const val BASE_URL = "http://192.168.100.164:80"
 }

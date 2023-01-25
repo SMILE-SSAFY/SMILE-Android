@@ -1,14 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.view.user.SignUp1Fragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/tv_id"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="아이디"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/et_id"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:hint="이메일 형식"
+        app:layout_constraintEnd_toStartOf="@+id/btn_double_check"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_id" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_double_check"
+        style="@style/BtnSmallRectangleBlue400Radius8"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:text="중복 확인"
+        app:layout_constraintBottom_toBottomOf="@+id/et_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_id"
+        app:layout_constraintTop_toTopOf="@+id/et_id" />
+
+    <ImageView
+        android:id="@+id/iv_id_check_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_check"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+
+    <TextView
+        android:id="@+id/tv_id_check_ok"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="사용 가능한 이메일입니다"
+        android:textColor="@color/smile_green"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_id_check_ok"
+        app:layout_constraintStart_toEndOf="@+id/iv_id_check_ok"
+        app:layout_constraintTop_toTopOf="@+id/iv_id_check_ok" />
+
+    <ImageView
+        android:id="@+id/iv_id_check_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_id" />
+
+    <TextView
+        android:id="@+id/tv_id_check_no"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="이미 사용중인 이메일입니다"
+        android:textColor="@color/smile_red"
+        app:layout_constraintBottom_toBottomOf="@id/iv_id_check_no"
+        app:layout_constraintStart_toEndOf="@id/iv_id_check_no"
+        app:layout_constraintTop_toTopOf="@id/iv_id_check_no" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_id_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_id_check_ok,tv_id_check_ok" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_id_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_id_check_no,iv_id_check_no" />
+
+    <TextView
+        android:id="@+id/tv_password"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="비밀번호"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+
+    <EditText
+        android:id="@+id/et_password"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:hint="8~20자리"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+
+    <TextView
+        android:id="@+id/tv_password_check"
+        style="@style/TvT2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="비밀번호 확인"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+
+    <EditText
+        android:id="@+id/et_password_check"
+        style="@style/Et1DirOutlined"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:hint="비밀번호 확인을 위해 재입력 해주세요"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toStartOf="@+id/btn_password_check"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_password_check" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_password_check"
+        style="@style/BtnSmallRectangleBlue400Radius8"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:text="비밀번호 확인"
+        app:layout_constraintBottom_toBottomOf="@+id/et_password_check"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/et_password_check"
+        app:layout_constraintTop_toTopOf="@+id/et_password_check" />
+
+    <ImageView
+        android:id="@+id/iv_password_check_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_check"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password_check" />
+
+    <TextView
+        android:id="@+id/tv_password_check_ok"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="비밀번호가 일치합니다"
+        android:textColor="@color/smile_green"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_password_check_ok"
+        app:layout_constraintStart_toEndOf="@+id/iv_password_check_ok"
+        app:layout_constraintTop_toTopOf="@+id/iv_password_check_ok" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_password_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_password_check_ok,iv_password_check_ok" />
+
+    <ImageView
+        android:id="@+id/iv_password_check_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password_check" />
+
+    <TextView
+        android:id="@+id/tv_password_check_no"
+        style="@style/TvT5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="비밀번호가 일치하지 않습니다"
+        android:textColor="@color/smile_red"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_password_check_no"
+        app:layout_constraintStart_toEndOf="@+id/iv_password_check_no"
+        app:layout_constraintTop_toTopOf="@+id/iv_password_check_no" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_password_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="tv_password_check_no,iv_password_check_no" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_next"
+        style="@style/BtnLargeRectangleGray400Radius8"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/ibm_plex_sans_semi_bold"
+        android:text="다음"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

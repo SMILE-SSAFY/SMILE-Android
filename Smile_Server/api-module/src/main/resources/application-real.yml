@@ -11,7 +11,10 @@ logging:
 spring:
   profiles:
     active: real
-    include: aws
+    include:
+      - aws
+      - coolsms
+      - kakao
   # Random Key
   jwt:
     secret: DvqcGn8mnFjqSL4a
