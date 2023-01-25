@@ -3,10 +3,11 @@ package com.ssafy.smile.presentation.base
 import android.app.Dialog
 import android.content.Context
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.ssafy.smile.R
 import com.ssafy.smile.common.view.LoadingDialog
 import com.ssafy.smile.domain.model.Types
 import es.dmoral.toasty.Toasty
@@ -14,6 +15,14 @@ import es.dmoral.toasty.Toasty
 interface BaseViewImpl : BaseView {
 
     var mLoadingDialog: LoadingDialog
+
+    override fun Toolbar.initToolbar(toolbarTitle:String, isBackAvailable:Boolean?, backAction : (() -> Unit)?){
+        this.title = toolbarTitle
+        if (isBackAvailable==true) this.setNavigationIcon(R.drawable.ic_back)
+        this.setNavigationOnClickListener {
+            if (backAction != null) { backAction() }
+        }
+    }
 
     override fun showLoadingDialog(context: Context) {
         mLoadingDialog = LoadingDialog(context)
@@ -36,6 +45,7 @@ interface BaseViewImpl : BaseView {
         lifecycleOwner?.lifecycle?.addObserver(observer)
         dialog.setOnDismissListener { lifecycleOwner?.lifecycle?.removeObserver(observer) }
     }
+
 
     override fun showToast(context: Context, message: String, type : Types.ToastType?, iconEnable : Boolean) {
         when (type){
