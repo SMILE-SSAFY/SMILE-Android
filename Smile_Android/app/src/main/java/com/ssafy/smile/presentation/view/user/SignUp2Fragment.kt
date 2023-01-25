@@ -52,26 +52,27 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
             etChangedListener(etPhone, "phone")
             etChangedListener(etCertification, "certification")
 
-            btnCertification.setOnClickListener {
-                val phoneNumber = etPhone.text.toString()
-                if(phoneNumber.isNotEmpty()) {
-                    startTimer()
-                    userViewModel.checkPhoneNumber(phoneNumber)
-                }
-            }
+//            btnCertification.setOnClickListener {
+//                val phoneNumber = etPhone.text.toString()
+//                if(phoneNumber.isNotEmpty()) {
+//                    startTimer()
+//                    userViewModel.checkPhoneNumber(phoneNumber)
+//                }
+//            }
 
             btnCertificationOk.setOnClickListener {
-                if(phoneCertNumber != null) {
-                    phoneCertCheck = if (phoneCertNumber == etCertification.text.toString().toInt()) {
-                        setPhoneNumberCheckVisibility(View.VISIBLE, View.GONE)
-                        true
-                    } else {
-                        setPhoneNumberCheckVisibility(View.GONE, View.VISIBLE)
-                        false
-                    }
-                } else {
-                    showToast(requireContext(), "인증 번호를 입력해주세요", Types.ToastType.WARNING)
-                }
+                phoneCertCheck = true
+//                if(phoneCertNumber != null) {
+//                    phoneCertCheck = if (phoneCertNumber == etCertification.text.toString().toInt()) {
+//                        setPhoneNumberCheckVisibility(View.VISIBLE, View.GONE)
+//                        true
+//                    } else {
+//                        setPhoneNumberCheckVisibility(View.GONE, View.VISIBLE)
+//                        false
+//                    }
+//                } else {
+//                    showToast(requireContext(), "인증 번호를 입력해주세요", Types.ToastType.WARNING)
+//                }
             }
 
             btnJoin.setOnSingleClickListener {
