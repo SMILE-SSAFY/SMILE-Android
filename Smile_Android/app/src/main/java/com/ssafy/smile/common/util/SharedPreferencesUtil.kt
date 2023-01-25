@@ -11,6 +11,7 @@ class SharedPreferencesUtil (context: Context) {
     companion object {
         private const val SHARED_PREFERENCES_NAME = "Application_Preferences"
         private const val AUTH_TOKEN = "AuthToken"
+        private const val AUTH_TIME = "AuthTime"
         private const val FCM_TOKEN = "FCMToken"
         private const val ROLE = "Role"
     }
@@ -34,6 +35,21 @@ class SharedPreferencesUtil (context: Context) {
         Application.authToken = Application.sharedPreferences.getAuthToken()
     }
 
+    fun putAuthTime(authTime: Long) {
+        preferences.edit {
+            putLong(AUTH_TIME, authTime)
+            apply()
+        }
+    }
+
+    fun getAuthTime(): Long = preferences.getLong(AUTH_TIME, 0)
+    fun removeAuthTime() {
+        preferences.edit {
+            remove(AUTH_TIME)
+            apply()
+        }
+    }
+
     fun putFCMToken(fcmToken: String) {
         preferences.edit {
             putString(FCM_TOKEN, fcmToken)
@@ -52,9 +68,9 @@ class SharedPreferencesUtil (context: Context) {
         Application.fcmToken = Application.sharedPreferences.getFCMToken()
     }
 
-    fun putRole(role: String) {
+    fun putRole(role: Types.Role) {
         preferences.edit {
-            putString(ROLE, role)
+            putString(ROLE, role.toString())
             apply()
         }
     }
@@ -67,5 +83,4 @@ class SharedPreferencesUtil (context: Context) {
             apply()
         }
     }
-
 }
