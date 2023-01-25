@@ -49,12 +49,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${kakao.oauth2.clientId}")
-    String clientId;
-
-    @Value("${kakao.oauth2.redirectUri}")
-    String redirectUri;
-
     @Value("${kakao.oauth2.secretPassword}")
     String kakaoPassword;
 
