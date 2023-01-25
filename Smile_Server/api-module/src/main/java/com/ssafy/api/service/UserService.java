@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Random;
 
 import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
@@ -246,4 +247,14 @@ public class UserService {
         return kakaoProfileDto;
     }
 
+
+    public void removeUser(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
+        log.info("token에 저장된 userId : {}", userId);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        log.info("DB에 저장된 userId : {}", user.getId());
+        userRepository.deleteById(userId);
+    }
 }
