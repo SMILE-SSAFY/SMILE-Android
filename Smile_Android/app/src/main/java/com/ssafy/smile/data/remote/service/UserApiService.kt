@@ -21,4 +21,7 @@ interface UserApiService {
 
     @POST("/api/user/login")
     suspend fun login(@Body loginRequestDto: LoginRequestDto): Response<UserResponseDto>
+
+    @POST("/api/user/sns")
+    suspend fun kakaoLogin(@Body token: String): Response<UserResponseDto>
 }

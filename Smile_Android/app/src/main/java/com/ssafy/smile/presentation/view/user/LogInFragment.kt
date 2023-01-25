@@ -50,6 +50,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
             }
         }
         loginResponseObserver()
+        kakaoLoginResponseObserver()
     }
 
     private fun loginResponseObserver() {
@@ -69,6 +70,27 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {}
+            }
+        }
+    }
+
+    private fun kakaoLoginResponseObserver() {
+        userViewModel.kakaoLoginResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
+                    SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
+                    SharedPreferencesUtil(requireContext()).putRole(it.data.role)
+                    findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
             }
         }
     }
@@ -108,7 +130,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                 } else if (token != null) {
-                    //TODO : 카카오 로그인 서버 통신 구현하기 -> token.accessToken
+                    userViewModel.kakaoLogin(token.accessToken)
                 }
             }
         } else {

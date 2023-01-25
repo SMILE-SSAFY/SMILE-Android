@@ -9,6 +9,7 @@ import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.repository.UserRepository
 import com.ssafy.smile.presentation.base.BaseRepository
+import retrofit2.Response
 
 class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource): BaseRepository(), UserRepository {
     private val _checkEmailResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
@@ -26,6 +27,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     private val _loginResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
     val loginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _loginResponseLiveData
+
+    private val _kakaoLoginResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
+    val kakaoLoginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
+        get() = _kakaoLoginResponseLiveData
 
     override suspend fun checkEmail(email: String) {
         safeApiCall(_checkEmailResponseLiveData) {
@@ -48,6 +53,12 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     override suspend fun login(loginDomainDto: LoginDomainDto) {
         safeApiCall(_loginResponseLiveData) {
             userRemoteDataSource.login(loginDomainDto.toLoginRequestDto())
+        }
+    }
+
+    override suspend fun kakaoLogin(token: String) {
+        safeApiCall(_kakaoLoginResponseLiveData) {
+            userRemoteDataSource.kakaoLogin(token)
         }
     }
 }
