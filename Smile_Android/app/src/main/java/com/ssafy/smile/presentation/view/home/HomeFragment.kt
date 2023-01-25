@@ -18,7 +18,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        isPhotographer = getRole()
+//        isPhotographer = getRole()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
