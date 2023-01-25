@@ -17,7 +17,7 @@ public class ArticleDetailDto {
      */
     private Long id;
 
-    private Boolean isME;
+    private Boolean isMe;
 
     private Boolean isHeart;
 
