@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.data.remote.model.Article
+import com.ssafy.smile.data.remote.model.PostListItem
 import com.ssafy.smile.databinding.FragmentPostViewPagerBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioRecyclerAdapter
@@ -19,11 +19,11 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     private val portfolioViewModel by activityViewModels<PortfolioViewModel>()
 
     private lateinit var portfolioRecyclerAdapter: PortfolioRecyclerAdapter
-    private val recyclerData = mutableListOf<Article>()
+    private val recyclerData = mutableListOf<PostListItem>()
     private var photographerId: Long = -1
 
     override fun initView() {
-        portfolioViewModel.getArticles(photographerId)
+        portfolioViewModel.getPosts(photographerId)
         articlesResponseObserver()
         initRecycler()
     }
@@ -33,18 +33,22 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     }
 
     private fun articlesResponseObserver() {
-        portfolioViewModel.getArticlesResponse.observe(viewLifecycleOwner) {
+        portfolioViewModel.getPostsResponse.observe(viewLifecycleOwner) {
             when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     it.data.articles.forEach { article ->
                         recyclerData.add(article)
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     Log.d(TAG, "portfolioResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
-                is NetworkUtils.NetworkResponse.Loading -> {}
             }
         }
     }

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.data.remote.model.ArticleResponseDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
+import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -24,13 +24,13 @@ class PortfolioViewModel: BaseViewModel() {
     }
 
     // 포트폴리오 게시물 화면 결과를 관리하는 LiveData
-    val getArticlesResponse: LiveData<NetworkUtils.NetworkResponse<ArticleResponseDto>>
-        get() = portfolioRepository.geArticlesResponseLiveData
+    val getPostsResponse: LiveData<NetworkUtils.NetworkResponse<PostListResponseDto>>
+        get() = portfolioRepository.getPostsResponseLiveData
 
     // 포트폴리오 게시물 화면 데이터 조회를 수행하는 함수
-    fun getArticles(photographerId: Long) {
+    fun getPosts(photographerId: Long) {
         viewModelScope.launch {
-            portfolioRepository.getArticles(photographerId)
+            portfolioRepository.getPosts(photographerId)
         }
     }
 }
