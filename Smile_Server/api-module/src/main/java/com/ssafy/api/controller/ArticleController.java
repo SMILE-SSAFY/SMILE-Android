@@ -43,11 +43,18 @@ public class ArticleController {
      * @param photographerId
      * @return ArticleBoardDto
      */
+    @GetMapping("/photographer/{photographerId}")
+    @ResponseBody
+    public ResponseEntity<?> getPhotographerInformation(@PathVariable("photographerId") Long photographerId){
+        PhotographerInfoDto photographerInfoDto = articleService.getPhotographerInformation(photographerId);
+        return new ResponseEntity<>(photographerInfoDto, HttpStatus.OK);
+    }
+
     @GetMapping("/list/{photographerId}")
     @ResponseBody
     public ResponseEntity<?> getArticleList(@PathVariable("photographerId") Long photographerId){
-        ArticleBoardDto articleBoardDto = articleService.getArticleList(photographerId);
-        return new ResponseEntity<>(articleBoardDto, HttpStatus.OK);
+        List<ArticleListDto> articleListDtoList = articleService.getArticleList(photographerId);
+        return new ResponseEntity<>(articleListDtoList, HttpStatus.OK);
     }
 
     /***

@@ -65,8 +65,24 @@ public class ArticleService {
      * @throws ARTICLE_NOT_FOUND
      */
     public ArticleDetailDto getArticleDetail(Long id){
+        User logInUser = getLogInUser();
         Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
-        return new ArticleDetailDto(article);
+        User articleAuthor = article.getUser();
+        boolean isME = isME(logInUser, articleAuthor);
+        boolean isHearted = !isNotHearted(logInUser, article);
+        Long hearts;
+        hearts = articleHeartRepository.countByArticle(article);
+
+        return ArticleDetailDto.builder()
+                .id(id)
+                .isME(isME)
+                .isHeart(isHearted)
+                .detailAddress(article.getDetailAddress())
+                .category(article.getCategory())
+                .createdAt(article.getCreatedAt())
+                .photoUrls(article.getPhotoUrls())
+                .hearts(hearts)
+                .build();
     }
 
     /***
@@ -96,18 +112,26 @@ public class ArticleService {
      * @throws UsernameNotFoundException
      */
 
-    public ArticleBoardDto getArticleList(Long userId) throws UsernameNotFoundException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        User loggedInUser = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+    public PhotographerInfoDto getPhotographerInformation(Long userId) {
+        User logInUser = getLogInUser();
         User user = userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         Photographer photographer = photographerRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        List<Article> articleList = articleRepository.findByUserId(userId);
+        Boolean isMe = isME(logInUser, user);
+//        Boolean isHeart =
+
+        return PhotographerInfoDto.builder()
+                .photographerId(userId)
+                .isMe(isMe)
+                .photographerName(user.getName())
+                .profileImg(photographer.getProfileImg())
+                .introduction(photographer.getIntroduction())
+                .places(photographer.getPlaces())
+                .build();
+    }
+
+    public List<ArticleListDto> getArticleList(Long photographerId){
+        List<Article> articleList = articleRepository.findByUserId(photographerId);
         List<ArticleListDto> articleListDtoList = new ArrayList<>();
-        boolean isMe = false;
-        if (loggedInUser.getId() == user.getId()){
-            isMe = true;
-        }
 
         for (Article article : articleList) {
             String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
@@ -118,16 +142,7 @@ public class ArticleService {
                     .build();
             articleListDtoList.add(articleListDto);
         }
-
-        return ArticleBoardDto.builder()
-                .photographerId(userId)
-                .isMe(isMe)
-                .photographerName(user.getName())
-                .profileImg(photographer.getProfileImg())
-                .introduction(photographer.getIntroduction())
-                .places(photographer.getPlaces())
-                .articles(articleListDtoList)
-                .build();
+        return articleListDtoList;
     }
 
     /***
