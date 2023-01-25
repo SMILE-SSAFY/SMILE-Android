@@ -3,6 +3,8 @@ package com.ssafy.core.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -16,10 +18,12 @@ public class ArticleHeart {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     public ArticleHeart(User user, Article article){
