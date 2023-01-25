@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -30,7 +28,6 @@ public class Article {
 
 //    private Integer heart;
 
-    @CreatedDate
     private LocalDateTime createdAt;
 
     private String category;
