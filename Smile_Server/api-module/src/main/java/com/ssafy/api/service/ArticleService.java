@@ -134,6 +134,11 @@ public class ArticleService {
                 .build();
     }
 
+    /***
+     * 작가별 게시글 조회
+     * @param photographerId
+     * @return 작가별 게시글 리스트, 게시글 아이디, 게시글 첫 사진을 리스트로 리턴
+     */
     public List<ArticleListDto> getArticleList(Long photographerId){
         List<Article> articleList = articleRepository.findByUserId(photographerId);
         List<ArticleListDto> articleListDtoList = new ArrayList<>();
