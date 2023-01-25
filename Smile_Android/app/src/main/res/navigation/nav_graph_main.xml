@@ -11,8 +11,8 @@ app:startDestination="@id/splashFragment">
     android:label="SplashFragment"
     tools:layout="@layout/fragment_splash" >
     <action
-        android:id="@+id/action_splashFragment_to_signUp1Fragment"
-        app:destination="@id/signUp1Fragment" />
+        android:id="@+id/action_splashFragment_to_logInFragment"
+        app:destination="@id/logInFragment" />
     <action
         android:id="@+id/action_splashFragment_to_mainFragment"
         app:destination="@id/mainFragment" />
