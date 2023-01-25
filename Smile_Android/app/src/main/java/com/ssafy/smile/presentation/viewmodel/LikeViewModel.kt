@@ -31,4 +31,26 @@ class LikeViewModel: BaseViewModel() {
             likeRepository.photographerLikeCancel(photographerId)
         }
     }
+
+    // 게시물 좋아요 반영 결과를 관리하는 LiveData
+    val postLikeResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = likeRepository.postLikeResponseLiveData
+
+    // 게시물 좋아요를 수행하는 함수
+    fun postLike(articleId: Long) {
+        viewModelScope.launch {
+            likeRepository.postLike(articleId)
+        }
+    }
+
+    // 게시물 좋아요 취소 결과를 관리하는 LiveData
+    val postLikeCancelResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = likeRepository.postLikeCancelResponseLiveData
+
+    // 게시물 좋아요 취소를 수행하는 함수
+    fun postLikeCancel(articleId: Long) {
+        viewModelScope.launch {
+            likeRepository.postLikeCancel(articleId)
+        }
+    }
 }

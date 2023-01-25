@@ -118,4 +118,6 @@ dependencies {
     // multiple ImagePicker Library 추가
     implementation 'io.github.ParkSangGwon:tedimagepicker:1.4.0'
 
+    // page indicator view Library 추가
+    implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 }
