@@ -1,10 +1,7 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.dto.article.ArticleDetailDto;
-import com.ssafy.api.dto.article.ArticleBoardDto;
-import com.ssafy.api.dto.article.ArticlePostDto;
+import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
-import com.ssafy.api.service.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +19,21 @@ import java.util.List;
 @RequestMapping("/api/article")
 @Slf4j
 public class ArticleController {
+
     @Autowired
     private ArticleService articleService;
-    @Autowired
-    private S3UploaderService s3UploaderService;
 
     /***
      * 게시글 등록
      * @param articlePostDto
-     * @param multipartFile
      * @throws IOException
      */
     @PostMapping()
-    public ResponseEntity<HttpStatus> uploadImage(
-            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto,
-            @RequestPart("image") List<MultipartFile> multipartFile) throws IOException {
-        String fileName = s3UploaderService.upload(multipartFile);
-        articleService.postArticle(fileName, articlePostDto);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public ResponseEntity<HttpStatus> uploadImage(ArticlePostDto articlePostDto) throws IOException {
+        log.info(articlePostDto.toString());
+        articleService.postArticle(articlePostDto);
+        log.info(articlePostDto.toString());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /***
@@ -47,11 +41,16 @@ public class ArticleController {
      * @param photographerId
      * @return ArticleBoardDto
      */
+    @GetMapping("/photographer/{photographerId}")
+    public ResponseEntity<?> getPhotographerInformation(@PathVariable("photographerId") Long photographerId){
+        PhotographerInfoDto photographerInfoDto = articleService.getPhotographerInformation(photographerId);
+        return new ResponseEntity<>(photographerInfoDto, HttpStatus.OK);
+    }
+
     @GetMapping("/list/{photographerId}")
-    @ResponseBody
     public ResponseEntity<?> getArticleList(@PathVariable("photographerId") Long photographerId){
-        ArticleBoardDto articleBoardDto = articleService.getArticleList(photographerId);
-        return new ResponseEntity<>(articleBoardDto, HttpStatus.OK);
+        List<ArticleListDto> articleListDtoList = articleService.getArticleList(photographerId);
+        return new ResponseEntity<>(articleListDtoList, HttpStatus.OK);
     }
 
     /***
@@ -60,7 +59,6 @@ public class ArticleController {
      * @return ArticleDetailDto
      */
     @GetMapping("/{articleId}")
-    @ResponseBody
     public ResponseEntity<ArticleDetailDto> getArticleDetail(@PathVariable("articleId") Long articleId){
         return ResponseEntity.ok(articleService.getArticleDetail(articleId));
     }
@@ -81,7 +79,6 @@ public class ArticleController {
      * 게시글 수정
      * @param articleId
      * @param articlePostDto
-     * @param multipartFile
      * @return 수정한 게시글 디테일
      * @throws IOException
      *
@@ -90,10 +87,22 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public ResponseEntity<?> updateArticle(
             @PathVariable("articleId") Long articleId,
-            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto,
-            @RequestPart("image") List<MultipartFile> multipartFile) throws IOException{
+            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto) throws IOException{
 
-        return ResponseEntity.ok(articleService.updateArticle(articleId, multipartFile, articlePostDto));
+        return ResponseEntity.ok(articleService.updateArticle(articleId, articlePostDto));
+    }
+
+    /***
+     * 게시글 좋아요/ 좋아요 취소
+     * @param articleId
+     * @return 게시글 아이디, 좋아요 여부
+     */
+    @PostMapping("/heart/{articleId}")
+    public ResponseEntity<?> heartArticle(
+            @PathVariable("articleId") Long articleId
+    ){
+        ArticleHeartDto articleHeartDto = articleService.heartArticle(articleId);
+        return new ResponseEntity<>(articleHeartDto, HttpStatus.OK);
     }
 
 }
