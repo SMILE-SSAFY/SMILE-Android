@@ -23,4 +23,5 @@ class ServiceInstances(retrofitInstances : RetrofitInstances) {
     fun getUserApiService() : UserApiService = userApiService
     fun getPortfolioApiService(): PortfolioApiService = portfolioApiService
     fun getLikeApiService(): LikeApiService = likeApiService
+
 }

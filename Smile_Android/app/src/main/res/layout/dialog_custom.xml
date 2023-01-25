@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:text="내용 텍스트입니다."
             android:textSize="14sp"
-            android:textColor="@string/TvT1"
             android:fontFamily="@font/ibm_plex_sans_medium"/>
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +39,7 @@
                 android:text="취소버튼"
                 android:textColor="@color/white"
                 android:fontFamily="@font/ibm_plex_sans_semi_bold"
-                android:textSize="@string/TvH4" />
+                android:textSize="18sp" />
             <Button
                 android:id="@+id/btn_custom"
                 android:layout_width="wrap_content"

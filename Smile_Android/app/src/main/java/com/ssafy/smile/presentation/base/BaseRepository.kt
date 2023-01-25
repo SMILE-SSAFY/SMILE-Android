@@ -1,13 +1,11 @@
 package com.ssafy.smile.presentation.base
 
-
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
 import retrofit2.Response
 
 
-// TODO : Retrofit + Coroutine + SafeCall 처리 필요 - 1
 private const val TAG = "BaseRepository_스마일"
 open class BaseRepository {
 
@@ -22,5 +20,6 @@ open class BaseRepository {
         Log.d(TAG, "safeApiResult: $response")
         if (response.isSuccessful && response.body()!=null) return NetworkResponse.Success(response.body()!!)
         return NetworkResponse.Failure(response.code())
+
     }
 }

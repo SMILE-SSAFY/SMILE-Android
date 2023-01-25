@@ -1,5 +1,6 @@
 package com.ssafy.smile
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -7,6 +8,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.ssafy.smile.databinding.ActivityMainBinding
 
+
+// TODO : presentation 패키지 내부로 옮기기.
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -27,7 +30,6 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar!!.setDisplayHomeAsUpEnabled(true)
                     supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
                 }
-
             } else {
                 toolbar.visibility = View.GONE
             }

@@ -25,4 +25,5 @@ class DataSourceInstances(serviceInstances: ServiceInstances) {
     fun getUserRemoteDataSource(): UserRemoteDataSourceImpl = userRemoteDataSourceImpl
     fun getPortfolioRemoteDataSource(): PortfolioRemoteDataSourceImpl = portfolioRemoteDataSourceImpl
     fun getLikeRemoteDataSource(): LikeRemoteDataSourceImpl = likeRemoteDataSourceImpl
+
 }

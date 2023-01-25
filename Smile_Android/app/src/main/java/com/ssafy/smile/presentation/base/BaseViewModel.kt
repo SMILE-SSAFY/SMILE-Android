@@ -4,6 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssafy.smile.common.sources.Event
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 abstract class BaseViewModel : ViewModel() {
@@ -30,5 +35,8 @@ abstract class BaseViewModel : ViewModel() {
         val message = exception.message ?: ""
         _error.value = Event(message)
     }
+
+    fun String?.convertToRequestBody() : RequestBody = requireNotNull(this).toRequestBody("text/plain".toMediaTypeOrNull())
+    fun File?.convertToRequestBody() : RequestBody = requireNotNull(this).asRequestBody("image/*".toMediaTypeOrNull())
 
 }
