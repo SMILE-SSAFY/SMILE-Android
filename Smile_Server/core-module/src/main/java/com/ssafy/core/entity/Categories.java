@@ -2,18 +2,26 @@ package com.ssafy.core.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "categories")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Categories {
 
-    private String categoryName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String categoryPrice;
-
-    private String description;
+    private String name;
 }
