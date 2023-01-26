@@ -21,9 +21,13 @@ class RepositoryInstances(dataSourceInstances: DataSourceInstances) {
     @Singleton
     private val postRepository: PostRepositoryImpl = PostRepositoryImpl(dataSourceInstances.getPostRemoteDataSource())
 
+    @Singleton
+    private val searchRepository: SearchRepositoryImpl = SearchRepositoryImpl(dataSourceInstances.getSearchRemoteDataSource())
+
     fun getUserRepository(): UserRepositoryImpl = userRepository
     fun getPortfolioRepository(): PortfolioRepositoryImpl = portfolioRepository
     fun getLikeRepository(): LikeRepositoryImpl = likeRepository
     fun getPhotographerRepository() : PhotographerRepositoryImpl = photographerRepository
     fun getPostRepository(): PostRepositoryImpl = postRepository
+    fun getSearchRepository(): SearchRepositoryImpl = searchRepository
 }
