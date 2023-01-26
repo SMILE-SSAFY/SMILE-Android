@@ -11,6 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 카테고리 테이블
+ *
+ * author @김정은
+ */
 @Entity
 @Table(name = "categories")
 @Getter
