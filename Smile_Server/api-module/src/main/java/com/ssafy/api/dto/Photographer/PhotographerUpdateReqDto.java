@@ -16,7 +16,7 @@ public class PhotographerUpdateReqDto {
     private String profileImg;
     private String introduction;
     private String account;
-    private List<PlacesUpdateReqDto> places;
-    private List<CategoriesUpdateReqDto> categories;
+    private List<PlacesReqDto> places;
+    private List<CategoriesReqDto> categories;
     private boolean isDeleted;
 }
