@@ -3,7 +3,9 @@ package com.ssafy.api.service;
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
+import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
+import com.ssafy.api.dto.Photographer.PlacesUpdateReqDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
@@ -57,8 +59,6 @@ public class PhotographerService {
             // 파일 업로드
             String fileName = s3UploaderService.upload(multipartFile);
             photographer.setProfileImg(fileName);
-        } else {
-            throw new CustomException(ErrorCode.NO_IMAGE);
         }
 
         // 활동지역 변환
@@ -118,7 +118,7 @@ public class PhotographerService {
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      * @throws IOException
      */
-    public PhotographerResDto changePhotographer(MultipartFile file, PhotographerReqDto photographer) throws IOException {
+    public PhotographerResDto changePhotographer(MultipartFile file, PhotographerUpdateReqDto photographer) throws IOException {
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
