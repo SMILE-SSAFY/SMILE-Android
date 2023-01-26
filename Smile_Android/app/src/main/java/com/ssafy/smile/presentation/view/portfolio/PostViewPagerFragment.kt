@@ -24,8 +24,12 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
 
     override fun initView() {
         portfolioViewModel.getPosts(photographerId)
-        articlesResponseObserver()
+        setObserver()
         initRecycler()
+    }
+
+    private fun setObserver() {
+        articlesResponseObserver()
     }
 
     override fun setEvent() {

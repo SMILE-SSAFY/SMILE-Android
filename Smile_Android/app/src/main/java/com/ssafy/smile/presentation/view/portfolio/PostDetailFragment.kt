@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import android.util.Log
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -28,10 +29,19 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
     private val args: PortfolioFragmentArgs by navArgs()
 
     override fun initView() {
-        (activity as MainActivity).setToolBar(isUsed = true, isBackUsed = true, title = "게시물")
+        initToolbar()
+        setObserver()
         postViewModel.getPostById(args.postId)
-        getPostByIdResponseObserver()
         initViewPager()
+    }
+
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("게시물", true)
+    }
+
+    private fun setObserver() {
+        getPostByIdResponseObserver()
         postLikeResponseObserver()
         postLikeCancelResponseObserver()
     }
@@ -49,13 +59,17 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
         postViewModel.getPostByIdResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     setPostInfo(it.data.toPostDomainDto())
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     Log.d(TAG, "postByIdResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "게시글 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
-                is NetworkUtils.NetworkResponse.Loading -> {}
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
             }
         }
     }
@@ -95,9 +109,11 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             likeViewModel.postLikeResponse.observe(viewLifecycleOwner) {
                 when(it) {
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         ctvLike.toggle()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
                         // TODO: error code 물어보기
                         if (it.errorCode == 400) {
                             showToast(requireContext(), "이미 좋아요를 누른 게시물입니다.")
@@ -105,7 +121,9 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                             showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                         }
                     }
-                    is NetworkUtils.NetworkResponse.Loading -> {}
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
                 }
             }
         }
@@ -116,16 +134,20 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             likeViewModel.postLikeCancelResponse.observe(viewLifecycleOwner) {
                 when(it) {
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         ctvLike.toggle()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
                         if (it.errorCode == 404) {
                             showToast(requireContext(), "존재하지 않는 게시물입니다.")
                         } else {
                             showToast(requireContext(), "게시물 좋아요 취소 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                         }
                     }
-                    is NetworkUtils.NetworkResponse.Loading -> {}
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
                 }
             }
         }
