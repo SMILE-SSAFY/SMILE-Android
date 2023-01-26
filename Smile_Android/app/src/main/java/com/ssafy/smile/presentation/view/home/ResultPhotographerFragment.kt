@@ -20,6 +20,9 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
     override fun initView() {
         setObserver()
         initRecycler()
+        binding.apply {
+            tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
+        }
     }
 
     private fun setObserver() {

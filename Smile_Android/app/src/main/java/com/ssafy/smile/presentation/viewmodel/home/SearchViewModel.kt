@@ -11,6 +11,9 @@ import kotlinx.coroutines.launch
 class SearchViewModel: BaseViewModel() {
     private val searchRepository = Application.repositoryInstances.getSearchRepository()
 
+    // 입력한 검색어
+    var searchCategory: String = ""
+
     // 작가 검색 결과를 관리하는 LiveData
     val searchPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPhotographerResponseDto>>>
         get() = searchRepository.searchPhotographerLiveData
