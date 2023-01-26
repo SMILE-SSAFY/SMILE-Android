@@ -12,7 +12,7 @@ import java.util.List;
 public interface PhotographerNCategoriesRepositoryCustom {
 
     /**
-     * categoryId로 사진 작가 조회
+     * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
      *
      * @param categoryId
      * @return List<Photographer>
