@@ -23,5 +23,4 @@ public class PhotographerReqDto {
     private String account;
     private List<PlacesReqDto> places;
     private List<CategoriesReqDto> categories;
-    private boolean isDeleted;
 }
