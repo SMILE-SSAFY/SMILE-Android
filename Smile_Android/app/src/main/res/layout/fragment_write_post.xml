@@ -10,10 +10,17 @@
     android:focusable="true"
     android:padding="20dp"
     android:focusableInTouchMode="true">
+
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/layout_common_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_toolbar"
         app:layout_constraintBottom_toTopOf="@+id/cl_place"
         android:id="@+id/cl_picture"
         android:layout_marginTop="14dp">

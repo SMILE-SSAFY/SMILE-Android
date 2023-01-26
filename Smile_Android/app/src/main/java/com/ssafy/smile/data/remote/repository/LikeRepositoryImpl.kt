@@ -25,18 +25,26 @@ class LikeRepositoryImpl(private val likeRemoteDataSource: LikeRemoteDataSource)
         get() = _postLikeCancelResponseLiveData
 
     override suspend fun photographerLike(photographerId: Long) {
-        likeRemoteDataSource.photographerLike(photographerId)
+        safeApiCall(_photographerLikeResponseLiveData) {
+            likeRemoteDataSource.photographerLike(photographerId)
+        }
     }
 
     override suspend fun photographerLikeCancel(photographerId: Long) {
-        likeRemoteDataSource.photographerLikeCancel(photographerId)
+        safeApiCall(_photographerLikeCancelResponseLiveData) {
+            likeRemoteDataSource.photographerLikeCancel(photographerId)
+        }
     }
 
     override suspend fun postLike(articleId: Long) {
-        likeRemoteDataSource.postLike(articleId)
+        safeApiCall(_postLikeResponseLiveData) {
+            likeRemoteDataSource.postLike(articleId)
+        }
     }
 
     override suspend fun postLikeCancel(articleId: Long) {
-        likeRemoteDataSource.postLikeCancel(articleId)
+        safeApiCall(_postLikeCancelResponseLiveData) {
+            likeRemoteDataSource.postLikeCancel(articleId)
+        }
     }
 }

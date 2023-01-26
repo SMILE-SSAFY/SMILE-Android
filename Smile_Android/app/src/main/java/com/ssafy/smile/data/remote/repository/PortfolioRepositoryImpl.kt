@@ -27,11 +27,15 @@ class PortfolioRepositoryImpl(private val portfolioRemoteDataSource: PortfolioRe
         get() = _postUploadResponseLiveData
 
     override suspend fun getPortfolio(photographerId: Long) {
-        portfolioRemoteDataSource.getPortfolio(photographerId)
+        safeApiCall(_getPortfolioResponseLiveData) {
+            portfolioRemoteDataSource.getPortfolio(photographerId)
+        }
     }
 
     override suspend fun getPosts(photographerId: Long) {
-        portfolioRemoteDataSource.getPosts(photographerId)
+        safeApiCall(_getPostsResponseLiveData) {
+            portfolioRemoteDataSource.getPosts(photographerId)
+        }
     }
 
     override suspend fun uploadPost(images: MutableMap<String, RequestBody>){

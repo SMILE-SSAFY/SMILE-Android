@@ -21,22 +21,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 //        isPhotographer = getRole()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.apply {
-            setToolbar()
-        }
-    }
-
     override fun initView() {
-        (activity as MainActivity).setToolBar(isUsed = false, isBackUsed = false, title = null)
+        initToolbar()
     }
 
     override fun setEvent() {
     }
 
-    private fun setToolbar() {
+    private fun initToolbar() {
         binding.tbHome.apply {
             inflateMenu(R.menu.menu_home)
 
