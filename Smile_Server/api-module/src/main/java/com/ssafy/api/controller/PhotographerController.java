@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
+import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.service.PhotographerService;
 import com.ssafy.api.service.S3UploaderService;
 import com.ssafy.core.entity.User;
@@ -75,7 +76,7 @@ public class PhotographerController {
      * @return 수정된 작가 프로필 객체
      */
     @PutMapping
-    public ResponseEntity<PhotographerResDto> changePhotographer(@RequestPart("Photographer") PhotographerReqDto photographer,
+    public ResponseEntity<PhotographerResDto> changePhotographer(@RequestPart("Photographer") PhotographerUpdateReqDto photographer,
                                                                  @RequestPart("image") MultipartFile multipartFile) throws IOException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
