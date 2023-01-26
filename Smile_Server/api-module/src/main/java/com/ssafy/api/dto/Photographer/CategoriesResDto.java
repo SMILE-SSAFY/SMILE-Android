@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class CategoriesResDto {
-    private long categoryId;
     private String name;
     private int price;
     private String description;
