@@ -203,6 +203,8 @@ public class PhotographerService {
     /**
      * categoryId로 작가 조회
      * 
+     * TODO: 작가 좋아요 구현 시 좋아요 갯수 및 좋아요 상태 추가, 추가 dto 필요
+     * 
      * @param categoryId
      * @return List<PhotographerForListDto>
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
@@ -221,6 +223,7 @@ public class PhotographerService {
         for (Photographer photographer : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographer));
         }
+        
         return photographerForList;
     }
 }

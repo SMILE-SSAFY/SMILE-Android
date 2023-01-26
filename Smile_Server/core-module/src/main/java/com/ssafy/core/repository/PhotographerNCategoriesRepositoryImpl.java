@@ -20,7 +20,8 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
     private final JPAQueryFactory jpaQueryFactory;
 
     /**
-     * categoryId로 사진 작가 조회
+     * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
+     * TODO: 작가 좋아요 구현 시 쿼리 추가
      *
      * @param categoryId
      * @return List<Photographer>
