@@ -31,4 +31,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     boolean existsByEmail(String email);
 
+    /**
+     * 휴대폰 번호 존재 유무 체크
+     *
+     * @param phoneNumber
+     * @return User
+     */
+    boolean existsByPhoneNumber(String phoneNumber);
+
 }
