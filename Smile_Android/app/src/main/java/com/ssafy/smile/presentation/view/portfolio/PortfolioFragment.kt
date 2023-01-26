@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import android.util.Log
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.MainActivity
@@ -23,10 +24,19 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
     private var photographerId: Long = -1
 
     override fun initView() {
-        (activity as MainActivity).setToolBar(true, isBackUsed = true, title = "프로필")
-        setViewPager()
+        initToolbar()
+        setObserver()
+        initViewPager()
         setPhotographerId()
         portfolioViewModel.getPortfolio(photographerId)
+    }
+
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("프로필", true)
+    }
+
+    private fun setObserver() {
         portfolioResponseObserver()
         photographerLikeResponseObserver()
         photographerLikeCancelResponseObserver()
@@ -44,7 +54,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         }
     }
 
-    private fun setViewPager() {
+    private fun initViewPager() {
         val viewPagerAdapter = PortfolioViewPagerAdapter(requireActivity())
         val tabTitle = listOf("게시물", "작가 리뷰")
 
@@ -62,13 +72,17 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         portfolioViewModel.getPortfolioResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     setPhotographerInfo(it.data.toPortfolioDomainDto())
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     Log.d(TAG, "portfolioResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
-                is NetworkUtils.NetworkResponse.Loading -> {}
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
             }
         }
     }

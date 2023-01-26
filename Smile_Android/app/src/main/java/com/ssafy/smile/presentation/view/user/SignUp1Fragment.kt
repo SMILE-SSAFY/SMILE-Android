@@ -5,9 +5,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentSignUp1Binding
@@ -37,7 +37,17 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
     }
 
     override fun initView() {
-        (activity as MainActivity).setToolBar(isUsed = true, isBackUsed = true, title = "회원가입")
+        initToolbar()
+        setObserver()
+    }
+
+    private fun setObserver() {
+        emailCheckResponseObserver()
+    }
+
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("회원가입", true)
     }
 
     override fun setEvent() {
@@ -69,8 +79,6 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                 }
             }
         }
-
-        emailCheckResponseObserver()
     }
 
     private fun setPasswordCheckVisibility(ok: Int, no: Int) {
@@ -84,6 +92,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
         userViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     idDoubleCheck = if (it.data == "OK") {
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
                         true
@@ -92,6 +101,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     idDoubleCheck = false
                     if (it.errorCode == 400) {
                         setIdCheckVisibility(View.GONE, View.VISIBLE)
@@ -101,6 +111,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                     }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
                     setIdCheckVisibility(View.GONE, View.GONE)
                     idDoubleCheck = false
                 }

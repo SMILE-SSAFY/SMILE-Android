@@ -1,5 +1,6 @@
 package com.ssafy.smile.data.remote.service
 
+import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.data.remote.model.LoginRequestDto
 import com.ssafy.smile.data.remote.model.SignUpRequestDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
@@ -21,4 +22,7 @@ interface UserApiService {
 
     @POST("/api/user/login")
     suspend fun login(@Body loginRequestDto: LoginRequestDto): Response<UserResponseDto>
+
+    @POST("/api/user/sns")
+    suspend fun kakaoLogin(@Body token: KakaoLoginRequestDto): Response<UserResponseDto>
 }

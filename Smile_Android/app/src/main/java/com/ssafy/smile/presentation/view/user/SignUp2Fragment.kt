@@ -1,16 +1,15 @@
 package com.ssafy.smile.presentation.view.user
 
-import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
@@ -35,15 +34,19 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     var phoneCertNumber: Int? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initView()
-        setEvent()
+    override fun initView() {
+        initToolbar()
+        setObserver()
     }
 
-    override fun initView() {
-        (activity as MainActivity).setToolBar(isUsed = true, isBackUsed = true, title = "회원가입")
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("회원가입", true)
+    }
+
+    private fun setObserver() {
+        signUpResponseObserver()
+        checkPhoneNumberResponseObserver()
     }
 
     override fun setEvent() {
@@ -84,8 +87,6 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 }
             }
         }
-        signUpResponseObserver()
-        checkPhoneNumberResponseObserver()
     }
 
     private fun startTimer() {
@@ -109,14 +110,17 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         userViewModel.phoneNumberCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     phoneCertNumber = it.data
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     showToast(requireContext(), "휴대전화 인증 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                     setPhoneNumberCheckVisibility(View.GONE, View.GONE)
                     phoneCertCheck = false
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
                     setPhoneNumberCheckVisibility(View.GONE, View.GONE)
                     phoneCertCheck = false
                 }
@@ -135,6 +139,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         userViewModel.signUpResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
                     SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
@@ -143,10 +148,13 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     Log.d(TAG, "signUpResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "회원 가입 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
-                is NetworkUtils.NetworkResponse.Loading -> {}
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
             }
         }
     }
