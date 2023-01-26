@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PlacesReqDto {
-    private long placeId;
+    private String placeId;
 }
