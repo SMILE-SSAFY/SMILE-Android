@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * 사진작가 DTO
+ * 사진작가 요청 DTO
  *
  * author @김정은
  */
