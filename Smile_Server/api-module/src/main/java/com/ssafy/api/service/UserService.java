@@ -63,23 +63,25 @@ public class UserService {
 
         log.info("[registerUser] RegisterFormDto 객체 : {}", registerFormDto.toString());
 
-        // 이메일이 존재할 때 에러 발생
-        if (userRepository.findByEmail(registerFormDto.getEmail()).isPresent()) {
-            throw new CustomException(ErrorCode.IS_REGISTERED);
+        // 카카오 전용 휴대폰 번호(11112345678)으로 회원가입 신청이 아니면 휴대폰 번호 중복 체크
+        if (!registerFormDto.getPhoneNumber().equals("11112345678") && userRepository.existsByPhoneNumber(registerFormDto.getPhoneNumber())) {
+            throw new CustomException(ErrorCode.HAS_PHONENUMBER);
         }
 
-        User user = User.builder()
-                .email(registerFormDto.getEmail())
-                .password(passwordEncoder.encode(registerFormDto.getPassword()))
-                .name(registerFormDto.getName())
-                .phoneNumber(registerFormDto.getPhoneNumber())
-                .role(Role.USER)
-                .build();
-        log.info("[registerUser] User 객체 : {}", user.toString());
+        // 이메일이 존재하면 등록 제외하고 로그인 진행
+        if (!userRepository.existsByEmail(registerFormDto.getEmail())) {
+            User user = User.builder()
+                    .email(registerFormDto.getEmail())
+                    .password(passwordEncoder.encode(registerFormDto.getPassword()))
+                    .name(registerFormDto.getName())
+                    .phoneNumber(registerFormDto.getPhoneNumber())
+                    .role(Role.USER)
+                    .build();
+            log.info("[registerUser] User 객체 : {}", user.toString());
 
-        User savedUser = userRepository.save(user);
-        log.info("[registerUser] 회원등록 완료");
-
+            User savedUser = userRepository.save(user);
+            log.info("[registerUser] 회원등록 완료");
+        }
 
         LoginUserDto loginUserDto = LoginUserDto.builder()
                 .email(registerFormDto.getEmail())
@@ -97,6 +99,7 @@ public class UserService {
      * jwt tokenDto
      */
     public TokenRoleDto login(LoginUserDto loginUserDto) {
+        log.info("user 로그인 진행");
         User user = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         log.info("user 객체 반환");
 
@@ -190,7 +193,7 @@ public class UserService {
                 .email(kakaoProfileDto.getKakao_account().getEmail())
                 .password(kakaoPassword)
                 .name(kakaoProfileDto.getProperties().getNickname())
-                .phoneNumber("01012345678")
+                .phoneNumber("11112345678")
                 .build();
 
         return registerUser(registerFormDto);
