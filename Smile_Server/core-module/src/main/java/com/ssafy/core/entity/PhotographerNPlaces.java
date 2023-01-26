@@ -14,6 +14,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * 사진작가와 활동지역 연계 테이블
+ *
+ * author @김정은
+ */
 @Entity
 @Table(name = "photographer_places")
 @Getter
@@ -33,10 +38,4 @@ public class PhotographerNPlaces {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Places places;
-
-    public void updatePhotographer(Long photographerId){
-        this.photographer = Photographer.builder()
-                .id(photographerId)
-                .build();
-    }
 }
