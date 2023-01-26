@@ -45,19 +45,13 @@ public class PhotographerController {
      * @return 정상일 때 OK
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> registPhotographer(@RequestPart("Photographer") PhotographerReqDto photographer,
+    public ResponseEntity<HttpStatus> registPhotographer(@RequestPart("photographer") PhotographerReqDto photographer,
                                                          @RequestPart("image") MultipartFile multipartFile) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
-        if(!multipartFile.isEmpty()) {
-            // 파일 업로드
-            String fileName = s3UploaderService.upload(multipartFile);
-            photographer.setProfileImg(fileName);
-        }
-
         photographer.setPhotographerId(user.getId());
-        photographerService.addPhotographer(photographer);
+        photographerService.addPhotographer(multipartFile, photographer);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

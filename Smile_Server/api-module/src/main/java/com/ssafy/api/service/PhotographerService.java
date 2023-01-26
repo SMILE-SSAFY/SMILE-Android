@@ -1,8 +1,16 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
+import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
+import com.ssafy.api.dto.Photographer.PlacesReqDto;
+import com.ssafy.api.dto.Photographer.PlacesUpdateReqDto;
+import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.entity.PhotographerNCategories;
+import com.ssafy.core.entity.PhotographerNPlaces;
+import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
@@ -15,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 작가 프로필 관련 클래스
@@ -37,20 +47,49 @@ public class PhotographerService {
     /**
      * 작가 등록
      *
+     * @param multipartFile 프로필 이미지
      * @param photographer
      * @throws USER_NOT_FOUND 유저를 찾을 수 없을 때 에러
      */
-    public void addPhotographer(PhotographerReqDto photographer){
+    public void addPhotographer(MultipartFile multipartFile, PhotographerReqDto photographer) throws IOException{
         User user = userRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(!multipartFile.isEmpty()) {
+            // 파일 업로드
+            String fileName = s3UploaderService.upload(multipartFile);
+            photographer.setProfileImg(fileName);
+        }
+
+        // 활동지역 변환
+        List<PhotographerNPlaces> places = new ArrayList<>();
+        for(PlacesReqDto place : photographer.getPlaces()){
+            places.add(PhotographerNPlaces.builder()
+                    .photographer(Photographer.builder().id(user.getId()).build())
+                    .places(Places.builder().id(place.getPlaceId()).build())
+                    .build()
+            );
+        }
+
+        // 카테고리 변환
+        List<PhotographerNCategories> categories = new ArrayList<>();
+        for(CategoriesReqDto category : photographer.getCategories()){
+            categories.add(PhotographerNCategories.builder()
+                    .photographer(Photographer.builder().id(user.getId()).build())
+                    .category(Categories.builder().id(category.getCategoryId()).build())
+                            .price(category.getPrice())
+                            .description(category.getDescription())
+                    .build()
+            );
+        }
 
         Photographer savedPhotographer = Photographer.builder()
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
                 .account(photographer.getAccount())
-                .places(photographer.getPlaces())
-                .categories(photographer.getCategories())
+                .places(places)
+                .categories(categories)
                 .build();
 
         photographerRepository.save(savedPhotographer);
@@ -79,7 +118,7 @@ public class PhotographerService {
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      * @throws IOException
      */
-    public PhotographerResDto changePhotographer(MultipartFile file, PhotographerReqDto photographer) throws IOException {
+    public PhotographerResDto changePhotographer(MultipartFile file, PhotographerUpdateReqDto photographer) throws IOException {
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
@@ -102,8 +141,8 @@ public class PhotographerService {
         findPhotographer.updateProfileImg(photographer.getProfileImg());
         findPhotographer.updateAccount(photographer.getAccount());
         findPhotographer.updateIntroduction(photographer.getIntroduction());
-        findPhotographer.updatePlaces(photographer.getPlaces());
-        findPhotographer.updateCategories(photographer.getCategories());
+//        findPhotographer.updatePlaces(photographer.getPlaces());
+//        findPhotographer.updateCategories(photographer.getCategories());
 
         PhotographerResDto savedPhotographer = new PhotographerResDto();
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
