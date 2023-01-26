@@ -1,13 +1,9 @@
 package com.ssafy.core.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -32,7 +29,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-@TypeDef(name = "json", typeClass = JsonType.class)
 public class Photographer implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
@@ -52,17 +48,10 @@ public class Photographer implements Serializable {
     @Column(length = 14, nullable = false)
     private String account;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private int heart;
-
-    @Column(columnDefinition = "longtext", nullable = false)
-    @Type(type="json")
-    private List<Places> places;
-
-    @Column(columnDefinition = "longtext", nullable = false)
-    @Type(type="json")
-    private List<Categories> categories;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
+    private List<PhotographerNPlaces> places;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
+    private List<PhotographerNCategories> categories;
 
     /**
      * 프로필 이미지 변경
@@ -92,20 +81,11 @@ public class Photographer implements Serializable {
     }
 
     /**
-     * 프로필 좋아요 변경
-     *
-     * @param heart
-     */
-    public void updateHeart(int heart) {
-        this.heart = heart;
-    }
-
-    /**
      * 프로필 활동지역 변경
      *
      * @param places
      */
-    public void updatePlaces(List<Places> places) {
+    public void updatePlaces(List<PhotographerNPlaces> places) {
         this.places = places;
     }
 
@@ -114,7 +94,7 @@ public class Photographer implements Serializable {
      *
      * @param categories
      */
-    public void updateCategories(List<Categories> categories){
+    public void updateCategories(List<PhotographerNCategories> categories){
         this.categories = categories;
     }
 }
