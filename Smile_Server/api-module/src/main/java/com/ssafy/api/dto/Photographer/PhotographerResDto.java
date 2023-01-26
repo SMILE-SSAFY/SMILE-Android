@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 사진작가 DTO
+ * 사진작가 응답 DTO
  *
  * author @김정은
  */
@@ -41,7 +41,6 @@ public class PhotographerResDto {
         List<PlacesResDto> places = new ArrayList<>();
         for(PhotographerNPlaces place : photographer.getPlaces()){
             places.add(PlacesResDto.builder()
-                    .placeId(place.getId())
                     .first(place.getPlaces().getFirst())
                     .second(place.getPlaces().getSecond()).build());
         }
@@ -49,7 +48,6 @@ public class PhotographerResDto {
         List<CategoriesResDto> categories = new ArrayList<>();
         for(PhotographerNCategories category : photographer.getCategories()){
             categories.add(CategoriesResDto.builder()
-                    .categoryId(category.getId())
                     .name(category.getCategory().getName())
                     .price(category.getPrice())
                     .description(category.getDescription())

@@ -5,7 +5,6 @@ import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
-import com.ssafy.api.dto.Photographer.PlacesUpdateReqDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
@@ -14,6 +13,8 @@ import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.PhotographerNCategoriesRepository;
+import com.ssafy.core.repository.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,10 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class PhotographerService {
+    @Autowired
+    private PhotographerNCategoriesRepository photographerNCategoriesRepository;
+    @Autowired
+    private PhotographerNPlacesRepository photographerNPlacesRepository;
     @Autowired
     private PhotographerRepository photographerRepository;
 
@@ -138,11 +143,39 @@ public class PhotographerService {
             s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
 
+        // 활동지역 변환
+        for(PhotographerNPlaces places : findPhotographer.getPlaces()){
+            photographerNPlacesRepository.deleteById(places.getId());
+        }
+        List<PhotographerNPlaces> places = new ArrayList<>();
+        for(PlacesReqDto place : photographer.getPlaces()){
+            places.add(PhotographerNPlaces.builder()
+                    .photographer(Photographer.builder().id(photographer.getPhotographerId()).build())
+                    .places(Places.builder().id(place.getPlaceId()).build())
+                    .build()
+            );
+        }
+
+        // 카테고리 변환
+        for(PhotographerNCategories categories : findPhotographer.getCategories()){
+            photographerNCategoriesRepository.deleteById(categories.getId());
+        }
+        List<PhotographerNCategories> categories = new ArrayList<>();
+        for(CategoriesReqDto category : photographer.getCategories()){
+            categories.add(PhotographerNCategories.builder()
+                    .photographer(Photographer.builder().id(photographer.getPhotographerId()).build())
+                    .category(Categories.builder().id(category.getCategoryId()).build())
+                    .price(category.getPrice())
+                    .description(category.getDescription())
+                    .build()
+            );
+        }
+
         findPhotographer.updateProfileImg(photographer.getProfileImg());
         findPhotographer.updateAccount(photographer.getAccount());
         findPhotographer.updateIntroduction(photographer.getIntroduction());
-//        findPhotographer.updatePlaces(photographer.getPlaces());
-//        findPhotographer.updateCategories(photographer.getCategories());
+        findPhotographer.updatePlaces(places);
+        findPhotographer.updateCategories(categories);
 
         PhotographerResDto savedPhotographer = new PhotographerResDto();
         return savedPhotographer.of(photographerRepository.save(findPhotographer));
