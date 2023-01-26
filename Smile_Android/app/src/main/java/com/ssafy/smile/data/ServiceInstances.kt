@@ -20,10 +20,14 @@ class ServiceInstances(retrofitInstances : RetrofitInstances) {
     @Singleton
     private val postApiService: PostApiService = retrofitInstances.getRetrofit().create(PostApiService::class.java)
 
+    @Singleton
+    private val searchApiService: SearchApiService = retrofitInstances.getRetrofit().create(SearchApiService::class.java)
+
     fun getUserApiService() : UserApiService = userApiService
     fun getPortfolioApiService(): PortfolioApiService = portfolioApiService
     fun getLikeApiService(): LikeApiService = likeApiService
     fun getPhotographerApiService() : PhotographerApiService = photographerApiService
     fun getPostApiService(): PostApiService = postApiService
+    fun getSearchApiService(): SearchApiService = searchApiService
 
 }
