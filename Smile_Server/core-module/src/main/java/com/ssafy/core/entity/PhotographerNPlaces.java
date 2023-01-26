@@ -33,10 +33,4 @@ public class PhotographerNPlaces {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Places places;
-
-    public void updatePhotographer(Long photographerId){
-        this.photographer = Photographer.builder()
-                .id(photographerId)
-                .build();
-    }
 }
