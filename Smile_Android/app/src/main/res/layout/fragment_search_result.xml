@@ -6,6 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.view.home.SearchResultFragment">
 
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/layout_common_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_search"
         style="@style/Et4DirOutlined.TextInputLayout"
@@ -17,10 +23,10 @@
         app:startIconTint="@color/blue400"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/layout_toolbar">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_id"
+            android:id="@+id/et_search"
             style="@style/Et4DirOutlined.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

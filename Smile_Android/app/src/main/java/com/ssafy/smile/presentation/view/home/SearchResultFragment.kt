@@ -1,18 +1,46 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.view.KeyEvent
+import android.view.KeyEvent.KEYCODE_ENTER
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.hideKeyboard
 import com.ssafy.smile.databinding.FragmentSearchResultBinding
 import com.ssafy.smile.presentation.adapter.SearchViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(FragmentSearchResultBinding::bind, R.layout.fragment_search_result) {
+    private val searchViewModel by activityViewModels<SearchViewModel>()
+
     override fun initView() {
         setViewPager()
+        initToolbar()
+    }
+
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("검색", true)
     }
 
     override fun setEvent() {
-//        TODO("Not yet implemented")
+        setSearchEvent()
+    }
+
+    private fun setSearchEvent() {
+        binding.apply {
+            etSearch.setOnKeyListener { view, keyCode, keyEvent ->
+                if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
+                    hideKeyboard(view)
+                    searchViewModel.searchPhotographer(etSearch.text.toString())
+                    true
+                } else {
+                    false
+                }
+            }
+        }
     }
 
     private fun setViewPager() {
