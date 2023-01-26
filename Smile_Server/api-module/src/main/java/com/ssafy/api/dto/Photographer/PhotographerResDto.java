@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 사진작가 DTO
+ * 사진작가 응답 DTO
  *
  * author @김정은
  */

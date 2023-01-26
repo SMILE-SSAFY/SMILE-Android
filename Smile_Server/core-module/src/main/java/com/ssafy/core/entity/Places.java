@@ -9,6 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 활동지역 테이블
+ *
+ * author @김정은
+ */
 @Entity
 @Table(name = "places")
 @Getter
