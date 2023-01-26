@@ -7,10 +7,10 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
+import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.databinding.FragmentLogInBinding
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -29,7 +29,12 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
     }
 
     override fun initView() {
-        (activity as MainActivity).setToolBar(isUsed = false, isBackUsed = false, title = null)
+        setObserver()
+    }
+
+    private fun setObserver() {
+        loginResponseObserver()
+        kakaoLoginResponseObserver()
     }
 
     override fun setEvent() {
@@ -49,27 +54,35 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                 kakaoLogin()
             }
         }
-        loginResponseObserver()
-        kakaoLoginResponseObserver()
     }
 
     private fun loginResponseObserver() {
         userViewModel.loginResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
                     SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
                     findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    if (it.errorCode == 404) {
-                        showToast(requireContext(), "존재하지 않는 회원입니다. 다시 로그인해주세요.", Types.ToastType.WARNING)
-                    } else {
-                        showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    dismissLoadingDialog()
+                    when (it.errorCode) {
+                        404 -> {
+                            showToast(requireContext(), "존재하지 않는 회원입니다. 다시 로그인해주세요.", Types.ToastType.WARNING)
+                        }
+                        400 -> {
+                            showToast(requireContext(), "비밀번호가 일치하지 않습니다. 다시 로그인해주세요.", Types.ToastType.WARNING)
+                        }
+                        else -> {
+                            showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                        }
                     }
                 }
-                is NetworkUtils.NetworkResponse.Loading -> {}
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
             }
         }
     }
@@ -86,6 +99,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
                     findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
+                    showToast(requireContext(), "로그인 되었습니다.", Types.ToastType.BASIC)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -130,7 +144,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                 } else if (token != null) {
-                    userViewModel.kakaoLogin(token.accessToken)
+                    userViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken))
                 }
             }
         } else {

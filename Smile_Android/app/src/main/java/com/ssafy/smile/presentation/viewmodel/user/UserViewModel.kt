@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
@@ -62,7 +63,7 @@ class UserViewModel: BaseViewModel() {
     }
 
     // 카카오 로그인을 수행하는 함수
-    fun kakaoLogin(token: String) {
+    fun kakaoLogin(token: KakaoLoginRequestDto) {
         viewModelScope.launch {
             userRepository.kakaoLogin(token)
         }

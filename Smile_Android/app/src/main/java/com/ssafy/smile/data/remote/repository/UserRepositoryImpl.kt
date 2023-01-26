@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.UserRemoteDataSource
+import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
@@ -56,7 +57,7 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
         }
     }
 
-    override suspend fun kakaoLogin(token: String) {
+    override suspend fun kakaoLogin(token: KakaoLoginRequestDto) {
         safeApiCall(_kakaoLoginResponseLiveData) {
             userRemoteDataSource.kakaoLogin(token)
         }

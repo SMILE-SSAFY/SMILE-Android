@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ssafy.smile.R
@@ -27,11 +28,16 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
     }
 
     override fun initView() {
-        mainActivity.setToolBar(isUsed = true, isBackUsed = true, title = "게시글 업로드")
+        initToolbar()
         setRvAdapter()
         setSpinnerAdapter()
         setObserver()
         setButtonDisable()
+    }
+
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("게시글 업로드", true)
     }
 
     override fun setEvent() {

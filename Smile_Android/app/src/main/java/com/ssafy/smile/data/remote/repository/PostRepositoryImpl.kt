@@ -13,15 +13,19 @@ class PostRepositoryImpl(private val postRemoteDataSource: PostRemoteDataSource)
     val getPostByIdLiveData: LiveData<NetworkUtils.NetworkResponse<PostDetailResponseDto>>
         get() = _getPostByIdLiveData
 
-    override suspend fun getPostById(articleId: Long) {
-        postRemoteDataSource.getPostById(articleId)
-    }
-
     private val _deletePostByIdLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
     val deletePostByIdLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _deletePostByIdLiveData
 
+    override suspend fun getPostById(articleId: Long) {
+        safeApiCall(_getPostByIdLiveData){
+            postRemoteDataSource.getPostById(articleId)
+        }
+    }
+
     override suspend fun deletePostById(articleId: Long) {
-        postRemoteDataSource.deletePostById(articleId)
+        safeApiCall(_deletePostByIdLiveData){
+            postRemoteDataSource.deletePostById(articleId)
+        }
     }
 }

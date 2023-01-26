@@ -1,5 +1,6 @@
 package com.ssafy.smile.data.remote.datasource
 
+import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.data.remote.model.LoginRequestDto
 import com.ssafy.smile.data.remote.model.SignUpRequestDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
@@ -23,7 +24,7 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
         return userApiService.login(loginRequestDto)
     }
 
-    override suspend fun kakaoLogin(token: String): Response<UserResponseDto> {
+    override suspend fun kakaoLogin(token: KakaoLoginRequestDto): Response<UserResponseDto> {
         return userApiService.kakaoLogin(token)
     }
 }

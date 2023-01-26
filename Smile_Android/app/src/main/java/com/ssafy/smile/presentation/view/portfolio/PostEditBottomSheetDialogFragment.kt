@@ -19,6 +19,10 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
     private val args: PostDetailFragmentArgs by navArgs()
 
     override fun initView() {
+        setObserver()
+    }
+
+    private fun setObserver() {
         deletePostByIdResponseObserver()
     }
 
@@ -39,13 +43,17 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
         postViewModel.deletePostByIdResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
                     showToast(requireContext(), "삭제되었습니다.", Types.ToastType.BASIC)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
                     Log.d(TAG, "deletePostByIdResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "게시글 삭제 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
-                is NetworkUtils.NetworkResponse.Loading -> {}
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
             }
         }
     }
