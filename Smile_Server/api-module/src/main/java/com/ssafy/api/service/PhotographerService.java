@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
+import com.ssafy.api.dto.Photographer.PhotographerForListDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -31,6 +32,7 @@ import java.util.List;
  * 작가 프로필 관련 클래스
  *
  * author @김정은
+ * author @서재건
  */
 @Service
 @Transactional
@@ -196,5 +198,29 @@ public class PhotographerService {
             s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
         photographerRepository.delete(findPhotographer);
+    }
+
+    /**
+     * categoryId로 작가 조회
+     * 
+     * @param categoryId
+     * @return List<PhotographerForListDto>
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
+     */
+    public List<PhotographerForListDto> getPhotographerListByCategory(Long categoryId) {
+        List<Photographer> photographerList = photographerNCategoriesRepository.findByCategoryId(categoryId);
+        log.info("카테고리로 작가 조회");
+
+        if (photographerList.isEmpty()) {
+            log.info("해당 카테고리의 작가가 없음");
+            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
+        }
+
+        log.info("해당 카테고리를 가진 작가가 있음");
+        List<PhotographerForListDto> photographerForList = new ArrayList<>();
+        for (Photographer photographer : photographerList) {
+            photographerForList.add(new PhotographerForListDto().of(photographer));
+        }
+        return photographerForList;
     }
 }
