@@ -7,12 +7,12 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.hideKeyboard
-import com.ssafy.smile.databinding.FragmentSearchResultBinding
+import com.ssafy.smile.databinding.FragmentSearchBinding
 import com.ssafy.smile.presentation.adapter.SearchViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
-class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(FragmentSearchResultBinding::bind, R.layout.fragment_search_result) {
+class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::bind, R.layout.fragment_search) {
     private val searchViewModel by activityViewModels<SearchViewModel>()
 
     override fun initView() {
@@ -34,6 +34,7 @@ class SearchResultFragment : BaseFragment<FragmentSearchResultBinding>(FragmentS
             etSearch.setOnKeyListener { view, keyCode, keyEvent ->
                 if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
                     hideKeyboard(view)
+                    searchViewModel.searchCategory = etSearch.text.toString()
                     searchViewModel.searchPhotographer(etSearch.text.toString())
                     true
                 } else {

@@ -38,6 +38,10 @@ class CustomPhotographer: ConstraintLayout {
         tvPrice = findViewById(R.id.tv_price)
         ctvLike = findViewById(R.id.ctv_like)
         tvLike = findViewById(R.id.tv_like)
+
+        ctvLike.setOnClickListener {
+            ctvLike.isChecked = !(ctvLike.isChecked)
+        }
     }
 
     // attrs.xml 파일로부터 속성 정보 확보 - typedArray
