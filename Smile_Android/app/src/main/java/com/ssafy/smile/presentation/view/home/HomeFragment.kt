@@ -35,7 +35,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.action_search -> {
-                        // TODO : 검색 화면
+                        findNavController().navigate(R.id.action_mainFragment_to_searchResultFragment)
                         true
                     }
                     R.id.action_portfolio -> {
