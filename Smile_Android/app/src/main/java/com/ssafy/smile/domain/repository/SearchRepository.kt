@@ -1,5 +1,6 @@
 package com.ssafy.smile.domain.repository
 
 interface SearchRepository {
-    suspend fun searchPhotographer(category:String)
+    suspend fun searchPhotographer(categoryId:String)
+    suspend fun searchPost(categoryId: String)
 }

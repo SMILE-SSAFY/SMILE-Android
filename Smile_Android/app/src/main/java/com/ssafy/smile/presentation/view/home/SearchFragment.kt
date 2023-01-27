@@ -36,6 +36,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     hideKeyboard(view)
                     searchViewModel.searchCategory = etSearch.text.toString()
                     searchViewModel.searchPhotographer(etSearch.text.toString())
+                    searchViewModel.searchPost(etSearch.text.toString())
                     true
                 } else {
                     false
