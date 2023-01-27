@@ -1,18 +1,22 @@
 package com.ssafy.smile.presentation.view.home
 
 import android.os.Bundle
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 
+    private val homeViewModel by activityViewModels<HomeViewModel>()
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var isPhotographer = true
@@ -20,38 +24,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        for (i in 1..10) {
-            recyclerData.add(
-                CustomPhotographerDomainDto(
-                    "https://lab.ssafy.com/uploads/-/system/appearance/header_logo/1/ssafy_logo.png",
-                    "cccc",
-                    "ccccc",
-                    "cccc",
-                    "cccc",
-                    false,
-                    100
-                )
-            )
-            recyclerData.add(
-                CustomPhotographerDomainDto(
-                    "https://lab.ssafy.com/uploads/-/system/appearance/header_logo/1/ssafy_logo.png",
-                    "cccc",
-                    "ccccc",
-                    "cccc",
-                    "cccc",
-                    false,
-                    100
-                )
-            )
-        }
-
-//        isPhotographer = getRole()
     }
 
     override fun initView() {
+//        isPhotographer = getRole()
         initToolbar()
+        setObserver()
         initRecycler()
+    }
+
+    private fun setObserver() {
+        getPhotographerInfoByAddressResponseObserver()
+    }
+
+    private fun getPhotographerInfoByAddressResponseObserver() {
+        homeViewModel.getPhotographerInfoByAddressResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    recyclerData.clear()
+                    it.data.forEach { data ->
+                        recyclerData.add(data.toCustomPhotographerDomainDto())
+                    }
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    showToast(requireContext(), "주변 작가 목록 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+            }
+        }
     }
 
     override fun setEvent() {

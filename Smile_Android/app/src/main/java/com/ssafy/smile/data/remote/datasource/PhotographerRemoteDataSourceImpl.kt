@@ -1,5 +1,6 @@
 package com.ssafy.smile.data.remote.datasource
 
+import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.data.remote.service.PhotographerApiService
@@ -20,5 +21,9 @@ class PhotographerRemoteDataSourceImpl(private val photographerApiService: Photo
 
     override suspend fun deletePhotographerInfo(): Response<String> {
         return photographerApiService.deletePhotographerInfo()
+    }
+
+    override suspend fun getPhotographerInfoByAddress(address:String): Response<ArrayList<PhotographerByAddressResponseDto>> {
+        return photographerApiService.getPhotographerInfoByAddress(address)
     }
 }
