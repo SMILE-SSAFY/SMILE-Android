@@ -16,10 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-    /***
-     * 작가별 게시글 리스트를 반환하는 Dto*
-     * @Author  신민철
-     */
+/***
+ * 작가별 게시글 리스트를 반환하는 Dto*
+ * author @신민철
+ */
 public class PhotographerInfoDto {
     private Long photographerId;
     private Boolean isMe;

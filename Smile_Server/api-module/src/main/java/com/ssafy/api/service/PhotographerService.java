@@ -36,8 +36,9 @@ import java.util.List;
 /**
  * 작가 프로필 관련 클래스
  *
- * author @김정은
- * author @서재건
+ * @author 김정은
+ * @author 서재건
+ * @author 신민철
  */
 @Service
 @Transactional
@@ -49,13 +50,10 @@ public class PhotographerService {
     private PhotographerNPlacesRepository photographerNPlacesRepository;
     @Autowired
     private PhotographerRepository photographerRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private S3UploaderService s3UploaderService;
-
     @Autowired
     private PhotographerHeartRepository photographerHeartRepository;
 
@@ -234,6 +232,14 @@ public class PhotographerService {
         
         return photographerForList;
     }
+
+    /***
+     *
+     * @param photographerId
+     * @return 포토그래퍼 id, isHeart boolean
+     * @throws CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)
+     * @throws CustomException(ErrorCode.USER_NOT_FOUND)
+     */
     public PhotographerHeartDto addHeartPhotographer(Long photographerId){
         Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -242,19 +248,26 @@ public class PhotographerService {
         User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         boolean isHeart = isHearted(user, photographer);
 
+        // 좋아요가 없을 때 -> 좋아요 등록
         if(!isHeart){
             photographerHeartRepository.save(new PhotographerHeart(user, photographer));
         } else {
-            Long id = photographerHeartRepository.findByUserAndPhotographer(user, photographer).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)).getId();
-            photographerHeartRepository.deleteById(id);
+            photographerHeartRepository.deleteByUserAndPhotographer(user, photographer);
         }
 
+        // 버튼을 누른 이후 이므로, 좋아요면 싫어요, 싫어요면 좋아요를 반환
         return PhotographerHeartDto.builder()
                 .photographerId(photographerId)
                 .isHeart(!isHeart)
                 .build();
     }
 
+    /***
+     *
+     * @param user
+     * @param photographer
+     * @return user가 photographer에 좋아요를 눌렀는지 여부
+     */
     private Boolean isHearted(User user, Photographer photographer){
         return photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent();
     }

@@ -1,6 +1,5 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.Photographer.PlacesResDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
@@ -56,9 +55,9 @@ public class ArticleService {
     }
 
     /***
+     * article 생성
      *
      * @param dto
-     * user 정보와 articlePostDto를 받아와 articleRepository에 save
      * @throws PHOTOGRAPHER_NOT_FOUND
      */
     public void postArticle(ArticlePostDto dto) throws IOException{
@@ -84,8 +83,7 @@ public class ArticleService {
         User articleAuthor = article.getUser();
         boolean isMe = isMe(logInUser, articleAuthor);
         boolean isHearted = isHearted(logInUser, article);
-        Long hearts;
-        hearts = articleHeartRepository.countByArticle(article);
+        Long hearts = articleHeartRepository.countByArticle(article);
 
         return ArticleDetailDto.builder()
                 .id(id)
@@ -135,8 +133,7 @@ public class ArticleService {
         Photographer photographer = photographerRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         Boolean isMe = isMe(logInUser, user);
         Boolean isHeart = photographerHeartRepository.findByUserAndPhotographer(logInUser, photographer).isPresent();
-        Long hearts;
-        hearts = photographerHeartRepository.countByPhotographer(photographer);
+        Long hearts = photographerHeartRepository.countByPhotographer(photographer);
         // 활동지역
         List<String> places = new ArrayList<>();
         for(PhotographerNPlaces place : photographer.getPlaces()){
@@ -247,8 +244,7 @@ public class ArticleService {
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
         } else {
-           Long id = articleHeartRepository.findByUserAndArticle(user, article).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND)).getId();
-           articleHeartRepository.deleteById(id);
+           articleHeartRepository.deleteByUserAndArticle(user, article);
         }
 
         return ArticleHeartDto.builder()

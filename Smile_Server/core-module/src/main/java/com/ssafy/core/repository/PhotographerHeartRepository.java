@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface PhotographerHeartRepository extends JpaRepository<PhotographerHeart, Long> {
     Optional<PhotographerHeart> findByUserAndPhotographer(User user, Photographer photographer);
 
+    void deleteByUserAndPhotographer(User user, Photographer photographer);
+
     Long countByPhotographer(Photographer photographer);
 }
