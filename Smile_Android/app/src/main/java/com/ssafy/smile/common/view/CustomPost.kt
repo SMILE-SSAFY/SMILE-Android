@@ -13,12 +13,12 @@ import com.ssafy.smile.R
 import com.ssafy.smile.domain.model.CustomPostDomainDto
 
 class CustomPost: ConstraintLayout {
-    private lateinit var ivImage: ImageView
-    private lateinit var tvCategory: TextView
-    private lateinit var tvName: TextView
-    private lateinit var tvLocation: TextView
-    private lateinit var ctvLike: CheckedTextView
-    private lateinit var tvLike: TextView
+    lateinit var ivImage: ImageView
+    lateinit var tvCategory: TextView
+    lateinit var tvName: TextView
+    lateinit var tvLocation: TextView
+    lateinit var ctvLike: CheckedTextView
+    lateinit var tvLike: TextView
 
     constructor(context: Context) : super(context)
 

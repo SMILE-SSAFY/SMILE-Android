@@ -13,13 +13,13 @@ import com.ssafy.smile.R
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 
 class CustomPhotographer: ConstraintLayout {
-    private lateinit var ivImage: ImageView
-    private lateinit var tvCategory: TextView
-    private lateinit var tvName: TextView
-    private lateinit var tvLocation: TextView
-    private lateinit var tvPrice: TextView
-    private lateinit var ctvLike: CheckedTextView
-    private lateinit var tvLike: TextView
+    lateinit var ivImage: ImageView
+    lateinit var tvCategory: TextView
+    lateinit var tvName: TextView
+    lateinit var tvLocation: TextView
+    lateinit var tvPrice: TextView
+    lateinit var ctvLike: CheckedTextView
+    lateinit var tvLike: TextView
 
     constructor(context: Context) : super(context)
 
@@ -38,10 +38,6 @@ class CustomPhotographer: ConstraintLayout {
         tvPrice = findViewById(R.id.tv_price)
         ctvLike = findViewById(R.id.ctv_like)
         tvLike = findViewById(R.id.tv_like)
-
-        ctvLike.setOnClickListener {
-            ctvLike.isChecked = !(ctvLike.isChecked)
-        }
     }
 
     // attrs.xml 파일로부터 속성 정보 확보 - typedArray

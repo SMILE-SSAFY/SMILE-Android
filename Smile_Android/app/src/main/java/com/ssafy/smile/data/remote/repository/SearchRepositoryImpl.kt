@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.SearchRemoteDataSource
 import com.ssafy.smile.data.remote.model.SearchPhotographerResponseDto
+import com.ssafy.smile.data.remote.model.SearchPostResponseDto
 import com.ssafy.smile.domain.repository.SearchRepository
 import com.ssafy.smile.presentation.base.BaseRepository
 
@@ -13,9 +14,19 @@ class SearchRepositoryImpl(private val searchRemoteDataSource: SearchRemoteDataS
     val searchPhotographerLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPhotographerResponseDto>>>
         get() = _searchPhotographerLiveData
 
-    override suspend fun searchPhotographer(category: String) {
+    private val _searchPostLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPostResponseDto>>>()
+    val searchPostLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPostResponseDto>>>
+        get() = _searchPostLiveData
+
+    override suspend fun searchPhotographer(categoryId: String) {
         safeApiCall(_searchPhotographerLiveData){
-            searchRemoteDataSource.searchPhotographer(category)
+            searchRemoteDataSource.searchPhotographer(categoryId)
+        }
+    }
+
+    override suspend fun searchPost(categoryId: String) {
+        safeApiCall(_searchPostLiveData){
+            searchRemoteDataSource.searchPost(categoryId)
         }
     }
 }

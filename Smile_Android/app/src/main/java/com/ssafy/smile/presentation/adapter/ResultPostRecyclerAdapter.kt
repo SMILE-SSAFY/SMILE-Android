@@ -26,6 +26,11 @@ class ResultPostRecyclerAdapter(val context: Context, val datas: MutableList<Cus
                     data.isLike,
                     data.like
                 ))
+
+                val button = customPost.ctvLike
+                button.setOnClickListener {
+                    button.isChecked = !(button.isChecked)
+                }
             }
         }
     }
