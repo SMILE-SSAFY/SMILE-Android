@@ -1,6 +1,10 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.article.*;
+import com.ssafy.api.dto.article.ArticleDetailDto;
+import com.ssafy.api.dto.article.ArticleHeartDto;
+import com.ssafy.api.dto.article.ArticleListDto;
+import com.ssafy.api.dto.article.ArticlePostDto;
+import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.Photographer;
@@ -130,7 +134,8 @@ public class ArticleService {
                 .photographerName(user.getName())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
-                .places(photographer.getPlaces())
+                .categoriesList(photographer.getCategories())
+                .placesList(photographer.getPlaces())
                 .build();
     }
 

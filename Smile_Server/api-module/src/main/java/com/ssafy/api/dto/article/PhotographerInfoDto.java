@@ -1,5 +1,6 @@
 package com.ssafy.api.dto.article;
 
+import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Places;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,5 +24,6 @@ public class PhotographerInfoDto {
     private String photographerName;
     private String profileImg;
     private String introduction;
-    private List<Places> places;
+    private List<Categories> categoriesList;
+    private List<Places> placesList;
 }
