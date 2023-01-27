@@ -1,7 +1,12 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Intent
+import android.speech.RecognizerIntent
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
@@ -15,6 +20,28 @@ import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::bind, R.layout.fragment_search) {
     private val searchViewModel by activityViewModels<SearchViewModel>()
 
+    private lateinit var selected: String
+
+    private val sttLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.data == null || it.resultCode != Activity.RESULT_OK) {
+            return@registerForActivityResult
+        }
+
+        val results = it.data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) //인식된 데이터 list 받아옴.
+
+        AlertDialog.Builder(requireContext())
+            .setSingleChoiceItems(results!!.toTypedArray(), -1) { _, pos ->
+                selected = results[pos]
+            }
+            .setPositiveButton("확인") { _, _ ->
+                searchCategory(selected)
+            }
+            .setNegativeButton("취소") { _, _ ->
+                selected = ""
+            }.create()
+            .show()
+    }
+
     override fun initView() {
         setViewPager()
         initToolbar()
@@ -27,6 +54,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     override fun setEvent() {
         setSearchEvent()
+        binding.apply {
+            btnStt.setOnClickListener {
+                startStt()
+            }
+        }
     }
 
     private fun setSearchEvent() {
@@ -34,14 +66,20 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             etSearch.setOnKeyListener { view, keyCode, keyEvent ->
                 if (keyEvent.action == KeyEvent.ACTION_DOWN && keyCode == KEYCODE_ENTER) {
                     hideKeyboard(view)
-                    searchViewModel.searchCategory = etSearch.text.toString()
-                    searchViewModel.searchPhotographer(etSearch.text.toString())
-                    searchViewModel.searchPost(etSearch.text.toString())
+                    searchCategory(etSearch.text.toString())
                     true
                 } else {
                     false
                 }
             }
+        }
+    }
+
+    private fun searchCategory(category: String) {
+        binding.apply {
+            searchViewModel.searchCategory = category
+            searchViewModel.searchPhotographer(category)
+            searchViewModel.searchPost(category)
         }
     }
 
@@ -53,5 +91,21 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitle[position]
         }.attach()
+    }
+
+    private fun startStt() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, requireActivity().packageName)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "검색어를 말씀해주세요.")
+        }
+
+        sttLauncher.launch(intent)
+    }
+
+    private fun setResultText(selected: String) {
+        binding.apply {
+            etSearch.setText(selected)
+        }
     }
 }
