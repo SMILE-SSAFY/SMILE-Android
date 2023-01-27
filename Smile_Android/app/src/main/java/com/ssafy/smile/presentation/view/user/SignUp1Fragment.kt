@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.view.user
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
@@ -91,8 +92,15 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
     private fun emailCheckResponseObserver() {
         userViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    //TODO : 로딩 다이얼로그 고치기
+//                    showLoadingDialog(requireContext())
+                    setIdCheckVisibility(View.GONE, View.GONE)
+                    idDoubleCheck = false
+                }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    dismissLoadingDialog()
+                    //TODO : 로딩 다이얼로그 고치기
+//                    dismissLoadingDialog()
                     idDoubleCheck = if (it.data == "OK") {
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
                         true
@@ -101,7 +109,8 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    dismissLoadingDialog()
+                    //TODO : 로딩 다이얼로그 고치기
+//                    dismissLoadingDialog()
                     idDoubleCheck = false
                     if (it.errorCode == 400) {
                         setIdCheckVisibility(View.GONE, View.VISIBLE)
@@ -109,11 +118,6 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                         setIdCheckVisibility(View.GONE, View.GONE)
                         showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                     }
-                }
-                is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
-                    setIdCheckVisibility(View.GONE, View.GONE)
-                    idDoubleCheck = false
                 }
             }
         }
