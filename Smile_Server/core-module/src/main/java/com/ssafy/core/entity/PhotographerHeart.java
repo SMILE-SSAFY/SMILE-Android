@@ -1,6 +1,8 @@
 package com.ssafy.core.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -14,7 +16,8 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
 public class PhotographerHeart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -33,6 +33,7 @@ import java.util.List;
  *
  * author @김정은
  * author @서재건
+ * author @신민철
  */
 @RestController
 @RequestMapping("/api/photographer")
@@ -115,6 +116,12 @@ public class PhotographerController {
         List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByCategory(categoryId);
         return ResponseEntity.ok().body(photographerList);
     }
+
+    /***
+     *
+     * @param photographerId
+     * @return 작가 id, isHeart boolean
+     */
     @PutMapping("/heart/{photographerId}")
     public ResponseEntity<?> addHeartPhotographer(@PathVariable("photographerId") Long photographerId){
         PhotographerHeartDto photographerHeartDto = photographerService.addHeartPhotographer(photographerId);

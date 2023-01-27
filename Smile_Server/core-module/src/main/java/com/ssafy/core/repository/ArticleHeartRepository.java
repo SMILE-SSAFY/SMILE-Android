@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface ArticleHeartRepository extends JpaRepository<ArticleHeart, Long> {
     Optional<ArticleHeart> findByUserAndArticle(User user, Article article);
+    void deleteByUserAndArticle(User user, Article article);
     Long countByArticle(Article article);
 }
