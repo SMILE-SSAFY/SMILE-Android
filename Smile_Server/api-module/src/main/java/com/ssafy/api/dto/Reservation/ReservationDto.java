@@ -29,5 +29,11 @@ public class ReservationDto {
 
     private LocalTime time;
 
+    // 장소
+    private String address;
+
+    // 상세주소
+    private String detailAddress;
+
     private boolean isReviewed;
 }
