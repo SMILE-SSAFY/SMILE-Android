@@ -9,4 +9,12 @@
         <attr name="isChecked" format="boolean" />
         <attr name="like" format="string" />
     </declare-styleable>
+    <declare-styleable name="CustomPost">
+        <attr name="postImg" format="integer|reference" />
+        <attr name="pCategory" format="string" />
+        <attr name="pName" format="string" />
+        <attr name="pLocation" format="string" />
+        <attr name="pIsChecked" format="boolean" />
+        <attr name="pLike" format="string" />
+    </declare-styleable>
 </resources>
