@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 
+import com.ssafy.api.dto.Photographer.PhotographerForListDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -8,6 +9,7 @@ import com.ssafy.api.service.PhotographerService;
 import com.ssafy.api.service.S3UploaderService;
 import com.ssafy.core.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,12 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 작가 관련 Controller
  *
  * author @김정은
- *
+ * author @서재건
  */
 @RestController
 @RequestMapping("/api/photographer")
@@ -97,5 +100,17 @@ public class PhotographerController {
         User user = (User)authentication.getPrincipal();
         photographerService.removePhotographer(user.getId());
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /**
+     * 카테고리로 작가 검색
+     *
+     * @param categoryId
+     * @return List<PhotographerForListDto>
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryId") Long categoryId) {
+        List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByCategory(categoryId);
+        return ResponseEntity.ok().body(photographerList);
     }
 }
