@@ -167,6 +167,9 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User logInUser = getLogInUser();
         Boolean isMe = isMe(logInUser, article.getUser());
+        boolean isHearted = isHearted(logInUser, article);
+        Long hearts;
+        hearts = articleHeartRepository.countByArticle(article);
 
         if (isMe){
             // 이미지 지우기
@@ -191,10 +194,12 @@ public class ArticleService {
         return ArticleDetailDto.builder()
                 .id(articleId)
                 .isMe(isMe)
+                .isHeart(isHearted)
                 .detailAddress(article.getDetailAddress())
                 .category(article.getCategory())
                 .createdAt(article.getCreatedAt())
                 .photoUrls(article.getPhotoUrls())
+                .hearts(hearts)
                 .build();
     }
 
