@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
+import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -9,18 +10,22 @@ import com.ssafy.api.dto.Photographer.PlacesReqDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,8 +37,9 @@ import java.util.List;
 /**
  * 작가 프로필 관련 클래스
  *
- * author @김정은
- * author @서재건
+ * @author 김정은
+ * @author 서재건
+ * @author 신민철
  */
 @Service
 @Transactional
@@ -45,12 +51,12 @@ public class PhotographerService {
     private PhotographerNPlacesRepository photographerNPlacesRepository;
     @Autowired
     private PhotographerRepository photographerRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private S3UploaderService s3UploaderService;
+    @Autowired
+    private PhotographerHeartRepository photographerHeartRepository;
 
     /**
      * 작가 등록
@@ -238,5 +244,44 @@ public class PhotographerService {
         }
         
         return photographerForList;
+    }
+
+    /***
+     *
+     * @param photographerId
+     * @return 포토그래퍼 id, isHeart boolean
+     * @throws CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)
+     * @throws CustomException(ErrorCode.USER_NOT_FOUND)
+     */
+    public PhotographerHeartDto addHeartPhotographer(Long photographerId){
+        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        boolean isHeart = isHearted(user, photographer);
+
+        // 좋아요가 없을 때 -> 좋아요 등록
+        if(!isHeart){
+            photographerHeartRepository.save(new PhotographerHeart(user, photographer));
+        } else {
+            photographerHeartRepository.deleteByUserAndPhotographer(user, photographer);
+        }
+
+        // 버튼을 누른 이후 이므로, 좋아요면 싫어요, 싫어요면 좋아요를 반환
+        return PhotographerHeartDto.builder()
+                .photographerId(photographerId)
+                .isHeart(!isHeart)
+                .build();
+    }
+
+    /***
+     *
+     * @param user
+     * @param photographer
+     * @return user가 photographer에 좋아요를 눌렀는지 여부
+     */
+    private Boolean isHearted(User user, Photographer photographer){
+        return photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent();
     }
 }
