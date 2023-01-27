@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
+import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -113,4 +115,11 @@ public class PhotographerController {
         List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByCategory(categoryId);
         return ResponseEntity.ok().body(photographerList);
     }
+    @PutMapping("/heart/{photographerId}")
+    public ResponseEntity<?> addHeartPhotographer(@PathVariable("photographerId") Long photographerId){
+        PhotographerHeartDto photographerHeartDto = photographerService.addHeartPhotographer(photographerId);
+        return new ResponseEntity<>(photographerHeartDto, HttpStatus.OK);
+    }
+
+
 }
