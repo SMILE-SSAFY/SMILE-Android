@@ -96,7 +96,7 @@ public class ArticleController {
      * @param articleId
      * @return 게시글 아이디, 좋아요 여부
      */
-    @PostMapping("/heart/{articleId}")
+    @PutMapping("/heart/{articleId}")
     public ResponseEntity<?> heartArticle(
             @PathVariable("articleId") Long articleId
     ){
