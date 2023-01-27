@@ -2,24 +2,29 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
+import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +55,9 @@ public class PhotographerService {
 
     @Autowired
     private S3UploaderService s3UploaderService;
+
+    @Autowired
+    private PhotographerHeartRepository photographerHeartRepository;
 
     /**
      * 작가 등록
@@ -225,5 +233,29 @@ public class PhotographerService {
         }
         
         return photographerForList;
+    }
+    public PhotographerHeartDto addHeartPhotographer(Long photographerId){
+        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        boolean isHeart = isHearted(user, photographer);
+
+        if(!isHeart){
+            photographerHeartRepository.save(new PhotographerHeart(user, photographer));
+        } else {
+            Long id = photographerHeartRepository.findByUserAndPhotographer(user, photographer).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)).getId();
+            photographerHeartRepository.deleteById(id);
+        }
+
+        return PhotographerHeartDto.builder()
+                .photographerId(photographerId)
+                .isHeart(!isHeart)
+                .build();
+    }
+
+    private Boolean isHearted(User user, Photographer photographer){
+        return photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent();
     }
 }

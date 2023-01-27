@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.Photographer.PlacesResDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
@@ -8,11 +9,14 @@ import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.entity.PhotographerNCategories;
+import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.ArticleHeartRepository;
 import com.ssafy.core.repository.ArticleRepository;
+import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,30 +26,33 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/***
+ * @author 신민철
+ */
 @Service
 @Slf4j
 public class ArticleService {
-    /***
-     * @author: 신민철
-     */
     private final ArticleRepository articleRepository;
     private final S3UploaderService s3UploaderService;
     private final UserRepository userRepository;
     private final PhotographerRepository photographerRepository;
     private final ArticleHeartRepository articleHeartRepository;
+    private final PhotographerHeartRepository photographerHeartRepository;
 
-    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository) {
+    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository) {
         this.articleRepository = articleRepository;
         this.s3UploaderService = s3UploaderService;
         this.userRepository = userRepository;
         this.photographerRepository = photographerRepository;
         this.articleHeartRepository = articleHeartRepository;
+        this.photographerHeartRepository = photographerHeartRepository;
     }
 
     /***
@@ -121,21 +128,37 @@ public class ArticleService {
      * @throws UsernameNotFoundException
      */
 
+    @Transactional
     public PhotographerInfoDto getPhotographerInformation(Long userId) {
         User logInUser = getLogInUser();
         User user = userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         Photographer photographer = photographerRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         Boolean isMe = isMe(logInUser, user);
-//        Boolean isHeart =
+        Boolean isHeart = photographerHeartRepository.findByUserAndPhotographer(logInUser, photographer).isPresent();
+        Long hearts;
+        hearts = photographerHeartRepository.countByPhotographer(photographer);
+        // 활동지역
+        List<String> places = new ArrayList<>();
+        for(PhotographerNPlaces place : photographer.getPlaces()){
+            places.add(place.getPlaces().getFirst()+" " +place.getPlaces().getSecond());
+        }
+
+        // 카테고리
+        List<String> categories = new ArrayList<>();
+        for(PhotographerNCategories category : photographer.getCategories()){
+            categories.add(category.getCategory().getName());
+        }
 
         return PhotographerInfoDto.builder()
                 .photographerId(userId)
                 .isMe(isMe)
+                .isHeart(isHeart)
+                .hearts(hearts)
                 .photographerName(user.getName())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
-                .categoriesList(photographer.getCategories())
-                .placesList(photographer.getPlaces())
+                .categories(categories)
+                .places(places)
                 .build();
     }
 
@@ -220,7 +243,7 @@ public class ArticleService {
 
         User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
-        Boolean isHeart = isHearted(user, article);
+        boolean isHeart = isHearted(user, article);
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
         } else {
