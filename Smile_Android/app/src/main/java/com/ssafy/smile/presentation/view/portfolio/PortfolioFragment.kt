@@ -25,10 +25,10 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     override fun initView() {
         initToolbar()
-        setObserver()
         initViewPager()
         setPhotographerId()
         portfolioViewModel.getPortfolio(photographerId)
+        setObserver()
     }
 
     private fun initToolbar(){

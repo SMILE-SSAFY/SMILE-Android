@@ -29,6 +29,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun initView() {
 //        isPhotographer = getRole()
         initToolbar()
+        homeViewModel.getPhotographerInfoByAddressInfo("tmp")
         setObserver()
         initRecycler()
     }
@@ -59,6 +60,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     override fun setEvent() {
+        setRefreshLayoutEvent()
+    }
+
+    private fun setRefreshLayoutEvent() {
+        binding.apply {
+            refreshLayout.setOnRefreshListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("tmp")
+                refreshLayout.isRefreshing = false
+            }
+        }
     }
 
     private fun initToolbar() {

@@ -30,8 +30,8 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
 
     override fun initView() {
         initToolbar()
-        setObserver()
         postViewModel.getPostById(args.postId)
+        setObserver()
         initViewPager()
     }
 
