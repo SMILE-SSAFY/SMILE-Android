@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.SearchPhotographerResponseDto
+import com.ssafy.smile.data.remote.model.SearchPostResponseDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -22,6 +23,17 @@ class SearchViewModel: BaseViewModel() {
     fun searchPhotographer(category: String) {
         viewModelScope.launch {
             searchRepository.searchPhotographer(category)
+        }
+    }
+
+    // 게시글 검색 결과를 관리하는 LiveData
+    val searchPostResponse: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPostResponseDto>>>
+        get() = searchRepository.searchPostLiveData
+
+    // 게시글 검색을 수행하는 함수
+    fun searchPost(category: String) {
+        viewModelScope.launch {
+            searchRepository.searchPost(category)
         }
     }
 }

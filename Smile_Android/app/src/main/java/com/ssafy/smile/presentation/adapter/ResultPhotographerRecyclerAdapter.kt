@@ -4,7 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckedTextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.ssafy.smile.R
 import com.ssafy.smile.databinding.RecyclerPhotographerItemBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 
@@ -27,6 +30,11 @@ class ResultPhotographerRecyclerAdapter(val context: Context, val datas: Mutable
                     data.isLike,
                     data.like
                 ))
+
+                val button = customPhotographer.ctvLike
+                button.setOnClickListener {
+                    button.isChecked = !(button.isChecked)
+                }
             }
         }
     }
