@@ -3,6 +3,7 @@ package com.ssafy.core.entity;
 import com.ssafy.core.code.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -18,8 +19,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -45,6 +48,9 @@ public class Reservation {
 
     private int price;
 
+    // 만나는 장소
+    private String place;
+
     private Date date;
 
     private Time time;
@@ -52,4 +58,7 @@ public class Reservation {
     @Column(name = "reviewed")
     @ColumnDefault("false")
     private boolean isReviewed;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }
