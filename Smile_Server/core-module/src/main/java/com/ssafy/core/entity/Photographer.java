@@ -45,7 +45,7 @@ public class Photographer implements Serializable {
     @Column(length = 100, nullable = false)
     private String introduction;
 
-    @Column(length = 14, nullable = false)
+    @Column(length = 35, nullable = false)
     private String account;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
