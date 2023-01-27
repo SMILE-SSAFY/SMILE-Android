@@ -44,6 +44,7 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
+                    recyclerData.clear()
                     it.data.articles.forEach { article ->
                         recyclerData.add(article)
                     }

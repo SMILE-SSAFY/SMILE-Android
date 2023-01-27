@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.PhotographerRemoteDataSource
+import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.domain.repository.PhotographerRepository
 import com.ssafy.smile.presentation.base.BaseRepository
+import retrofit2.Response
 
 class PhotographerRepositoryImpl(private val photographerRemoteDataSource: PhotographerRemoteDataSource): BaseRepository(), PhotographerRepository {
     private val _registerPhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
@@ -25,6 +27,10 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
     private val _deletePhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
     val deletePhotographerInfoResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
         get() = _deletePhotographerInfoResponseLiveData
+
+    private val _getPhotographerInfoByAddressResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>()
+    val getPhotographerInfoByAddressResponseLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>
+        get() = _getPhotographerInfoByAddressResponseLiveData
 
 
     override suspend fun registerPhotographerInfo(photographerRequestDto: PhotographerRequestDto) {
@@ -48,6 +54,12 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
     override suspend fun deletePhotographerInfo() {
         safeApiCall(_deletePhotographerInfoResponseLiveData){
             photographerRemoteDataSource.deletePhotographerInfo()
+        }
+    }
+
+    override suspend fun getPhotographerInfoByAddress(address:String){
+        safeApiCall(_getPhotographerInfoByAddressResponseLiveData){
+            photographerRemoteDataSource.getPhotographerInfoByAddress(address)
         }
     }
 }

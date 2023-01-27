@@ -20,9 +20,6 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
     override fun initView() {
         setObserver()
         initRecycler()
-        binding.apply {
-            tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-        }
     }
 
     private fun setObserver() {
@@ -34,6 +31,10 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
+                    binding.apply {
+                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
+                    }
+                    recyclerData.clear()
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPhotographerDomainDto())
                     }

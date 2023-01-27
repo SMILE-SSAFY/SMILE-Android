@@ -15,49 +15,23 @@ data class PortfolioResponseDto (
     val category: ArrayList<Category> = arrayListOf(),
 ){
     fun toPortfolioDomainDto(): PortfolioDomainDto {
+        val categoryNames = arrayListOf<String>()
+        val categoryPrices = arrayListOf<Int>()
+        category.forEach { data ->
+            categoryNames.add(data.categoryName)
+            categoryPrices.add(data.categoryPrice.toInt())
+        }
+
         return PortfolioDomainDto(
             isMe,
-            getCategoryName(),
+            CommonUtils.getCategoryName(categoryNames),
             photographerName,
-            getPlace(),
-            getCategoryPrice(category),
+            CommonUtils.getPlace(places),
+            CommonUtils.getCategoryPrice(categoryPrices),
             introduction,
             isHeart,
             hearts
         )
-    }
-
-    private fun getCategoryName(): String {
-        return when (category.size) {
-            1 -> {
-                "#${category[0].categoryName}}"
-            }
-            2 -> {
-                "#${category[0].categoryName}  #${category[1].categoryName}"
-            }
-            else -> {
-                "#${category[0].categoryName}  #${category[1].categoryName}..."
-            }
-        }
-    }
-
-    private fun getPlace(): String {
-        return when (places.size) {
-            1 -> {
-                "${places[0].place}}"
-            }
-            2 -> {
-                "${places[0].place}, ${places[1].place}"
-            }
-            else -> {
-                "${places[0].place}, ${places[1].place}, ..."
-            }
-        }
-    }
-
-    private fun getCategoryPrice(pCategory: ArrayList<Category>): String {
-        val sCategory = pCategory.sortedBy { it.categoryPrice }
-        return "${CommonUtils.makeComma(sCategory[0].categoryPrice.toInt())}원 부터~"
     }
 }
 
