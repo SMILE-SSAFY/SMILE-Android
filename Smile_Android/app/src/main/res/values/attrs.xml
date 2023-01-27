@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomPhotographer">
+        <attr name="profileImg" format="integer|reference" />
+        <attr name="category" format="string" />
+        <attr name="name" format="string" />
+        <attr name="location" format="string" />
+        <attr name="price" format="string" />
+        <attr name="isChecked" format="boolean" />
+        <attr name="like" format="string" />
+    </declare-styleable>
+</resources>
