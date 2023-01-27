@@ -47,7 +47,7 @@ public class PhotographerController {
      */
     @PostMapping
     public ResponseEntity<HttpStatus> registPhotographer(@RequestPart("photographer") PhotographerReqDto photographer,
-                                                         @RequestPart("image") MultipartFile multipartFile) throws IOException {
+                                                         @RequestPart("profileImg") MultipartFile multipartFile) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
@@ -77,7 +77,7 @@ public class PhotographerController {
      */
     @PutMapping
     public ResponseEntity<PhotographerResDto> changePhotographer(@RequestPart("Photographer") PhotographerUpdateReqDto photographer,
-                                                                 @RequestPart("image") MultipartFile multipartFile) throws IOException{
+                                                                 @RequestPart("profileImg") MultipartFile multipartFile) throws IOException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
