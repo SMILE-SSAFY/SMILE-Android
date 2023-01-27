@@ -6,6 +6,7 @@ import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
+import com.ssafy.core.code.Role;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
@@ -71,11 +72,13 @@ public class PhotographerService {
         // 활동지역 변환
         List<PhotographerNPlaces> places = new ArrayList<>();
         for(PlacesReqDto place : photographer.getPlaces()){
+            log.info(place.getPlaceId().getClass().getName());
             places.add(PhotographerNPlaces.builder()
                     .photographer(Photographer.builder().id(user.getId()).build())
                     .places(Places.builder().id(place.getPlaceId()).build())
                     .build()
             );
+            log.info(places.get(0).getPlaces().getId());
         }
 
         // 카테고리 변환
@@ -84,8 +87,8 @@ public class PhotographerService {
             categories.add(PhotographerNCategories.builder()
                     .photographer(Photographer.builder().id(user.getId()).build())
                     .category(Categories.builder().id(category.getCategoryId()).build())
-                            .price(category.getPrice())
-                            .description(category.getDescription())
+                    .price(category.getPrice())
+                    .description(category.getDescription())
                     .build()
             );
         }
@@ -100,6 +103,10 @@ public class PhotographerService {
                 .build();
 
         photographerRepository.save(savedPhotographer);
+
+        // 유저 역할 photographer로 수정
+        user.updateRole(Role.PHOTOGRAPHER);
+        userRepository.save(user);
     }
 
     /**
@@ -198,6 +205,12 @@ public class PhotographerService {
             s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
         photographerRepository.delete(findPhotographer);
+
+        // 일반 유저로 전환
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        user.updateRole(Role.USER);
+        userRepository.save(user);
     }
 
     /**

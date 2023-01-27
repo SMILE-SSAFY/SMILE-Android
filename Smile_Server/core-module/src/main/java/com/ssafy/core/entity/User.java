@@ -27,6 +27,7 @@ import java.util.Collection;
  * 유저 Entity
  *
  * author @서재건
+ * author @김정은
  */
 @Entity
 @Builder
@@ -141,6 +142,15 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    /**
+     * 유저 권한 변경
+     *
+     * @param role 권한
+     */
+    public void updateRole(Role role){
+        this.role = role;
     }
 }
 
