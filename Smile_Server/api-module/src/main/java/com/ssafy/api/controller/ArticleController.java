@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
@@ -87,7 +86,7 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public ResponseEntity<?> updateArticle(
             @PathVariable("articleId") Long articleId,
-            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto) throws IOException{
+            ArticlePostDto articlePostDto) throws IOException{
 
         return ResponseEntity.ok(articleService.updateArticle(articleId, articlePostDto));
     }
