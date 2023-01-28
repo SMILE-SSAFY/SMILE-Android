@@ -27,8 +27,9 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         initToolbar()
         initViewPager()
         setPhotographerId()
-        portfolioViewModel.getPortfolio(photographerId)
-        setObserver()
+        //TODO : 서버 통신 되면 주석 풀기
+//        portfolioViewModel.getPortfolio(photographerId)
+//        setObserver()
     }
 
     private fun initToolbar(){

@@ -62,30 +62,17 @@
     </style>
 
     <!-- chip -->
-    <style name="ChipMediumRectangleRadius8" parent="@style/Widget.MaterialComponents.Chip.Filter">
-        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:checkable">true</item>
-        <item name="rippleColor">@color/transparent</item>
-        <item name="chipCornerRadius">8dp</item>
-    </style>
-
-    <style name="ChipMediumRectangleBlue400Radius8" parent="ChipMediumRectangleRadius8">
-        <item name="chipBackgroundColor">@color/blue400</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="ChipMediumRectangleBlueRadius8" parent="ChipMediumRectangleRadius8">
-        <item name="chipBackgroundColor">@color/blue100</item>
-        <item name="android:textColor">@color/dark400</item>
+    <style name="ChipMediumRectangleBlueRadius8" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/filter_chip_bg_color</item>
+        <item name="android:textColor">@color/filter_chip_text_color</item>
         <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:checkable">true</item>
         <item name="chipStartPadding">8dp</item>
         <item name="chipIconVisible">true</item>
         <item name="checkedIconVisible">false</item>
-        <item name="rippleColor">@color/blue400</item>
-
+        <item name="rippleColor">@color/transparent</item>
+        <item name="chipCornerRadius">8dp</item>
     </style>
 
     <style name="ChipSmallRectangleRadius4" parent="@style/Widget.MaterialComponents.Chip.Filter">

@@ -43,50 +43,49 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_popular"
-            style="@style/ChipMediumRectangleBlueRadius8"
-            android:layout_width="70dp"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="20dp"
-            android:text="인기순"
+            android:layout_marginTop="4dp"
+            app:singleSelection="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_home" />
+            app:layout_constraintTop_toBottomOf="@+id/tb_home">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_recent"
-            style="@style/ChipMediumRectangleBlueRadius8"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
-            android:text="최신순"
-            app:layout_constraintTop_toBottomOf="@+id/tb_home"
-            app:layout_constraintStart_toEndOf="@id/chip_popular"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_popular"
+                style="@style/ChipMediumRectangleBlueRadius8"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="인기순" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_price"
-            style="@style/ChipMediumRectangleBlueRadius8"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="8dp"
-            android:text="가격순"
-            app:layout_constraintTop_toBottomOf="@+id/tb_home"
-            app:layout_constraintStart_toEndOf="@id/chip_recent"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_recent"
+                style="@style/ChipMediumRectangleBlueRadius8"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="최신순" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_price"
+                style="@style/ChipMediumRectangleBlueRadius8"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="가격순" />
+        </com.google.android.material.chip.ChipGroup>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginBottom="60dp"
             android:paddingHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chip_popular" />
+            app:layout_constraintTop_toBottomOf="@+id/chip_group" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
