@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findByUserId(Long user_id);
+    List<Article> findAllByLatitudeBetweenAndLongitudeBetween(Double y1, Double y2, Double x1, Double x2);
 }
