@@ -38,12 +38,12 @@
     </style>
 
     <style name="BtnMediumRectangleBlue400" parent="BtnLargeRectangleCommon">
-        <item name="backgroundColor">@color/blue400</item>
+        <item name="android:background">@drawable/rectangle_blue400</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="BtnMediumRectangleBlue100" parent="BtnLargeRectangleCommon">
-        <item name="backgroundColor">@color/blue100</item>
+        <item name="android:background">@drawable/rectangle_blue100</item>
         <item name="android:textColor">@color/dark400</item>
     </style>
 
@@ -101,14 +101,14 @@
         <item name="hintEnabled">false</item>
     </style>
     <style name="Et4DirOutlined.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
-        <item name="android:textColorHint">@color/gray400</item>
+        <item name="android:textColorHint">@color/gray500</item>
         <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
     <style name="Et1DirOutlined" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/et_underline_blue400</item>
-        <item name="android:textColorHint">@color/gray400</item>
+        <item name="android:textColorHint">@color/gray500</item>
         <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/black</item>
