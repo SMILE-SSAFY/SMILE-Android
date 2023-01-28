@@ -8,6 +8,7 @@ import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
 import com.ssafy.core.code.Role;
+import com.ssafy.core.dto.PhotographerQuerydslDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
@@ -219,30 +220,56 @@ public class PhotographerService {
         userRepository.save(user);
     }
 
+//    /**
+//     * categoryId로 작가 조회
+//     *
+//     * TODO: 작가 좋아요 구현으로 관련 dto 수정 전
+//     *
+//     * @param categoryId
+//     * @return List<PhotographerForListDto>
+//     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
+//     */
+//    public List<PhotographerForListDto> getPhotographerListByCategory(Long categoryId) {
+//        List<Photographer> photographerList = photographerNCategoriesRepository.findByCategoryId(categoryId);
+//        log.info("카테고리로 작가 조회");
+//
+//        if (photographerList.isEmpty()) {
+//            log.info("해당 카테고리의 작가가 없음");
+//            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
+//        }
+//
+//        log.info("해당 카테고리를 가진 작가가 있음");
+//        List<PhotographerForListDto> photographerForList = new ArrayList<>();
+//        for (Photographer photographer : photographerList) {
+//            photographerForList.add(new PhotographerForListDto().of(photographer));
+//        }
+//
+//        return photographerForList;
+//    }
+
     /**
-     * categoryId로 작가 조회
-     * 
-     * TODO: 작가 좋아요 구현 시 좋아요 갯수 및 좋아요 상태 추가, 추가 dto 필요
-     * 
-     * @param categoryId
+     * 주변 작가 조회
+     *
+     * @param address
      * @return List<PhotographerForListDto>
-     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public List<PhotographerForListDto> getPhotographerListByCategory(Long categoryId) {
-        List<Photographer> photographerList = photographerNCategoriesRepository.findByCategoryId(categoryId);
-        log.info("카테고리로 작가 조회");
+    public List<PhotographerForListDto> getPhotographerListByAddresss(Long userId, String address) {
+        String[] addresssList = address.split(" ");
+        List<PhotographerQuerydslDto> photographerList =
+                photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1]);
+        log.info("주변 작가 조회");
 
         if (photographerList.isEmpty()) {
-            log.info("해당 카테고리의 작가가 없음");
+            log.info("주변 작가가 없음");
             throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
         }
 
-        log.info("해당 카테고리를 가진 작가가 있음");
+        log.info("주변 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (Photographer photographer : photographerList) {
-            photographerForList.add(new PhotographerForListDto().of(photographer));
+        for (PhotographerQuerydslDto photographerQuerydsl : photographerList) {
+            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
-        
+
         return photographerForList;
     }
 

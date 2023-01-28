@@ -1,5 +1,6 @@
 package com.ssafy.api.dto.Photographer;
 
+import com.ssafy.core.dto.PhotographerQuerydslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
@@ -34,20 +35,20 @@ public class PhotographerForListDto {
     /**
      * Photographer Entity에서 검색용 photographer DTO로 변경
      *
-     * @param photographer  PhotographerEntity
+     * @param photographerQuerydsl  photographerQuerydslDto
      * @return 변환된 DTO
      */
-    public PhotographerForListDto of(Photographer photographer) {
+    public PhotographerForListDto of(PhotographerQuerydslDto photographerQuerydsl) {
         // 활동지역
         List<PlacesForListDto> places = new ArrayList<>();
-        for(PhotographerNPlaces place : photographer.getPlaces()){
+        for(PhotographerNPlaces place : photographerQuerydsl.getPhotographer().getPlaces()){
             places.add(PlacesForListDto.builder()
                     .place(place.getPlaces().getFirst() + " " + place.getPlaces().getSecond())
                     .build());
         }
         // 카테고리
         List<CategoriesForListDto> categories = new ArrayList<>();
-        for(PhotographerNCategories category : photographer.getCategories()){
+        for(PhotographerNCategories category : photographerQuerydsl.getPhotographer().getCategories()){
             categories.add(CategoriesForListDto.builder()
                     .name(category.getCategory().getName())
                     .price(category.getPrice())
@@ -55,13 +56,13 @@ public class PhotographerForListDto {
         }
 
         return PhotographerForListDto.builder()
-                .photographerId(photographer.getId())
-                .name(photographer.getUser().getName())
-                .profileImg(photographer.getProfileImg())
+                .photographerId(photographerQuerydsl.getPhotographer().getId())
+                .name(photographerQuerydsl.getPhotographer().getUser().getName())
+                .profileImg(photographerQuerydsl.getPhotographer().getProfileImg())
                 .places(places)
                 .categories(categories)
-                .hasHeart(false)
-                .heart(0)
+                .heart(Math.toIntExact(photographerQuerydsl.getHeart()))
+                .hasHeart(photographerQuerydsl.isHasHeart())
                 .build();
     }
 }
