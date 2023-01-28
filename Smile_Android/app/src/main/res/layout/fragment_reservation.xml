@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
-            android:text="오전 09시 30분"
-            android:textColor="@color/black"
+            android:text="시작 시간을 설정해주세요"
+            android:textColor="@color/gray500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_time_title" />
 
