@@ -20,6 +20,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var isPhotographer = true
+    private var curAddress = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +28,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     override fun initView() {
+        //TODO : 서버 통신 되면 주석 풀기
 //        isPhotographer = getRole()
+//        curAddress = getAddress()
         initToolbar()
-        homeViewModel.getPhotographerInfoByAddressInfo("tmp")
-        setObserver()
+//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+//        setObserver()
         initRecycler()
     }
 
@@ -66,35 +69,42 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setRefreshLayoutEvent() {
         binding.apply {
             refreshLayout.setOnRefreshListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("tmp")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
                 refreshLayout.isRefreshing = false
             }
         }
     }
 
     private fun initToolbar() {
-        binding.tbHome.apply {
-            inflateMenu(R.menu.menu_home)
+        binding.apply {
+            tbHome.apply {
+                inflateMenu(R.menu.menu_home)
 
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.action_search -> {
-                        findNavController().navigate(R.id.action_mainFragment_to_searchResultFragment)
-                        true
+                setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_search -> {
+                            findNavController().navigate(R.id.action_mainFragment_to_searchResultFragment)
+                            true
+                        }
+                        R.id.action_portfolio -> {
+                            findNavController().navigate(R.id.action_mainFragment_to_portfolioFragment)
+                            true
+                        }
+                        else -> false
                     }
-                    R.id.action_portfolio -> {
-                        findNavController().navigate(R.id.action_mainFragment_to_portfolioFragment)
-                        true
-                    }
-                    else -> false
                 }
-            }
 
-            menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
+                menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
+            }
+            tvToolbarAddress.text = curAddress
         }
     }
 
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.toString()
+
+    private fun getAddress() {
+        //TODO : 주소록 구현 후 curAddress 변수로 주소 가져오기
+    }
 
     private fun initRecycler() {
         homeRecyclerAdapter = HomeRecyclerAdapter(requireContext(), recyclerData)

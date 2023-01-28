@@ -23,8 +23,9 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     private var photographerId: Long = -1
 
     override fun initView() {
-        portfolioViewModel.getPosts(photographerId)
-        setObserver()
+        //TODO : 서버 통신 되면 주석 풀기
+//        portfolioViewModel.getPosts(photographerId)
+//        setObserver()
         initRecycler()
     }
 
