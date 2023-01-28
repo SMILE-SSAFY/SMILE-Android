@@ -282,6 +282,7 @@ public class ArticleService {
                     .detailAddress(article.getDetailAddress())
                     .isHeart(isHearted)
                     .hearts(hearts)
+                    .createdAt(article.getCreatedAt())
                     .category(article.getCategory())
                     .photoUrl(photoUrlList.get(0).trim())
                     .build();
