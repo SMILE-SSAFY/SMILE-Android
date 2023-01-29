@@ -8,8 +8,8 @@ import retrofit2.http.Query
 
 interface SearchApiService {
     @GET("/api/photographer/search")
-    fun searchPhotographer(@Query("categoryId") categoryId:String): Response<ArrayList<SearchPhotographerResponseDto>>
+    fun searchPhotographer(@Query("categoryName") categoryName:String): Response<ArrayList<SearchPhotographerResponseDto>>
 
     @GET("/api/article/search")
-    fun searchPost(@Query("categoryId") categoryId:String): Response<ArrayList<SearchPostResponseDto>>
+    fun searchPost(@Query("categoryName") categoryName:String): Response<ArrayList<SearchPostResponseDto>>
 }
