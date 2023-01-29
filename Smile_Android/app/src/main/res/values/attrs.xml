@@ -17,4 +17,15 @@
         <attr name="pIsChecked" format="boolean" />
         <attr name="pLike" format="string" />
     </declare-styleable>
+    <declare-styleable name="CustomReservation">
+        <attr name="curDate" format="string" />
+        <attr name="opposite" format="string" />
+        <attr name="rName" format="string" />
+        <attr name="phonNumber" format="string" />
+        <attr name="resDate" format="string" />
+        <attr name="startTime" format="string" />
+        <attr name="rLocation" format="string" />
+        <attr name="rCategory" format="string" />
+        <attr name="cost" format="string" />
+    </declare-styleable>
 </resources>

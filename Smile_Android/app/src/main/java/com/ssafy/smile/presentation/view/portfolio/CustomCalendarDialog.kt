@@ -46,7 +46,7 @@ class CustomCalendarDialog(context: Context, private val unableDate: ArrayList<L
             setCalendarView()
 
             btnOk.setOnSingleClickListener {
-                onButtonClickListener.onOkButtonClick(tvYear.text.toString(), tvDate.text.toString())
+                onButtonClickListener.onOkButtonClick(tvYear.text.toString(), tvReservationDate.text.toString())
                 dismiss()
             }
             btnCancel.setOnSingleClickListener {
@@ -84,7 +84,7 @@ class CustomCalendarDialog(context: Context, private val unableDate: ArrayList<L
 
         binding.apply {
             tvYear.text = "${iYear}년"
-            tvDate.text = "${month}월 ${date}일 (${day})"
+            tvReservationDate.text = "${month}월 ${date}일 (${day})"
         }
     }
 

@@ -55,7 +55,7 @@ app:startDestination="@id/splashFragment">
         app:destination="@id/photographerReservationList" />
     <action
         android:id="@+id/action_mainFragment_to_portfolioFragment"
-        app:destination="@id/reservationFragment" />
+        app:destination="@id/portfolioFragment" />
     <action
         android:id="@+id/action_mainFragment_to_registerPortFolioGraph"
         app:destination="@id/registerPortFolioGraph" >
@@ -181,7 +181,11 @@ app:startDestination="@id/splashFragment">
         android:id="@+id/reservationResultFragment"
         android:name="com.ssafy.smile.presentation.view.portfolio.ReservationResultFragment"
         android:label="fragment_reservation_result"
-        tools:layout="@layout/fragment_reservation_result" />
+        tools:layout="@layout/fragment_reservation_result" >
+        <action
+            android:id="@+id/action_reservationResultFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
     <fragment
         android:id="@+id/writePostFragment"
         android:name="com.ssafy.smile.presentation.view.portfolio.WritePostFragment"

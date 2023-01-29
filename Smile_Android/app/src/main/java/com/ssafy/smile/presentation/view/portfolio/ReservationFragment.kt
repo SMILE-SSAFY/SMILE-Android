@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import android.graphics.Color
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_KEYBOARD
 import com.google.android.material.timepicker.TimeFormat
@@ -65,8 +66,8 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
 
     private fun setDateText(year: String, date: String) {
         binding.apply {
-            tvDate.setTextColor(Color.BLACK)
-            tvDate.text = "$year $date"
+            tvReservationDate.setTextColor(Color.BLACK)
+            tvReservationDate.text = "$year $date"
         }
     }
 
@@ -110,7 +111,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             val dialog = CommonDialog(
                 requireContext(),
                 DialogBody("잠깐!\n사진을 전송 받을 이메일이 맞나요?\n\n${etEmail.text}", "맞아요", "틀려요"),
-                { showToast(requireContext(), "결제 페이지로 이동~") },
+                { findNavController().navigate(R.id.action_reservationFragment_to_reservationResultFragment) },
                 { showToast(requireContext(), "이메일을 다시 입력해주세요") }
             )
             showDialog(dialog, viewLifecycleOwner)

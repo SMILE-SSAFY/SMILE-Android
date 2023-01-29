@@ -144,28 +144,28 @@
     </style>
 
     <style name="TvT1" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="TvT2" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="TvT3" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/ibm_plex_sans_bold</item>s
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>s
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="TvT4" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TvT5" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/ibm_plex_sans_bold</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">11sp</item>
     </style>
 
 
