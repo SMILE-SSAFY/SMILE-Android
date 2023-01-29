@@ -8,6 +8,7 @@ data class SearchPostResponseDto(
 ){
     fun toCustomPostDomainDto(): CustomPostDomainDto {
         return CustomPostDomainDto(
+            0,
             "aa",
             "aa",
             "aa",

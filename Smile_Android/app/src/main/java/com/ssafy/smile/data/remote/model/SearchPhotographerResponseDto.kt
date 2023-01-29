@@ -1,20 +1,34 @@
 package com.ssafy.smile.data.remote.model
 
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 
-//TODO: API 문서에 맞춰서 바꾸기
 data class SearchPhotographerResponseDto(
-    val id: Int = 0
+    val photographerId: Long = 0,
+    val name: String = "",
+    val profileImg: String = "",
+    val places: ArrayList<Place> = arrayListOf(),
+    val categories: ArrayList<CategoryNoDes> = arrayListOf(),
+    val hasHeart: Boolean = false,
+    val heart: Int = 0
 ){
     fun toCustomPhotographerDomainDto(): CustomPhotographerDomainDto {
+        val categoryNames = arrayListOf<String>()
+        val categoryPrices = arrayListOf<Int>()
+        categories.forEach { data ->
+            categoryNames.add(data.name)
+            categoryPrices.add(data.price.toInt())
+        }
+
         return CustomPhotographerDomainDto(
-            "aa",
-            "aa",
-            "aa",
-            "aa",
-            "aa",
-            true,
-            200
+            photographerId,
+            profileImg,
+            CommonUtils.getCategoryName(categoryNames),
+            name,
+            CommonUtils.getPlace(places),
+            CommonUtils.getCategoryPrice(categoryPrices),
+            hasHeart,
+            heart
         )
     }
 }

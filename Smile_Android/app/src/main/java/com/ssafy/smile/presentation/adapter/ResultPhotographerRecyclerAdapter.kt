@@ -13,15 +13,23 @@ import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 
 class ResultPhotographerRecyclerAdapter(val context: Context, val datas: MutableList<CustomPhotographerDomainDto>): RecyclerView.Adapter<ResultPhotographerRecyclerAdapter.ResultPhotographerRecyclerViewHolder>() {
 
+    interface OnPhotographerHeartItemClickListener {
+        fun onClick(view: View, position: Int)
+    }
+    lateinit var onPhotographerHeartItemClickListener : OnPhotographerHeartItemClickListener
+    fun setPhotographerHeartItemClickListener(onPhotographerHeartItemClickListener: OnPhotographerHeartItemClickListener) { this.onPhotographerHeartItemClickListener = onPhotographerHeartItemClickListener }
+
     interface OnItemClickListener {
         fun onClick(view: View, position: Int)
     }
     lateinit var onItemClickListener : OnItemClickListener
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) { this.onItemClickListener = onItemClickListener }
 
     inner class ResultPhotographerRecyclerViewHolder(val binding: RecyclerPhotographerItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: CustomPhotographerDomainDto) {
+        fun bind(data: CustomPhotographerDomainDto, position: Int) {
             binding.apply {
                 customPhotographer.setAttrs(CustomPhotographerDomainDto(
+                    data.photographerId,
                     data.img,
                     data.category,
                     data.name,
@@ -34,6 +42,7 @@ class ResultPhotographerRecyclerAdapter(val context: Context, val datas: Mutable
                 val button = customPhotographer.ctvLike
                 button.setOnClickListener {
                     button.isChecked = !(button.isChecked)
+                    onPhotographerHeartItemClickListener.onClick(it, position)
                 }
             }
         }
@@ -45,7 +54,7 @@ class ResultPhotographerRecyclerAdapter(val context: Context, val datas: Mutable
 
     override fun onBindViewHolder(holder: ResultPhotographerRecyclerViewHolder, position: Int) {
         holder.apply {
-            bind(datas[position])
+            bind(datas[position], position)
 
             itemView.setOnClickListener {
                 onItemClickListener.onClick(it, position)
