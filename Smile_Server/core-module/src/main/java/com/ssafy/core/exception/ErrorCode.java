@@ -25,6 +25,7 @@ public enum ErrorCode {
     FAIL_AUTHORIZATION(HttpStatus.FORBIDDEN, "권한이 없는 요청입니다."),
     NO_IMAGE(HttpStatus.BAD_REQUEST, "이미지가 존재하지 않습니다."),
     HAS_PHONENUMBER(HttpStatus.BAD_REQUEST, "이미 등록된 휴대폰 번호입니다."),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카테고리는 존재하지 않습니다.")
     ;
 
 

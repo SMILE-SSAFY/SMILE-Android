@@ -18,6 +18,7 @@ import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.PhotographerNPlacesRepository;
@@ -58,6 +59,8 @@ public class PhotographerService {
     private S3UploaderService s3UploaderService;
     @Autowired
     private PhotographerHeartRepository photographerHeartRepository;
+    @Autowired
+    private CategoriesRepository categoriesRepository;
 
     /**
      * 작가 등록
@@ -220,32 +223,38 @@ public class PhotographerService {
         userRepository.save(user);
     }
 
-//    /**
-//     * categoryId로 작가 조회
-//     *
-//     * TODO: 작가 좋아요 구현으로 관련 dto 수정 전
-//     *
-//     * @param categoryId
-//     * @return List<PhotographerForListDto>
-//     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
-//     */
-//    public List<PhotographerForListDto> getPhotographerListByCategory(Long categoryId) {
-//        List<Photographer> photographerList = photographerNCategoriesRepository.findByCategoryId(categoryId);
-//        log.info("카테고리로 작가 조회");
-//
-//        if (photographerList.isEmpty()) {
-//            log.info("해당 카테고리의 작가가 없음");
-//            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
-//        }
-//
-//        log.info("해당 카테고리를 가진 작가가 있음");
-//        List<PhotographerForListDto> photographerForList = new ArrayList<>();
-//        for (Photographer photographer : photographerList) {
-//            photographerForList.add(new PhotographerForListDto().of(photographer));
-//        }
-//
-//        return photographerForList;
-//    }
+    /**
+     * categoryId로 작가 조회
+     *
+     * @param categoryName
+     * @return List<PhotographerForListDto>
+     * @throws CATEGORY_NOT_FOUND 해당 카테고리가 없을 때 에러
+     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
+     */
+    public List<PhotographerForListDto> getPhotographerListByCategory(Long userId, String categoryName) {
+        List<Long> categoryIdList = categoriesRepository.findAllIdByNameContaining(categoryName);
+        if (categoryIdList.isEmpty()) {
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+        log.info("해당 카테고리 존재");
+
+        List<PhotographerQuerydslDto> photographerList =
+                photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
+        log.info("카테고리로 작가 조회");
+
+        if (photographerList.isEmpty()) {
+            log.info("해당 카테고리의 작가가 없음");
+            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
+        }
+
+        log.info("해당 카테고리를 가진 작가가 있음");
+        List<PhotographerForListDto> photographerForList = new ArrayList<>();
+        for (PhotographerQuerydslDto photographerQuerydsl : photographerList) {
+            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+        }
+
+        return photographerForList;
+    }
 
     /**
      * 주변 작가 조회
