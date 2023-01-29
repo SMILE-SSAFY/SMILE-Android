@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaAuditing
 @ComponentScan({"com.ssafy.core"})
 @ComponentScan({"com.ssafy.api"})
+
 @EntityScan("com.ssafy.core")
 @EnableJpaRepositories("com.ssafy.core")
 @SpringBootApplication
