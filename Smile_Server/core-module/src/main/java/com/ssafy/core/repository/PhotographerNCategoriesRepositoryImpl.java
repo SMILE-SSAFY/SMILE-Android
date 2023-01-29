@@ -1,5 +1,6 @@
 package com.ssafy.core.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
@@ -55,6 +56,19 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
                 .join(photographerNCategories).on(photographer.eq(photographerNCategories.photographer))
                 .where(photographerNCategories.category.id.in(categoryIdList))
                 .groupBy(photographer.id)
+                .fetch();
+    }
+
+    @Override
+    public List<Tuple> findCategoriesByPhotographerId(Long photographerId){
+        QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
+        QCategories categories = QCategories.categories;
+
+        return jpaQueryFactory
+                .select(categories.id, categories.name, photographerNCategories.price, photographerNCategories.description)
+                .from(categories)
+                .join(photographerNCategories).on(categories.eq(photographerNCategories.category))
+                .where(photographerNCategories.photographer.id.eq(photographerId))
                 .fetch();
     }
 }

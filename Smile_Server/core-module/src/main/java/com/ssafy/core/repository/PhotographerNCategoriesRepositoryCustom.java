@@ -1,5 +1,6 @@
 package com.ssafy.core.repository;
 
+import com.querydsl.core.Tuple;
 import com.ssafy.core.dto.PhotographerQuerydslDto;
 import com.ssafy.core.entity.Photographer;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * querydsl 작성할 인터페이스
  *
  * author @서재건
+ * author @김정은
  */
 public interface PhotographerNCategoriesRepositoryCustom {
 
@@ -20,4 +22,5 @@ public interface PhotographerNCategoriesRepositoryCustom {
      * @return List<PhotographerQuerydslDto>
      */
     List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList);
+    List<Tuple> findCategoriesByPhotographerId(Long photographerId);
 }
