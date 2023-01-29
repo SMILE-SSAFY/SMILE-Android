@@ -123,4 +123,7 @@ dependencies {
 
     // page indicator view Library 추가
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
+
+    // custom calendar view Library 추가
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 }

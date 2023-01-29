@@ -38,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
-            android:text="2023년 01월 09일 (월)"
-            android:textColor="@color/black"
+            android:text="촬영 일자를 설정해주세요"
+            android:textColor="@color/gray500"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_date_title" />
 
