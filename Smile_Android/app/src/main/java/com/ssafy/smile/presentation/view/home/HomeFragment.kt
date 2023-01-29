@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.view.home
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +40,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     private fun setObserver() {
         getPhotographerInfoByAddressResponseObserver()
+        photographerHeartResponseObserver()
     }
 
     private fun getPhotographerInfoByAddressResponseObserver() {
@@ -57,6 +59,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
+                }
+            }
+        }
+    }
+
+    private fun photographerHeartResponseObserver() {
+        homeViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    homeRecyclerAdapter.notifyDataSetChanged()
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
         }
@@ -107,7 +127,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     private fun initRecycler() {
-        homeRecyclerAdapter = HomeRecyclerAdapter(requireContext(), recyclerData)
+        homeRecyclerAdapter = HomeRecyclerAdapter(requireContext(), recyclerData).apply {
+            setPhotographerHeartItemClickListener(object : HomeRecyclerAdapter.OnPhotographerHeartItemClickListener{
+                override fun onClick(view: View, position: Int) {
+                    homeViewModel.photographerHeart(recyclerData[position].photographerId)
+                }
+            })
+        }
 
         binding.rvHome.apply {
             layoutManager = LinearLayoutManager(requireContext())

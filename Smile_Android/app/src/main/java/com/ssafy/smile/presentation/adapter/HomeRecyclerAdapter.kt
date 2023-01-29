@@ -10,16 +10,24 @@ import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 
 class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPhotographerDomainDto>): RecyclerView.Adapter<HomeRecyclerAdapter.HomeRecyclerViewHolder>() {
 
+    interface OnPhotographerHeartItemClickListener {
+        fun onClick(view: View, position: Int)
+    }
+    lateinit var onPhotographerHeartItemClickListener : OnPhotographerHeartItemClickListener
+    fun setPhotographerHeartItemClickListener(onPhotographerHeartItemClickListener: OnPhotographerHeartItemClickListener) { this.onPhotographerHeartItemClickListener = onPhotographerHeartItemClickListener }
+
     interface OnItemClickListener {
         fun onClick(view: View, position: Int)
     }
     lateinit var onItemClickListener : OnItemClickListener
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) { this.onItemClickListener = onItemClickListener }
 
     inner class HomeRecyclerViewHolder(val binding: RecyclerHomeItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: CustomPhotographerDomainDto) {
+        fun bind(data: CustomPhotographerDomainDto, position: Int) {
             binding.apply {
                 customPhotographer.setAttrs(
                     CustomPhotographerDomainDto(
+                        data.photographerId,
                         data.img,
                         data.category,
                         data.name,
@@ -33,6 +41,7 @@ class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPho
                 val button = customPhotographer.ctvLike
                 button.setOnClickListener {
                     button.isChecked = !(button.isChecked)
+                    onPhotographerHeartItemClickListener.onClick(it, position)
                 }
             }
         }
@@ -46,7 +55,7 @@ class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPho
 
     override fun onBindViewHolder(holder: HomeRecyclerViewHolder, position: Int) {
         holder.apply {
-            bind(datas[position])
+            bind(datas[position], position)
 
             itemView.setOnClickListener {
                 onItemClickListener.onClick(it, position)

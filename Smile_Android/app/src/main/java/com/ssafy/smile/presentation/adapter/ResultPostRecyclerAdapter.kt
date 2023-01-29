@@ -10,15 +10,23 @@ import com.ssafy.smile.domain.model.CustomPostDomainDto
 
 class ResultPostRecyclerAdapter(val context: Context, val datas: MutableList<CustomPostDomainDto>): RecyclerView.Adapter<ResultPostRecyclerAdapter.ResultPostRecyclerViewHolder>() {
 
+    interface OnPostHeartItemClickListener {
+        fun onClick(view: View, position: Int)
+    }
+    lateinit var onPostHeartItemClickListener : OnPostHeartItemClickListener
+    fun setPostHeartItemClickListener(onPostHeartItemClickListener: OnPostHeartItemClickListener) { this.onPostHeartItemClickListener = onPostHeartItemClickListener }
+
     interface OnItemClickListener {
         fun onClick(view: View, position: Int)
     }
     lateinit var onItemClickListener : OnItemClickListener
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) { this.onItemClickListener = onItemClickListener }
 
     inner class ResultPostRecyclerViewHolder(val binding: RecyclerPostItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: CustomPostDomainDto) {
+        fun bind(data: CustomPostDomainDto, position: Int) {
             binding.apply {
                 customPost.setAttrs(CustomPostDomainDto(
+                    data.articleId,
                     data.img,
                     data.category,
                     data.name,
@@ -30,6 +38,7 @@ class ResultPostRecyclerAdapter(val context: Context, val datas: MutableList<Cus
                 val button = customPost.ctvLike
                 button.setOnClickListener {
                     button.isChecked = !(button.isChecked)
+                    onPostHeartItemClickListener.onClick(it, position)
                 }
             }
         }
@@ -41,7 +50,7 @@ class ResultPostRecyclerAdapter(val context: Context, val datas: MutableList<Cus
 
     override fun onBindViewHolder(holder: ResultPostRecyclerViewHolder, position: Int) {
         holder.apply {
-            bind(datas[position])
+            bind(datas[position], position)
 
             itemView.setOnClickListener {
                 onItemClickListener.onClick(it, position)
