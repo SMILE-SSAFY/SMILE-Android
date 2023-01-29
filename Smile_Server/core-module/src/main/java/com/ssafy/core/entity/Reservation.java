@@ -7,16 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -33,12 +24,12 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "photographer_id")
     private Photographer photographer;
 
-    @ManyToOne
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ColumnDefault("0")
@@ -48,12 +39,14 @@ public class Reservation {
 
     private int price;
 
+    private String email;
+
     // 만나는 장소
     private String place;
 
-    private Date date;
+    private Date reservedAt;
 
-    private Time time;
+    private Time reservedTime;
 
     @Column(name = "reviewed")
     @ColumnDefault("false")
