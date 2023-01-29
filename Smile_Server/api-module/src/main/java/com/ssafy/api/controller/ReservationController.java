@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+/**
+ * 예약 관련 Controller
+ *
+ * author @김정은
+ */
 @RestController
 @RequestMapping("/api/reservation")
 @Slf4j
@@ -22,6 +24,12 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    /**
+     * 예약 등록하기
+     *
+     * @param reservation
+     * @return 정상일 때 OK
+     */
     @PostMapping
     public ResponseEntity<?> registerReservation(@RequestBody ReservationDto reservation){
         log.info(reservation.toString());
@@ -32,4 +40,10 @@ public class ReservationController {
         reservationService.reserve(reservation);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @GetMapping("/{photographerId}")
+    public ResponseEntity<?> getPhotographerInfo(@PathVariable("photographerId") Long photographerId){
+        return ResponseEntity.ok(reservationService.getPhotographerInfo(photographerId));
+    }
+
 }
