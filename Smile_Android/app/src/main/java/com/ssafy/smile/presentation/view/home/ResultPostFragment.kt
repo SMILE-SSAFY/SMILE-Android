@@ -20,9 +20,6 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
     override fun initView() {
         setObserver()
         initRecycler()
-        binding.apply {
-            tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-        }
     }
 
     private fun setObserver() {
@@ -37,6 +34,10 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
+                    binding.apply {
+                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
+                    }
+                    recyclerData.clear()
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPostDomainDto())
                     }

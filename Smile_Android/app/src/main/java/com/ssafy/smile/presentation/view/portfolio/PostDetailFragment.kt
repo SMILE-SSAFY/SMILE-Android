@@ -30,8 +30,9 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
 
     override fun initView() {
         initToolbar()
-        setObserver()
-        postViewModel.getPostById(args.postId)
+        //TODO : 서버 통신 되면 주석 풀기
+//        postViewModel.getPostById(args.postId)
+//        setObserver()
         initViewPager()
     }
 
