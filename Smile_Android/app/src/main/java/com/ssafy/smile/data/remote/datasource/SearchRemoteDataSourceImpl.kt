@@ -6,11 +6,11 @@ import com.ssafy.smile.data.remote.service.SearchApiService
 import retrofit2.Response
 
 class SearchRemoteDataSourceImpl(private val searchApiService: SearchApiService): SearchRemoteDataSource {
-    override fun searchPhotographer(categoryId: String): Response<ArrayList<SearchPhotographerResponseDto>> {
-        return searchApiService.searchPhotographer(categoryId)
+    override fun searchPhotographer(categoryName: String): Response<ArrayList<SearchPhotographerResponseDto>> {
+        return searchApiService.searchPhotographer(categoryName)
     }
 
-    override fun searchPost(categoryId: String): Response<ArrayList<SearchPostResponseDto>> {
-        return searchApiService.searchPost(categoryId)
+    override fun searchPost(categoryName: String): Response<ArrayList<SearchPostResponseDto>> {
+        return searchApiService.searchPost(categoryName)
     }
 }

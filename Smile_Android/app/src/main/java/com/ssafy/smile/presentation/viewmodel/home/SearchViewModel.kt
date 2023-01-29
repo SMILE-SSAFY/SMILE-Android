@@ -35,16 +35,16 @@ class SearchViewModel: BaseViewModel() {
         get() = heartRepository.postHeartResponseLiveData
 
     // 작가 검색을 수행하는 함수
-    fun searchPhotographer(category: String) {
+    fun searchPhotographer(categoryName: String) {
         viewModelScope.launch {
-            searchRepository.searchPhotographer(category)
+            searchRepository.searchPhotographer(categoryName)
         }
     }
 
     // 게시글 검색을 수행하는 함수
-    fun searchPost(category: String) {
+    fun searchPost(categoryName: String) {
         viewModelScope.launch {
-            searchRepository.searchPost(category)
+            searchRepository.searchPost(categoryName)
         }
     }
 
