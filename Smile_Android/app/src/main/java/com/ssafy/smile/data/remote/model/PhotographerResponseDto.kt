@@ -3,7 +3,6 @@ package com.ssafy.smile.data.remote.model
 import android.os.Parcelable
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
-import com.ssafy.smile.domain.model.PortfolioDomainDto
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -34,6 +33,7 @@ data class PhotographerByAddressResponseDto(
         }
 
         return CustomPhotographerDomainDto(
+            photographerId,
             profileImg,
             CommonUtils.getCategoryName(categoryNames),
             name,

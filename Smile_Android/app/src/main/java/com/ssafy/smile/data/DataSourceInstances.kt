@@ -14,7 +14,7 @@ class DataSourceInstances(serviceInstances: ServiceInstances) {
     private val portfolioRemoteDataSourceImpl: PortfolioRemoteDataSourceImpl = PortfolioRemoteDataSourceImpl(serviceInstances.getPortfolioApiService())
 
     @Singleton
-    private val likeRemoteDataSourceImpl: LikeRemoteDataSourceImpl = LikeRemoteDataSourceImpl(serviceInstances.getLikeApiService())
+    private val heartRemoteDataSourceImpl: HeartRemoteDataSourceImpl = HeartRemoteDataSourceImpl(serviceInstances.getHeartApiService())
 
     @Singleton
     private val photographerRemoteDataSourceImpl : PhotographerRemoteDataSourceImpl = PhotographerRemoteDataSourceImpl(serviceInstances.getPhotographerApiService())
@@ -27,7 +27,7 @@ class DataSourceInstances(serviceInstances: ServiceInstances) {
 
     fun getUserRemoteDataSource(): UserRemoteDataSourceImpl = userRemoteDataSourceImpl
     fun getPortfolioRemoteDataSource(): PortfolioRemoteDataSourceImpl = portfolioRemoteDataSourceImpl
-    fun getLikeRemoteDataSource(): LikeRemoteDataSourceImpl = likeRemoteDataSourceImpl
+    fun getHeartRemoteDataSource(): HeartRemoteDataSourceImpl = heartRemoteDataSourceImpl
     fun getPhotographerRemoteDataSource() : PhotographerRemoteDataSourceImpl = photographerRemoteDataSourceImpl
     fun getPostRemoteDataSource(): PostRemoteDataSourceImpl = postRemoteDataSourceImpl
     fun getSearchRemoteDataSource(): SearchRemoteDataSourceImpl = searchRemoteDataSourceImpl

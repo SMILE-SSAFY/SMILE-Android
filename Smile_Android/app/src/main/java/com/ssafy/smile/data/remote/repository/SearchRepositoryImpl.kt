@@ -18,15 +18,15 @@ class SearchRepositoryImpl(private val searchRemoteDataSource: SearchRemoteDataS
     val searchPostLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPostResponseDto>>>
         get() = _searchPostLiveData
 
-    override suspend fun searchPhotographer(categoryId: String) {
+    override suspend fun searchPhotographer(categoryName: String) {
         safeApiCall(_searchPhotographerLiveData){
-            searchRemoteDataSource.searchPhotographer(categoryId)
+            searchRemoteDataSource.searchPhotographer(categoryName)
         }
     }
 
-    override suspend fun searchPost(categoryId: String) {
+    override suspend fun searchPost(categoryName: String) {
         safeApiCall(_searchPostLiveData){
-            searchRemoteDataSource.searchPost(categoryId)
+            searchRemoteDataSource.searchPost(categoryName)
         }
     }
 }
