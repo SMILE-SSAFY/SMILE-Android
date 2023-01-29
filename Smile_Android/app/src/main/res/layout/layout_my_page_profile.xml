@@ -53,7 +53,7 @@
     </LinearLayout>
     <!-- 로그아웃 버튼 -->
     <ImageButton
-        android:id="@+id/btn_back"
+        android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

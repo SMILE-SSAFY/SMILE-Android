@@ -67,22 +67,23 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
             binding.apply {
 
                 tvPhotographerPlaceFirst.run {
-                    setOnItemClickListener { _, _, _, _ ->
+                    setOnItemClickListener { _, _, position, _ ->
                         val resource = Spinners.getSelectedPlaceArrayResource(this.getString())
                         tvPhotographerPlaceSecond.setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, resource))
                         tvPhotographerPlaceSecond.isEnabled = true
                         tvPhotographerPlaceSecond.text = null
                         dto.isEmpty = true
                         dto.first = this.getString()
+                        dto.firstId = position
                     }
                     setText(dto.first)
                     setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, R.array.spinner_region))
                 }
                 tvPhotographerPlaceSecond.apply {
-                    setOnItemClickListener { _, _, _, _ ->
+                    setOnItemClickListener { _, _, position, _ ->
                         dto.isEmpty = false
                         dto.second = if (dto.first==Types.Region.SAEJONG.getValue()) this.getString() else ""
-                        dto.place = dto.getPlaceString()
+                        dto.secondId = position
                     }
                     setText(dto.second)
                     dto.first?.let {

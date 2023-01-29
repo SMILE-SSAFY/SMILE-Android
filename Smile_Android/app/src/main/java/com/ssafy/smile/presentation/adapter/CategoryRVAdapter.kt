@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.adapter
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,35 +14,37 @@ import com.ssafy.smile.R
 import com.ssafy.smile.common.util.getString
 import com.ssafy.smile.common.util.makeComma
 import com.ssafy.smile.databinding.ItemPhotographerCategoryBinding
-import com.ssafy.smile.domain.model.CategoryDto
+import com.ssafy.smile.domain.model.CategoryDomainDto
 import com.ssafy.smile.domain.model.Spinners
 import java.lang.ref.WeakReference
 
-
+private const val TAG = "CategoryRVAdapter"
 class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) : RecyclerView.Adapter<CategoryRVAdapter.Holder>() {
-    private val itemList : ArrayList<CategoryDto> = arrayListOf()
+    private val itemList : ArrayList<CategoryDomainDto> = arrayListOf()
 
-    fun getListData() : ArrayList<CategoryDto> = itemList
+    fun getListData() : ArrayList<CategoryDomainDto> = itemList
 
-    fun setListData(dataList: ArrayList<CategoryDto>){
+    fun setListData(dataList: ArrayList<CategoryDomainDto>){
         itemList.addAll(dataList)
         notifyDataSetChanged()
     }
 
     fun addData() {
         if (itemCount<=limit){
-            itemList.add(CategoryDto())
+            itemList.add(CategoryDomainDto())
+            Log.d(TAG, "addData: $itemList")
             notifyDataSetChanged()
         }
     }
 
-    fun deleteItem(index: Int){
+    fun deleteData(index: Int){
         itemList.removeAt(index)
+        Log.d(TAG, "deleteItem: $itemList")
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        if (itemList.isEmpty()) itemList.add(CategoryDto())
+        if (itemList.isEmpty()) itemList.add(CategoryDomainDto())
         else if (itemList.size==limit) addBtnView.visibility = View.GONE
         else addBtnView.visibility = View.VISIBLE
         return itemList.size
@@ -59,43 +62,42 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
         }
     }
     interface ItemClickListener{
-        fun onClickBtnDelete(view: View, position: Int, dto:CategoryDto)
+        fun onClickBtnDelete(view: View, position: Int, dto:CategoryDomainDto)
     }
     private lateinit var itemClickListener: ItemClickListener
     fun setItemClickListener(itemClickListener: ItemClickListener){ this.itemClickListener = itemClickListener }
 
 
     inner class Holder(private val binding: ItemPhotographerCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bindInfo(position: Int, dto: CategoryDto) {
+        fun bindInfo(position: Int, dto: CategoryDomainDto) {
             binding.apply {
                 tvPhotographerCategory.apply {
                     setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, R.array.spinner_category))
-                    setOnItemClickListener { _, _, _, _ ->
-                        dto.categoryName = this.getString()
+                    setOnItemClickListener { _, _, position, _ ->
+                        dto.name = this.getString()
+                        dto.categoryId = position
                     }
-                    setText(dto.categoryName)
+                    setText(dto.name)
                 }
                 etPhotographerCategoryPrice.apply {
-                    setText(dto.categoryPrice)
-//                    doOnTextChanged { charSequence, _, _, _ ->
-//                        if (charSequence!=null){
-//                            val price = charSequence.replace("""[,원]""".toRegex(), "").toInt()
-//                            val formatted: String = price.makeComma()
-//                            itemList[position].categoryPrice = price.toString()
-//                            setText(formatted)
-//                        }
-//                    }
-                     //addTextChangedListener(OnCurrentTextWatcher(position, this))
+                    doOnTextChanged { charSequence, _, _, _ ->
+                        itemList[position].price = if (charSequence.toString()=="") 0 else charSequence.toString().toInt()
+                    }
+                    val priceString = if (dto.price==0) null else dto.price.toString()
+                    setText(priceString)
+                //addTextChangedListener(OnCurrentTextWatcher(position, this))
                 }
                 etPhotographerCategoryDetail.apply {
+                    doOnTextChanged { charSequence, _, _, _ ->
+                        itemList[position].description = charSequence.toString()
+                    }
                     setText(dto.description)
-//                    doOnTextChanged { charSequence, _, _, _ ->
-//                        itemList[position].description = charSequence.toString()
-//                    }
                 }
                 if (position==0) btnDelete.visibility = View.INVISIBLE
                 else btnDelete.visibility = View.VISIBLE
-                btnDelete.setOnClickListener { itemClickListener.onClickBtnDelete(it, position, dto) }
+                btnDelete.setOnClickListener {
+                    itemClickListener.onClickBtnDelete(it, position, dto)
+                }
             }
         }
     }
@@ -116,7 +118,7 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
             editText.setText(formatted)
             editText.setSelection(formatted.length)
             editText.addTextChangedListener(this)
-            itemList[position].categoryPrice = price.toString()
+            itemList[position].price = price
         }
     }
 

@@ -27,6 +27,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     val loginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _loginResponseLiveData
 
+    private val _withDrawResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
+    val withDrawResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
+        get() = _withDrawResponseLiveData
+
     override suspend fun checkEmail(email: String) {
         safeApiCall(_checkEmailResponseLiveData) {
             userRemoteDataSource.checkEmail(email)
@@ -48,6 +52,12 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     override suspend fun login(loginDomainDto: LoginDomainDto) {
         safeApiCall(_loginResponseLiveData) {
             userRemoteDataSource.login(loginDomainDto.toLoginRequestDto())
+        }
+    }
+
+    override suspend fun withDrawUser() {
+        safeApiCall(_withDrawResponseLiveData){
+            userRemoteDataSource.withDraw()
         }
     }
 }

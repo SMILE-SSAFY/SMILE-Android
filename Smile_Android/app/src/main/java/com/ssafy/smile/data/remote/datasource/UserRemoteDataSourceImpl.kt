@@ -22,4 +22,8 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
     override suspend fun login(loginRequestDto: LoginRequestDto): Response<UserResponseDto> {
         return userApiService.login(loginRequestDto)
     }
+
+    override suspend fun withDraw(): Response<String> {
+        return userApiService.withDraw()
+    }
 }

@@ -8,4 +8,5 @@ interface UserRepository {
     suspend fun signUp(signUpDomainDto: SignUpDomainDto)
     suspend fun checkPhoneNumber(phoneNumber: String)
     suspend fun login(loginDomainDto: LoginDomainDto)
+     suspend fun withDrawUser()
 }

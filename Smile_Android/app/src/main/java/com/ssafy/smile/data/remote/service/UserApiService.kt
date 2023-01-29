@@ -5,6 +5,7 @@ import com.ssafy.smile.data.remote.model.SignUpRequestDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -21,4 +22,7 @@ interface UserApiService {
 
     @POST("/api/user/login")
     suspend fun login(@Body loginRequestDto: LoginRequestDto): Response<UserResponseDto>
+
+    @DELETE("/api/user")
+    suspend fun withDraw(): Response<String>
 }
