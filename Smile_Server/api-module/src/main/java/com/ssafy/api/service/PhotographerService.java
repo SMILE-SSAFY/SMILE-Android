@@ -18,6 +18,7 @@ import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.PhotographerNPlacesRepository;
@@ -58,6 +59,8 @@ public class PhotographerService {
     private S3UploaderService s3UploaderService;
     @Autowired
     private PhotographerHeartRepository photographerHeartRepository;
+    @Autowired
+    private CategoriesRepository categoriesRepository;
 
     /**
      * 작가 등록
@@ -223,13 +226,20 @@ public class PhotographerService {
     /**
      * categoryId로 작가 조회
      *
-     * @param categoryId
+     * @param categoryName
      * @return List<PhotographerForListDto>
+     * @throws CATEGORY_NOT_FOUND 해당 카테고리가 없을 때 에러
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public List<PhotographerForListDto> getPhotographerListByCategory(Long userId, Long categoryId) {
+    public List<PhotographerForListDto> getPhotographerListByCategory(Long userId, String categoryName) {
+        List<Long> categoryIdList = categoriesRepository.findAllIdByNameContaining(categoryName);
+        if (categoryIdList.isEmpty()) {
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+        log.info("해당 카테고리 존재");
+
         List<PhotographerQuerydslDto> photographerList =
-                photographerNCategoriesRepository.findByCategoryId(userId, categoryId);
+                photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
         log.info("카테고리로 작가 조회");
 
         if (photographerList.isEmpty()) {

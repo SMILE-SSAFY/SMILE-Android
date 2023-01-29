@@ -107,17 +107,16 @@ public class PhotographerController {
 
     /**
      * 카테고리로 작가 검색
-     * TODO: 작가 좋아요 구현으로 수정 전
      *
-     * @param categoryId
+     * @param categoryName
      * @return List<PhotographerForListDto>
      */
     @GetMapping("/search")
-    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryId") Long categoryId) {
+    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryName") String categoryName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByCategory(user.getId(), categoryId);
+                photographerService.getPhotographerListByCategory(user.getId(), categoryName);
         return ResponseEntity.ok().body(photographerList);
     }
 

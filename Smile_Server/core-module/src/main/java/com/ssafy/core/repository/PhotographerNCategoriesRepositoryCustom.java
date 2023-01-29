@@ -16,8 +16,8 @@ public interface PhotographerNCategoriesRepositoryCustom {
      * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
      *
      * @param userId
-     * @param categoryId
+     * @param categoryIdList
      * @return List<PhotographerQuerydslDto>
      */
-    List<PhotographerQuerydslDto> findByCategoryId(Long userId, Long categoryId);
+    List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList);
 }
