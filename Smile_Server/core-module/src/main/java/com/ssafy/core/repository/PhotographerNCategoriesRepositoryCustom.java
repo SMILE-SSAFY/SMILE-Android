@@ -1,5 +1,6 @@
 package com.ssafy.core.repository;
 
+import com.ssafy.core.dto.PhotographerQuerydslDto;
 import com.ssafy.core.entity.Photographer;
 
 import java.util.List;
@@ -14,8 +15,9 @@ public interface PhotographerNCategoriesRepositoryCustom {
     /**
      * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
      *
+     * @param userId
      * @param categoryId
-     * @return List<Photographer>
+     * @return List<PhotographerQuerydslDto>
      */
-    List<Photographer> findByCategoryId(Long categoryId);
+    List<PhotographerQuerydslDto> findByCategoryId(Long userId, Long categoryId);
 }

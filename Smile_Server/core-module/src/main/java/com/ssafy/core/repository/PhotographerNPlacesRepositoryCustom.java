@@ -1,7 +1,6 @@
 package com.ssafy.core.repository;
 
 import com.ssafy.core.dto.PhotographerQuerydslDto;
-import com.ssafy.core.entity.Photographer;
 
 import java.util.List;
 
