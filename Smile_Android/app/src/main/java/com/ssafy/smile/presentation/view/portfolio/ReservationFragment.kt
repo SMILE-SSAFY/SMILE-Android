@@ -10,6 +10,7 @@ import com.ssafy.smile.common.view.CommonDialog
 import com.ssafy.smile.databinding.FragmentReservationBinding
 import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.presentation.base.BaseFragment
+import java.time.LocalDate
 
 class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentReservationBinding::bind, R.layout.fragment_reservation) {
 
@@ -30,7 +31,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     override fun setEvent() {
         binding.apply {
             btnDate.setOnClickListener {
-                //TODO : 데이트 피커 띄우기
+                showDatePicker()
             }
             btnTime.setOnClickListener {
                 showTimePicker()
@@ -40,6 +41,32 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                     showEmailCheckDialog()
                 }
             }
+        }
+    }
+
+    private fun showDatePicker() {
+        val unable = arrayListOf<LocalDate>(
+            LocalDate.of(2023, 1, 29),
+            LocalDate.of(2023, 2, 1),
+            LocalDate.of(2023, 2, 2),
+            LocalDate.of(2023, 2, 16),
+            LocalDate.of(2023, 2, 17),
+        )
+
+        CustomCalendarDialog(requireContext(), unable).apply {
+            setButtonClickListener(object : CustomCalendarDialog.OnButtonClickListener{
+                override fun onOkButtonClick(year: String, date: String) {
+                    setDateText(year, date)
+                }
+            })
+            show()
+        }
+    }
+
+    private fun setDateText(year: String, date: String) {
+        binding.apply {
+            tvDate.setTextColor(Color.BLACK)
+            tvDate.text = "$year $date"
         }
     }
 
