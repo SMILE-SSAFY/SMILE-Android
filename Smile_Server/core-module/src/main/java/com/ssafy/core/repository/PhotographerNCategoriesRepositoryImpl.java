@@ -28,11 +28,11 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
      * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
      *
      * @param userId
-     * @param categoryId
+     * @param categoryIdList
      * @return List<PhotographerQuerydslDto>
      */
     @Override
-    public List<PhotographerQuerydslDto> findByCategoryId(Long userId, Long categoryId) {
+    public List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList) {
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
         QPhotographer photographer = QPhotographer.photographer;
         QPhotographerHeart photographerHeart = QPhotographerHeart.photographerHeart;
@@ -53,7 +53,7 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
                 .from(photographer)
                 .leftJoin(photographerHeart).on(photographer.eq(photographerHeart.photographer))
                 .join(photographerNCategories).on(photographer.eq(photographerNCategories.photographer))
-                .where(photographerNCategories.category.id.eq(categoryId))
+                .where(photographerNCategories.category.id.in(categoryIdList))
                 .groupBy(photographer.id)
                 .fetch();
     }
