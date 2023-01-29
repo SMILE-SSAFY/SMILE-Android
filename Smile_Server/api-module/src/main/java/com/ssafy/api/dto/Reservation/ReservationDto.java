@@ -25,6 +25,8 @@ public class ReservationDto {
 
     private int price;
 
+    private String email;
+
     private Date date;
 
     private LocalTime time;
