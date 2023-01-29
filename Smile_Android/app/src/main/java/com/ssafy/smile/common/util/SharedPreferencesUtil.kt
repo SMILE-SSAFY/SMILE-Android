@@ -40,6 +40,7 @@ class SharedPreferencesUtil (context: Context) {
             putLong(AUTH_TIME, authTime)
             apply()
         }
+        Application.authTime = Application.sharedPreferences.getAuthTime()
     }
 
     fun getAuthTime(): Long = preferences.getLong(AUTH_TIME, 0)
@@ -48,6 +49,7 @@ class SharedPreferencesUtil (context: Context) {
             remove(AUTH_TIME)
             apply()
         }
+        Application.authTime = Application.sharedPreferences.getAuthTime()
     }
 
     fun putFCMToken(fcmToken: String) {
@@ -73,6 +75,7 @@ class SharedPreferencesUtil (context: Context) {
             putString(ROLE, role.toString())
             apply()
         }
+        Application.role = Application.sharedPreferences.getRole()
     }
 
     fun getRole(): String? = preferences.getString(ROLE, null)
@@ -82,5 +85,12 @@ class SharedPreferencesUtil (context: Context) {
             remove(ROLE)
             apply()
         }
+        Application.role = Application.sharedPreferences.getRole()
     }
+
+    fun changeRole(role: Types.Role){
+        removeRole()
+        putRole(role)
+    }
+
 }

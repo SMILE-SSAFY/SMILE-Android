@@ -1,15 +1,16 @@
 package com.ssafy.smile.data.remote.model
 
 import android.os.Parcelable
-import com.ssafy.smile.domain.model.CategoryDto
+import com.ssafy.smile.domain.model.CategoryDomainDto
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CategoryDto(
-    val categoryName: String,
-    val categoryPrice: Int,
+    val categoryId : Int,
+    val name: String,
+    val price: Int,
     val description: String,
 ) : Parcelable
 {
-    fun CategoryDto() = CategoryDto(false, categoryName, categoryPrice.toString(), description)
+    fun toCategoryDto() = CategoryDomainDto(false, name, price, description)
 }

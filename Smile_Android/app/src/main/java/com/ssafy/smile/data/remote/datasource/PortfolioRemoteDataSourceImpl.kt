@@ -15,16 +15,8 @@ class PortfolioRemoteDataSourceImpl(private val portfolioApiService: PortfolioAp
     override suspend fun getArticles(photographerId: Long): Response<ArticleResponseDto> {
         return portfolioApiService.getArticles(photographerId)
     }
-    override suspend fun uploadPost(images: MutableMap<String, RequestBody>) : Response<Any>{
-        return portfolioApiService.uploadPost(images)
-    }
     override suspend fun uploadPost(latitude: Float, longitude: Float,
                                     detailAddress: String, category: String, images : List<MultipartBody.Part>): Response<Any>{
-        return portfolioApiService.uploadPost(latitude, longitude, detailAddress, category, images)
-    }
-
-    override suspend fun uploadPost(latitude: Float, longitude: Float,
-                                    detailAddress: String, category: String, images : HashMap<String, List<MultipartBody.Part>>): Response<Any>{
         return portfolioApiService.uploadPost(latitude, longitude, detailAddress, category, images)
     }
 

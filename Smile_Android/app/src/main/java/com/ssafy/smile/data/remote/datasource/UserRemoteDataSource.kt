@@ -10,4 +10,5 @@ interface UserRemoteDataSource {
     suspend fun signUp(signUpDto: SignUpRequestDto): Response<UserResponseDto>
     suspend fun checkPhoneNumber(phoneNumber: String): Response<Int>
     suspend fun login(loginRequestDto: LoginRequestDto): Response<UserResponseDto>
+    suspend fun withDraw(): Response<String>
 }
