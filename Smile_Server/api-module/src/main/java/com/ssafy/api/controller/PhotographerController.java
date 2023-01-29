@@ -112,11 +112,14 @@ public class PhotographerController {
      * @param categoryId
      * @return List<PhotographerForListDto>
      */
-//    @GetMapping("/search")
-//    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryId") Long categoryId) {
-//        List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByCategory(categoryId);
-//        return ResponseEntity.ok().body(photographerList);
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryId") Long categoryId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        List<PhotographerForListDto> photographerList =
+                photographerService.getPhotographerListByCategory(user.getId(), categoryId);
+        return ResponseEntity.ok().body(photographerList);
+    }
 
     /***
      *
