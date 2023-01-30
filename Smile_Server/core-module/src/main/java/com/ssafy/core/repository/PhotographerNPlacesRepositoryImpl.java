@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
 import com.ssafy.core.entity.QPhotographerNPlaces;
@@ -57,6 +58,18 @@ public class PhotographerNPlacesRepositoryImpl implements PhotographerNPlacesRep
                 .join(places).on(places.eq(photographerNPlaces.places))
                 .where(places.first.eq(first), places.second.eq(second))
                 .groupBy(photographer.id)
+                .fetch();
+    }
+
+    @Override
+    public List<Places> findPlacesByPhotographer(Long photographerId){
+        QPhotographerNPlaces photographerNPlaces = QPhotographerNPlaces.photographerNPlaces;
+        QPlaces places = QPlaces.places;
+
+        return jpaQueryFactory
+                .selectFrom(places)
+                .join(photographerNPlaces).on(photographerNPlaces.places.eq(places))
+                .where(photographerNPlaces.photographer.id.eq(photographerId))
                 .fetch();
     }
 }

@@ -1,6 +1,7 @@
 package com.ssafy.core.repository;
 
 import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.entity.Places;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface PhotographerNPlacesRepositoryCustom {
      * @return List<PhotographerQuerydslDto>
      */
     List<PhotographerQuerydslDto> findPhotographerByAddress(Long userId, String first, String second);
+    List<Places> findPlacesByPhotographer(Long photographerId);
 }

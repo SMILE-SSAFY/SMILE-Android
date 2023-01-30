@@ -1,6 +1,7 @@
 package com.ssafy.core.repository;
 
 import com.querydsl.core.Tuple;
+import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.dto.PhotographerQuerydslDto;
 import com.ssafy.core.entity.Photographer;
 
@@ -22,5 +23,5 @@ public interface PhotographerNCategoriesRepositoryCustom {
      * @return List<PhotographerQuerydslDto>
      */
     List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList);
-    List<Tuple> findCategoriesByPhotographerId(Long photographerId);
+    List<CategoriesQdslDto> findCategoriesByPhotographerId(Long photographerId);
 }
