@@ -71,12 +71,6 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.user.SignUp1Fragment"
         android:label="fragment_sign_up1"
         tools:layout="@layout/fragment_sign_up1" >
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <argument
-            android:name="password"
-            app:argType="string" />
         <action
             android:id="@+id/action_signUp1Fragment_to_signUp2Fragment"
             app:destination="@id/signUp2Fragment">
@@ -93,6 +87,12 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.user.SignUp2Fragment"
         android:label="fragment_sign_up2"
         tools:layout="@layout/fragment_sign_up2">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
         <action
             android:id="@+id/action_signUp2Fragment_to_mainFragment"
             app:destination="@id/mainFragment"/>
@@ -146,9 +146,6 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.PortfolioFragment"
         android:label="fragment_portfolio"
         tools:layout="@layout/fragment_portfolio" >
-        <argument
-            android:name="postId"
-            app:argType="long" />
         <action
             android:id="@+id/action_portfolioFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
@@ -176,9 +173,6 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.ReservationFragment"
         android:label="fragment_reservation"
         tools:layout="@layout/fragment_reservation" >
-        <argument
-            android:name="reservationResult"
-            app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
         <action
             android:id="@+id/action_reservationFragment_to_reservationResultFragment"
             app:destination="@id/reservationResultFragment">
@@ -192,6 +186,9 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.ReservationResultFragment"
         android:label="fragment_reservation_result"
         tools:layout="@layout/fragment_reservation_result" >
+        <argument
+            android:name="reservationResult"
+            app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
         <action
             android:id="@+id/action_reservationResultFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -233,6 +230,9 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.PostEditBottomSheetDialogFragment"
         android:label="fragment_post_edit_bottom_sheet_dialog"
         tools:layout="@layout/fragment_post_edit_bottom_sheet_dialog" >
+        <argument
+            android:name="postId"
+            app:argType="long" />
     </dialog>
     <navigation
         android:id="@+id/registerPortFolioGraph"
