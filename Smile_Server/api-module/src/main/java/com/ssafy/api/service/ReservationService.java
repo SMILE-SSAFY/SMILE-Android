@@ -6,6 +6,8 @@ import com.ssafy.api.dto.Reservation.CategoryDetailDto;
 import com.ssafy.api.dto.Reservation.PhotographerInfoDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
+import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Places;
@@ -18,6 +20,7 @@ import com.ssafy.core.repository.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.ReservationRepository;
 import com.ssafy.core.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,18 +40,14 @@ import java.util.Map;
  * author @김정은
  */
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ReservationService {
-    @Autowired
-    private PhotographerRepository photographerRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private PhotographerNCategoriesRepository photographerNCategoriesRepository;
-    @Autowired
-    private PhotographerNPlacesRepository photographerNPlacesRepository;
+    private final PhotographerRepository photographerRepository;
+    private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
+    private final PhotographerNCategoriesRepository photographerNCategoriesRepository;
+    private final PhotographerNPlacesRepository photographerNPlacesRepository;
 
     /**
      * 예약 등록
@@ -135,5 +134,30 @@ public class ReservationService {
                 .categories(list)
                 .places(places)
                 .build();
+    }
+
+    /**
+     * 예약 상태 변경
+     *
+     * @param statusDto
+     */
+    public Reservation changeStatus(ReservationStatusDto statusDto){
+        Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
+                .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+
+        // 해당하는 유저가 아닐 경우
+        if(reservation.getUser().getId() != statusDto.getUserId()
+                || reservation.getPhotographer().getId() != statusDto.getUserId()){
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if(reservation.getStatus() == ReservationStatus.예약취소){
+            throw new CustomException(ErrorCode.ALREADY_CANCELED);
+        } else if(reservation.getStatus() == ReservationStatus.완료){
+            // TODO: CREATE ERROR
+        }
+
+        reservation.updateStatus(statusDto.getStatus());
+        return reservationRepository.save(reservation);
     }
 }
