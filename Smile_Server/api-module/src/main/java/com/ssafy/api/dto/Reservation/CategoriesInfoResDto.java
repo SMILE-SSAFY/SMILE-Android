@@ -5,6 +5,11 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 카테고리 정보
+ *
+ * @author 김정은
+ */
 @Data
 @Builder
 public class CategoriesInfoResDto {

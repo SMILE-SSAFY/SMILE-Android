@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * 사진 작가와 활동 지역 Repository Querydsl Impl
  *
- * author @서재건
+ * @author 서재건
+ * @author 김정은
  */
 @RequiredArgsConstructor
 public class PhotographerNPlacesRepositoryImpl implements PhotographerNPlacesRepositoryCustom{
@@ -61,6 +62,12 @@ public class PhotographerNPlacesRepositoryImpl implements PhotographerNPlacesRep
                 .fetch();
     }
 
+    /**
+     * 사진작가 별 활동지역 조회
+     *
+     * @param photographerId
+     * @return Places
+     */
     @Override
     public List<Places> findPlacesByPhotographer(Long photographerId){
         QPhotographerNPlaces photographerNPlaces = QPhotographerNPlaces.photographerNPlaces;
