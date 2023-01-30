@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleQuerydslDto {
+public class ArticleQdslDto {
 
     private Article article;
     private Long hearts;

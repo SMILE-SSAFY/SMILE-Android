@@ -1,6 +1,6 @@
 package com.ssafy.core.repository;
 
-import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.dto.PhotographerQdslDto;
 
 import java.util.List;
 
@@ -19,5 +19,5 @@ public interface PhotographerNPlacesRepositoryCustom {
      * @param second
      * @return List<PhotographerQuerydslDto>
      */
-    List<PhotographerQuerydslDto> findPhotographerByAddress(Long userId, String first, String second);
+    List<PhotographerQdslDto> findPhotographerByAddress(Long userId, String first, String second);
 }

@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.Photographer;
 
-import com.ssafy.core.dto.PhotographerQuerydslDto;
-import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
 import lombok.AllArgsConstructor;
@@ -38,7 +37,7 @@ public class PhotographerForListDto {
      * @param photographerQuerydsl  photographerQuerydslDto
      * @return 변환된 DTO
      */
-    public PhotographerForListDto of(PhotographerQuerydslDto photographerQuerydsl) {
+    public PhotographerForListDto of(PhotographerQdslDto photographerQuerydsl) {
         // 활동지역
         List<PlacesForListDto> places = new ArrayList<>();
         for(PhotographerNPlaces place : photographerQuerydsl.getPhotographer().getPlaces()){
