@@ -2,25 +2,32 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
+import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
 import com.ssafy.core.code.Role;
+import com.ssafy.core.dto.PhotographerQuerydslDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.CategoriesRepository;
+import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,8 +39,9 @@ import java.util.List;
 /**
  * 작가 프로필 관련 클래스
  *
- * author @김정은
- * author @서재건
+ * @author 김정은
+ * @author 서재건
+ * @author 신민철
  */
 @Service
 @Transactional
@@ -45,12 +53,14 @@ public class PhotographerService {
     private PhotographerNPlacesRepository photographerNPlacesRepository;
     @Autowired
     private PhotographerRepository photographerRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private S3UploaderService s3UploaderService;
+    @Autowired
+    private PhotographerHeartRepository photographerHeartRepository;
+    @Autowired
+    private CategoriesRepository categoriesRepository;
 
     /**
      * 작가 등록
@@ -215,15 +225,21 @@ public class PhotographerService {
 
     /**
      * categoryId로 작가 조회
-     * 
-     * TODO: 작가 좋아요 구현 시 좋아요 갯수 및 좋아요 상태 추가, 추가 dto 필요
-     * 
-     * @param categoryId
+     *
+     * @param categoryName
      * @return List<PhotographerForListDto>
+     * @throws CATEGORY_NOT_FOUND 해당 카테고리가 없을 때 에러
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public List<PhotographerForListDto> getPhotographerListByCategory(Long categoryId) {
-        List<Photographer> photographerList = photographerNCategoriesRepository.findByCategoryId(categoryId);
+    public List<PhotographerForListDto> getPhotographerListByCategory(Long userId, String categoryName) {
+        List<Long> categoryIdList = categoriesRepository.findAllIdByNameContaining(categoryName);
+        if (categoryIdList.isEmpty()) {
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+        log.info("해당 카테고리 존재");
+
+        List<PhotographerQuerydslDto> photographerList =
+                photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
         log.info("카테고리로 작가 조회");
 
         if (photographerList.isEmpty()) {
@@ -233,10 +249,75 @@ public class PhotographerService {
 
         log.info("해당 카테고리를 가진 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (Photographer photographer : photographerList) {
-            photographerForList.add(new PhotographerForListDto().of(photographer));
+        for (PhotographerQuerydslDto photographerQuerydsl : photographerList) {
+            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
-        
+
         return photographerForList;
+    }
+
+    /**
+     * 주변 작가 조회
+     *
+     * @param address
+     * @return List<PhotographerForListDto>
+     */
+    public List<PhotographerForListDto> getPhotographerListByAddresss(Long userId, String address) {
+        String[] addresssList = address.split(" ");
+        List<PhotographerQuerydslDto> photographerList =
+                photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1]);
+        log.info("주변 작가 조회");
+
+        if (photographerList.isEmpty()) {
+            log.info("주변 작가가 없음");
+            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
+        }
+
+        log.info("주변 작가가 있음");
+        List<PhotographerForListDto> photographerForList = new ArrayList<>();
+        for (PhotographerQuerydslDto photographerQuerydsl : photographerList) {
+            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+        }
+
+        return photographerForList;
+    }
+
+    /***
+     *
+     * @param photographerId
+     * @return 포토그래퍼 id, isHeart boolean
+     * @throws CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)
+     * @throws CustomException(ErrorCode.USER_NOT_FOUND)
+     */
+    public PhotographerHeartDto addHeartPhotographer(Long photographerId){
+        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((UserDetails) principal).getUsername();
+
+        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        boolean isHeart = isHearted(user, photographer);
+
+        // 좋아요가 없을 때 -> 좋아요 등록
+        if(!isHeart){
+            photographerHeartRepository.save(new PhotographerHeart(user, photographer));
+        } else {
+            photographerHeartRepository.deleteByUserAndPhotographer(user, photographer);
+        }
+
+        // 버튼을 누른 이후 이므로, 좋아요면 싫어요, 싫어요면 좋아요를 반환
+        return PhotographerHeartDto.builder()
+                .photographerId(photographerId)
+                .isHeart(!isHeart)
+                .build();
+    }
+
+    /***
+     *
+     * @param user
+     * @param photographer
+     * @return user가 photographer에 좋아요를 눌렀는지 여부
+     */
+    private Boolean isHearted(User user, Photographer photographer){
+        return photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent();
     }
 }

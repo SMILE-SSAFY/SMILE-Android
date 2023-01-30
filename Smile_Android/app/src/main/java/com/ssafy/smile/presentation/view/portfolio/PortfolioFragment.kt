@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.tabs.TabLayoutMediator
-import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentPortfolioBinding
@@ -13,7 +12,6 @@ import com.ssafy.smile.domain.model.PortfolioDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.LikeViewModel
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
 private const val TAG = "PortfolioFragment_스마일"
@@ -25,10 +23,11 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     override fun initView() {
         initToolbar()
-        setObserver()
         initViewPager()
         setPhotographerId()
-        portfolioViewModel.getPortfolio(photographerId)
+        //TODO : 서버 통신 되면 주석 풀기
+//        portfolioViewModel.getPortfolio(photographerId)
+//        setObserver()
     }
 
     private fun initToolbar(){

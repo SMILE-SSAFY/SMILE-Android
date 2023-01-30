@@ -2,13 +2,14 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
+import com.ssafy.core.entity.Article;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
@@ -87,7 +88,7 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public ResponseEntity<?> updateArticle(
             @PathVariable("articleId") Long articleId,
-            @RequestPart("ArticlePostReq") ArticlePostDto articlePostDto) throws IOException{
+            ArticlePostDto articlePostDto) throws IOException{
 
         return ResponseEntity.ok(articleService.updateArticle(articleId, articlePostDto));
     }
@@ -97,12 +98,29 @@ public class ArticleController {
      * @param articleId
      * @return 게시글 아이디, 좋아요 여부
      */
-    @PostMapping("/heart/{articleId}")
+    @PutMapping("/heart/{articleId}")
     public ResponseEntity<?> heartArticle(
             @PathVariable("articleId") Long articleId
     ){
         ArticleHeartDto articleHeartDto = articleService.heartArticle(articleId);
         return new ResponseEntity<>(articleHeartDto, HttpStatus.OK);
+    }
+
+    /***
+     * 좌상,우하 위도 경도 주어졌을 때 그 안의 게시물 List로 모두 반환
+     * @param y1
+     * @param x1
+     * @param y2
+     * @param x2
+     * @return 게시글리스트
+     */
+    @GetMapping("list")
+    public ResponseEntity<?> searchArticleNear(@RequestParam("cord1y") Double y1,
+                                    @RequestParam("cord1x") Double x1,
+                                    @RequestParam("cord2y") Double y2,
+                                    @RequestParam("cord2x") Double x2){
+        List<ArticleSearchDto> articleSearchDtoList = articleService.searchArticleNear(y1, x1, y2, x2);
+        return new ResponseEntity<>(articleSearchDtoList, HttpStatus.OK);
     }
 
 }

@@ -117,6 +117,9 @@ app:startDestination="@id/splashFragment">
         <action
             android:id="@+id/action_searchResultFragment_to_postDetailFragment"
             app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_searchResultFragment_self"
+            app:destination="@id/searchResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerReservationListFragment"
