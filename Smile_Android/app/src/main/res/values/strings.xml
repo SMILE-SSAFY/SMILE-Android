@@ -2,7 +2,15 @@
     <string name="app_name">Smile_Android</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Address -->
+    <string name="tv_address_selected">%s ▾</string>
+    <string name="tv_address_unselected">주소를 등록해주세요 ▾</string>
+    <string name="tv_address_empty">최근 검색 목록이 존재하지 않습니다.</string>
+    <string name="address_search_tv">지번, 도로명, 건물명으로 검색</string>
+    <!-- Address -->
     <!-- Map -->
+    <string name="address_search_url">https://pjt-smile.web.app</string>
+    <string name="address_search_execute_url">javascript:execDaumPostcode();</string>
     <string name="permission_error_service_off">위치 서비스가 꺼져 있어, 현재 위치를 확인할 수 없습니다.</string>
     <string name="permission_error_service_denied">위치 권한이 거부되었습니다.</string>
     <!-- MyPage -->

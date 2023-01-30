@@ -1,23 +1,19 @@
 package com.ssafy.smile.presentation.view.mypage
 
-import android.graphics.Color
-import android.os.Bundle
-import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.ImageUtils.convertBitmapToFile
 import com.ssafy.smile.databinding.FragmentImageCropBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteViewModel
+import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
 class PhotographerProfileCropFragment : BaseFragment<FragmentImageCropBinding>(
     FragmentImageCropBinding::bind, R.layout.fragment_image_crop
 ) {
-    private val viewModel : PhotographerWriteViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
+    private val viewModel : PhotographerWriteGraphViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
 
     override fun initView() {
         initToolbar()

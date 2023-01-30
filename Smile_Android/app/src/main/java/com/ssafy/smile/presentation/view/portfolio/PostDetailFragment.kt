@@ -114,7 +114,6 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        // TODO: error code 물어보기
                         if (it.errorCode == 400) {
                             showToast(requireContext(), "이미 좋아요를 누른 게시물입니다.")
                         } else {

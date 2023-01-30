@@ -26,29 +26,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     override fun setEvent() {
+        setClickListener()
     }
 
     private fun initToolbar() {
-        binding.tbHome.apply {
-            inflateMenu(R.menu.menu_home)
+        binding.apply {
+            tbHome.apply {
+                inflateMenu(R.menu.menu_home)
 
-            setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.action_search -> {
-                        findNavController().navigate(R.id.action_mainFragment_to_searchResultFragment)
-                        true
+                setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_search -> {
+                            findNavController().navigate(R.id.action_mainFragment_to_searchResultFragment)
+                            true
+                        }
+                        R.id.action_portfolio -> {
+                            findNavController().navigate(R.id.action_mainFragment_to_portfolioFragment)
+                            true
+                        }
+                        else -> false
                     }
-                    R.id.action_portfolio -> {
-                        findNavController().navigate(R.id.action_mainFragment_to_portfolioFragment)
-                        true
-                    }
-                    else -> false
                 }
+                menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
             }
+        }
+    }
 
-            menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
+    private fun setClickListener(){
+        binding.apply {
+            layoutSearchAddress.setOnClickListener { moveToAddressGraph() }
         }
     }
 
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.toString()
+    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
 }
