@@ -124,6 +124,9 @@ dependencies {
     // page indicator view Library 추가
     implementation 'com.romandanylyk:pageindicatorview:1.0.3'
 
+    // custom calendar view Library 추가
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+    
     // swipe refresh layout dependency 추가
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
