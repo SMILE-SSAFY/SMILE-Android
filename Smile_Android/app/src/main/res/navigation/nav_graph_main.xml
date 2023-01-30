@@ -55,7 +55,7 @@ app:startDestination="@id/splashFragment">
         app:destination="@id/photographerReservationList" />
     <action
         android:id="@+id/action_mainFragment_to_portfolioFragment"
-        app:destination="@id/reservationFragment" />
+        app:destination="@id/portfolioFragment" />
     <action
         android:id="@+id/action_mainFragment_to_registerPortFolioGraph"
         app:destination="@id/registerPortFolioGraph" >
