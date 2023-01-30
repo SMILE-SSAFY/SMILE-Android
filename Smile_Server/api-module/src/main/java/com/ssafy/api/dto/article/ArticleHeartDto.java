@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/***
+ * 좋아요 누른 이후 좋아요 여부 체크
+ * @author 신민철
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

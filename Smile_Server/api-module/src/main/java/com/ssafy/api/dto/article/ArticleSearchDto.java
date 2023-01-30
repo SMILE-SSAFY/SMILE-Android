@@ -6,6 +6,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/***
+ * 게시글 검색결과 반환 Dto
+ *
+ * @author 신민철
+ */
 @Data
 @Builder
 @AllArgsConstructor

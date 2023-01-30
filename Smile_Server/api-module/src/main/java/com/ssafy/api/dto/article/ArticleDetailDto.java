@@ -6,15 +6,16 @@ import lombok.Data;
 
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
-
+/***
+ * 게시글 상세정보를 반환하는 Dto
+ *
+ * @author 신민철
+ */
 @Data
 @Builder
 @AllArgsConstructor
 public class ArticleDetailDto {
-    /***
-     * 게시글 상세정보를 반환하는 Dto
-     *
-     */
+
     private Long id;
 
     private Boolean isMe;
