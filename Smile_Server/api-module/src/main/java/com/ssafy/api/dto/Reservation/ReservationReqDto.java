@@ -4,26 +4,26 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReservationDto {
+public class ReservationReqDto {
     private Long id;
 
     private Long photographerId;
 
     private Long userId;
 
-    private String status;
-
     private int price;
+
+    private String categoryName;
+
+    private String options;
 
     private String email;
 
@@ -37,5 +37,4 @@ public class ReservationDto {
     // 상세주소
     private String detailAddress;
 
-    private boolean isReviewed;
 }
