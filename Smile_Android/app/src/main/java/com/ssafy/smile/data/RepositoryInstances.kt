@@ -1,10 +1,15 @@
 package com.ssafy.smile.data
 
+import android.content.Context
+import com.ssafy.smile.data.local.repository.AddressRepositoryImpl
 import com.ssafy.smile.data.remote.repository.*
 import javax.inject.Singleton
 
 @Singleton
 class RepositoryInstances(dataSourceInstances: DataSourceInstances) {
+
+    @Singleton
+    private val addressRepository : AddressRepositoryImpl = AddressRepositoryImpl(dataSourceInstances.getAddressRemoteDataSource())
 
     @Singleton
     private val userRepository: UserRepositoryImpl = UserRepositoryImpl(dataSourceInstances.getUserRemoteDataSource())
@@ -24,6 +29,7 @@ class RepositoryInstances(dataSourceInstances: DataSourceInstances) {
     @Singleton
     private val searchRepository: SearchRepositoryImpl = SearchRepositoryImpl(dataSourceInstances.getSearchRemoteDataSource())
 
+    fun getAddressRepository() : AddressRepositoryImpl = addressRepository
     fun getUserRepository(): UserRepositoryImpl = userRepository
     fun getPortfolioRepository(): PortfolioRepositoryImpl = portfolioRepository
     fun getLikeRepository(): LikeRepositoryImpl = likeRepository
