@@ -18,7 +18,6 @@ private const val TAG = "PortfolioFragment_스마일"
 class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortfolioBinding::bind, R.layout.fragment_portfolio) {
 
     private val portfolioViewModel by activityViewModels<PortfolioViewModel>()
-    private val likeViewModel by activityViewModels<LikeViewModel>()
     private var photographerId: Long = -1
 
     override fun initView() {
@@ -37,18 +36,13 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     private fun setObserver() {
         portfolioResponseObserver()
-        photographerLikeResponseObserver()
-        photographerLikeCancelResponseObserver()
+        photographerHeartResponseObserver()
     }
 
     override fun setEvent() {
         binding.apply {
             ctvLike.setOnClickListener {
-                if (ctvLike.isChecked) {
-                    likeViewModel.photographerLikeCancel(photographerId)
-                } else {
-                    likeViewModel.photographerLike(photographerId)
-                }
+                portfolioViewModel.photographerHeart(photographerId)
             }
         }
     }
@@ -86,9 +80,9 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         }
     }
 
-    private fun photographerLikeResponseObserver() {
+    private fun photographerHeartResponseObserver() {
         binding.apply {
-            likeViewModel.photographerLikeResponse.observe(viewLifecycleOwner) {
+            portfolioViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
                 when(it) {
                     is NetworkUtils.NetworkResponse.Loading -> {
                         showLoadingDialog(requireContext())
@@ -99,35 +93,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        if (it.errorCode == 400) {
-                            showToast(requireContext(), "이미 좋아요를 누른 작가입니다.")
-                        } else {
-                            showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun photographerLikeCancelResponseObserver() {
-        binding.apply {
-            likeViewModel.photographerLikeCancelResponse.observe(viewLifecycleOwner) {
-                when(it) {
-                    is NetworkUtils.NetworkResponse.Loading -> {
-                        showLoadingDialog(requireContext())
-                    }
-                    is NetworkUtils.NetworkResponse.Success -> {
-                        dismissLoadingDialog()
-                        ctvLike.toggle()
-                    }
-                    is NetworkUtils.NetworkResponse.Failure -> {
-                        // TODO: error code 물어보기
-                        if (it.errorCode == 404) {
-                            showToast(requireContext(), "존재하지 않는 작가입니다.")
-                        } else {
-                            showToast(requireContext(), "작가 좋아요 취소 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                        }
+                        showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                     }
                 }
             }
