@@ -3,7 +3,7 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/nav_group"
-app:startDestination="@id/splashFragment">
+app:startDestination="@id/mainFragment">
 <fragment
     android:id="@+id/splashFragment"
     android:name="com.ssafy.smile.presentation.view.splash.SplashFragment"
@@ -295,6 +295,11 @@ app:startDestination="@id/splashFragment">
             android:name="com.ssafy.smile.presentation.view.home.AddressSearchFragment"
             android:label="AddressSearchFragment"
             tools:layout="@layout/fragment_address_search">
+            <action
+                android:id="@+id/action_addressSearchFragment_pop"
+                app:popUpTo="@id/addressSearchFragment"
+                app:popUpToInclusive="true" >
+            </action>
         </dialog>
         <dialog
             android:id="@+id/addressMapFragment"
@@ -306,6 +311,10 @@ app:startDestination="@id/splashFragment">
                 app:popUpTo="@id/addressMapFragment"
                 app:popUpToInclusive="true" >
             </action>
+            <action
+                android:id="@+id/action_addressMapFragment_pop_including_addressGraph"
+                app:popUpTo="@id/addressGraph"
+                app:popUpToInclusive="true" />
         </dialog>
     </navigation>
 </navigation>

@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AddressLocalDataSource {
     suspend fun insertAddress(address: AddressEntity) : Long
+    suspend fun selectAddress(address: AddressEntity) : Long
     suspend fun deleteAddress(address: AddressEntity) : Int
-    suspend fun selectAddress(address: AddressEntity) : Int
     fun getAddressList() : LiveData<List<AddressEntity>>
 }

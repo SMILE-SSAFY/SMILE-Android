@@ -11,7 +11,7 @@ import com.ssafy.smile.presentation.base.BaseBottomSheetDialogFragment
 import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
 
-class PhotographerProfileFragment(override var mLoadingDialog: LoadingDialog) : BaseBottomSheetDialogFragment<FragmentPhotographerProfileBinding>(FragmentPhotographerProfileBinding::inflate) {
+class PhotographerProfileFragment() : BaseBottomSheetDialogFragment<FragmentPhotographerProfileBinding>(FragmentPhotographerProfileBinding::inflate) {
     private val viewModel : PhotographerWriteGraphViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
     override fun initView() {
 

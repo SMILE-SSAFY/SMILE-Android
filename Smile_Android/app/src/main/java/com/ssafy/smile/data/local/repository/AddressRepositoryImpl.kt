@@ -13,12 +13,12 @@ class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalData
         return addressLocalDataSource.insertAddress(address.makeToAddressEntity())
     }
 
-    override suspend fun deleteAddress(address: AddressDomainDto) : Int {
-        return addressLocalDataSource.deleteAddress(address.makeToAddressEntity())
+    override suspend fun selectAddress(address: AddressDomainDto) : Long {
+        return addressLocalDataSource.selectAddress(address.makeToAddressEntity())
     }
 
-    override suspend fun selectAddress(address: AddressDomainDto) : Int {
-        return addressLocalDataSource.selectAddress(address.makeToAddressEntity())
+    override suspend fun deleteAddress(address: AddressDomainDto) : Int {
+        return addressLocalDataSource.deleteAddress(address.makeToAddressEntity())
     }
 
     override fun getAddressList(): LiveData<List<AddressDomainDto>> {

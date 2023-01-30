@@ -1,14 +1,10 @@
 package com.ssafy.smile.common.util
 
-import android.Manifest
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import androidx.appcompat.app.AlertDialog
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
 import com.naver.maps.geometry.LatLng
-import com.ssafy.smile.domain.model.AddressGeo
+import com.ssafy.smile.domain.model.AddressGeoDomainDto
 import com.ssafy.smile.domain.model.Types.GeoAddress
 import java.io.IOException
 import java.util.*
@@ -30,21 +26,21 @@ object AddressUtils {
 
     fun getPointsFromLatLng(latLng: LatLng) : Pair<Double, Double> =  latLng.latitude to latLng.longitude
 
-    fun getGeoFromPoints(context:Context, lat:Double, lng:Double) : AddressGeo {
+    fun getGeoFromPoints(context:Context, lat:Double, lng:Double) : AddressGeoDomainDto {
         val addressList: List<Address>?
         try {
             val geocoder =  Geocoder(context, Locale.KOREA)
             addressList = geocoder.getFromLocation(lat, lng,1)
         } catch (ioException: IOException) {
-            return AddressGeo(false, GeoAddress.NETWORK_ERROR)
+            return AddressGeoDomainDto(false, GeoAddress.NETWORK_ERROR)
         } catch (illegalArgumentException: IllegalArgumentException) {
-            return AddressGeo(false, GeoAddress.GPS_ERROR)
+            return AddressGeoDomainDto(false, GeoAddress.GPS_ERROR)
         }
-        return if (addressList == null || addressList.isEmpty()) AddressGeo(false, GeoAddress.ENCODING_ERROR)
+        return if (addressList == null || addressList.isEmpty()) AddressGeoDomainDto(false, GeoAddress.ENCODING_ERROR)
         else{
             val address = addressList[0].getAddressLine(0)
-            if (address.contains("대한민국")) AddressGeo(true, GeoAddress.ADDRESS, address.split("대한민국 ")[1])
-            else AddressGeo(true, GeoAddress.ADDRESS, addressList[0].getAddressLine(0).toString())
+            if (address.contains("대한민국")) AddressGeoDomainDto(true, GeoAddress.ADDRESS, address.split("대한민국 ")[1])
+            else AddressGeoDomainDto(true, GeoAddress.ADDRESS, addressList[0].getAddressLine(0).toString())
         }
     }
 

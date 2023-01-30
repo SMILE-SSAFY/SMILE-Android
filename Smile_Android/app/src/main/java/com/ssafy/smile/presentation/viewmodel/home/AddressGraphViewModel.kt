@@ -15,6 +15,9 @@ class AddressGraphViewModel : BaseViewModel() {
     private val _insertAddressResponseLiveData : MutableLiveData<Long> = MutableLiveData<Long>()
     val insertAddressResponseLiveData = _insertAddressResponseLiveData
 
+    private val _selectedAddressResponseLiveData : MutableLiveData<Long> = MutableLiveData<Long>()
+    val selectedAddressResponseLiveData = _selectedAddressResponseLiveData
+
     val getAddressListResponseLiveData: LiveData<List<AddressDomainDto>>
         get() = this.getAddressList()
 
@@ -22,12 +25,12 @@ class AddressGraphViewModel : BaseViewModel() {
         _insertAddressResponseLiveData.postValue(addressRepository.insertAddress(address))
     }
 
-    suspend fun deleteAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
-        addressRepository.deleteAddress(address)
+    suspend fun selectAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
+        _selectedAddressResponseLiveData.postValue(addressRepository.selectAddress(address))
     }
 
-    suspend fun selectAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
-        addressRepository.selectAddress(address)
+    suspend fun deleteAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
+        addressRepository.deleteAddress(address)
     }
 
     private fun getAddressList() : LiveData<List<AddressDomainDto>> {

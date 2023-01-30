@@ -10,15 +10,15 @@ class AddressLocalDataSourceImpl(private val addressDao: AddressDao) : AddressLo
         return addressDao.insertAddress(address)
     }
 
-    override suspend fun deleteAddress(address: AddressEntity) : Int {
-        return addressDao.deleteAddress( address = address)
-    }
-
-    override suspend fun selectAddress(address: AddressEntity): Int {
+    override suspend fun selectAddress(address: AddressEntity): Long {
         addressDao.getAddressIsSelected()?.let {
             addressDao.updateAddressSelected(isSelected = false, address = it.address)
         }
-        return addressDao.updateAddressSelected(isSelected = true, address = address.address)
+        return addressDao.insertAddress(address)
+    }
+
+    override suspend fun deleteAddress(address: AddressEntity) : Int {
+        return addressDao.deleteAddress( address = address)
     }
 
     override fun getAddressList(): LiveData<List<AddressEntity>> {
