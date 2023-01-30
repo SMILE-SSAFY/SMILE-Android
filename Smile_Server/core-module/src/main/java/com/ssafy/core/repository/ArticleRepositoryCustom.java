@@ -1,6 +1,6 @@
 package com.ssafy.core.repository;
 
-import com.ssafy.core.dto.ArticleQuerydslDto;
+import com.ssafy.core.dto.ArticleQdslDto;
 
 import java.util.List;
 
@@ -18,5 +18,5 @@ public interface ArticleRepositoryCustom {
      * @param categoryNameList
      * @return List<ArticleQuerydslDto>
      */
-    List<ArticleQuerydslDto> findByCategoryName(Long userId, List<String> categoryNameList);
+    List<ArticleQdslDto> findByCategoryName(Long userId, List<String> categoryNameList);
 }

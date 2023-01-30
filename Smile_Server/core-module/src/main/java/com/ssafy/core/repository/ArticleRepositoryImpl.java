@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.core.dto.ArticleQuerydslDto;
+import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.entity.QArticle;
 import com.ssafy.core.entity.QArticleHeart;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +30,12 @@ public class ArticleRepositoryImpl implements ArticleRepositoryCustom{
      * @return List<ArticleQuerydslDto>
      */
     @Override
-    public List<ArticleQuerydslDto> findByCategoryName(Long userId, List<String> categoryNameList) {
+    public List<ArticleQdslDto> findByCategoryName(Long userId, List<String> categoryNameList) {
         QArticle article = QArticle.article;
         QArticleHeart articleHeart = QArticleHeart.articleHeart;
 
         return jpaQueryFactory
-                .select(Projections.constructor(ArticleQuerydslDto.class,
+                .select(Projections.constructor(ArticleQdslDto.class,
                         article,
                         articleHeart.id.count(),
                         new CaseBuilder()

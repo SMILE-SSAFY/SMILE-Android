@@ -6,7 +6,7 @@ import com.ssafy.api.dto.article.ArticleListDto;
 import com.ssafy.api.dto.article.ArticlePostDto;
 import com.ssafy.api.dto.article.ArticleSearchDto;
 import com.ssafy.api.dto.article.PhotographerInfoDto;
-import com.ssafy.core.dto.ArticleQuerydslDto;
+import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.Photographer;
@@ -316,7 +316,7 @@ public class ArticleService {
         }
         log.info("해당 카테고리 존재");
 
-        List<ArticleQuerydslDto> articleList = articleRepository.findByCategoryName(userId, categoryNameList);
+        List<ArticleQdslDto> articleList = articleRepository.findByCategoryName(userId, categoryNameList);
 
         if (articleList.isEmpty()) {
             log.info("해당 카테고리의 게시글이 없음");
@@ -325,7 +325,7 @@ public class ArticleService {
 
         log.info("해당 카테고리의 게시글 존재");
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
-        for (ArticleQuerydslDto articleQuerydsl : articleList) {
+        for (ArticleQdslDto articleQuerydsl : articleList) {
             String photoUrls = articleQuerydsl.getArticle().getPhotoUrls().replace("[", "").replace("]", "");
             List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
 
