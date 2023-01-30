@@ -1,11 +1,12 @@
 package com.ssafy.core.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.entity.QCategories;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
 import com.ssafy.core.entity.QPhotographerNCategories;
@@ -60,12 +61,12 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
     }
 
     @Override
-    public List<Tuple> findCategoriesByPhotographerId(Long photographerId){
+    public List<CategoriesQdslDto> findCategoriesByPhotographerId(Long photographerId){
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
         QCategories categories = QCategories.categories;
 
         return jpaQueryFactory
-                .select(categories.id, categories.name, photographerNCategories.price, photographerNCategories.description)
+                .select(Projections.constructor(CategoriesQdslDto.class, categories.id, categories.name, photographerNCategories.price, photographerNCategories.description))
                 .from(categories)
                 .join(photographerNCategories).on(categories.eq(photographerNCategories.category))
                 .where(photographerNCategories.photographer.id.eq(photographerId))
