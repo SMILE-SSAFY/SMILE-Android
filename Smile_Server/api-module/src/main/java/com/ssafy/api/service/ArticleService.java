@@ -1,6 +1,12 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.article.*;
+import com.ssafy.api.dto.article.ArticleDetailDto;
+import com.ssafy.api.dto.article.ArticleHeartDto;
+import com.ssafy.api.dto.article.ArticleListDto;
+import com.ssafy.api.dto.article.ArticlePostDto;
+import com.ssafy.api.dto.article.ArticleSearchDto;
+import com.ssafy.api.dto.article.PhotographerInfoDto;
+import com.ssafy.core.dto.ArticleQuerydslDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.Photographer;
@@ -11,6 +17,7 @@ import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.ArticleHeartRepository;
 import com.ssafy.core.repository.ArticleRepository;
+import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
@@ -30,6 +37,7 @@ import java.util.List;
 
 /***
  * @author 신민철
+ * @author 서재건
  */
 @Service
 @Slf4j
@@ -40,14 +48,16 @@ public class ArticleService {
     private final PhotographerRepository photographerRepository;
     private final ArticleHeartRepository articleHeartRepository;
     private final PhotographerHeartRepository photographerHeartRepository;
+    private final CategoriesRepository categoriesRepository;
 
-    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository) {
+    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository, CategoriesRepository categoriesRepository) {
         this.articleRepository = articleRepository;
         this.s3UploaderService = s3UploaderService;
         this.userRepository = userRepository;
         this.photographerRepository = photographerRepository;
         this.articleHeartRepository = articleHeartRepository;
         this.photographerHeartRepository = photographerHeartRepository;
+        this.categoriesRepository = categoriesRepository;
     }
 
     /***
@@ -284,6 +294,51 @@ public class ArticleService {
                     .hearts(hearts)
                     .createdAt(article.getCreatedAt())
                     .category(article.getCategory())
+                    .photoUrl(photoUrlList.get(0).trim())
+                    .build();
+
+            articleSearchDtoList.add(articleSearchDto);
+        }
+        return articleSearchDtoList;
+    }
+
+    /**
+     * 카테고리 이름으로 게시글 검색
+     *
+     * @param userId
+     * @param categoryName
+     * @return List<ArticleSearchDto>
+     */
+    public List<ArticleSearchDto> getArticleListByCategory(Long userId, String categoryName) {
+        List<String> categoryNameList = categoriesRepository.findAllCategoryNameByNameContaining(categoryName);
+        if (categoryNameList.isEmpty()) {
+            throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+        log.info("해당 카테고리 존재");
+
+        List<ArticleQuerydslDto> articleList = articleRepository.findByCategoryName(userId, categoryNameList);
+
+        if (articleList.isEmpty()) {
+            log.info("해당 카테고리의 게시글이 없음");
+            throw new CustomException(ErrorCode.ARTICLE_NOT_FOUND);
+        }
+
+        log.info("해당 카테고리의 게시글 존재");
+        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+        for (ArticleQuerydslDto articleQuerydsl : articleList) {
+            String photoUrls = articleQuerydsl.getArticle().getPhotoUrls().replace("[", "").replace("]", "");
+            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
+
+            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
+                    .articleId(articleQuerydsl.getArticle().getId())
+                    .photographerName(articleQuerydsl.getArticle().getUser().getName())
+                    .latitude(articleQuerydsl.getArticle().getLatitude())
+                    .longitude(articleQuerydsl.getArticle().getLongitude())
+                    .detailAddress(articleQuerydsl.getArticle().getDetailAddress())
+                    .isHeart(articleQuerydsl.isHeart())
+                    .hearts(articleQuerydsl.getHearts())
+                    .createdAt(articleQuerydsl.getArticle().getCreatedAt())
+                    .category(articleQuerydsl.getArticle().getCategory())
                     .photoUrl(photoUrlList.get(0).trim())
                     .build();
 
