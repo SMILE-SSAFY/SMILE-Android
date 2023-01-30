@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PhotographerQuerydslDto {
+public class PhotographerQdslDto {
     private Photographer photographer;
     private Long heart;
     private boolean hasHeart;
