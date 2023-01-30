@@ -19,6 +19,7 @@ class ResultPostRecyclerAdapter(val context: Context, val datas: MutableList<Cus
         fun bind(data: CustomPostDomainDto) {
             binding.apply {
                 customPost.setAttrs(CustomPostDomainDto(
+                    data.articleId,
                     data.img,
                     data.category,
                     data.name,
