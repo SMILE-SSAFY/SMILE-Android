@@ -17,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 /***
- * 작가별 게시글 리스트를 반환하는 Dto*
+ * 작가별 게시글 리스트를 반환하는 Dto
+ *
  * author @신민철
  */
 public class PhotographerInfoDto {
