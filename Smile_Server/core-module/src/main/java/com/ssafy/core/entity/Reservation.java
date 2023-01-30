@@ -39,6 +39,10 @@ public class Reservation {
 
     private int price;
 
+    private String categoryName;
+
+    private String options;
+
     private String email;
 
     // 만나는 장소
