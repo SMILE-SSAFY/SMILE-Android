@@ -6,7 +6,9 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,14 +24,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearchBinding>(FragmentAddressSearchBinding::inflate) {
-    private val viewModel : AddressGraphViewModel by navGraphViewModels(R.id.addressGraph)
+    private val viewModel : AddressGraphViewModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         dialog.setOnShowListener {
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet!!)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            BottomSheetBehavior.from(bottomSheet!!).apply {
+                state = BottomSheetBehavior.STATE_EXPANDED
+                isDraggable = false
+            }
             setupRatio(bottomSheet, 90)
         }
         return dialog
@@ -50,9 +54,10 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
     }
 
     override fun setEvent() {
+        binding.btnBack.setOnClickListener { moveToPopUpSelf() }
         viewModel.insertAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 선택 과정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
-            else this@AddressSearchFragment.dismiss()
+            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+            else moveToPopUpSelf()
         }
     }
 
@@ -73,6 +78,8 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
             }
         }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_addressSearchFragment_pop)
 
 
 }

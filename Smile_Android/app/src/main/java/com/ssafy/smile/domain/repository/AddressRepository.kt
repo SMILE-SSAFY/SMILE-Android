@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AddressRepository {
     suspend fun insertAddress(address: AddressDomainDto) : Long
+    suspend fun selectAddress(address: AddressDomainDto) : Long
     suspend fun deleteAddress(address: AddressDomainDto) : Int
-    suspend fun selectAddress(address: AddressDomainDto) : Int
     fun getAddressList() : LiveData<List<AddressDomainDto>>
 }

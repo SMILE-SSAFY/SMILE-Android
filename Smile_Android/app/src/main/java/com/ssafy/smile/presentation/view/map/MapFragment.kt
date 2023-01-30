@@ -7,15 +7,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -23,10 +18,8 @@ import com.gun0912.tedpermission.PermissionListener
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.MapFragment
-import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.PermissionUtils
 import com.ssafy.smile.databinding.FragmentMapBinding
 import com.ssafy.smile.domain.model.Types

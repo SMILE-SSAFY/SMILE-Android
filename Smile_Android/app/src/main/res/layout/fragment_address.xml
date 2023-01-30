@@ -31,15 +31,21 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_title_address"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/black"
-                android:layout_gravity="center_horizontal"
-                android:text="주소 설정"
-                style="@style/TvH4"/>
+                android:paddingHorizontal="20dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_title_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    android:text="주소 설정"
+                    style="@style/TvH4"/>
+            </LinearLayout>
             <include
                 android:id="@+id/l_address_search"
                 layout="@layout/layout_address_search"/>
@@ -73,15 +79,27 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:visibility="visible"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_address"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/layout_rv_address"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grayForBackground"
-            android:nestedScrollingEnabled="false"
-            android:orientation="vertical"
+            android:overScrollMode="never"
             android:visibility="visible"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_rv_address" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grayForBackground"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_rv_address" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
