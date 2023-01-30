@@ -18,7 +18,6 @@
         <attr name="pLike" format="string" />
     </declare-styleable>
     <declare-styleable name="CustomReservation">
-        <attr name="curDate" format="string" />
         <attr name="opposite" format="string" />
         <attr name="rName" format="string" />
         <attr name="phonNumber" format="string" />

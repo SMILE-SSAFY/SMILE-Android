@@ -2,12 +2,16 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.ssafy.smile.R
 import com.ssafy.smile.databinding.FragmentReservationResultBinding
 import com.ssafy.smile.domain.model.CustomReservationDomainDto
 import com.ssafy.smile.presentation.base.BaseFragment
 
 class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>(FragmentReservationResultBinding::bind, R.layout.fragment_reservation_result) {
+
+    private val args: ReservationFragmentArgs by navArgs()
+
     override fun initView() {
         initToolbar()
         setResult()
@@ -17,15 +21,14 @@ class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>
         binding.apply {
             customReservation.setAttrs(
                 CustomReservationDomainDto(
-                    "2023년 01월 07일",
-                    "작가님",
-                    "홍길동",
-                    "010-1234-5678",
-                    "2023년 01월 09일(월)",
-                    "오전 09시 30분",
-                    "구미시\n동락공원 풍차 앞",
-                    "웨딩사진\n기본 300장 + 추가 100장 + 보정 20장",
-                    "300,000원"
+                    args.reservationResult.opposite,
+                    args.reservationResult.name,
+                    args.reservationResult.phoneNumber,
+                    args.reservationResult.resDate,
+                    args.reservationResult.startTime,
+                    args.reservationResult.location,
+                    args.reservationResult.category,
+                    args.reservationResult.cost
                 )
             )
         }

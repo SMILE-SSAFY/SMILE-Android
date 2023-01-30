@@ -1,7 +1,10 @@
 package com.ssafy.smile.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class CustomReservationDomainDto(
-    val curDate: String = "",
     val opposite: String = "",
     val name: String = "",
     val phoneNumber: String = "",
@@ -10,4 +13,4 @@ data class CustomReservationDomainDto(
     val location: String = "",
     val category: String = "",
     val cost: String = ""
-)
+): Parcelable
