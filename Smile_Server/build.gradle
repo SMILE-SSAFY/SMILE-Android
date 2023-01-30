@@ -71,6 +71,12 @@ subprojects {
         //  retrofit2
         implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.2'
 
+        // smile-clustering
+        implementation 'com.github.haifengl:smile-core:3.0.0'
+
+        // redis
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     }
 }
 

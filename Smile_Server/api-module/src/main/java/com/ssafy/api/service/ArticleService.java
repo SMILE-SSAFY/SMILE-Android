@@ -27,13 +27,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import smile.clustering.KMeans;
+import smile.clustering.PartitionClustering;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /***
  * @author 신민철
@@ -78,7 +83,7 @@ public class ArticleService {
     }
 
     /***
-     *
+     * 게시글 상세조회
      * @param id 게시글 id
      * @return 게시글상세정보
      * @throws ARTICLE_NOT_FOUND
@@ -349,6 +354,26 @@ public class ArticleService {
         return articleSearchDtoList;
     }
 
+    public void clusterTest(Double y1, Double x1, Double y2, Double x2){
+        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y1, y2, x1, x2);
+        KMeans clusters = PartitionClustering.run(20, () -> KMeans.fit(getGeoPointArray(articleList),2));
+
+        System.out.println(Arrays.toString(clusters.y));
+        System.out.println(Arrays.deepToString(clusters.centroids));
+        System.out.println(Arrays.toString(clusters.size));
+
+        Map<Integer, double[]> groupIdNGeoPoint = new HashMap<>();
+        for (int i = 0; i < clusters.size.length-1; i++) {
+            int groupId = i;
+            double[] centroids = clusters.centroids[i];
+            double x = centroids[0];
+            double y = centroids[1];
+            System.out.println(clusters.size[i]);
+//            groupIdNGeoPoint.computeIfAbsent(groupId, k -> clusters.centroids[i]);
+        }
+        System.out.println(groupIdNGeoPoint);
+    }
+
     /***
      *
      * @param user
@@ -383,5 +408,18 @@ public class ArticleService {
         return logInUser;
     }
 
-
+    /***
+     * 지도의 범위내 게시글에서 위도 경도를 얻어오는 함수
+     */
+     private double[][] getGeoPointArray(List<Article> articleList){
+         if (articleList.isEmpty()){
+             return new double[0][];
+         }
+         double[][] geoPointArray = new double[articleList.size()][];
+         int index = 0;
+         for (Article article : articleList){
+             geoPointArray[index++] = new double[]{article.getLatitude(), article.getLongitude()};
+         }
+         return geoPointArray;
+     }
 }
