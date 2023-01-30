@@ -17,13 +17,13 @@ import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.CommonDialog
 import com.ssafy.smile.data.remote.model.ResCategory
-import com.ssafy.smile.data.remote.model.ReservationPhotographerDto
+import com.ssafy.smile.data.remote.model.ReservationRequestDto
 import com.ssafy.smile.databinding.FragmentReservationBinding
 import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.user.SignUp1FragmentDirections
 import com.ssafy.smile.presentation.viewmodel.portfolio.ReservationViewModel
-import java.time.LocalDate
 import java.util.*
 import java.util.regex.Pattern
 
@@ -48,6 +48,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     var isPlaceChecked = false
     var isCategoryChecked = false
     var isEmailChecked = false
+    var selectData = ReservationRequestDto()
 
     override fun initView() {
         initToolbar()
@@ -66,10 +67,12 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
 
     private fun setPhotographerId() {
         // TODO : 이전 화면에서 작가 id 넘겨준 값 가져와서 photographerId 변수 값 변경하기
+        selectData.photographerId = photographerId
     }
 
     private fun setObserver() {
         getPhotographerReservationInfoResponseObserver()
+        postReservationResponseObserver()
     }
 
     private fun getPhotographerReservationInfoResponseObserver() {
@@ -98,6 +101,25 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                     dismissLoadingDialog()
                     Log.d(TAG, "photographerReservationResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "작가 예약 정보 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+            }
+        }
+    }
+
+    private fun postReservationResponseObserver() {
+        reservationViewModel.postReservationResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    val action = ReservationFragmentDirections.actionReservationFragmentToReservationResultFragment(it.data.toCustomReservationDomainDto())
+                    findNavController().navigate(action)
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    showToast(requireContext(), "예약 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
         }
@@ -145,9 +167,11 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 }
             }
             tvPlace.setOnItemClickListener { _, _, _, _ ->
+                selectData.address = tvPlace.text.toString()
                 etPlaceDetail.isEnabled = true
             }
             tvCategory.setOnItemClickListener { _, _, pos, _ ->
+                selectData.categoryName = tvCategory.text.toString()
                 tvOption.isEnabled = true
 
                 categories[pos].categoryDetail.forEach { categoryDetail ->
@@ -158,6 +182,8 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             tvOption.setOnItemClickListener { _, _, pos, _ ->
                 isCategoryChecked = true
 
+                selectData.options = optionData[pos]
+                selectData.price = priceData[pos]
                 binding.tvCost.text = "${CommonUtils.makeComma(priceData[pos])} 원"
             }
         }
@@ -168,6 +194,9 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             setButtonClickListener(object : CustomCalendarDialog.OnButtonClickListener{
                 override fun onOkButtonClick(year: String, date: String) {
                     isDateChecked = true
+
+                    val arr = date.split("-")
+                    selectData.date = "${year}-${arr[1]}-${arr[2]}"
                     setDateText(year, date)
                 }
             })
@@ -191,6 +220,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             .build()
 
         timePicker.addOnPositiveButtonClickListener {
+            selectData.time = "${timePicker.hour}:${timePicker.minute}"
             setTimeText(timePicker.hour, timePicker.minute)
             isTimeChecked = true
         }
@@ -222,7 +252,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             val dialog = CommonDialog(
                 requireContext(),
                 DialogBody("잠깐!\n사진을 전송 받을 이메일이 맞나요?\n\n${etEmail.text}", "맞아요", "틀려요"),
-                { findNavController().navigate(R.id.action_reservationFragment_to_reservationResultFragment) },
+                { reservationViewModel.postReservation(selectData) },
                 { showToast(requireContext(), "이메일을 다시 입력해주세요") }
             )
             showDialog(dialog, viewLifecycleOwner)
@@ -243,8 +273,14 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             override fun afterTextChanged(editable: Editable) {
                 if (editable.isNotEmpty()) {
                     when(type) {
-                        "detailPlace" -> isPlaceChecked = true
-                        "email" -> isEmailChecked = true
+                        "detailPlace" -> {
+                            selectData.detailAddress = editText.text.toString()
+                            isPlaceChecked = true
+                        }
+                        "email" -> {
+                            selectData.email = editText.text.toString()
+                            isEmailChecked = true
+                        }
                         else -> {}
                     }
                 }

@@ -10,7 +10,6 @@ import com.ssafy.smile.R
 import com.ssafy.smile.domain.model.CustomReservationDomainDto
 
 class CustomReservation: ConstraintLayout {
-    lateinit var tvCurDate: TextView
     lateinit var tvOpposite: TextView
     lateinit var tvName: TextView
     lateinit var tvPhoneNumber: TextView
@@ -31,7 +30,6 @@ class CustomReservation: ConstraintLayout {
         val view = LayoutInflater.from(context).inflate(R.layout.custom_reservation, this, false)
         addView(view)
 
-        tvCurDate = findViewById(R.id.tv_cur_date)
         tvOpposite = findViewById(R.id.tv_opposite)
         tvName = findViewById(R.id.tv_name)
         tvPhoneNumber = findViewById(R.id.tv_phone_number)
@@ -50,7 +48,6 @@ class CustomReservation: ConstraintLayout {
 
     // 속성값을 view 요소들에 연결
     private fun setTypedArray(typedArray: TypedArray) {
-        tvCurDate.text = typedArray.getText(R.styleable.CustomReservation_curDate)
         tvOpposite.text = typedArray.getText(R.styleable.CustomReservation_opposite)
         tvName.text = typedArray.getText(R.styleable.CustomReservation_rName)
         tvPhoneNumber.text = typedArray.getText(R.styleable.CustomReservation_phonNumber)
@@ -63,7 +60,6 @@ class CustomReservation: ConstraintLayout {
     }
 
     fun setAttrs(data: CustomReservationDomainDto) {
-        tvCurDate.text = data.curDate
         tvOpposite.text = data.opposite
         tvName.text = data.name
         tvPhoneNumber.text = data.phoneNumber

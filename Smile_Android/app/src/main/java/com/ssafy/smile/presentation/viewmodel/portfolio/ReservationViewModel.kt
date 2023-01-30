@@ -6,6 +6,7 @@ import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.ReservationPhotographerDto
 import com.ssafy.smile.data.remote.model.ReservationRequestDto
+import com.ssafy.smile.data.remote.model.ReservationResponseDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,7 @@ class ReservationViewModel: BaseViewModel() {
     }
 
     // 예약 결과를 관리하는 LiveData
-    val postReservationResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+    val postReservationResponse: LiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
         get() = reservationRepository.postReservationLiveData
 
     // 예약을 수행하는 함수

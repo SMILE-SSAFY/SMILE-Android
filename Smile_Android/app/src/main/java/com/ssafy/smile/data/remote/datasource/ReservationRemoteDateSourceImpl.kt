@@ -2,6 +2,7 @@ package com.ssafy.smile.data.remote.datasource
 
 import com.ssafy.smile.data.remote.model.ReservationPhotographerDto
 import com.ssafy.smile.data.remote.model.ReservationRequestDto
+import com.ssafy.smile.data.remote.model.ReservationResponseDto
 import com.ssafy.smile.data.remote.service.ReservationApiService
 import retrofit2.Response
 
@@ -10,7 +11,7 @@ class ReservationRemoteDateSourceImpl(private val reservationApiService: Reserva
         return reservationApiService.getPhotographerReservationInfo(photographerId)
     }
 
-    override suspend fun postReservation(reservationRequestDto: ReservationRequestDto): Response<Any> {
+    override suspend fun postReservation(reservationRequestDto: ReservationRequestDto): Response<ReservationResponseDto> {
         return reservationApiService.postReservation(reservationRequestDto)
     }
 }

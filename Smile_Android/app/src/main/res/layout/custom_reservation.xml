@@ -27,21 +27,6 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginHorizontal="20dp"
                 android:orientation="horizontal">
-
-                <TextView
-                    style="@style/TvT5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="예약일자"
-                    android:textColor="@color/gray500" />
-
-                <TextView
-                    android:id="@+id/tv_cur_date"
-                    style="@style/TvT5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:textColor="@color/gray500" />
             </LinearLayout>
 
             <LinearLayout
@@ -66,42 +51,42 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         style="@style/TvH6"
                         android:text="연락처"
                         android:textColor="@color/black"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         style="@style/TvH6"
                         android:text="일자"
                         android:textColor="@color/black"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         style="@style/TvH6"
                         android:text="시작 시간"
                         android:textColor="@color/black"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         style="@style/TvH6"
                         android:text="촬영 장소"
                         android:textColor="@color/black"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="22dp"
+                        android:layout_marginTop="12dp"
                         style="@style/TvH6"
                         android:text="촬영 카테고리 &amp; 옵션"
                         android:textColor="@color/black"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="12dp"
                         style="@style/TvH6"
                         android:text="결제 금액"
                         android:textColor="@color/black"/>
@@ -124,7 +109,7 @@
                         android:id="@+id/tv_phone_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         style="@style/TvT5"
@@ -133,7 +118,7 @@
                         android:id="@+id/tv_reservation_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         style="@style/TvT5"
@@ -142,15 +127,17 @@
                         android:id="@+id/tv_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         style="@style/TvT5"
                         android:textColor="@color/black"/>
                     <TextView
                         android:id="@+id/tv_place"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="2"
+                        android:layout_marginTop="12dp"
+                        android:maxLines="1"
                         android:ellipsize="end"
                         style="@style/TvT5"
                         android:textColor="@color/black"/>
@@ -158,8 +145,8 @@
                         android:id="@+id/tv_category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:maxLines="2"
+                        android:layout_marginTop="12dp"
+                        android:maxLines="1"
                         android:ellipsize="end"
                         style="@style/TvT5"
                         android:textColor="@color/black"/>
@@ -167,7 +154,7 @@
                         android:id="@+id/tv_cost"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         style="@style/TvT5"
