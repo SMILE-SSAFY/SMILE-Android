@@ -176,15 +176,26 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.ReservationFragment"
         android:label="fragment_reservation"
         tools:layout="@layout/fragment_reservation" >
+        <argument
+            android:name="reservationResult"
+            app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
         <action
             android:id="@+id/action_reservationFragment_to_reservationResultFragment"
-            app:destination="@id/reservationResultFragment" />
+            app:destination="@id/reservationResultFragment">
+            <argument
+                android:name="reservationResult"
+                app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/reservationResultFragment"
         android:name="com.ssafy.smile.presentation.view.portfolio.ReservationResultFragment"
         android:label="fragment_reservation_result"
-        tools:layout="@layout/fragment_reservation_result" />
+        tools:layout="@layout/fragment_reservation_result" >
+        <action
+            android:id="@+id/action_reservationResultFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
     <fragment
         android:id="@+id/writePostFragment"
         android:name="com.ssafy.smile.presentation.view.portfolio.WritePostFragment"

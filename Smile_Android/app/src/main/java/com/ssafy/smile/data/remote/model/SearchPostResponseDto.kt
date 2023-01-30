@@ -1,20 +1,29 @@
 package com.ssafy.smile.data.remote.model
 
 import com.ssafy.smile.domain.model.CustomPostDomainDto
+import java.time.LocalDateTime
 
-//TODO: API 문서에 맞춰서 바꾸기
 data class SearchPostResponseDto(
-    val id: Int = 0
+    val articleId: Long = 0,
+    val photographerName: String = "",
+    val latitude: Float = 0.0f,
+    val longitude: Float = 0.0f,
+    val isHeart: Boolean = false,
+    val hearts: Int = 0,
+    val detailAddress: String = "",
+    val createdAt: LocalDateTime,
+    val category: String = "",
+    val photoUrl: String = ""
 ){
     fun toCustomPostDomainDto(): CustomPostDomainDto {
         return CustomPostDomainDto(
-            0,
-            "aa",
-            "aa",
-            "aa",
-            "aa",
-            true,
-            200
+            articleId,
+            photoUrl,
+            category,
+            photographerName,
+            detailAddress,
+            isHeart,
+            hearts
         )
     }
 }

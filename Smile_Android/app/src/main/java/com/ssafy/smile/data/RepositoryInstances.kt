@@ -24,10 +24,14 @@ class RepositoryInstances(dataSourceInstances: DataSourceInstances) {
     @Singleton
     private val searchRepository: SearchRepositoryImpl = SearchRepositoryImpl(dataSourceInstances.getSearchRemoteDataSource())
 
+    @Singleton
+    private val reservationRepository: ReservationRepositoryImpl = ReservationRepositoryImpl(dataSourceInstances.getReservationRemoteDataSource())
+
     fun getUserRepository(): UserRepositoryImpl = userRepository
     fun getPortfolioRepository(): PortfolioRepositoryImpl = portfolioRepository
     fun getHeartRepository(): HeartRepositoryImpl = heartRepository
     fun getPhotographerRepository() : PhotographerRepositoryImpl = photographerRepository
     fun getPostRepository(): PostRepositoryImpl = postRepository
     fun getSearchRepository(): SearchRepositoryImpl = searchRepository
+    fun getReservationRepository(): ReservationRepositoryImpl = reservationRepository
 }
