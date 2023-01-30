@@ -2,6 +2,7 @@ package com.ssafy.smile.data
 
 
 import com.ssafy.smile.data.remote.service.*
+import retrofit2.create
 import javax.inject.Singleton
 
 @Singleton
@@ -23,11 +24,15 @@ class ServiceInstances(retrofitInstances : RetrofitInstances) {
     @Singleton
     private val searchApiService: SearchApiService = retrofitInstances.getRetrofit().create(SearchApiService::class.java)
 
+    @Singleton
+    private val reservationApiService: ReservationApiService = retrofitInstances.getRetrofit().create(ReservationApiService::class.java)
+
     fun getUserApiService() : UserApiService = userApiService
     fun getPortfolioApiService(): PortfolioApiService = portfolioApiService
     fun getLikeApiService(): LikeApiService = likeApiService
     fun getPhotographerApiService() : PhotographerApiService = photographerApiService
     fun getPostApiService(): PostApiService = postApiService
     fun getSearchApiService(): SearchApiService = searchApiService
+    fun getReservationApiService(): ReservationApiService = reservationApiService
 
 }

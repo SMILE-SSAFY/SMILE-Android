@@ -134,6 +134,7 @@
             android:layout_marginHorizontal="20dp"
             android:hint="상세 주소를 설명해주세요"
             android:paddingHorizontal="8dp"
+            android:enabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_place" />
@@ -193,6 +194,7 @@
                 android:hint="옵션 선택"
                 android:inputType="none"
                 android:maxLines="1"
+                android:enabled="false"
                 android:textColorHint="@color/gray500"
                 android:fontFamily="@font/ibm_plex_sans_regular"
                 android:textSize="14sp"/>
@@ -217,7 +219,6 @@
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="20dp"
-            android:text="abcd1234@gmail.com"
             android:paddingHorizontal="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -241,7 +242,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="300,000 원"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/tv_cost_title"
             app:layout_constraintEnd_toEndOf="parent"

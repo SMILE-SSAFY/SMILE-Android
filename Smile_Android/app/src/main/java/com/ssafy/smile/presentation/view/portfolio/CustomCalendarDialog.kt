@@ -13,11 +13,11 @@ import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.ssafy.smile.common.util.setOnSingleClickListener
 import com.ssafy.smile.databinding.DialogCustomCalendarBinding
 import java.text.SimpleDateFormat
-import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import kotlin.system.exitProcess
 
-class CustomCalendarDialog(context: Context, private val unableDate: ArrayList<LocalDate>): Dialog(context) {
+class CustomCalendarDialog(context: Context, private val unableDate: ArrayList<Date>): Dialog(context) {
 
     interface OnButtonClickListener {
         fun onOkButtonClick(year: String, date: String)
@@ -146,11 +146,15 @@ class CustomCalendarDialog(context: Context, private val unableDate: ArrayList<L
         }
     }
 
-    private fun setUnableDay(unableDate: ArrayList<LocalDate>) {
+    private fun setUnableDay(unableDate: ArrayList<Date>) {
         val unableList = ArrayList<CalendarDay>()
 
         unableDate.forEach { date ->
-            unableList.add(CalendarDay.from(date.year, date.monthValue, date.dayOfMonth))
+            val localDate = date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+
+            unableList.add(CalendarDay.from(localDate.year, localDate.monthValue, localDate.dayOfMonth))
         }
 
         for (unableDay in unableList){
