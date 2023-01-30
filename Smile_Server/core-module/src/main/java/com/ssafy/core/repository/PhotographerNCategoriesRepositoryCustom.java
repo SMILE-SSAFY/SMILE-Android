@@ -23,5 +23,12 @@ public interface PhotographerNCategoriesRepositoryCustom {
      * @return List<PhotographerQuerydslDto>
      */
     List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList);
+
+    /**
+     * photographerId로 카테고리 조회
+     *
+     * @param photographerId
+     * @return List<CategoriesQdslDto>
+     */
     List<CategoriesQdslDto> findCategoriesByPhotographerId(Long photographerId);
 }

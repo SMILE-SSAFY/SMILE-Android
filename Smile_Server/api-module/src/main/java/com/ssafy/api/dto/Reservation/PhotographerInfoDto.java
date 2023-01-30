@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * 사진작가 정보 조회 DTO
+ *
+ * @author 김정은
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -8,7 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 예약 관련 Controller
@@ -27,7 +32,7 @@ public class ReservationController {
      * 예약 등록하기
      *
      * @param reservation
-     * @return 정상일 때 OK
+     * @return ReservationReqDto
      */
     @PostMapping
     public ResponseEntity<?> registerReservation(@RequestBody ReservationReqDto reservation){
@@ -39,6 +44,12 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.reserve(reservation));
     }
 
+    /**
+     * 예약 시 사진작가 정보(예약된 날짜, 카테고리, 활동지역) 조회
+     *
+     * @param photographerId
+     * @return PhotographerInfoDto
+     */
     @GetMapping("/{photographerId}")
     public ResponseEntity<?> getPhotographerInfo(@PathVariable("photographerId") Long photographerId){
         return ResponseEntity.ok(reservationService.getPhotographerInfo(photographerId));

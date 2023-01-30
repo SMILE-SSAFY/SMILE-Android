@@ -8,7 +8,8 @@ import java.util.List;
 /**
  * 사진 작가와 활동 지역 Repository Querydsl custom
  *
- * author @서재건
+ * @author 서재건
+ * @author 김정은
  */
 public interface PhotographerNPlacesRepositoryCustom {
 
@@ -21,5 +22,12 @@ public interface PhotographerNPlacesRepositoryCustom {
      * @return List<PhotographerQuerydslDto>
      */
     List<PhotographerQuerydslDto> findPhotographerByAddress(Long userId, String first, String second);
+
+    /**
+     * 사진작가 별 활동지역 검색
+     *
+     * @param photographerId
+     * @return 활동지역
+     */
     List<Places> findPlacesByPhotographer(Long photographerId);
 }

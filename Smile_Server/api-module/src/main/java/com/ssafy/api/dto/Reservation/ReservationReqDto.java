@@ -8,6 +8,11 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 import java.time.LocalTime;
 
+/**
+ * 예약 요청 DTO
+ *
+ * @author 김정은
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

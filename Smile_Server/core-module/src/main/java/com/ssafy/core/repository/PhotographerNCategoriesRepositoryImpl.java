@@ -18,7 +18,8 @@ import java.util.List;
 /**
  * querydsl 작성하는 클래스
  *
- * author @서재건
+ * @author 서재건
+ * @author 김정은
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -60,6 +61,12 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
                 .fetch();
     }
 
+    /**
+     * 사진작가 별 카테고리 검색
+     *
+     * @param photographerId
+     * @return 검색된 카테고리 결과(id, name, price, description)
+     */
     @Override
     public List<CategoriesQdslDto> findCategoriesByPhotographerId(Long photographerId){
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;

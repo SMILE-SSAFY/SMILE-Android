@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 import java.sql.Time;
 
+/**
+ * 예약 응답 DTO
+ *
+ * @author 김정은
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,6 +39,14 @@ public class ReservationResDto {
 
     private boolean isReviewed;
 
+    /**
+     * Entity에서 DTO로 변환
+     *
+     * @param reservation
+     * @param name
+     * @param phoneNumber
+     * @return  ReservationResDTO
+     */
     public ReservationResDto of(Reservation reservation, String name, String phoneNumber){
         return ReservationResDto.builder()
                 .photographerName(name)

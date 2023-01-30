@@ -82,6 +82,12 @@ public class ReservationService {
         return res.of(entity, user.getName(), user.getPhoneNumber());
     }
 
+    /**
+     * 예약 시 사진작가의 정보(예약된 날짜, 카테고리, 활동지역) 조회
+     *
+     * @param photographerId
+     * @return PhotographerInfoDto
+     */
     public PhotographerInfoDto getPhotographerInfo(Long photographerId){
         photographerRepository.findById(photographerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
