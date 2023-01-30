@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.home
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
@@ -9,6 +10,7 @@ import com.ssafy.smile.databinding.FragmentResultPhotographerBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.ResultPhotographerRecyclerAdapter
+import com.ssafy.smile.presentation.adapter.ResultPostRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
@@ -79,6 +81,13 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                 override fun onClick(view: View, position: Int) {
                     searchViewModel.photographerHeart(recyclerData[position].photographerId)
                 }
+            })
+            setItemClickListener(object : ResultPhotographerRecyclerAdapter.OnItemClickListener{
+                override fun onClick(view: View, position: Int) {
+                    val action = SearchFragmentDirections.actionSearchResultFragmentToPortfolioFragment(recyclerData[position].photographerId)
+                    findNavController().navigate(action)
+                }
+
             })
         }
 

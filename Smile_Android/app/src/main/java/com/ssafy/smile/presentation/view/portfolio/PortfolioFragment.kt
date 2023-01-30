@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
@@ -12,18 +14,19 @@ import com.ssafy.smile.domain.model.PortfolioDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.user.SignUp2FragmentArgs
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
 private const val TAG = "PortfolioFragment_스마일"
 class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortfolioBinding::bind, R.layout.fragment_portfolio) {
 
     private val portfolioViewModel by activityViewModels<PortfolioViewModel>()
-    private var photographerId: Long = -1
+    private val args: PortfolioFragmentArgs by navArgs()
+    var photographerId = args.photographerId
 
     override fun initView() {
         initToolbar()
         initViewPager()
-        setPhotographerId()
         //TODO : 서버 통신 되면 주석 풀기
 //        portfolioViewModel.getPortfolio(photographerId)
 //        setObserver()
@@ -44,6 +47,10 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
             ctvLike.setOnClickListener {
                 portfolioViewModel.photographerHeart(photographerId)
             }
+            btnReservation.setOnClickListener {
+                val action = PortfolioFragmentDirections.actionPortfolioFragmentToReservationFragment(photographerId)
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -55,10 +62,6 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitle[position]
         }.attach()
-    }
-
-    private fun setPhotographerId() {
-        // TODO : 이전 화면에서 작가 id 넘겨준 값 가져와서 photographerId 변수 값 변경하기
     }
 
     private fun portfolioResponseObserver() {

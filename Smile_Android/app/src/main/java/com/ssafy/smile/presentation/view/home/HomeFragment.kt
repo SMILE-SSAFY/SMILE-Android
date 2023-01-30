@@ -13,6 +13,7 @@ import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
@@ -132,6 +133,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 override fun onClick(view: View, position: Int) {
                     homeViewModel.photographerHeart(recyclerData[position].photographerId)
                 }
+            })
+            setItemClickListener(object: HomeRecyclerAdapter.OnItemClickListener{
+                override fun onClick(view: View, position: Int) {
+                    val action = MainFragmentDirections.actionMainFragmentToPortfolioFragment(recyclerData[position].photographerId)
+                    findNavController().navigate(action)
+                }
+
             })
         }
 

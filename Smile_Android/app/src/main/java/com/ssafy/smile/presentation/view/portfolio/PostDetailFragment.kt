@@ -29,7 +29,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
     override fun initView() {
         initToolbar()
         //TODO : 서버 통신 되면 주석 풀기
-//        postViewModel.getPostById(args.postId)
+//        postViewModel.getPostById(postId)
 //        setObserver()
         initViewPager()
     }
@@ -48,11 +48,11 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
         binding.apply {
 
             ivPostMore.setOnClickListener {
-                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(args.postId)
+                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(postId)
                 findNavController().navigate(action)
             }
             ctvLike.setOnClickListener {
-                postViewModel.postHeart(args.postId)
+                postViewModel.postHeart(postId)
             }
         }
     }
