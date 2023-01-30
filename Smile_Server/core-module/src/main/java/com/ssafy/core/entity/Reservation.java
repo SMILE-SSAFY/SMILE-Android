@@ -6,18 +6,35 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
+/**
+ * 예약 관련 Entity
+ *
+ * @author 김정은
+ */
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "reservation")
+@DynamicUpdate
 public class Reservation {
 
     @Id
@@ -58,4 +75,13 @@ public class Reservation {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    /**
+     * 예약 상태 변경
+     *
+     * @param status
+     */
+    public void updateStatus(ReservationStatus status){
+        this.status = status;
+    }
 }
