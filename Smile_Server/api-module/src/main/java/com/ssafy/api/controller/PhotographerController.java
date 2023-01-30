@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
+import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,7 @@ import java.util.List;
  *
  * author @김정은
  * author @서재건
+ * author @신민철
  */
 @RestController
 @RequestMapping("/api/photographer")
@@ -105,12 +108,43 @@ public class PhotographerController {
     /**
      * 카테고리로 작가 검색
      *
-     * @param categoryId
+     * @param categoryName
      * @return List<PhotographerForListDto>
      */
     @GetMapping("/search")
-    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryId") Long categoryId) {
-        List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByCategory(categoryId);
+    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryName") String categoryName) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        List<PhotographerForListDto> photographerList =
+                photographerService.getPhotographerListByCategory(user.getId(), categoryName);
+        return ResponseEntity.ok().body(photographerList);
+    }
+
+    /***
+     *
+     * @param photographerId
+     * @return 작가 id, isHeart boolean
+     */
+    @PutMapping("/heart/{photographerId}")
+    public ResponseEntity<?> addHeartPhotographer(@PathVariable("photographerId") Long photographerId){
+        PhotographerHeartDto photographerHeartDto = photographerService.addHeartPhotographer(photographerId);
+        return new ResponseEntity<>(photographerHeartDto, HttpStatus.OK);
+    }
+
+
+
+    /**
+     * 주변 작가 조회
+     *
+     * @param address
+     * @return List<PhotographerForListDto>
+     */
+    @GetMapping("/list")
+    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(@Param("address") String address) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        List<PhotographerForListDto> photographerList =
+                photographerService.getPhotographerListByAddresss(user.getId(), address);
         return ResponseEntity.ok().body(photographerList);
     }
 }

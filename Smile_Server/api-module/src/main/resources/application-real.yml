@@ -41,7 +41,7 @@ spring:
       max-lifetime: 580000
   sql:
     init:
-      mode: always
+      mode: never
 server:
   port: 80
   domain: http://127.0.0.1

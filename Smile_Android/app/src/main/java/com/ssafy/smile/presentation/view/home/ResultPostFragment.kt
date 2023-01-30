@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
@@ -20,13 +21,11 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
     override fun initView() {
         setObserver()
         initRecycler()
-        binding.apply {
-            tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-        }
     }
 
     private fun setObserver() {
         searchPostResponseObserver()
+        postHeartResponseObserver()
     }
 
     private fun searchPostResponseObserver() {
@@ -37,6 +36,10 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
+                    binding.apply {
+                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
+                    }
+                    recyclerData.clear()
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPostDomainDto())
                     }
@@ -49,11 +52,35 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
         }
     }
 
+    private fun postHeartResponseObserver() {
+        searchViewModel.postHeartResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    resultPostRecyclerAdapter.notifyDataSetChanged()
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+            }
+        }
+    }
+
     override fun setEvent() {
     }
 
     private fun initRecycler() {
-        resultPostRecyclerAdapter = ResultPostRecyclerAdapter(requireContext(), recyclerData)
+        resultPostRecyclerAdapter = ResultPostRecyclerAdapter(requireContext(), recyclerData).apply {
+            setPostHeartItemClickListener(object : ResultPostRecyclerAdapter.OnPostHeartItemClickListener{
+                override fun onClick(view: View, position: Int) {
+                    searchViewModel.postHeart(recyclerData[position].articleId)
+                }
+            })
+        }
 
         binding.rvPhotographerResult.apply {
             layoutManager = LinearLayoutManager(requireContext())

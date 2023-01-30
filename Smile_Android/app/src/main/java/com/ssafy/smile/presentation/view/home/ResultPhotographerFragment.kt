@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
@@ -20,13 +21,11 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
     override fun initView() {
         setObserver()
         initRecycler()
-        binding.apply {
-            tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-        }
     }
 
     private fun setObserver() {
         searchPhotographerResponseObserver()
+        photographerHeartResponseObserver()
     }
 
     private fun searchPhotographerResponseObserver() {
@@ -34,6 +33,10 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
+                    binding.apply {
+                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
+                    }
+                    recyclerData.clear()
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPhotographerDomainDto())
                     }
@@ -49,11 +52,35 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
         }
     }
 
+    private fun photographerHeartResponseObserver() {
+        searchViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    resultPhotographerRecyclerAdapter.notifyDataSetChanged()
+                }
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+            }
+        }
+    }
+
     override fun setEvent() {
     }
 
     private fun initRecycler() {
-        resultPhotographerRecyclerAdapter = ResultPhotographerRecyclerAdapter(requireContext(), recyclerData)
+        resultPhotographerRecyclerAdapter = ResultPhotographerRecyclerAdapter(requireContext(), recyclerData).apply {
+            setPhotographerHeartItemClickListener(object : ResultPhotographerRecyclerAdapter.OnPhotographerHeartItemClickListener{
+                override fun onClick(view: View, position: Int) {
+                    searchViewModel.photographerHeart(recyclerData[position].photographerId)
+                }
+            })
+        }
 
         binding.rvPhotographerResult.apply {
             layoutManager = LinearLayoutManager(requireContext())
