@@ -8,7 +8,7 @@ import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
 import com.ssafy.core.code.Role;
-import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
@@ -238,7 +238,7 @@ public class PhotographerService {
         }
         log.info("해당 카테고리 존재");
 
-        List<PhotographerQuerydslDto> photographerList =
+        List<PhotographerQdslDto> photographerList =
                 photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
         log.info("카테고리로 작가 조회");
 
@@ -249,7 +249,7 @@ public class PhotographerService {
 
         log.info("해당 카테고리를 가진 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (PhotographerQuerydslDto photographerQuerydsl : photographerList) {
+        for (PhotographerQdslDto photographerQuerydsl : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
 
@@ -264,7 +264,7 @@ public class PhotographerService {
      */
     public List<PhotographerForListDto> getPhotographerListByAddresss(Long userId, String address) {
         String[] addresssList = address.split(" ");
-        List<PhotographerQuerydslDto> photographerList =
+        List<PhotographerQdslDto> photographerList =
                 photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1]);
         log.info("주변 작가 조회");
 
@@ -275,7 +275,7 @@ public class PhotographerService {
 
         log.info("주변 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (PhotographerQuerydslDto photographerQuerydsl : photographerList) {
+        for (PhotographerQdslDto photographerQuerydsl : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
 

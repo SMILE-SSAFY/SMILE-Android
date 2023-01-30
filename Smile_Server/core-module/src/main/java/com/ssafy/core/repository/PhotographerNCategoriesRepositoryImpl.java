@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
 import com.ssafy.core.entity.QPhotographerNCategories;
@@ -32,13 +32,13 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
      * @return List<PhotographerQuerydslDto>
      */
     @Override
-    public List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList) {
+    public List<PhotographerQdslDto> findByCategoryId(Long userId, List<Long> categoryIdList) {
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
         QPhotographer photographer = QPhotographer.photographer;
         QPhotographerHeart photographerHeart = QPhotographerHeart.photographerHeart;
 
         return jpaQueryFactory
-                .select(Projections.constructor(PhotographerQuerydslDto.class,
+                .select(Projections.constructor(PhotographerQdslDto.class,
                         photographer,
                         photographerHeart.id.count(),
                         new CaseBuilder()
