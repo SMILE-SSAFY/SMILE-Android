@@ -104,7 +104,7 @@ public class ArticleService {
     }
 
     /***
-     *
+     * 게시글 삭제
      * @param id 게시글 id
      * @throws ARTICLE_NOT_FOUND
      */
@@ -121,11 +121,13 @@ public class ArticleService {
             List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
             photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
             articleRepository.deleteById(id);
+        } else {
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
     }
 
     /***
-     *
+     * 포트폴리오의 작가정보
      * @param userId
      * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article 게시글 전체조회
      *
@@ -187,7 +189,7 @@ public class ArticleService {
     }
 
     /***
-     *
+     * 게시글 수정
      * @param articleId
      * @param articlePostDto
      * @return 수정한 게시글
@@ -221,7 +223,7 @@ public class ArticleService {
             article.setPhotoUrls(fileName);
             articleRepository.save(article);
 
-        }
+        } else throw new CustomException(ErrorCode.USER_MISMATCH);
         return ArticleDetailDto.builder()
                 .id(articleId)
                 .isMe(isMe)
