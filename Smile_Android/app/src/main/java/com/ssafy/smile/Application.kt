@@ -4,6 +4,7 @@ import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.data.*
+import com.ssafy.smile.data.local.database.AppDatabase
 
 class Application : Application()  {
 
@@ -15,20 +16,25 @@ class Application : Application()  {
         private val okHttpInstances = OkhttpClientInstances
         private val retrofitInstances = RetrofitInstances(okHttpInstances)
         private val serviceInstances = ServiceInstances(retrofitInstances)
-        private val dataSourceInstances = DataSourceInstances(serviceInstances)
-        val repositoryInstances = RepositoryInstances(dataSourceInstances)
+        lateinit var appDatabaseInstance : AppDatabase
+        lateinit var dataSourceInstances : DataSourceInstances
+        lateinit var repositoryInstances : RepositoryInstances
     }
 
     override fun onCreate() {
         super.onCreate()
-        initSharedPreference()
+        initContextInjection()
         kakaoInit()
     }
 
-    private fun initSharedPreference(){
+    private fun initContextInjection(){
         sharedPreferences = SharedPreferencesUtil(this)
         authToken = sharedPreferences.getAuthToken()
         fcmToken = sharedPreferences.getFCMToken()
+
+        appDatabaseInstance = AppDatabase.getDatabase(this)
+        dataSourceInstances = DataSourceInstances(appDatabaseInstance, serviceInstances)
+        repositoryInstances = RepositoryInstances(dataSourceInstances)
     }
 
     private fun kakaoInit() {

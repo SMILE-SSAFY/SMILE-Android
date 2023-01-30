@@ -1,11 +1,16 @@
 package com.ssafy.smile.data
 
+import com.ssafy.smile.data.local.database.AppDatabase
+import com.ssafy.smile.data.local.datasource.AddressLocalDataSourceImpl
 import com.ssafy.smile.data.remote.datasource.*
 
 import javax.inject.Singleton
 
 @Singleton
-class DataSourceInstances(serviceInstances: ServiceInstances) {
+class DataSourceInstances(appDatabase: AppDatabase, serviceInstances: ServiceInstances) {
+
+    @Singleton
+    private val addressLocalDataSourceImpl : AddressLocalDataSourceImpl = AddressLocalDataSourceImpl(appDatabase.addressDao())
 
     @Singleton
     private val userRemoteDataSourceImpl : UserRemoteDataSourceImpl = UserRemoteDataSourceImpl(serviceInstances.getUserApiService())
@@ -25,6 +30,8 @@ class DataSourceInstances(serviceInstances: ServiceInstances) {
     @Singleton
     private val searchRemoteDataSourceImpl: SearchRemoteDataSourceImpl = SearchRemoteDataSourceImpl(serviceInstances.getSearchApiService())
 
+
+    fun getAddressRemoteDataSource() : AddressLocalDataSourceImpl = addressLocalDataSourceImpl
     fun getUserRemoteDataSource(): UserRemoteDataSourceImpl = userRemoteDataSourceImpl
     fun getPortfolioRemoteDataSource(): PortfolioRemoteDataSourceImpl = portfolioRemoteDataSourceImpl
     fun getLikeRemoteDataSource(): LikeRemoteDataSourceImpl = likeRemoteDataSourceImpl

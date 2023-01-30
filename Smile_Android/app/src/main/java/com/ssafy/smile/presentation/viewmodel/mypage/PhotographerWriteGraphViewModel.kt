@@ -12,7 +12,7 @@ import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 
-class PhotographerWriteViewModel : BaseViewModel() {
+class PhotographerWriteGraphViewModel : BaseViewModel() {
     private val photographerRepository = Application.repositoryInstances.getPhotographerRepository()
 
     var profileBitmap : Bitmap? = null
