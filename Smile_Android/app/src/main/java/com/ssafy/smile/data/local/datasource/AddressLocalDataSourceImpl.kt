@@ -25,4 +25,8 @@ class AddressLocalDataSourceImpl(private val addressDao: AddressDao) : AddressLo
         return addressDao.getAddressList()
     }
 
+    override fun getAddressListWithSelection(): LiveData<List<AddressEntity>> {
+        return addressDao.getAddressListWithSelected()
+    }
+
 }

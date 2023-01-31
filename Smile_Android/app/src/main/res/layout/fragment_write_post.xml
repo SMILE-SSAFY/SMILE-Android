@@ -102,16 +102,19 @@
                 android:layout_marginRight="6dp"
                 android:enabled="false"
                 android:layout_width="0dp"
+                android:inputType="text"
                 android:layout_weight="1"
                 android:layout_height="match_parent">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_place_content"
                     style="@style/Et4DirOutlined.TextInputEditText"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
             <ImageButton
-                android:id="@+id/btn_search"
+                android:id="@+id/btn_search_address"
                 android:layout_width="55dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_location"

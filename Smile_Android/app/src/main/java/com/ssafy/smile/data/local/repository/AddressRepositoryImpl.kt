@@ -9,6 +9,7 @@ import com.ssafy.smile.presentation.base.BaseRepository
 
 class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalDataSource): BaseRepository(), AddressRepository {
 
+
     override suspend fun insertAddress(address: AddressDomainDto) : Long {
         return addressLocalDataSource.insertAddress(address.makeToAddressEntity())
     }
@@ -21,11 +22,16 @@ class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalData
         return addressLocalDataSource.deleteAddress(address.makeToAddressEntity())
     }
 
+
     override fun getAddressList(): LiveData<List<AddressDomainDto>> {
-        return addressLocalDataSource.getAddressList().map { list ->
-            list.map { entity -> entity.makeToAddressDomainDto() }.also {
-                it.sortedBy {dto -> dto.isSelected }
-            }
+        return addressLocalDataSource.getAddressList().map {  list ->
+            list.map { entity -> entity.makeToAddressDomainDto() }
+        }
+    }
+
+    override fun getAddressListWithSelection(): LiveData<List<AddressDomainDto>> {
+        return addressLocalDataSource.getAddressListWithSelection().map { list ->
+            list.map { entity -> entity.makeToAddressDomainDto() }
         }
     }
 

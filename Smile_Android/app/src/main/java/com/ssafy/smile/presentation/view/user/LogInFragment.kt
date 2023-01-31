@@ -75,6 +75,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
                     SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
+                    SharedPreferencesUtil(requireContext()).putUserId(it.data.userId)
                     findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {

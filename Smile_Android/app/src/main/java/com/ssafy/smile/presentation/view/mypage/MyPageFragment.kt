@@ -2,8 +2,11 @@ package com.ssafy.smile.presentation.view.mypage
 
 
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ssafy.smile.MainActivity
@@ -20,9 +23,15 @@ import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.mypage.MyPageViewModel
 import java.io.IOException
 
-
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
     private val viewModel : MyPageViewModel by viewModels()
+
+    override fun onResume() {
+        super.onResume()
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
+            viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+        }
+    }
 
     override fun initView() {
         initToolbar()
@@ -31,6 +40,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     override fun setEvent() {
         setClickListener()
     }
+
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
         toolbar.initToolbar("마이페이지", false)
@@ -41,13 +51,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 val isPhotographer = it==Types.Role.PHOTOGRAPHER
                 setPhotographerLayoutView(isPhotographer)
             }
-
             getPhotographerResponse.observe(viewLifecycleOwner){
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
                     is NetworkUtils.NetworkResponse.Success -> { moveToRegisterPortFolioGraph(it.data) }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), "정보를 가져오는 중에 오류가 발생했습니다.\n잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 가져오는"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -60,7 +69,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), "정보 삭제 중에 오류가 발생했습니다.\n잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보 삭제"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -73,10 +82,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), "회원 탈퇴 중에 오류가 발생했습니다.\n잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "회원탈퇴"), Types.ToastType.ERROR)
                     }
                 }
             }
+            getRole(requireContext())
         }
     }
     private fun setClickListener(){
@@ -128,8 +138,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         } catch (e: IOException) { findNavController().navigate(R.id.action_global_loginFragment) }
     }
     private fun removeUserInfo(){
-        SharedPreferencesUtil(requireContext()).removeAuthToken()
-        SharedPreferencesUtil(requireContext()).removeFCMToken()
+       SharedPreferencesUtil(requireContext()).removeAllInfo()
     }
     private fun showLogoutDialog(){
         val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.logout), "로그아웃"), { logout() })

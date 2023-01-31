@@ -67,11 +67,11 @@
                 app:iconTint = "@color/gray500"
                 app:iconSize = "25sp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/grayForBackground" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grayForBackground" />
         <include
             android:id="@+id/layout_address_empty_view"
             layout="@layout/layout_empty_view"
@@ -94,7 +94,7 @@
                     android:id="@+id/rv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/grayForBackground"
+                    android:background="@color/white"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

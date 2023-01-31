@@ -80,7 +80,12 @@ app:startDestination="@id/splashFragment">
     </action>
     <action
         android:id="@+id/action_mainFragment_to_addressGraph"
-        app:destination="@id/addressGraph" /> <!-- TODO : Animation 추가 -->
+        app:destination="@id/addressGraph" >
+        <argument
+            android:name="isSelectionMode"
+            app:argType="boolean"
+            android:defaultValue="true" />      <!-- TODO : Animation 추가 -->
+    </action>
 </fragment>
     <fragment
         android:id="@+id/signUp1Fragment"
@@ -193,6 +198,9 @@ app:startDestination="@id/splashFragment">
                 android:name="postId"
                 app:argType="long" />
         </action>
+        <action
+            android:id="@+id/action_portfolioFragment_to_writePostFragment2"
+            app:destination="@id/writePostFragment" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
@@ -239,6 +247,14 @@ app:startDestination="@id/splashFragment">
             android:id="@+id/action_writePostFragment_pop"
             app:popUpTo="@id/writePostFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_writePostFragment_to_addressGraph"
+            app:destination="@id/addressGraph">
+            <argument
+                android:name="isSelectionMode"
+                app:argType="boolean"
+                android:defaultValue="false" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/postDetailFragment"
@@ -324,33 +340,59 @@ app:startDestination="@id/splashFragment">
             android:name="com.ssafy.smile.presentation.view.home.AddressFragment"
             android:label="AddressFragment"
             tools:layout="@layout/fragment_address">
+            <argument
+                android:name="isSelectionMode"
+                app:argType="boolean"
+                android:defaultValue="false" />
             <action
                 android:id="@+id/action_addressFragment_to_addressSearchFragment"
-                app:destination="@id/addressSearchFragment" />
+                app:destination="@id/addressSearchFragment">
+                <argument
+                    android:name="isSelectionMode"
+                    app:argType="boolean"
+                    android:defaultValue="false" />
+            </action>
+            <action
+                android:id="@+id/action_addressFragment_to_addressMapFragment"
+                app:destination="@id/addressMapFragment" >
+                <argument
+                    android:name="isSelectionMode"
+                    app:argType="boolean"
+                    android:defaultValue="false" />
+            </action>
             <action
                 android:id="@+id/action_addressFragment_pop"
                 app:popUpTo="@id/addressFragment"
                 app:popUpToInclusive="true" />
-            <action
-                android:id="@+id/action_addressFragment_to_addressMapFragment"
-                app:destination="@id/addressMapFragment" />
         </dialog>
         <dialog
             android:id="@+id/addressSearchFragment"
             android:name="com.ssafy.smile.presentation.view.home.AddressSearchFragment"
             android:label="AddressSearchFragment"
             tools:layout="@layout/fragment_address_search">
+            <argument
+                android:name="isSelectionMode"
+                app:argType="boolean"
+                android:defaultValue="false" />
             <action
                 android:id="@+id/action_addressSearchFragment_pop"
                 app:popUpTo="@id/addressSearchFragment"
                 app:popUpToInclusive="true" >
             </action>
+            <action
+                android:id="@+id/action_addressSearchFragment_pop_including_addressGraph"
+                app:popUpTo="@id/addressGraph"
+                app:popUpToInclusive="true" />
         </dialog>
         <dialog
             android:id="@+id/addressMapFragment"
             android:name="com.ssafy.smile.presentation.view.home.AddressMapFragment"
             android:label="fragment_address_map"
             tools:layout="@layout/fragment_address_map" >
+            <argument
+                android:name="isSelectionMode"
+                app:argType="boolean"
+                android:defaultValue="false" />
             <action
                 android:id="@+id/action_addressMapFragment_pop"
                 app:popUpTo="@id/addressMapFragment"
