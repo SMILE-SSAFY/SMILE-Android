@@ -62,14 +62,14 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
     override fun setEvent() {
         binding.btnBack.setOnClickListener { moveToPopUpSelf() }
         viewModel.selectedAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+            if (it<0) showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "주소설정"), Types.ToastType.ERROR)
             else {
                 showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
                 moveToPopUpToGraph()
             }
         }
         viewModel.insertAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+            if (it<0) showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "주소설정"), Types.ToastType.ERROR)
             else{
                 val bundle = Bundle().apply { putParcelable("addressDomainDto", addressDomainDto) }
                 requireActivity().supportFragmentManager.setFragmentResult("getAddress",bundle)

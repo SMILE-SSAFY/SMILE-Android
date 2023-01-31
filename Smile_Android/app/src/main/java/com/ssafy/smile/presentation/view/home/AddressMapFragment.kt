@@ -31,6 +31,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.PermissionUtils
+import com.ssafy.smile.common.util.getString
 import com.ssafy.smile.databinding.FragmentAddressMapBinding
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -82,14 +83,14 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
     override fun setEvent() {
         binding.btnBack.setOnClickListener { moveToPopUpSelf() }
         viewModel.selectedAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+            if (it<0) showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "주소 설정"), Types.ToastType.ERROR)
             else {
                 showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
                 moveToPopUpToGraph()
             }
         }
         viewModel.insertAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+            if (it<0) showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "주소 설정"), Types.ToastType.ERROR)
             else{
                 val bundle = Bundle().apply { putParcelable("addressDomainDto", addressDomainDto) }
                 requireActivity().supportFragmentManager.setFragmentResult("getAddress",bundle)

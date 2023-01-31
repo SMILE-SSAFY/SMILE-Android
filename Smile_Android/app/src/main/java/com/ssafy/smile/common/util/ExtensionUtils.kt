@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import com.ssafy.smile.R
 import java.text.DecimalFormat
 
 
@@ -27,6 +28,7 @@ fun Fragment.hideKeyboard(view: View) {
 
 fun EditText.getString() = this.text.toString().trim()
 fun String?.getString() = this.toString().trim()
+fun Context.getString(drawableId : Int, msg:String) = String.format(this.getString(drawableId), msg)
 
 fun Int.makeComma():String{
     val comma = DecimalFormat("#,###")

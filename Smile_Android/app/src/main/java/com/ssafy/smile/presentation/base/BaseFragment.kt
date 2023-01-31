@@ -23,6 +23,7 @@ abstract class BaseFragment<B : ViewBinding>(private val bind: (View) -> B, @Lay
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        mLoadingDialog = LoadingDialog(requireContext())
         mainActivity = context as MainActivity
     }
 
