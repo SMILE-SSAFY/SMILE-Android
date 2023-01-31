@@ -1,4 +1,4 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.article;
 
 import com.ssafy.core.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;

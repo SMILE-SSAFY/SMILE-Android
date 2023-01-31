@@ -1,4 +1,4 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.photographer;
 
 import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.dto.PhotographerQdslDto;
