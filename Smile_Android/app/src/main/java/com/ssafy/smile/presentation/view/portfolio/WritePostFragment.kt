@@ -1,10 +1,12 @@
 package com.ssafy.smile.presentation.view.portfolio
 
+import android.os.Parcelable
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
@@ -19,7 +21,8 @@ import java.io.File
 import kotlin.math.abs
 
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
-    private val viewModel : WritePostViewModel by viewModels()
+
+    private val viewModel : WritePostViewModel by navGraphViewModels(R.id.portfolioGraph)
 
     private lateinit var imageRvAdapter: ImageRVAdapter
     private val spinnerAdapter: ArrayAdapter<String> by lazy {
@@ -67,6 +70,13 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         }
     }
     private fun setObserver(){
+        requireActivity().supportFragmentManager.setFragmentResultListener("getAddress",viewLifecycleOwner) { requestKey, result ->
+            if (requestKey == "getAddress" && result["addressDomainDto"] != null) {
+                val addressDomainDto = result["addressDomainDto"] as AddressDomainDto
+                viewModel.uploadAddressData(addressDomainDto)
+                setAddressData(addressDomainDto)
+            }
+        }
         viewModel.run {
             postDataResponse.observe(viewLifecycleOwner){
                 when (it){
@@ -102,9 +112,8 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
                 }
             }
 
-            btnSearch.setOnClickListener {
-                val tempAddress = getAddressData()
-                viewModel.uploadAddressData(tempAddress)
+            btnSearchAddress.setOnClickListener {
+                moveToAddressGraph()
             }
             tvCategoryContent.setOnItemClickListener { _, _, _, _ ->
                 viewModel.uploadCategoryData(tvCategoryContent.text.toString())
@@ -116,8 +125,8 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
     }
 
     private fun getImageData() = imageRvAdapter.getListData()
-    private fun getAddressData() = AddressDomainDto("임시 주소", 0.0, 0.0) // TODO : 주소록 연결
     private fun getCategoryData() = binding.tvCategoryContent.text.toString()
+    private fun setAddressData(addressDomainDto: AddressDomainDto) { binding.etPlaceContent.setText(addressDomainDto.address) }
 
     private fun setButtonEnable() {
         binding.btnUpload.apply {
@@ -132,4 +141,6 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         }
     }
 
+
+    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_writePostFragment_to_addressGraph)
 }

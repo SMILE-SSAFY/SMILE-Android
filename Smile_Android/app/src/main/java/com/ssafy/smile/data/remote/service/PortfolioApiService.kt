@@ -13,7 +13,7 @@ interface PortfolioApiService {
     suspend fun getPortfolio(@Path("photographerId") photographerId: Long): Response<PortfolioResponseDto>
 
     @GET("/api/article/list/{photographerId}")
-    suspend fun getPosts(@Path("photographerId") photographerId: Long): Response<PostListResponseDto>
+    suspend fun getPosts(@Path("photographerId") photographerId: Long): Response<ArrayList<PostListResponseDto>>
 
     @Multipart
     @POST(BASE_URL_PORTFOLIO)

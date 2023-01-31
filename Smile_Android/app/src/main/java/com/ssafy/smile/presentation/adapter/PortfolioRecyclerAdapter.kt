@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.ssafy.smile.data.remote.model.PostListItem
+import com.ssafy.smile.common.util.Constants
+import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.databinding.RecyclerPortfolioPostItemBinding
 
 private const val TAG = "PortfolioRecyclerAdapte_스마일"
-class PortfolioRecyclerAdapter(val context: Context, val datas: MutableList<PostListItem>): RecyclerView.Adapter<PortfolioRecyclerAdapter.PortfolioRecyclerViewHolder>() {
+class PortfolioRecyclerAdapter(val context: Context, val datas: MutableList<PostListResponseDto>): RecyclerView.Adapter<PortfolioRecyclerAdapter.PortfolioRecyclerViewHolder>() {
 
     interface OnItemClickListener {
         fun onClick(view: View, position: Int)
@@ -19,10 +20,10 @@ class PortfolioRecyclerAdapter(val context: Context, val datas: MutableList<Post
     fun setItemClickListener(onItemClickListener: OnItemClickListener) { this.onItemClickListener = onItemClickListener }
 
     inner class PortfolioRecyclerViewHolder(val binding: RecyclerPortfolioPostItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: PostListItem) {
+        fun bind(data: PostListResponseDto) {
             binding.apply {
                 Glide.with(context)
-                    .load(data.photoUrl)
+                    .load(Constants.IMAGE_BASE_URL+data.photoUrl)
                     .into(binding.ivPostImage)
             }
         }

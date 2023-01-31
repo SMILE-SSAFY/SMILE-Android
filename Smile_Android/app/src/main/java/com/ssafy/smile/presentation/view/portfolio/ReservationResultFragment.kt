@@ -36,8 +36,10 @@ class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>
 
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("예약하기", false)
+        toolbar.initToolbar("예약하기", false) { moveToPopUpSelf() }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_reservationResultFragment_pop)
 
     override fun setEvent() {
         binding.btnHome.setOnClickListener {

@@ -87,6 +87,7 @@
                         android:hint="@string/hint_photographer_introduce"
                         android:gravity="top"
                         android:inputType="textMultiLine"
+                        android:imeOptions="actionDone"
                         android:lines="4"
                         android:maxLines="8" />
                 </com.google.android.material.textfield.TextInputLayout>

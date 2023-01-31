@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -30,6 +31,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.PermissionUtils
+import com.ssafy.smile.common.util.getString
 import com.ssafy.smile.databinding.FragmentAddressMapBinding
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -40,7 +42,9 @@ import kotlinx.coroutines.launch
 
 class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBinding>(FragmentAddressMapBinding::inflate), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
+    private val navArgs : AddressMapFragmentArgs by navArgs()
     private val viewModel : AddressGraphViewModel by viewModels()
+    private var isSelectionMode : Boolean = false
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -54,20 +58,23 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
     private var locationSource : FusedLocationSource? = null
     private var currentMarker: Marker? = null
 
-    private var addressDto : AddressDomainDto = AddressDomainDto()
+    private var addressDomainDto : AddressDomainDto = AddressDomainDto()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         dialog.setOnShowListener {
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet!!)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            BottomSheetBehavior.from(bottomSheet!!).apply {
+                state = BottomSheetBehavior.STATE_EXPANDED
+                isDraggable = false
+            }
             setupRatio(bottomSheet, 90)
         }
         return dialog
     }
 
     override fun initView() {
+        isSelectionMode = navArgs.isSelectionMode
         (childFragmentManager.findFragmentById(R.id.innerMapView) as MapFragment).getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -76,9 +83,17 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
     override fun setEvent() {
         binding.btnBack.setOnClickListener { moveToPopUpSelf() }
         viewModel.selectedAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+            if (it<0) showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "주소 설정"), Types.ToastType.ERROR)
             else {
                 showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
+                moveToPopUpToGraph()
+            }
+        }
+        viewModel.insertAddressResponseLiveData.observe(viewLifecycleOwner){
+            if (it<0) showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "주소 설정"), Types.ToastType.ERROR)
+            else{
+                val bundle = Bundle().apply { putParcelable("addressDomainDto", addressDomainDto) }
+                requireActivity().supportFragmentManager.setFragmentResult("getAddress",bundle)
                 moveToPopUpToGraph()
             }
         }
@@ -143,11 +158,10 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
             currentMarker?.position = latLng
             val addressGeoDto = AddressUtils.getGeoFromPoints(requireContext(), naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
             if (addressGeoDto.type == Types.GeoAddress.ADDRESS) {
-                addressDto = AddressDomainDto().apply {
+                addressDomainDto = AddressDomainDto().apply {
                     address = addressGeoDto.address
                     latitude = latLng.latitude
                     longitude = latLng.longitude
-                    isSelected = true
                 }
                 setButtonEnable(addressGeoDto.address)
             }
@@ -165,7 +179,11 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
         }
 
         binding.btnAddressAdd.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO){ viewModel.selectAddress(addressDto) }
+            if (isSelectionMode) lifecycleScope.launch(Dispatchers.IO){
+                viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
+            }
+            else lifecycleScope.launch(Dispatchers.IO){ viewModel.insertAddress(addressDomainDto) }
+
         }
 
     }

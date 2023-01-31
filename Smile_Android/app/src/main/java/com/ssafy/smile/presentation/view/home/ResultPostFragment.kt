@@ -44,10 +44,15 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPostDomainDto())
                     }
+                    resultPostRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "게시물 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    if (it.errorCode == 404) {
+                        showToast(requireContext(), "검색한 키워드의 게시물이 존재하지 않습니다.", Types.ToastType.INFO)
+                    } else {
+                        showToast(requireContext(), "게시물 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    }
                 }
             }
         }
@@ -57,14 +62,12 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
         searchViewModel.postHeartResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    dismissLoadingDialog()
+                    searchViewModel.searchPost(searchViewModel.searchCategory)
                     resultPostRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    dismissLoadingDialog()
                     showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
@@ -83,7 +86,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
             })
             setItemClickListener(object: ResultPostRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val action = SearchFragmentDirections.actionSearchResultFragmentToPostDetailFragment(recyclerData[position].articleId)
+                    val action = SearchFragmentDirections.actionSearchFragmentToPostDetailFragment(recyclerData[position].articleId)
                     findNavController().navigate(action)
                 }
 
