@@ -27,4 +27,7 @@ public class TokenRoleDto {
     @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @NotNull
+    private Long userId;
 }
