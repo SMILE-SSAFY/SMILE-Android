@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.article.ArticleClusterDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
@@ -16,12 +17,14 @@ import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.ArticleClusterRepository;
 import com.ssafy.core.repository.ArticleHeartRepository;
 import com.ssafy.core.repository.ArticleRepository;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.PhotographerHeartRepository;
 import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,6 +46,7 @@ import java.util.List;
  * @author 서재건
  */
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ArticleService {
     private final ArticleRepository articleRepository;
@@ -53,18 +57,6 @@ public class ArticleService {
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleClusterRepository articleClusterRepository;
-
-    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository, ArticleClusterRepository articleClusterRepository) {
-    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository, CategoriesRepository categoriesRepository) {
-        this.articleRepository = articleRepository;
-        this.s3UploaderService = s3UploaderService;
-        this.userRepository = userRepository;
-        this.photographerRepository = photographerRepository;
-        this.articleHeartRepository = articleHeartRepository;
-        this.photographerHeartRepository = photographerHeartRepository;
-        this.categoriesRepository = categoriesRepository;
-        this.articleClusterRepository = articleClusterRepository;
-    }
 
     /***
      * article 생성
