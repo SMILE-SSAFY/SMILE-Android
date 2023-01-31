@@ -173,7 +173,7 @@ public class ArticleService {
      * @return 작가별 게시글 리스트, 게시글 아이디, 게시글 첫 사진을 리스트로 리턴
      */
     public List<ArticleListDto> getArticleList(Long photographerId){
-        List<Article> articleList = articleRepository.findByUserId(photographerId);
+        List<Article> articleList = articleRepository.findByUserIdOrderByIdDesc(photographerId);
         List<ArticleListDto> articleListDtoList = new ArrayList<>();
 
         for (Article article : articleList) {

@@ -287,7 +287,7 @@ public class UserService {
         }
 
         log.info("유저의 게시글 조회");
-        List<Article> articleList = articleRepository.findByUserId(user.getId());
+        List<Article> articleList = articleRepository.findByUserIdOrderByIdDesc(user.getId());
         for (Article article : articleList) {
             String photoUriList = article.getPhotoUrls();
             photoUriList = photoUriList.replace("[","").replace("]","");
