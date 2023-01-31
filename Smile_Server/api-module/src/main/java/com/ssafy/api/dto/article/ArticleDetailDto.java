@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 /***
  * 게시글 상세정보를 반환하는 Dto
@@ -30,6 +29,8 @@ public class ArticleDetailDto {
 
     private String category;
 
-    private  String photoUrls;
+    private String photoUrls;
+
+    private String photographerName;
 
 }

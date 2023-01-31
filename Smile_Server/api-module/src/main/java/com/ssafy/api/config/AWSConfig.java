@@ -8,14 +8,14 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+/**
+ * aws 접속값 설정
+ *
+ * @author 신민철
+ */
 @Configuration
 public class AWSConfig {
-    /**
-     * aws 접속값 설정
-     *
-     *
-     */
+
 
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;

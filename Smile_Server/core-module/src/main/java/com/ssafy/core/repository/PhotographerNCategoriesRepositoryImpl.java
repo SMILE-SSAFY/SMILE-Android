@@ -5,7 +5,7 @@ import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.CategoriesQdslDto;
-import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.QCategories;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
