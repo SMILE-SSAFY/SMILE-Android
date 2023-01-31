@@ -1,16 +1,25 @@
 package com.ssafy.core.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+
+/**
+ * 게시글 좋아요 Entity
+ *
+ * @author 신민철
+ * @author 서재건
+ */
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
 public class ArticleHeart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,12 +27,10 @@ public class ArticleHeart {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     public ArticleHeart(User user, Article article){
