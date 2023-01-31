@@ -299,24 +299,27 @@ public class ArticleService {
         return articleSearchDtoList;
     }
 
-    public void clusterTest(Double y1, Double x1, Double y2, Double x2){
+    public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
         List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y1, y2, x1, x2);
         KMeans clusters = PartitionClustering.run(20, () -> KMeans.fit(getGeoPointArray(articleList),2));
+
+        List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
         System.out.println(Arrays.toString(clusters.y));
         System.out.println(Arrays.deepToString(clusters.centroids));
         System.out.println(Arrays.toString(clusters.size));
 
-        Map<Integer, double[]> groupIdNGeoPoint = new HashMap<>();
         for (int i = 0; i < clusters.size.length-1; i++) {
-            int groupId = i;
             double[] centroids = clusters.centroids[i];
-            double x = centroids[0];
-            double y = centroids[1];
-            System.out.println(clusters.size[i]);
-//            groupIdNGeoPoint.computeIfAbsent(groupId, k -> clusters.centroids[i]);
-        }
-        System.out.println(groupIdNGeoPoint);
+            ArticleClusterDto clusterDto = ArticleClusterDto.builder()
+                    .clusterId(i)
+                    .numOfCluster(clusters.size[i])
+                    .centroidLat(centroids[0])
+                    .centroidLong(centroids[1])
+                    .build();
+            clusterResults.add(clusterDto);
+            }
+        return clusterResults;
     }
 
     /***
