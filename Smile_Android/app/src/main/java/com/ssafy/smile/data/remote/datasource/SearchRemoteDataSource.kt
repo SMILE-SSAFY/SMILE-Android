@@ -6,6 +6,6 @@ import retrofit2.Response
 import retrofit2.http.Query
 
 interface SearchRemoteDataSource {
-    fun searchPhotographer(categoryName:String): Response<ArrayList<SearchPhotographerResponseDto>>
-    fun searchPost(categoryName:String): Response<ArrayList<SearchPostResponseDto>>
+    suspend fun searchPhotographer(categoryName:String): Response<ArrayList<SearchPhotographerResponseDto>>
+    suspend fun searchPost(categoryName:String): Response<ArrayList<SearchPostResponseDto>>
 }

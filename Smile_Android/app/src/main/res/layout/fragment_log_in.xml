@@ -36,6 +36,7 @@
             style="@style/Et4DirOutlined.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="아이디를 입력해주세요" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,6 +48,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
+        app:passwordToggleEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/btn_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -58,6 +60,8 @@
             style="@style/Et4DirOutlined.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:inputType="textPassword"
             android:hint="비밀번호를 입력해주세요" />
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -14,6 +14,7 @@ class Application : Application()  {
         var authTime : Long? = null
         var fcmToken : String? = null
         var role : String? = null
+        var userId : Long = -1L
 
         private val okHttpInstances = OkhttpClientInstances
         private val retrofitInstances = RetrofitInstances(okHttpInstances)
@@ -33,6 +34,8 @@ class Application : Application()  {
         sharedPreferences = SharedPreferencesUtil(this)
         authToken = sharedPreferences.getAuthToken()
         fcmToken = sharedPreferences.getFCMToken()
+        role = sharedPreferences.getRole()
+        userId = sharedPreferences.getUserId()
 
         appDatabaseInstance = AppDatabase.getDatabase(this)
         dataSourceInstances = DataSourceInstances(appDatabaseInstance, serviceInstances)

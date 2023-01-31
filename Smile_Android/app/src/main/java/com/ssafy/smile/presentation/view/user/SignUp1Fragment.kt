@@ -9,6 +9,7 @@ import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentSignUp1Binding
@@ -21,7 +22,7 @@ import java.util.regex.Pattern
 private const val TAG = "SignUp1Fragment_스마일"
 class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Binding::bind, R.layout.fragment_sign_up1) {
 
-    private val userViewModel by activityViewModels<UserViewModel>()
+    private val userViewModel: UserViewModel by navGraphViewModels(R.id.signUpGraph)
 
     var idInput = false
     var pwdInput = false
@@ -48,8 +49,10 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
 
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("회원가입", true)
+        toolbar.initToolbar("회원가입", true) { moveToPopUpSelf() }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_signUp1Fragment_pop)
 
     override fun setEvent() {
         binding.apply {

@@ -9,6 +9,7 @@ import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.hideKeyboard
@@ -49,8 +50,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("검색", true)
+        toolbar.initToolbar("검색", true) { moveToPopUpSelf() }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_searchFragment_pop)
 
     override fun setEvent() {
         setSearchEvent()
@@ -76,11 +79,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
     private fun searchCategory(category: String) {
-        binding.apply {
-            searchViewModel.searchCategory = category
-            searchViewModel.searchPhotographer(category)
-            searchViewModel.searchPost(category)
-        }
+        searchViewModel.searchCategory = category
+        searchViewModel.searchPhotographer(category)
+        searchViewModel.searchPost(category)
     }
 
     private fun setViewPager() {
