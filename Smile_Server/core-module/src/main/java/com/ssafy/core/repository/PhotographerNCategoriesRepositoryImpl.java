@@ -4,7 +4,9 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.core.dto.PhotographerQdslDto;
+import com.ssafy.core.dto.CategoriesQdslDto;
+import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.entity.QCategories;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
 import com.ssafy.core.entity.QPhotographerNCategories;
@@ -16,7 +18,8 @@ import java.util.List;
 /**
  * querydsl 작성하는 클래스
  *
- * author @서재건
+ * @author 서재건
+ * @author 김정은
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -55,6 +58,25 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
                 .join(photographerNCategories).on(photographer.eq(photographerNCategories.photographer))
                 .where(photographerNCategories.category.id.in(categoryIdList))
                 .groupBy(photographer.id)
+                .fetch();
+    }
+
+    /**
+     * 사진작가 별 카테고리 검색
+     *
+     * @param photographerId
+     * @return 검색된 카테고리 결과(id, name, price, description)
+     */
+    @Override
+    public List<CategoriesQdslDto> findCategoriesByPhotographerId(Long photographerId){
+        QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
+        QCategories categories = QCategories.categories;
+
+        return jpaQueryFactory
+                .select(Projections.constructor(CategoriesQdslDto.class, categories.id, categories.name, photographerNCategories.price, photographerNCategories.description))
+                .from(categories)
+                .join(photographerNCategories).on(categories.eq(photographerNCategories.category))
+                .where(photographerNCategories.photographer.id.eq(photographerId))
                 .fetch();
     }
 }

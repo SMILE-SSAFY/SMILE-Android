@@ -43,7 +43,6 @@ import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
