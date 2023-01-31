@@ -355,7 +355,7 @@ public class ArticleService {
      * @param x1
      * @param y2
      * @param x2
-     * @return
+     * @return 마커, 마커의 위치, 마커에 포함된 게시글의 개수
      */
 
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
@@ -425,7 +425,7 @@ public class ArticleService {
     /***
      * 클러스터링 이후 해당 클러스터 별로 게시글 검색결과를 반환
      * @param Id
-     * @return
+     * @return 마커별 게시글 리스트
      */
 
     public ArticleClusterListDto getClusterByClusterId(Long Id){
@@ -473,6 +473,8 @@ public class ArticleService {
 
     /***
      * 지도의 범위내 게시글에서 위도 경도를 얻어오는 함수
+     * @param articleList
+     * @return 범위내 게시글을 double[][]로 위도경도로 리턴
      */
      private double[][] getGeoPointArray(List<Article> articleList){
          if (articleList.isEmpty()){
