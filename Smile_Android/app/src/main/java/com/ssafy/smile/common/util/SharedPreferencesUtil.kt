@@ -14,6 +14,7 @@ class SharedPreferencesUtil (context: Context) {
         private const val AUTH_TIME = "AuthTime"
         private const val FCM_TOKEN = "FCMToken"
         private const val ROLE = "Role"
+        private const val USER_ID = "UserId"
     }
 
     var preferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -72,7 +73,7 @@ class SharedPreferencesUtil (context: Context) {
 
     fun putRole(role: Types.Role) {
         preferences.edit {
-            putString(ROLE, role.toString())
+            putString(ROLE, role.getValue())
             apply()
         }
         Application.role = Application.sharedPreferences.getRole()
@@ -80,7 +81,7 @@ class SharedPreferencesUtil (context: Context) {
 
     fun getRole(): String? = preferences.getString(ROLE, null)
 
-    fun removeRole() {
+    private fun removeRole() {
         preferences.edit {
             remove(ROLE)
             apply()
@@ -91,6 +92,32 @@ class SharedPreferencesUtil (context: Context) {
     fun changeRole(role: Types.Role){
         removeRole()
         putRole(role)
+    }
+
+    fun putUserId(userId: Long) {
+        preferences.edit {
+            putLong(USER_ID, userId)
+            apply()
+        }
+        Application.userId = Application.sharedPreferences.getUserId()
+    }
+
+    fun getUserId(): Long = preferences.getLong(USER_ID, -1L)
+
+    private fun removeUserId() {
+        preferences.edit {
+            remove(USER_ID)
+            apply()
+        }
+        Application.userId = Application.sharedPreferences.getUserId()
+    }
+
+    fun removeAllInfo(){
+        removeAuthToken()
+        removeAuthTime()
+        removeFCMToken()
+        removeRole()
+        removeUserId()
     }
 
 }

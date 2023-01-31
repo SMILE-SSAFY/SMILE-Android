@@ -27,8 +27,8 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
     override fun initView() {
         initToolbar()
         initViewPager()
-        portfolioViewModel.getPortfolio(photographerId)
-        setObserver()
+//        portfolioViewModel.getPortfolio(photographerId)
+//        setObserver()
     }
 
     private fun initToolbar(){
@@ -50,6 +50,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                 val action = PortfolioFragmentDirections.actionPortfolioFragmentToReservationFragment(photographerId)
                 findNavController().navigate(action)
             }
+            btnWritePost.setOnClickListener { moveToWritePostFragment() }
         }
     }
 
@@ -124,5 +125,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
             }
         }
     }
+
+    private fun moveToWritePostFragment() = findNavController().navigate(R.id.writePostFragment)
 
 }

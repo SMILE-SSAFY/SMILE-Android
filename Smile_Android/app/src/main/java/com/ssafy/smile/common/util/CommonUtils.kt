@@ -11,7 +11,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 object CommonUtils {
-    //천단위 콤마
+
     fun makeComma(num: Int): String {
         val comma = DecimalFormat("#,###")
         return comma.format(num)
@@ -68,4 +68,5 @@ object CommonUtils {
         category.sort()
         return "${makeComma(category[0])}원 부터~"
     }
+
 }

@@ -9,6 +9,7 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,7 +25,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearchBinding>(FragmentAddressSearchBinding::inflate) {
+
+    private val navArgs : AddressSearchFragmentArgs by navArgs()
     private val viewModel : AddressGraphViewModel by viewModels()
+    private var isSelectionMode : Boolean = false
+    private var addressDomainDto : AddressDomainDto = AddressDomainDto()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -40,6 +45,7 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
     }
 
     override fun initView() {
+        isSelectionMode = navArgs.isSelectionMode
         binding.webView.apply {
             settings.javaScriptEnabled = true
             addJavascriptInterface(BridgeInterface(), "Android")
@@ -55,9 +61,20 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
 
     override fun setEvent() {
         binding.btnBack.setOnClickListener { moveToPopUpSelf() }
+        viewModel.selectedAddressResponseLiveData.observe(viewLifecycleOwner){
+            if (it<0) showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "주소설정"), Types.ToastType.ERROR)
+            else {
+                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
+                moveToPopUpToGraph()
+            }
+        }
         viewModel.insertAddressResponseLiveData.observe(viewLifecycleOwner){
-            if (it<0) showToast(requireContext(), "주소 설정 중 에러가 발생했습니다. 잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
-            else moveToPopUpSelf()
+            if (it<0) showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "주소설정"), Types.ToastType.ERROR)
+            else{
+                val bundle = Bundle().apply { putParcelable("addressDomainDto", addressDomainDto) }
+                requireActivity().supportFragmentManager.setFragmentResult("getAddress",bundle)
+                moveToPopUpToGraph()
+            }
         }
     }
 
@@ -65,7 +82,7 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
         @JavascriptInterface
         fun processDATA(data : String){
             val latLng = AddressUtils.getPointsFromGeo(this@AddressSearchFragment.requireContext(), data)
-            val addressDto = AddressDomainDto(address = data).apply {
+            addressDomainDto = AddressDomainDto(address = data).apply {
                 latLng?.let {
                     latitude = it.latitude
                     longitude = it.longitude
@@ -73,13 +90,16 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
             }
             lifecycleScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.Main) {
-                    viewModel.insertAddress(addressDto)
+                    if (isSelectionMode) lifecycleScope.launch(Dispatchers.IO){
+                        viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
+                    }
+                    else lifecycleScope.launch(Dispatchers.IO){ viewModel.insertAddress(addressDomainDto) }
                 }
             }
         }
     }
 
     private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_addressSearchFragment_pop)
-
+    private fun moveToPopUpToGraph() { findNavController().navigate(R.id.action_addressSearchFragment_pop_including_addressGraph) }
 
 }

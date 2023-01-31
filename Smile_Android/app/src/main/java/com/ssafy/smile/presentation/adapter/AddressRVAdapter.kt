@@ -1,13 +1,15 @@
 package com.ssafy.smile.presentation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ssafy.smile.R
 import com.ssafy.smile.databinding.ItemRvAddressBinding
 import com.ssafy.smile.domain.model.AddressDomainDto
 
-class AddressRVAdapter() : RecyclerView.Adapter<AddressRVAdapter.Holder>() {
+class AddressRVAdapter(private val isSelectionMode : Boolean) : RecyclerView.Adapter<AddressRVAdapter.Holder>() {
 
     private val itemList : ArrayList<AddressDomainDto> = arrayListOf()
 
@@ -21,14 +23,17 @@ class AddressRVAdapter() : RecyclerView.Adapter<AddressRVAdapter.Holder>() {
     inner class Holder(private val binding: ItemRvAddressBinding) : RecyclerView.ViewHolder(binding.root){
         fun bindInfo(position: Int, address: AddressDomainDto){
             binding.apply {
-                if (address.isSelected) setSelectedView()
-                else setUnSelectedView()
+                if (isSelectionMode){
+                    if (address.isSelected) setSelectedView()
+                    else setUnSelectedView()
+                }
                 tvAddressItem.text = address.address
-                tvAddressItem.setOnClickListener { itemClickListener.onClickItem(it, position, itemList[position]) }
+                layoutItemAddress.setOnClickListener { itemClickListener.onClickItem(it, position, itemList[position]) }
                 btnAddressItemDelete.setOnClickListener { itemClickListener.onClickRemove(it, position, itemList[position]) }
             }
         }
         private fun setSelectedView(){
+            binding.layoutItemAddress.setBackgroundResource(R.color.white)
             binding.btnAddressItemDelete.visibility = View.GONE
             binding.btnAddressItemSelected.visibility = View.VISIBLE
             binding.tvAddressComment.visibility = View.VISIBLE

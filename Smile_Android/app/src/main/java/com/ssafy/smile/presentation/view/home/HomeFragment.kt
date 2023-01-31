@@ -24,6 +24,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private var isPhotographer = true
     private var curAddress = ""
 
+    override fun onResume() {
+        super.onResume()
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
+            // viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -157,6 +164,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
-    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
+    private fun moveToAddressGraph() {
+        val action = MainFragmentDirections.actionMainFragmentToAddressGraph(true)
+        findNavController().navigate(action)
+    }
 
 }
