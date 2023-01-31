@@ -1,7 +1,7 @@
 package com.ssafy.core.repository;
 
 import com.ssafy.core.dto.CategoriesQdslDto;
-import com.ssafy.core.dto.PhotographerQuerydslDto;
+import com.ssafy.core.dto.PhotographerQdslDto;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface PhotographerNCategoriesRepositoryCustom {
      * @param categoryIdList
      * @return List<PhotographerQuerydslDto>
      */
-    List<PhotographerQuerydslDto> findByCategoryId(Long userId, List<Long> categoryIdList);
+    List<PhotographerQdslDto> findByCategoryId(Long userId, List<Long> categoryIdList);
 
     /**
      * photographerId로 카테고리 조회
