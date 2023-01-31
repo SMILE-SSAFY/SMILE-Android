@@ -125,4 +125,5 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
             }
         }
     }
+
 }

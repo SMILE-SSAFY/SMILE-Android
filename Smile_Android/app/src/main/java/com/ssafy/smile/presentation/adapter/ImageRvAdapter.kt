@@ -1,8 +1,6 @@
 package com.ssafy.smile.presentation.adapter
 
 import android.content.Context
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.ssafy.smile.databinding.ItemRvImageBinding
 import java.io.File
 
-class ImageRvAdapter(private val context: Context) : RecyclerView.Adapter<ImageRvAdapter.Holder>() {
+class ImageRVAdapter(private val context: Context) : RecyclerView.Adapter<ImageRVAdapter.Holder>() {
     private val itemList : ArrayList<File> = arrayListOf()
     fun getListData() = itemList
 

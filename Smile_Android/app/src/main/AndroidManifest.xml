@@ -50,7 +50,7 @@
         </activity>
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="d5qlkjdwi1" />
+            android:value="@string/naver_map_key" />
     </application>
 
 </manifest>

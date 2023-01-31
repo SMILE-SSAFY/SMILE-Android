@@ -94,6 +94,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 refreshLayout.isRefreshing = false
             }
         }
+        setClickListener()
     }
 
     private fun initToolbar() {
@@ -118,6 +119,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
             }
             tvToolbarAddress.text = curAddress
+        }
+    }
+
+
+    private fun setClickListener(){
+        binding.apply {
+            layoutSearchAddress.setOnClickListener { moveToAddressGraph() }
         }
     }
 
@@ -148,4 +156,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             adapter = homeRecyclerAdapter
         }
     }
+
+    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
+
 }

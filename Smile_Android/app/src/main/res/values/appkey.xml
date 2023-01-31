@@ -2,4 +2,5 @@
 <resources>
     <string name="kakao_native_key_manifest">kakao55f35312cb55b99915edb3cf9d88e8a4</string>
     <string name="kakao_native_key">55f35312cb55b99915edb3cf9d88e8a4</string>
+    <string name="naver_map_key">d5qlkjdwi1</string>
 </resources>

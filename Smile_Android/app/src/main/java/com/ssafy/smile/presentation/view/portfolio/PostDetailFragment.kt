@@ -19,6 +19,7 @@ import com.ssafy.smile.presentation.viewmodel.portfolio.PostViewModel
 
 private const val TAG = "PostDetailFragment_싸피"
 class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostDetailBinding::bind, R.layout.fragment_post_detail) {
+
     private val postViewModel by activityViewModels<PostViewModel>()
     private lateinit var postViewPagerAdapter: PostViewPagerAdapter
     private var imageData = mutableListOf<String>()
@@ -125,4 +126,5 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             }
         }
     }
+
 }

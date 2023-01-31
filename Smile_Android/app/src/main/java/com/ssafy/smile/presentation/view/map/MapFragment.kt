@@ -7,25 +7,20 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.gun0912.tedpermission.PermissionListener
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.MapFragment
-import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.AddressUtils
+import com.ssafy.smile.common.util.PermissionUtils
 import com.ssafy.smile.databinding.FragmentMapBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
@@ -54,6 +49,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         //TODO("Not yet implemented")
     }
 
+    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
+
     override fun onMapReady(naverMap: NaverMap) {
         with(naverMap) {
             uiSettings.isLocationButtonEnabled = false
@@ -75,9 +72,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     showToast(requireContext(), getString(R.string.permission_error_service_denied), Types.ToastType.WARNING)
                 }
             }
-            AddressUtils.getLocationServicePermission(permissionListener)
+            PermissionUtils.getLocationServicePermission(permissionListener)
         }else if (!checkLocationServicesStatus()) {
-            AddressUtils.showDialogForLocationServiceSetting(requireContext(),
+            PermissionUtils.showDialogForLocationServiceSetting(requireContext(),
                 action = { activityLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) },
                 cancelAction = {
                     showToast(requireContext(), "위치 서비스를 활성화하지 않으면\n지도를 사용하실 수 없습니다.", Types.ToastType.WARNING)
@@ -124,7 +121,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
     private fun moveToLatLng(latLng: LatLng){
         map?.moveCamera(CameraUpdate.scrollAndZoomTo(LatLng(latLng.latitude, latLng.longitude), 15.0))
     }
-
 
     //--------------------------------------------------------------------------------------------------------------------------------
 
