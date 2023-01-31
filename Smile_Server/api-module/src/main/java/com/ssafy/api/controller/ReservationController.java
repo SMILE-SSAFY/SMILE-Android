@@ -1,6 +1,6 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.dto.Reservation.ReservationPhotographerDto;
+import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.api.service.ReservationService;
@@ -82,7 +82,7 @@ public class ReservationController {
     }
 
     @GetMapping("/photographer")
-    public ResponseEntity<List<ReservationPhotographerDto>> findPhotographerReservation() {
+    public ResponseEntity<List<ReservationListDto>> findPhotographerReservation() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         return ResponseEntity.ok().body(reservationService.findPhotographerReservation(user));
