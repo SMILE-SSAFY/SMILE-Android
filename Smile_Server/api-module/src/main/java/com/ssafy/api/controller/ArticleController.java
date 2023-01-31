@@ -1,12 +1,6 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.dto.article.ArticleClusterDto;
-import com.ssafy.api.dto.article.ArticleDetailDto;
-import com.ssafy.api.dto.article.ArticleHeartDto;
-import com.ssafy.api.dto.article.ArticleListDto;
-import com.ssafy.api.dto.article.ArticlePostDto;
-import com.ssafy.api.dto.article.ArticleSearchDto;
-import com.ssafy.api.dto.article.PhotographerInfoDto;
+import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.entity.Article;
@@ -31,12 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * 게시글 Controller
- *
- * @author 신민철
- * @author 서재건
- */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/article")
