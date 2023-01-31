@@ -2,7 +2,10 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import android.util.Log
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
+import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.CommonDialog
 import com.ssafy.smile.common.view.LoadingDialog
@@ -15,7 +18,7 @@ import com.ssafy.smile.presentation.viewmodel.portfolio.PostViewModel
 private const val TAG = "PostEditBottomSheetDialogFragment_싸피"
 class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<FragmentPostEditBottomSheetDialogBinding>(FragmentPostEditBottomSheetDialogBinding::inflate) {
 
-    private val postViewModel by activityViewModels<PostViewModel>()
+    private val postViewModel: PostViewModel by navGraphViewModels(R.id.portfolioGraph)
     private val args: PostEditBottomSheetDialogFragmentArgs by navArgs()
 
     override fun initView() {
@@ -43,22 +46,16 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
         postViewModel.deletePostByIdResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    dismissLoadingDialog()
                     showToast(requireContext(), "삭제되었습니다.", Types.ToastType.BASIC)
+                    findNavController().navigate(R.id.action_postEditBottomSheetDialogFragment_pop)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    dismissLoadingDialog()
                     Log.d(TAG, "deletePostByIdResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "게시글 삭제 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
                 }
             }
         }
     }
-
-    override var mLoadingDialog: LoadingDialog
-        get() = LoadingDialog(requireContext())
-        set(value) {}
 }

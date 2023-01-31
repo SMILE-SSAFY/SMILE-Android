@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.CommonUtils
@@ -20,25 +21,30 @@ import com.ssafy.smile.presentation.viewmodel.portfolio.PostViewModel
 private const val TAG = "PostDetailFragment_싸피"
 class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostDetailBinding::bind, R.layout.fragment_post_detail) {
 
-    private val postViewModel by activityViewModels<PostViewModel>()
+    private val postViewModel: PostViewModel by navGraphViewModels(R.id.portfolioGraph)
     private lateinit var postViewPagerAdapter: PostViewPagerAdapter
     private var imageData = mutableListOf<String>()
 
     private val args: PostDetailFragmentArgs by navArgs()
-    var postId = args.postId
+    var postId = -1L
 
     override fun initView() {
         initToolbar()
-        //TODO : 서버 통신 되면 주석 풀기
-//        postViewModel.getPostById(postId)
-//        setObserver()
-        initViewPager()
+        setPostId()
+        postViewModel.getPostById(postId)
+        setObserver()
+    }
+
+    private fun setPostId() {
+        postId = args.postId
     }
 
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("게시물", true)
+        toolbar.initToolbar("게시물", true) { moveToPopUpSelf() }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_postDetailFragment_pop)
 
     private fun setObserver() {
         getPostByIdResponseObserver()
@@ -63,6 +69,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
+                    Log.d(TAG, "getPostByIdResponseObserver: ${it.data.toPostDomainDto()}")
                     setPostInfo(it.data.toPostDomainDto())
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
@@ -83,13 +90,14 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                 ivPostMore.visibility = View.VISIBLE
             }
             tvPhotographerName.text = post.photographerName
-            tvPlace.text = CommonUtils.getAddress(requireContext(), post.latitude, post.longitude)
+            tvPlace.text = post.detailAddress
             imageData = post.photoUrl
-            ctvLike.isChecked = post.isLike
-            tvLike.text = post.heart
+            ctvLike.isChecked = post.isHeart
+            tvLike.text = post.hearts.toString()
             tvCategory.text = post.category
             tvCreatedAt.text = post.createdAt
         }
+        initViewPager()
     }
 
     private fun initViewPager() {
@@ -112,15 +120,13 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             postViewModel.postHeartResponse.observe(viewLifecycleOwner) {
                 when(it) {
                     is NetworkUtils.NetworkResponse.Success -> {
-                        dismissLoadingDialog()
                         ctvLike.toggle()
+                        postViewModel.getPostById(postId)
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        dismissLoadingDialog()
                         showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {
-                        showLoadingDialog(requireContext())
                     }
                 }
             }

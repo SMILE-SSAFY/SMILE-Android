@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_KEYBOARD
 import com.google.android.material.timepicker.TimeFormat
@@ -32,8 +33,8 @@ private const val TAG = "ReservationFragment_스마일"
 class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentReservationBinding::bind, R.layout.fragment_reservation) {
 
     private val args: ReservationFragmentArgs by navArgs()
-    private val reservationViewModel by activityViewModels<ReservationViewModel>()
-    private var photographerId: Long = args.photographerId
+    private val reservationViewModel: ReservationViewModel by navGraphViewModels(R.id.portfolioGraph)
+    private var photographerId: Long = -1L
     private val reservedDate = arrayListOf<Date>()
     private val places = arrayListOf<String>()
     private val categories = arrayListOf<ResCategory>()
@@ -54,17 +55,21 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
 
     override fun initView() {
         initToolbar()
+        setPhotographerId()
         reservationViewModel.getPhotographerReservationInfo(photographerId)
         setObserver()
-        initPlaceSpinner()
-        initCategorySpinner()
-        initOptionSpinner()
+    }
+
+    private fun setPhotographerId() {
+        photographerId = args.photographerId
     }
 
     private fun initToolbar() {
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("예약하기", true)
+        toolbar.initToolbar("예약하기", true) { moveToPopUpSelf() }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_reservationFragment_pop)
 
     private fun setObserver() {
         getPhotographerReservationInfoResponseObserver()
@@ -87,11 +92,13 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                         reservedDate.add(date)
                     }
                     it.data.places.forEach { place ->
-                        places.add(place)
+                        places.add(place.place)
                     }
                     it.data.categories.forEach { category ->
                         categories.add(category)
                     }
+                    initPlaceSpinner()
+                    initCategorySpinner()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -129,6 +136,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     }
 
     private fun initCategorySpinner() {
+        categoryData.clear()
         categories.forEach { category ->
             categoryData.add(category.categoryName)
         }
@@ -170,10 +178,13 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 selectData.categoryName = tvCategory.text.toString()
                 tvOption.isEnabled = true
 
-                categories[pos].categoryDetail.forEach { categoryDetail ->
-                    optionData.add(categoryDetail.description)
+                optionData.clear()
+                priceData.clear()
+                categories[pos].details.forEach { categoryDetail ->
+                    optionData.add(categoryDetail.options)
                     priceData.add(categoryDetail.price)
                 }
+                initOptionSpinner()
             }
             tvOption.setOnItemClickListener { _, _, pos, _ ->
                 isCategoryChecked = true
@@ -191,8 +202,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 override fun onOkButtonClick(year: String, date: String) {
                     isDateChecked = true
 
-                    val arr = date.split("-")
-                    selectData.date = "${year}-${arr[1]}-${arr[2]}"
+                    selectData.date = "${year.substring(0, 4)}-${date.substring(0, 2)}-${date.substring(4, 6)}"
                     setDateText(year, date)
                 }
             })
@@ -225,17 +235,21 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     }
 
     private fun setTimeText(hour: Int, minute: Int) {
-        val ampm = if (hour > 12) {
+        val ampm = if (hour >= 12) {
             "오후"
         } else {
             "오전"
         }
-        val hour = String.format("%02d", hour % 12)
+        val tHour = if (hour == 12) {
+            "12"
+        } else {
+            String.format("%02d", hour % 12)
+        }
         val min = String.format("%02d", minute)
 
         binding.apply {
             tvTime.setTextColor(Color.BLACK)
-            tvTime.text = "${ampm} ${hour}시 ${min}분"
+            tvTime.text = "${ampm} ${tHour}시 ${min}분"
         }
     }
 

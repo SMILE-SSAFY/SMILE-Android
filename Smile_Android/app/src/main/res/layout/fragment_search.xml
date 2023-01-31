@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:hint="검색 키워드를 입력해주세요"
             android:imeOptions="actionSearch"
+            android:singleLine="true"
             android:inputType="text"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>

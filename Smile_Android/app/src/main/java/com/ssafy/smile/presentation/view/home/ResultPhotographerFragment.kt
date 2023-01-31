@@ -42,10 +42,15 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPhotographerDomainDto())
                     }
+                    resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "작가 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    if (it.errorCode == 404) {
+                        showToast(requireContext(), "검색한 키워드의 작가가 존재하지 않습니다.", Types.ToastType.INFO)
+                    } else {
+                        showToast(requireContext(), "작가 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -58,14 +63,12 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
         searchViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    dismissLoadingDialog()
+                    searchViewModel.searchPhotographer(searchViewModel.searchCategory)
                     resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    dismissLoadingDialog()
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
@@ -84,7 +87,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             })
             setItemClickListener(object : ResultPhotographerRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val action = SearchFragmentDirections.actionSearchResultFragmentToPortfolioFragment(recyclerData[position].photographerId)
+                    val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(recyclerData[position].photographerId)
                     findNavController().navigate(action)
                 }
 

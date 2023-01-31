@@ -58,7 +58,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
             }
 
             btnSignUp.setOnClickListener {
-                findNavController().navigate(R.id.action_logInFragment_to_signUp1Fragment)
+                findNavController().navigate(R.id.action_logInFragment_to_signUpGraph)
             }
 
             btnSnsLogin.setOnClickListener {

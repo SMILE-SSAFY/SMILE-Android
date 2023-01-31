@@ -12,7 +12,7 @@ class PortfolioRemoteDataSourceImpl(private val portfolioApiService: PortfolioAp
         return portfolioApiService.getPortfolio(photographerId)
     }
 
-    override suspend fun getPosts(photographerId: Long): Response<PostListResponseDto> {
+    override suspend fun getPosts(photographerId: Long): Response<ArrayList<PostListResponseDto>> {
         return portfolioApiService.getPosts(photographerId)
     }
 

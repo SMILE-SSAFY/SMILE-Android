@@ -26,7 +26,7 @@ class PortfolioViewModel: BaseViewModel() {
     }
 
     // 포트폴리오 게시물 화면 결과를 관리하는 LiveData
-    val getPostsResponse: LiveData<NetworkUtils.NetworkResponse<PostListResponseDto>>
+    val getPostsResponse: LiveData<NetworkUtils.NetworkResponse<ArrayList<PostListResponseDto>>>
         get() = portfolioRepository.getPostsResponseLiveData
 
     // 포트폴리오 게시물 화면 데이터 조회를 수행하는 함수

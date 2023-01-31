@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.view.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
+private const val TAG = "HomeFragment_스마일"
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 
     private val homeViewModel by activityViewModels<HomeViewModel>()
@@ -30,12 +32,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     override fun initView() {
-        //TODO : 서버 통신 되면 주석 풀기
-//        isPhotographer = getRole()
-//        curAddress = getAddress()
+        isPhotographer = getRole()
+        setAddress()
         initToolbar()
-//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-//        setObserver()
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+        setObserver()
         initRecycler()
     }
 
@@ -53,6 +54,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                     it.data.forEach { data ->
                         recyclerData.add(data.toCustomPhotographerDomainDto())
                     }
+                    homeRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -69,14 +71,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         homeViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    dismissLoadingDialog()
                     homeRecyclerAdapter.notifyDataSetChanged()
+                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    dismissLoadingDialog()
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
@@ -109,7 +109,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                             true
                         }
                         R.id.action_portfolio -> {
-                            findNavController().navigate(R.id.action_mainFragment_to_portfolioFragment)
+                            findNavController().navigate(R.id.action_mainFragment_to_portfolioGraph)
                             true
                         }
                         else -> false
@@ -131,8 +131,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.toString()
 
-    private fun getAddress() {
+    private fun setAddress() {
         //TODO : 주소록 구현 후 curAddress 변수로 주소 가져오기
+        curAddress = "강원도 양구군"
     }
 
     private fun initRecycler() {
@@ -144,7 +145,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             })
             setItemClickListener(object: HomeRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val action = MainFragmentDirections.actionMainFragmentToPortfolioFragment(recyclerData[position].photographerId)
+                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId)
                     findNavController().navigate(action)
                 }
 
