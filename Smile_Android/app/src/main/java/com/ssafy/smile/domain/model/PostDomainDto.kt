@@ -2,13 +2,11 @@ package com.ssafy.smile.domain.model
 
 data class PostDomainDto (
     val isMe: Boolean = false,
-    val photographerId: Long = 0,
-    val photographerName: String = "",
-    val latitude: Float = 0f,
-    val longitude: Float = 0f,
-    val photoUrl: ArrayList<String> = arrayListOf(),
-    val isLike: Boolean = false,
-    val heart: String = "",
+    val isHeart: Boolean = false,
+    val hearts: Int = 0,
+    val detailAddress: String = "",
+    val createdAt: String = "",
     val category: String = "",
-    val createdAt: String = ""
+    val photographerName: String = "",
+    val photoUrl: ArrayList<String> = arrayListOf(),
 )

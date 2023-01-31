@@ -18,8 +18,8 @@ class PortfolioRepositoryImpl(private val portfolioRemoteDataSource: PortfolioRe
         get() = _getPortfolioResponseLiveData
 
     private val _getPostsResponseLiveData =
-        MutableLiveData<NetworkUtils.NetworkResponse<PostListResponseDto>>()
-    val getPostsResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PostListResponseDto>>
+        MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<PostListResponseDto>>>()
+    val getPostsResponseLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<PostListResponseDto>>>
         get() = _getPostsResponseLiveData
 
     private val _postUploadResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
