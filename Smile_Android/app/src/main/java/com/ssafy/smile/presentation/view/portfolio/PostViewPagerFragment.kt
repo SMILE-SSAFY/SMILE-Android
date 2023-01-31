@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.view.portfolio
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
@@ -12,11 +13,12 @@ import com.ssafy.smile.databinding.FragmentPostViewPagerBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
 private const val TAG = "PostViewPagerFragment_스마일"
 class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(FragmentPostViewPagerBinding::bind, R.layout.fragment_post_view_pager) {
-    private val portfolioViewModel by activityViewModels<PortfolioViewModel>()
+    private val portfolioViewModel: PortfolioViewModel by viewModels()
 
     private lateinit var portfolioRecyclerAdapter: PortfolioRecyclerAdapter
     private val recyclerData = mutableListOf<PostListResponseDto>()

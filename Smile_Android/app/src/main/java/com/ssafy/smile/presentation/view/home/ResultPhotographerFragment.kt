@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.home
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
@@ -12,17 +13,22 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.ResultPhotographerRecyclerAdapter
 import com.ssafy.smile.presentation.adapter.ResultPostRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBinding>(FragmentResultPhotographerBinding::bind, R.layout.fragment_result_photographer) {
 
-    private val searchViewModel by activityViewModels<SearchViewModel>()
+    private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var resultPhotographerRecyclerAdapter: ResultPhotographerRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
 
-    override fun initView() {
+    override fun onResume() {
+        super.onResume()
         setObserver()
         initRecycler()
+    }
+
+    override fun initView() {
     }
 
     private fun setObserver() {
