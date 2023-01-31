@@ -98,6 +98,7 @@ public class ArticleService {
                 .createdAt(article.getCreatedAt())
                 .photoUrls(article.getPhotoUrls())
                 .hearts(hearts)
+                .photographerName(articleAuthor.getName())
                 .build();
     }
 

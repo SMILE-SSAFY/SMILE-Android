@@ -1,4 +1,4 @@
-package com.ssafy.api.dto.article;
+package com.ssafy.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
