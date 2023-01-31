@@ -81,10 +81,27 @@ public class ReservationController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /**
+     * 작가 예약 목록 조회
+     *
+     * @return List<ReservationListDto>
+     */
     @GetMapping("/photographer")
     public ResponseEntity<List<ReservationListDto>> findPhotographerReservation() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         return ResponseEntity.ok().body(reservationService.findPhotographerReservation(user));
+    }
+
+    /**
+     * 유저 예약 목록 조회
+     *
+     * @return List<ReservationListDto>
+     */
+    @GetMapping("/user")
+    public ResponseEntity<List<ReservationListDto>> findUserReservation() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return ResponseEntity.ok().body(reservationService.findUserReservation(user.getId()));
     }
 }
