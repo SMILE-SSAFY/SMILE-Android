@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.dto.article.ArticleClusterDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
