@@ -141,7 +141,7 @@ public class ReservationService {
      *
      * @param statusDto
      */
-    public Reservation changeStatus(ReservationStatusDto statusDto){
+    public void changeStatus(ReservationStatusDto statusDto){
         Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
@@ -153,11 +153,9 @@ public class ReservationService {
 
         if(reservation.getStatus() == ReservationStatus.예약취소){
             throw new CustomException(ErrorCode.ALREADY_CANCELED);
-        } else if(reservation.getStatus() == ReservationStatus.완료){
-            // TODO: CREATE ERROR
         }
 
         reservation.updateStatus(statusDto.getStatus());
-        return reservationRepository.save(reservation);
+        reservationRepository.save(reservation);
     }
 }
