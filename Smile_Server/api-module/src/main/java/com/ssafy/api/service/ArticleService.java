@@ -8,6 +8,7 @@ import com.ssafy.api.dto.article.ArticleSearchDto;
 import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.entity.Article;
+import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
@@ -35,10 +36,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /***
  * @author 신민철
@@ -54,7 +52,9 @@ public class ArticleService {
     private final ArticleHeartRepository articleHeartRepository;
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
+    private final ArticleClusterRepository articleClusterRepository;
 
+    public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository, ArticleClusterRepository articleClusterRepository) {
     public ArticleService(ArticleRepository articleRepository, S3UploaderService s3UploaderService, UserRepository userRepository, PhotographerRepository photographerRepository, ArticleHeartRepository articleHeartRepository, PhotographerHeartRepository photographerHeartRepository, CategoriesRepository categoriesRepository) {
         this.articleRepository = articleRepository;
         this.s3UploaderService = s3UploaderService;
@@ -63,6 +63,7 @@ public class ArticleService {
         this.articleHeartRepository = articleHeartRepository;
         this.photographerHeartRepository = photographerHeartRepository;
         this.categoriesRepository = categoriesRepository;
+        this.articleClusterRepository = articleClusterRepository;
     }
 
     /***
@@ -364,6 +365,8 @@ public class ArticleService {
         System.out.println(Arrays.deepToString(clusters.centroids));
         System.out.println(Arrays.toString(clusters.size));
 
+        User logInUser = getLogInUser();
+
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
             ArticleClusterDto clusterDto = ArticleClusterDto.builder()
@@ -374,6 +377,35 @@ public class ArticleService {
                     .build();
             clusterResults.add(clusterDto);
             }
+        for (int j = 0; j < clusters.y.length; j++){
+            System.out.println(clusters.y[j]);
+
+            Article article = articleList.get(j);
+            Integer clusterId = clusters.y[j];
+
+            User articleAuthor = article.getUser();
+
+            boolean isHearted = isHearted(logInUser, article);
+            Long hearts = articleHeartRepository.countByArticle(article);
+
+            String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
+            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
+
+            ArticleCluster articleCluster = ArticleCluster.builder()
+                    .clusterId(clusterId)
+                    .photographerName(articleAuthor.getName())
+                    .latitude(article.getLatitude())
+                    .longitude(article.getLongitude())
+                    .detailAddress(article.getDetailAddress())
+                    .isHeart(isHearted)
+                    .hearts(hearts)
+                    .createdAt(article.getCreatedAt())
+                    .category(article.getCategory())
+                    .photoUrl(photoUrlList.get(0).trim())
+                    .build();
+            articleClusterRepository.save(articleCluster);
+        }
+        articleClusterRepository.findAll().forEach(System.out::println);
         return clusterResults;
     }
 
