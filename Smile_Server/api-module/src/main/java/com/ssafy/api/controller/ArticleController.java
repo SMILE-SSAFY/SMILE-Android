@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.core.entity.Article;
+import com.ssafy.core.repository.ArticleClusterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
