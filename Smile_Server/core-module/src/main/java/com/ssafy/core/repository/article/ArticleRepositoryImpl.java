@@ -1,4 +1,4 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.article;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;

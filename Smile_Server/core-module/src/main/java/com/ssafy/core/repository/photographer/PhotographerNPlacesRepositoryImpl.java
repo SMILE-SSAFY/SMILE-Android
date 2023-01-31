@@ -1,42 +1,42 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.photographer;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.dto.PhotographerQdslDto;
-import com.ssafy.core.entity.QCategories;
+import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
-import com.ssafy.core.entity.QPhotographerNCategories;
+import com.ssafy.core.entity.QPhotographerNPlaces;
+import com.ssafy.core.entity.QPlaces;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 /**
- * querydsl 작성하는 클래스
+ * 사진 작가와 활동 지역 Repository Querydsl Impl
  *
  * @author 서재건
  * @author 김정은
  */
-@Slf4j
 @RequiredArgsConstructor
-public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCategoriesRepositoryCustom {
+public class PhotographerNPlacesRepositoryImpl implements PhotographerNPlacesRepositoryCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
 
     /**
-     * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
+     * 활동지역에 해당하는 사진작가 조회
      *
      * @param userId
-     * @param categoryIdList
+     * @param first
+     * @param second
      * @return List<PhotographerQuerydslDto>
      */
     @Override
-    public List<PhotographerQdslDto> findByCategoryId(Long userId, List<Long> categoryIdList) {
-        QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
+    public List<PhotographerQdslDto> findPhotographerByAddress(Long userId, String first, String second) {
+        QPhotographerNPlaces photographerNPlaces = QPhotographerNPlaces.photographerNPlaces;
+        QPlaces places = QPlaces.places;
         QPhotographer photographer = QPhotographer.photographer;
         QPhotographerHeart photographerHeart = QPhotographerHeart.photographerHeart;
 
@@ -52,31 +52,31 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
                                                 .where(photographerHeart.user.id.eq(userId))
                                 )).then(true)
                                 .otherwise(false)
-                ))
+                        ))
                 .from(photographer)
                 .leftJoin(photographerHeart).on(photographer.eq(photographerHeart.photographer))
-                .join(photographerNCategories).on(photographer.eq(photographerNCategories.photographer))
-                .where(photographerNCategories.category.id.in(categoryIdList))
+                .join(photographerNPlaces).on(photographer.eq(photographerNPlaces.photographer))
+                .join(places).on(places.eq(photographerNPlaces.places))
+                .where(places.first.eq(first), places.second.eq(second))
                 .groupBy(photographer.id)
                 .fetch();
     }
 
     /**
-     * 사진작가 별 카테고리 검색
+     * 사진작가 별 활동지역 조회
      *
      * @param photographerId
-     * @return 검색된 카테고리 결과(id, name, price, description)
+     * @return Places
      */
     @Override
-    public List<CategoriesQdslDto> findCategoriesByPhotographerId(Long photographerId){
-        QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
-        QCategories categories = QCategories.categories;
+    public List<Places> findPlacesByPhotographer(Long photographerId){
+        QPhotographerNPlaces photographerNPlaces = QPhotographerNPlaces.photographerNPlaces;
+        QPlaces places = QPlaces.places;
 
         return jpaQueryFactory
-                .select(Projections.constructor(CategoriesQdslDto.class, categories.id, categories.name, photographerNCategories.price, photographerNCategories.description))
-                .from(categories)
-                .join(photographerNCategories).on(categories.eq(photographerNCategories.category))
-                .where(photographerNCategories.photographer.id.eq(photographerId))
+                .selectFrom(places)
+                .join(photographerNPlaces).on(photographerNPlaces.places.eq(places))
+                .where(photographerNPlaces.photographer.id.eq(photographerId))
                 .fetch();
     }
 }

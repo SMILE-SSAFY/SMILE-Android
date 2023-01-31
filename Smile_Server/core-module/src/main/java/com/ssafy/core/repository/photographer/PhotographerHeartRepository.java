@@ -1,4 +1,4 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.photographer;
 
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;

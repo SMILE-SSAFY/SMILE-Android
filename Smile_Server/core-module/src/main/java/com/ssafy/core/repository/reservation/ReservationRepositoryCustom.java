@@ -1,4 +1,4 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.reservation;
 
 
 import java.sql.Date;

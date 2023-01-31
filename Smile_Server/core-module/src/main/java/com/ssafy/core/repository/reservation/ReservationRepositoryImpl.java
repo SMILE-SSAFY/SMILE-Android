@@ -1,4 +1,4 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.reservation;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.code.ReservationStatus;
