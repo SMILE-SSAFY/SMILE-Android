@@ -130,7 +130,6 @@ public class ArticleController {
                                     @RequestParam("cord1x") Double x1,
                                     @RequestParam("cord2y") Double y2,
                                     @RequestParam("cord2x") Double x2){
-//        List<ArticleSearchDto> articleSearchDtoList = articleService.searchArticleNear(y1, x1, y2, x2);
         List<ArticleClusterDto> articleClusterDtoList = articleService.clusterTest(y1,x1,y2,x2);
         return new ResponseEntity<>(articleClusterDtoList, HttpStatus.OK);
     }

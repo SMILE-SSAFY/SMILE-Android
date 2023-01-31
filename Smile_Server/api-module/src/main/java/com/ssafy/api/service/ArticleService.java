@@ -430,11 +430,10 @@ public class ArticleService {
 
     public ArticleClusterListDto getClusterByClusterId(Long Id){
         ArticleCluster articleCluster = articleClusterRepository.findById(Id).orElseThrow();
-        ArticleClusterListDto articleClusterListDto = ArticleClusterListDto.builder()
+        return ArticleClusterListDto.builder()
                 .clusterId(Id)
                 .articleSearchDtoList(articleCluster.getArticleSearchDtoList())
                 .build();
-        return articleClusterListDto;
     }
 
     /***
