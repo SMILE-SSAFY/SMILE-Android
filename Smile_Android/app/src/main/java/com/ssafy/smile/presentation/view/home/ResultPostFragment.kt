@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.home
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
@@ -15,13 +16,17 @@ import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResultPostBinding::bind, R.layout.fragment_result_post) {
 
-    private val searchViewModel by activityViewModels<SearchViewModel>()
+    private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var resultPostRecyclerAdapter: ResultPostRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPostDomainDto>()
 
-    override fun initView() {
+    override fun onResume() {
+        super.onResume()
         setObserver()
         initRecycler()
+    }
+
+    override fun initView() {
     }
 
     private fun setObserver() {

@@ -146,6 +146,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                     SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
                     SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
+                    SharedPreferencesUtil(requireContext()).putUserId(it.data.userId)
                     if(findNavController().currentDestination?.id == R.id.signUp2Fragment) {
                         findNavController().navigate(R.id.action_signUp2Fragment_to_mainFragment)
                     }

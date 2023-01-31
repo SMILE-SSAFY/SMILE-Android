@@ -9,6 +9,7 @@ import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
@@ -19,7 +20,7 @@ import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::bind, R.layout.fragment_search) {
-    private val searchViewModel by activityViewModels<SearchViewModel>()
+    private val searchViewModel: SearchViewModel by viewModels()
 
     private lateinit var selected: String
 
