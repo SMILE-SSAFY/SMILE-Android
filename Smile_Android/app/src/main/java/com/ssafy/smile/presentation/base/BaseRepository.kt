@@ -8,7 +8,6 @@ import retrofit2.Response
 
 private const val TAG = "BaseRepository_스마일"
 open class BaseRepository {
-
     suspend fun <T : Any> safeApiCall(liveData: MutableLiveData<NetworkResponse<T>>, action: suspend () -> Response<T>){
         liveData.postValue(NetworkResponse.Loading())
         val result : NetworkResponse<T> = safeApiResult(action=action)
@@ -20,6 +19,6 @@ open class BaseRepository {
         Log.d(TAG, "safeApiResult: $response")
         if (response.isSuccessful && response.body()!=null) return NetworkResponse.Success(response.body()!!)
         return NetworkResponse.Failure(response.code())
-
     }
+
 }

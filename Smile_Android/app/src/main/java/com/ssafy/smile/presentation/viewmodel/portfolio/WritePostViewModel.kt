@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.domain.model.Address
+import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.PostDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +33,8 @@ class WritePostViewModel : BaseViewModel() {
         postData.images = images
         _postDataResponse.postValue(checkData())
     }
-    fun uploadAddressData(address: Address){
-        postData.address = address
+    fun uploadAddressData(addressDomainDto: AddressDomainDto){
+        postData.addressDomainDto = addressDomainDto
         _postDataResponse.postValue(checkData())
     }
     fun uploadCategoryData(category : String){
@@ -42,7 +42,7 @@ class WritePostViewModel : BaseViewModel() {
         _postDataResponse.postValue(checkData())
     }
     private fun checkData() : Boolean {
-        if (postData.images.isNullOrEmpty() || postData.address==null || postData.category==null) return false
+        if (postData.images.isNullOrEmpty() || postData.addressDomainDto==null || postData.category==null) return false
         return true
     }
 

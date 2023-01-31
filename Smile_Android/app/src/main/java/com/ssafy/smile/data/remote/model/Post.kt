@@ -11,6 +11,6 @@ data class Post(
 data class ArticlePostReq(
     val category: String,
     val detailAddress: String,
-    val latitude: Float,
-    val longitude: Float
+    val latitude: Double,
+    val longitude: Double
 )

@@ -9,3 +9,4 @@ interface PhotographerRepository {
     suspend fun deletePhotographerInfo()
     suspend fun getPhotographerInfoByAddress(address:String)
 }
+

@@ -93,6 +93,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 refreshLayout.isRefreshing = false
             }
         }
+        setClickListener()
     }
 
     private fun initToolbar() {
@@ -120,6 +121,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
+
+    private fun setClickListener(){
+        binding.apply {
+            layoutSearchAddress.setOnClickListener { moveToAddressGraph() }
+        }
+    }
+
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.toString()
 
     private fun getAddress() {
@@ -140,4 +148,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             adapter = homeRecyclerAdapter
         }
     }
+
+    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
+
 }

@@ -3,7 +3,7 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/nav_group"
-app:startDestination="@id/splashFragment">
+app:startDestination="@id/mainFragment">
 <fragment
     android:id="@+id/splashFragment"
     android:name="com.ssafy.smile.presentation.view.splash.SplashFragment"
@@ -64,7 +64,10 @@ app:startDestination="@id/splashFragment">
             app:argType="com.ssafy.smile.data.remote.model.PhotographerResponseDto"
             app:nullable="true"
             android:defaultValue="@null" />
-    </action> <!-- TODO : Animation 추가 -->
+    </action>
+    <action
+        android:id="@+id/action_mainFragment_to_addressGraph"
+        app:destination="@id/addressGraph" /> <!-- TODO : Animation 추가 -->
 </fragment>
     <fragment
         android:id="@+id/signUp1Fragment"
@@ -99,9 +102,9 @@ app:startDestination="@id/splashFragment">
     </fragment>
     <fragment
         android:id="@+id/findAddressFragment"
-        android:name="com.ssafy.smile.presentation.view.home.FindAddressFragment"
+        android:name="com.ssafy.smile.presentation.view.home.AddressSearchFragment"
         android:label="fragment_find_address"
-        tools:layout="@layout/fragment_find_address" >
+        tools:layout="@layout/fragment_address_search" >
         <action
             android:id="@+id/action_findAddressFragment_to_setAddressFragment"
             app:destination="@id/setAddressFragment" />
@@ -138,9 +141,9 @@ app:startDestination="@id/splashFragment">
         tools:layout="@layout/fragment_photographer_reservation_list" />
     <fragment
         android:id="@+id/setAddressFragment"
-        android:name="com.ssafy.smile.presentation.view.home.SetAddressFragment"
+        android:name="com.ssafy.smile.presentation.view.home.AddressFragment"
         android:label="fragment_set_address"
-        tools:layout="@layout/fragment_set_address" />
+        tools:layout="@layout/fragment_address" />
     <fragment
         android:id="@+id/portfolioFragment"
         android:name="com.ssafy.smile.presentation.view.portfolio.PortfolioFragment"
@@ -281,6 +284,52 @@ app:startDestination="@id/splashFragment">
                 app:popUpTo="@id/photographerProfileCropFragment"
                 app:popUpToInclusive="true" />
         </fragment>
+    </navigation>
+    <navigation
+        android:id="@+id/addressGraph"
+        app:startDestination="@id/addressFragment">
+        <dialog
+            android:id="@+id/addressFragment"
+            android:name="com.ssafy.smile.presentation.view.home.AddressFragment"
+            android:label="AddressFragment"
+            tools:layout="@layout/fragment_address">
+            <action
+                android:id="@+id/action_addressFragment_to_addressSearchFragment"
+                app:destination="@id/addressSearchFragment" />
+            <action
+                android:id="@+id/action_addressFragment_pop"
+                app:popUpTo="@id/addressFragment"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_addressFragment_to_addressMapFragment"
+                app:destination="@id/addressMapFragment" />
+        </dialog>
+        <dialog
+            android:id="@+id/addressSearchFragment"
+            android:name="com.ssafy.smile.presentation.view.home.AddressSearchFragment"
+            android:label="AddressSearchFragment"
+            tools:layout="@layout/fragment_address_search">
+            <action
+                android:id="@+id/action_addressSearchFragment_pop"
+                app:popUpTo="@id/addressSearchFragment"
+                app:popUpToInclusive="true" >
+            </action>
+        </dialog>
+        <dialog
+            android:id="@+id/addressMapFragment"
+            android:name="com.ssafy.smile.presentation.view.home.AddressMapFragment"
+            android:label="fragment_address_map"
+            tools:layout="@layout/fragment_address_map" >
+            <action
+                android:id="@+id/action_addressMapFragment_pop"
+                app:popUpTo="@id/addressMapFragment"
+                app:popUpToInclusive="true" >
+            </action>
+            <action
+                android:id="@+id/action_addressMapFragment_pop_including_addressGraph"
+                app:popUpTo="@id/addressGraph"
+                app:popUpToInclusive="true" />
+        </dialog>
     </navigation>
 </navigation>
 

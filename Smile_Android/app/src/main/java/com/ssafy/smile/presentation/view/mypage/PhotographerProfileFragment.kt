@@ -6,15 +6,13 @@ import com.ssafy.smile.R
 import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
 import com.ssafy.smile.common.view.LoadingDialog
-import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.databinding.FragmentPhotographerProfileBinding
 import com.ssafy.smile.presentation.base.BaseBottomSheetDialogFragment
-import com.ssafy.smile.presentation.view.MainFragmentDirections
-import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteViewModel
+import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
 
-class PhotographerProfileFragment(override var mLoadingDialog: LoadingDialog) : BaseBottomSheetDialogFragment<FragmentPhotographerProfileBinding>(FragmentPhotographerProfileBinding::inflate) {
-    private val viewModel : PhotographerWriteViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
+class PhotographerProfileFragment() : BaseBottomSheetDialogFragment<FragmentPhotographerProfileBinding>(FragmentPhotographerProfileBinding::inflate) {
+    private val viewModel : PhotographerWriteGraphViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
     override fun initView() {
 
     }
