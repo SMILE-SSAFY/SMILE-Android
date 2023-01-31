@@ -20,16 +20,16 @@ import com.ssafy.smile.presentation.viewmodel.portfolio.PostViewModel
 private const val TAG = "PostDetailFragment_싸피"
 class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostDetailBinding::bind, R.layout.fragment_post_detail) {
     private val postViewModel by activityViewModels<PostViewModel>()
-    private val likeViewModel by activityViewModels<LikeViewModel>()
     private lateinit var postViewPagerAdapter: PostViewPagerAdapter
     private var imageData = mutableListOf<String>()
 
-    private val args: PortfolioFragmentArgs by navArgs()
+    private val args: PostDetailFragmentArgs by navArgs()
+    var postId = args.postId
 
     override fun initView() {
         initToolbar()
         //TODO : 서버 통신 되면 주석 풀기
-//        postViewModel.getPostById(args.postId)
+//        postViewModel.getPostById(postId)
 //        setObserver()
         initViewPager()
     }
@@ -42,14 +42,17 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
     private fun setObserver() {
         getPostByIdResponseObserver()
         postLikeResponseObserver()
-        postLikeCancelResponseObserver()
     }
 
     override fun setEvent() {
         binding.apply {
+
             ivPostMore.setOnClickListener {
-                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(args.postId)
+                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(postId)
                 findNavController().navigate(action)
+            }
+            ctvLike.setOnClickListener {
+                postViewModel.postHeart(postId)
             }
         }
     }
@@ -105,7 +108,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
 
     private fun postLikeResponseObserver() {
         binding.apply {
-            likeViewModel.postLikeResponse.observe(viewLifecycleOwner) {
+            postViewModel.postHeartResponse.observe(viewLifecycleOwner) {
                 when(it) {
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
@@ -113,36 +116,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        // TODO: error code 물어보기
-                        if (it.errorCode == 400) {
-                            showToast(requireContext(), "이미 좋아요를 누른 게시물입니다.")
-                        } else {
-                            showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                        }
-                    }
-                    is NetworkUtils.NetworkResponse.Loading -> {
-                        showLoadingDialog(requireContext())
-                    }
-                }
-            }
-        }
-    }
-
-    private fun postLikeCancelResponseObserver() {
-        binding.apply {
-            likeViewModel.postLikeCancelResponse.observe(viewLifecycleOwner) {
-                when(it) {
-                    is NetworkUtils.NetworkResponse.Success -> {
-                        dismissLoadingDialog()
-                        ctvLike.toggle()
-                    }
-                    is NetworkUtils.NetworkResponse.Failure -> {
-                        dismissLoadingDialog()
-                        if (it.errorCode == 404) {
-                            showToast(requireContext(), "존재하지 않는 게시물입니다.")
-                        } else {
-                            showToast(requireContext(), "게시물 좋아요 취소 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                        }
+                        showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {
                         showLoadingDialog(requireContext())

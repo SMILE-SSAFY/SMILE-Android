@@ -9,6 +9,7 @@ import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_KEYBOARD
 import com.google.android.material.timepicker.TimeFormat
@@ -30,8 +31,9 @@ import java.util.regex.Pattern
 private const val TAG = "ReservationFragment_스마일"
 class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentReservationBinding::bind, R.layout.fragment_reservation) {
 
+    private val args: ReservationFragmentArgs by navArgs()
     private val reservationViewModel by activityViewModels<ReservationViewModel>()
-    private var photographerId: Long = -1
+    private var photographerId: Long = args.photographerId
     private val reservedDate = arrayListOf<Date>()
     private val places = arrayListOf<String>()
     private val categories = arrayListOf<ResCategory>()
@@ -52,7 +54,6 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
 
     override fun initView() {
         initToolbar()
-        setPhotographerId()
         reservationViewModel.getPhotographerReservationInfo(photographerId)
         setObserver()
         initPlaceSpinner()
@@ -63,11 +64,6 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     private fun initToolbar() {
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
         toolbar.initToolbar("예약하기", true)
-    }
-
-    private fun setPhotographerId() {
-        // TODO : 이전 화면에서 작가 id 넘겨준 값 가져와서 photographerId 변수 값 변경하기
-        selectData.photographerId = photographerId
     }
 
     private fun setObserver() {
@@ -252,7 +248,10 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             val dialog = CommonDialog(
                 requireContext(),
                 DialogBody("잠깐!\n사진을 전송 받을 이메일이 맞나요?\n\n${etEmail.text}", "맞아요", "틀려요"),
-                { reservationViewModel.postReservation(selectData) },
+                {
+                    selectData.photographerId = photographerId
+                    reservationViewModel.postReservation(selectData)
+                },
                 { showToast(requireContext(), "이메일을 다시 입력해주세요") }
             )
             showDialog(dialog, viewLifecycleOwner)

@@ -24,7 +24,7 @@ private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
     private val userViewModel by activityViewModels<UserViewModel>()
-    private val args: SignUp1FragmentArgs by navArgs()
+    private val args: SignUp2FragmentArgs by navArgs()
 
     var nameInput = false
     var phoneInput = false
