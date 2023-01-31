@@ -22,6 +22,15 @@ app:startDestination="@id/splashFragment">
     android:label="fragment_log_in"
     tools:layout="@layout/fragment_log_in" >
     <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/logInFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+        app:popUpTo="@id/mainFragment"
+        app:popUpToInclusive="true" />
+    <action
         android:id="@+id/action_logInFragment_to_mainFragment"
         app:destination="@id/mainFragment" />
     <action

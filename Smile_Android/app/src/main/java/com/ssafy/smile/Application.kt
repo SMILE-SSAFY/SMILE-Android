@@ -10,7 +10,9 @@ class Application : Application()  {
     companion object{
         lateinit var sharedPreferences: SharedPreferencesUtil
         var authToken : String? = null
+        var authTime : Long? = null
         var fcmToken : String? = null
+        var role : String? = null
 
         private val okHttpInstances = OkhttpClientInstances
         private val retrofitInstances = RetrofitInstances(okHttpInstances)

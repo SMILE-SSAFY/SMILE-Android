@@ -1,4 +1,4 @@
-package com.ssafy.smile.common.sources
+package com.ssafy.smile.common.view.sources
 
 import androidx.lifecycle.Observer
 

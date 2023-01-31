@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.PhotographerRemoteDataSource
+import com.ssafy.smile.data.remote.model.PhotographerDto
 import com.ssafy.smile.data.remote.model.PhotographerRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.domain.repository.PhotographerRepository
 import com.ssafy.smile.presentation.base.BaseRepository
+import okhttp3.MultipartBody
+import retrofit2.http.Multipart
 
 class PhotographerRepositoryImpl(private val photographerRemoteDataSource: PhotographerRemoteDataSource): BaseRepository(), PhotographerRepository {
     private val _registerPhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
@@ -27,9 +30,9 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
         get() = _deletePhotographerInfoResponseLiveData
 
 
-    override suspend fun registerPhotographerInfo(photographerRequestDto: PhotographerRequestDto) {
+    override suspend fun registerPhotographerInfo(photographerDto: PhotographerDto, image: MultipartBody.Part) {
         safeApiCall(_registerPhotographerInfoResponseLiveData){
-            photographerRemoteDataSource.registerPhotographerInfo(photographerRequestDto)
+            photographerRemoteDataSource.registerPhotographerInfo(photographerDto, image)
         }
     }
 
@@ -39,9 +42,9 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
         }
     }
 
-    override suspend fun modifyPhotographerInfo(photographerRequestDto: PhotographerRequestDto) {
+    override suspend fun modifyPhotographerInfo(photographerDto: PhotographerDto, image: MultipartBody.Part) {
         safeApiCall(_modifyPhotographerInfoResponseLiveData){
-            photographerRemoteDataSource.modifyPhotographerInfo(photographerRequestDto)
+            photographerRemoteDataSource.modifyPhotographerInfo(photographerDto, image)
         }
     }
 

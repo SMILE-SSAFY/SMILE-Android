@@ -13,4 +13,5 @@ interface UserRemoteDataSource {
     suspend fun checkPhoneNumber(phoneNumber: String): Response<Int>
     suspend fun login(loginRequestDto: LoginRequestDto): Response<UserResponseDto>
     suspend fun kakaoLogin(token: KakaoLoginRequestDto): Response<UserResponseDto>
+    suspend fun withDraw(): Response<String>
 }
