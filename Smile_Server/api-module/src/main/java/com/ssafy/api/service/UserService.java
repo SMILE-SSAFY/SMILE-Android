@@ -10,9 +10,13 @@ import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
 import com.ssafy.api.dto.User.TokenRoleDto;
 import com.ssafy.core.code.Role;
+import com.ssafy.core.entity.Article;
+import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.ArticleRepository;
+import com.ssafy.core.repository.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +29,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
@@ -43,12 +50,14 @@ import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ArticleRepository articleRepository;
+    private final S3UploaderService s3UploaderService;
+    private final PhotographerRepository photographerRepository;
 
     @Value("${kakao.oauth2.secretPassword}")
     String kakaoPassword;
@@ -256,6 +265,7 @@ public class UserService {
      *
      * @param request
      */
+    @Transactional
     public void removeUser(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
@@ -263,6 +273,29 @@ public class UserService {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         log.info("DB에 저장된 userId : {}", user.getId());
+
+        if (user.getRole().equals(Role.PHOTOGRAPHER)) {
+            log.info("유저가 사진작가일 경우");
+            Photographer photographer = photographerRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+            // 이미지 삭제
+            if(photographer.getProfileImg() != null) {
+                s3UploaderService.deleteFile(photographer.getProfileImg().trim());
+            }
+            photographerRepository.delete(photographer);
+        }
+
+        log.info("유저의 게시글 조회");
+        List<Article> articleList = articleRepository.findByUserId(user.getId());
+        for (Article article : articleList) {
+            String photoUriList = article.getPhotoUrls();
+            photoUriList = photoUriList.replace("[","").replace("]","");
+            List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
+            photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
+            articleRepository.delete(article);
+        }
+
         userRepository.deleteById(userId);
     }
 
