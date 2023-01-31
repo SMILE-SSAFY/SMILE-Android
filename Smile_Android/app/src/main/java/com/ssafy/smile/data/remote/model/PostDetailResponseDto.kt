@@ -15,7 +15,6 @@ data class PostDetailResponseDto (
     val createdAt: Date = Date()
 ){
     fun toPostDomainDto(): PostDomainDto{
-        // TODO : 서버에 변경 요청 후 바꾸기
         return PostDomainDto(
             isMe = true,
             photographerId = photographerId,

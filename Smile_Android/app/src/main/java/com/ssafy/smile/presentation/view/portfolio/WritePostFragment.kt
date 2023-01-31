@@ -10,9 +10,9 @@ import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
 import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
 import com.ssafy.smile.databinding.FragmentWritePostBinding
-import com.ssafy.smile.domain.model.Address
+import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.Types
-import com.ssafy.smile.presentation.adapter.ImageRvAdapter
+import com.ssafy.smile.presentation.adapter.ImageRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.portfolio.WritePostViewModel
 import java.io.File
@@ -21,10 +21,10 @@ import kotlin.math.abs
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
     private val viewModel : WritePostViewModel by viewModels()
 
-    private lateinit var imageRvAdapter: ImageRvAdapter
+    private lateinit var imageRvAdapter: ImageRVAdapter
     private val spinnerAdapter: ArrayAdapter<String> by lazy {
         val items = resources.getStringArray(R.array.spinner_category)
-        ArrayAdapter(requireContext(), R.layout.item_spinner_category, items)
+        ArrayAdapter(requireContext(), R.layout.item_spinner, items)
     }
 
     override fun initView() {
@@ -45,8 +45,8 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
     }
 
     private fun setRvAdapter(){
-        imageRvAdapter = ImageRvAdapter(requireContext()).apply {
-            setItemClickListener(object : ImageRvAdapter.ItemClickListener{
+        imageRvAdapter = ImageRVAdapter(requireContext()).apply {
+            setItemClickListener(object : ImageRVAdapter.ItemClickListener{
                 override fun onClickBtnDelete(view: View, position: Int, dto: File) {
                     deleteItem(position)
                     viewModel.uploadImageData(getImageData())
@@ -116,7 +116,7 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
     }
 
     private fun getImageData() = imageRvAdapter.getListData()
-    private fun getAddressData() = Address("임시 주소", 0.0f, 0.0f) // TODO : 주소록 연결
+    private fun getAddressData() = AddressDomainDto("임시 주소", 0.0, 0.0) // TODO : 주소록 연결
     private fun getCategoryData() = binding.tvCategoryContent.text.toString()
 
     private fun setButtonEnable() {
