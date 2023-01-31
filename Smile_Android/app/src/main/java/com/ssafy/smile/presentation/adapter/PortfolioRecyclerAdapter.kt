@@ -16,6 +16,7 @@ class PortfolioRecyclerAdapter(val context: Context, val datas: MutableList<Post
         fun onClick(view: View, position: Int)
     }
     lateinit var onItemClickListener : OnItemClickListener
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) { this.onItemClickListener = onItemClickListener }
 
     inner class PortfolioRecyclerViewHolder(val binding: RecyclerPortfolioPostItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: PostListItem) {

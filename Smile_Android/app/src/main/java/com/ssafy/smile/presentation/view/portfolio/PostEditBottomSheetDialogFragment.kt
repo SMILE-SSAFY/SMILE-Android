@@ -16,7 +16,7 @@ private const val TAG = "PostEditBottomSheetDialogFragment_싸피"
 class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<FragmentPostEditBottomSheetDialogBinding>(FragmentPostEditBottomSheetDialogBinding::inflate) {
 
     private val postViewModel by activityViewModels<PostViewModel>()
-    private val args: PostDetailFragmentArgs by navArgs()
+    private val args: PostEditBottomSheetDialogFragmentArgs by navArgs()
 
     override fun initView() {
         setObserver()

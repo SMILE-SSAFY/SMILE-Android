@@ -55,7 +55,11 @@ app:startDestination="@id/splashFragment">
         app:destination="@id/photographerReservationList" />
     <action
         android:id="@+id/action_mainFragment_to_portfolioFragment"
-        app:destination="@id/portfolioFragment" />
+        app:destination="@id/portfolioFragment">
+        <argument
+            android:name="photographerId"
+            app:argType="long" />
+    </action>
     <action
         android:id="@+id/action_mainFragment_to_registerPortFolioGraph"
         app:destination="@id/registerPortFolioGraph" >
@@ -71,12 +75,6 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.user.SignUp1Fragment"
         android:label="fragment_sign_up1"
         tools:layout="@layout/fragment_sign_up1" >
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <argument
-            android:name="password"
-            app:argType="string" />
         <action
             android:id="@+id/action_signUp1Fragment_to_signUp2Fragment"
             app:destination="@id/signUp2Fragment">
@@ -93,6 +91,12 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.user.SignUp2Fragment"
         android:label="fragment_sign_up2"
         tools:layout="@layout/fragment_sign_up2">
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
         <action
             android:id="@+id/action_signUp2Fragment_to_mainFragment"
             app:destination="@id/mainFragment"/>
@@ -113,10 +117,18 @@ app:startDestination="@id/splashFragment">
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchResultFragment_to_portfolioFragment"
-            app:destination="@id/portfolioFragment" />
+            app:destination="@id/portfolioFragment">
+            <argument
+                android:name="photographerId"
+                app:argType="long" />
+        </action>
         <action
             android:id="@+id/action_searchResultFragment_to_postDetailFragment"
-            app:destination="@id/postDetailFragment" />
+            app:destination="@id/postDetailFragment">
+            <argument
+                android:name="postId"
+                app:argType="long" />
+        </action>
         <action
             android:id="@+id/action_searchResultFragment_self"
             app:destination="@id/searchResultFragment" />
@@ -147,14 +159,18 @@ app:startDestination="@id/splashFragment">
         android:label="fragment_portfolio"
         tools:layout="@layout/fragment_portfolio" >
         <argument
-            android:name="postId"
+            android:name="photographerId"
             app:argType="long" />
         <action
             android:id="@+id/action_portfolioFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
         <action
             android:id="@+id/action_portfolioFragment_to_reservationFragment"
-            app:destination="@id/reservationFragment" />
+            app:destination="@id/reservationFragment">
+            <argument
+                android:name="photographerId"
+                app:argType="long"/>
+        </action>
         <action
             android:id="@+id/action_portfolioFragment_to_writePostFragment"
             app:destination="@id/writePostFragment" />
@@ -177,8 +193,8 @@ app:startDestination="@id/splashFragment">
         android:label="fragment_reservation"
         tools:layout="@layout/fragment_reservation" >
         <argument
-            android:name="reservationResult"
-            app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
+            android:name="photographerId"
+            app:argType="long"/>
         <action
             android:id="@+id/action_reservationFragment_to_reservationResultFragment"
             app:destination="@id/reservationResultFragment">
@@ -192,6 +208,9 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.ReservationResultFragment"
         android:label="fragment_reservation_result"
         tools:layout="@layout/fragment_reservation_result" >
+        <argument
+            android:name="reservationResult"
+            app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
         <action
             android:id="@+id/action_reservationResultFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -233,6 +252,9 @@ app:startDestination="@id/splashFragment">
         android:name="com.ssafy.smile.presentation.view.portfolio.PostEditBottomSheetDialogFragment"
         android:label="fragment_post_edit_bottom_sheet_dialog"
         tools:layout="@layout/fragment_post_edit_bottom_sheet_dialog" >
+        <argument
+            android:name="postId"
+            app:argType="long" />
     </dialog>
     <navigation
         android:id="@+id/registerPortFolioGraph"
