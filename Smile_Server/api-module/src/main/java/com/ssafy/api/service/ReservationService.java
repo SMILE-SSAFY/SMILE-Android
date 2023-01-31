@@ -4,7 +4,7 @@ import com.ssafy.api.dto.Photographer.PlacesForListDto;
 import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
 import com.ssafy.api.dto.Reservation.CategoryDetailDto;
 import com.ssafy.api.dto.Reservation.PhotographerInfoDto;
-import com.ssafy.api.dto.Reservation.ReservationPhotographerDto;
+import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
@@ -17,11 +17,11 @@ import com.ssafy.core.entity.Reservation;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.reservation.ReservationRepository;
-import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -169,7 +169,7 @@ public class ReservationService {
      * @return List<ReservationPhotographerDto>
      */
     @Transactional(readOnly = true)
-    public List<ReservationPhotographerDto> findPhotographerReservation(User user) {
+    public List<ReservationListDto> findPhotographerReservation(User user) {
         log.info("작가 예약 목록 조회 시작");
         if (!user.getRole().equals(Role.PHOTOGRAPHER)) {
             throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
@@ -182,9 +182,9 @@ public class ReservationService {
         }
         log.info("예약 목록 조회");
 
-        List<ReservationPhotographerDto> reservationPhotographerList = new ArrayList<>();
+        List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
-            ReservationPhotographerDto reservationPhotographer = new ReservationPhotographerDto();
+            ReservationListDto reservationPhotographer = new ReservationListDto();
             User reservationUser = reservation.getUser();
             reservationPhotographerList.add(
                     reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())

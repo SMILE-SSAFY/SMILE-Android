@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 /**
- * 작가 예약 목록 조회 DTO
+ * 예약 목록 조회 DTO
  *
  * @author 서재건
  */
@@ -19,11 +19,11 @@ import java.sql.Time;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReservationPhotographerDto {
+public class ReservationListDto {
 
     private ReservationStatus status;
 
-    private String userName;
+    private String name;
 
     private String phoneNumber;
 
@@ -49,10 +49,10 @@ public class ReservationPhotographerDto {
      * @param phoneNumber
      * @return  ReservationPhotographerDto
      */
-    public ReservationPhotographerDto of(Reservation reservation, String name, String phoneNumber){
-        return ReservationPhotographerDto.builder()
+    public ReservationListDto of(Reservation reservation, String name, String phoneNumber){
+        return ReservationListDto.builder()
                 .status(reservation.getStatus())
-                .userName(name)
+                .name(name)
                 .phoneNumber(phoneNumber)
                 .price(reservation.getPrice())
                 .categoryName(reservation.getCategoryName())
