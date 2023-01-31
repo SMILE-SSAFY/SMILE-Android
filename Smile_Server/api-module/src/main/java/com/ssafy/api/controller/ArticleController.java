@@ -2,9 +2,9 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
+import com.ssafy.core.dto.ArticleSearchDto;
+import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.User;
-import com.ssafy.core.entity.Article;
-import com.ssafy.core.repository.ArticleClusterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -129,7 +130,7 @@ public class ArticleController {
                                     @RequestParam("cord1x") Double x1,
                                     @RequestParam("cord2y") Double y2,
                                     @RequestParam("cord2x") Double x2){
-        List<ArticleSearchDto> articleSearchDtoList = articleService.searchArticleNear(y1, x1, y2, x2);
+//        List<ArticleSearchDto> articleSearchDtoList = articleService.searchArticleNear(y1, x1, y2, x2);
         List<ArticleClusterDto> articleClusterDtoList = articleService.clusterTest(y1,x1,y2,x2);
         return new ResponseEntity<>(articleClusterDtoList, HttpStatus.OK);
     }
@@ -146,6 +147,17 @@ public class ArticleController {
         User user = (User)authentication.getPrincipal();
         List<ArticleSearchDto> articleSearchDto = articleService.getArticleListByCategory(user.getId(), categoryName);
         return ResponseEntity.ok().body(articleSearchDto);
+    }
+
+    /***
+     * 클러스터링시 마커에 포함된 게시글 확인
+     * @param clusterId
+     * @return 마커에 포함된 게시글
+     */
+    @GetMapping("/list/cluster/{clusterId}")
+    public ResponseEntity<?> getClusterData(@PathVariable("clusterId") Long clusterId){
+        ArticleClusterListDto articleClusterListDto = articleService.getClusterByClusterId(clusterId);
+        return new ResponseEntity<>(articleClusterListDto, HttpStatus.OK);
     }
 
 }
