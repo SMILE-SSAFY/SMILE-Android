@@ -1,11 +1,12 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.article.ArticleClusterDto;
+import com.ssafy.api.dto.article.ArticleClusterListDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
 import com.ssafy.api.dto.article.ArticlePostDto;
-import com.ssafy.api.dto.article.ArticleSearchDto;
+import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.entity.Article;
@@ -348,33 +349,46 @@ public class ArticleService {
         return articleSearchDtoList;
     }
 
+    /***
+     * 지도 범위 내 클러스터링 후 redis에 클러스터링된 데이터를 저장
+     * @param y1
+     * @param x1
+     * @param y2
+     * @param x2
+     * @return
+     */
+
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
         List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y1, y2, x1, x2);
-        KMeans clusters = PartitionClustering.run(20, () -> KMeans.fit(getGeoPointArray(articleList),2));
+        // k값 최적화 필요
+        KMeans clusters = PartitionClustering.run(20, ()->KMeans.fit(getGeoPointArray(articleList),2));
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
-
-        System.out.println(Arrays.toString(clusters.y));
-        System.out.println(Arrays.deepToString(clusters.centroids));
-        System.out.println(Arrays.toString(clusters.size));
 
         User logInUser = getLogInUser();
 
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
             ArticleClusterDto clusterDto = ArticleClusterDto.builder()
-                    .clusterId(i)
+                    .clusterId(Long.valueOf(i))
                     .numOfCluster(clusters.size[i])
                     .centroidLat(centroids[0])
                     .centroidLong(centroids[1])
                     .build();
             clusterResults.add(clusterDto);
             }
+        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (int j = 0; j < clusters.y.length; j++){
-            System.out.println(clusters.y[j]);
 
             Article article = articleList.get(j);
-            Integer clusterId = clusters.y[j];
+            Long clusterId = Long.valueOf(clusters.y[j]);
+
+            if (j>=1){
+                if (clusterId != clusters.y[j-1]){
+                    articleSearchDtoList = new ArrayList<>();
+                }
+            }
+
 
             User articleAuthor = article.getUser();
 
@@ -384,8 +398,8 @@ public class ArticleService {
             String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
             List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
 
-            ArticleCluster articleCluster = ArticleCluster.builder()
-                    .clusterId(clusterId)
+            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
+                    .articleId(article.getId())
                     .photographerName(articleAuthor.getName())
                     .latitude(article.getLatitude())
                     .longitude(article.getLongitude())
@@ -396,10 +410,31 @@ public class ArticleService {
                     .category(article.getCategory())
                     .photoUrl(photoUrlList.get(0).trim())
                     .build();
+            articleSearchDtoList.add(articleSearchDto);
+
+            ArticleCluster articleCluster = ArticleCluster.builder()
+                    .Id(clusterId)
+                    .articleSearchDtoList(articleSearchDtoList)
+                    .build();
             articleClusterRepository.save(articleCluster);
         }
         articleClusterRepository.findAll().forEach(System.out::println);
         return clusterResults;
+    }
+
+    /***
+     * 클러스터링 이후 해당 클러스터 별로 게시글 검색결과를 반환
+     * @param Id
+     * @return
+     */
+
+    public ArticleClusterListDto getClusterByClusterId(Long Id){
+        ArticleCluster articleCluster = articleClusterRepository.findById(Id).orElseThrow();
+        ArticleClusterListDto articleClusterListDto = ArticleClusterListDto.builder()
+                .clusterId(Id)
+                .articleSearchDtoList(articleCluster.getArticleSearchDtoList())
+                .build();
+        return articleClusterListDto;
     }
 
     /***

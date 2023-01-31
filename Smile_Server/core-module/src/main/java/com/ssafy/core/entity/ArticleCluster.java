@@ -1,34 +1,25 @@
 package com.ssafy.core.entity;
 
+import com.ssafy.core.dto.ArticleSearchDto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+/***
+ * @author 신민철
+ * Redis에 저장할 Entity
+ */
 @Data
 @RedisHash(value = "articles", timeToLive = 1800)
 @Builder
 public class ArticleCluster {
     @Id
-    private Integer clusterId;
+    private Long Id;
 
-    private String photographerName;
+    private List<ArticleSearchDto> articleSearchDtoList;
 
-    private Double latitude;
-
-    private Double longitude;
-
-    private Boolean isHeart;
-
-    private Long hearts;
-
-    private String detailAddress;
-
-    private LocalDateTime createdAt;
-
-    private String category;
-
-    private  String photoUrl;
 }
