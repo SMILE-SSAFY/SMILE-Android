@@ -5,13 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.view.portfolio.PortfolioFragment">
-
     <include
         android:id="@+id/layout_toolbar"
         layout="@layout/layout_common_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_intro"
         android:layout_width="match_parent"
@@ -156,7 +154,7 @@
                     android:layout_width="90dp"
                     android:layout_height="30dp"
                     android:text="예약하기"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_write_post"
@@ -164,7 +162,7 @@
                     android:layout_width="90dp"
                     android:layout_height="30dp"
                     android:text="게시글 업로드"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <CheckedTextView
                     android:id="@+id/ctv_like"
