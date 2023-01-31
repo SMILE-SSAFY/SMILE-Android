@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
@@ -15,21 +16,23 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
+import com.ssafy.smile.presentation.viewmodel.MainViewModel
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
 private const val TAG = "HomeFragment_스마일"
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 
-    private val homeViewModel by activityViewModels<HomeViewModel>()
+    private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var isPhotographer = true
     private var curAddress = ""
+    private var userId = -1L
 
     override fun onResume() {
         super.onResume()
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
-            // viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+            homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
     }
 
@@ -40,6 +43,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun initView() {
         isPhotographer = getRole()
+        userId = getUserId()
         setAddress()
         initToolbar()
         homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
@@ -50,6 +54,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setObserver() {
         getPhotographerInfoByAddressResponseObserver()
         photographerHeartResponseObserver()
+        getRoleObserver()
+    }
+
+    private fun getRoleObserver() {
+        homeViewModel.getRoleLiveData.observe(viewLifecycleOwner){
+            isPhotographer = it==Types.Role.PHOTOGRAPHER
+            binding.tbHome.menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
+        }
     }
 
     private fun getPhotographerInfoByAddressResponseObserver() {
@@ -116,7 +128,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                             true
                         }
                         R.id.action_portfolio -> {
-                            findNavController().navigate(R.id.action_mainFragment_to_portfolioGraph)
+                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId)
+                            findNavController().navigate(action)
                             true
                         }
                         else -> false
@@ -137,6 +150,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.toString()
+
+    private fun getUserId(): Long = SharedPreferencesUtil(requireContext()).getUserId()
 
     private fun setAddress() {
         //TODO : 주소록 구현 후 curAddress 변수로 주소 가져오기
