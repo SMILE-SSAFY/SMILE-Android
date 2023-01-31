@@ -77,8 +77,8 @@ public class ReservationService {
         Reservation entity = reservationRepository.save(savedReservation);
 
         ReservationResDto res = new ReservationResDto();
-        User user = userRepository.findById(reservation.getPhotographerId()).get();
-        return res.of(entity, user.getName(), user.getPhoneNumber());
+        User photographer = userRepository.findById(reservation.getPhotographerId()).get();
+        return res.of(entity, photographer.getName(), photographer.getPhoneNumber());
     }
 
     /**
