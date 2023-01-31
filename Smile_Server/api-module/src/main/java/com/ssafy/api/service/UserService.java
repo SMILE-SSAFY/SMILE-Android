@@ -123,6 +123,7 @@ public class UserService {
         return TokenRoleDto.builder()
                 .token(token)
                 .role(user.getRole())
+                .userId(user.getId())
                 .build();
     }
 
