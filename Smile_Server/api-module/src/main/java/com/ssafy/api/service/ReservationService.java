@@ -180,12 +180,38 @@ public class ReservationService {
         if (reservationList.isEmpty()) {
             throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
         }
-        log.info("예약 목록 조회");
+        log.info("작가 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
             ReservationListDto reservationPhotographer = new ReservationListDto();
             User reservationUser = reservation.getUser();
+            reservationPhotographerList.add(
+                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
+            );
+        }
+        return reservationPhotographerList;
+    }
+
+    /**
+     * 유저 예약 목록 조회
+     *
+     * @param userId
+     * @return List<ReservationListDto>
+     */
+    @Transactional(readOnly = true)
+    public List<ReservationListDto> findUserReservation(Long userId) {
+        log.info("유저 예약 목록 조회 시작");
+        List<Reservation> reservationList = reservationRepository.findReservationsByUserId(userId);
+        if (reservationList.isEmpty()) {
+            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
+        log.info("유저 예약 목록 조회");
+
+        List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
+            ReservationListDto reservationPhotographer = new ReservationListDto();
+            User reservationUser = reservation.getPhotographer().getUser();
             reservationPhotographerList.add(
                     reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
             );
