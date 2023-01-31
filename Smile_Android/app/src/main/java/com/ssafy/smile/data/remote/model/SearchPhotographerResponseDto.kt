@@ -19,13 +19,17 @@ data class SearchPhotographerResponseDto(
             categoryNames.add(data.name)
             categoryPrices.add(data.price.toInt())
         }
+        val sPlaces = arrayListOf<String>()
+        places.forEach { place ->
+            sPlaces.add(place.place)
+        }
 
         return CustomPhotographerDomainDto(
             photographerId,
             profileImg,
             CommonUtils.getCategoryName(categoryNames),
             name,
-            CommonUtils.getPlace(places),
+            CommonUtils.getPlace(sPlaces),
             CommonUtils.getCategoryPrice(categoryPrices),
             hasHeart,
             heart

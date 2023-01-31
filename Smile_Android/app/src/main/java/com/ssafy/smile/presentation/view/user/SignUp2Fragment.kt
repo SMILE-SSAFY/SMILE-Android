@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
@@ -23,7 +24,7 @@ import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
 private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
-    private val userViewModel by activityViewModels<UserViewModel>()
+    private val userViewModel: UserViewModel by navGraphViewModels(R.id.signUpGraph)
     private val args: SignUp2FragmentArgs by navArgs()
 
     var nameInput = false
@@ -41,8 +42,10 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("회원가입", true)
+        toolbar.initToolbar("회원가입", true) { moveToPopUpSelf() }
     }
+
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_signUp1Fragment_pop)
 
     private fun setObserver() {
         signUpResponseObserver()

@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.data.remote.model.PostListItem
+import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.databinding.FragmentPostViewPagerBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioRecyclerAdapter
@@ -19,13 +19,11 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     private val portfolioViewModel by activityViewModels<PortfolioViewModel>()
 
     private lateinit var portfolioRecyclerAdapter: PortfolioRecyclerAdapter
-    private val recyclerData = mutableListOf<PostListItem>()
-    private var photographerId = PortfolioFragment().photographerId
+    private val recyclerData = mutableListOf<PostListResponseDto>()
 
     override fun initView() {
-        //TODO : 서버 통신 되면 주석 풀기
-//        portfolioViewModel.getPosts(photographerId)
-//        setObserver()
+        portfolioViewModel.getPosts(PortfolioFragment().photographerId)
+        setObserver()
         initRecycler()
     }
 
@@ -45,9 +43,10 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
                     recyclerData.clear()
-                    it.data.articles.forEach { article ->
-                        recyclerData.add(article)
+                    it.data.forEach { post ->
+                        recyclerData.add(post)
                     }
+                    portfolioRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -62,7 +61,7 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
         portfolioRecyclerAdapter = PortfolioRecyclerAdapter(requireContext(), recyclerData).apply {
             setItemClickListener(object : PortfolioRecyclerAdapter.OnItemClickListener {
                 override fun onClick(view: View, position: Int) {
-                    val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(recyclerData[position].articleId)
+                    val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(recyclerData[position].id)
                     findNavController().navigate(action)
                 }
             })

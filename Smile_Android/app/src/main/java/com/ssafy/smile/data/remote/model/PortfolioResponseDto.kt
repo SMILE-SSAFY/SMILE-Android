@@ -10,34 +10,24 @@ data class PortfolioResponseDto (
     val isHeart: Boolean = false,
     val hearts: Int = 0,
     val photographerName: String = "",
-    val places: ArrayList<Place> = arrayListOf(),
+    val profileImg: String = "",
     val introduction: String = "",
-    val category: ArrayList<Category> = arrayListOf(),
+    val places: ArrayList<String> = arrayListOf(),
+    val categories: ArrayList<String> = arrayListOf(),
 ){
     fun toPortfolioDomainDto(): PortfolioDomainDto {
-        val categoryNames = arrayListOf<String>()
-        val categoryPrices = arrayListOf<Int>()
-        category.forEach { data ->
-            categoryNames.add(data.categoryName)
-            categoryPrices.add(data.categoryPrice.toInt())
-        }
-
         return PortfolioDomainDto(
             isMe,
-            CommonUtils.getCategoryName(categoryNames),
-            photographerName,
-            CommonUtils.getPlace(places),
-            CommonUtils.getCategoryPrice(categoryPrices),
-            introduction,
             isHeart,
-            hearts
+            hearts,
+            photographerName,
+            profileImg,
+            introduction,
+            CommonUtils.getPlace(places),
+            CommonUtils.getCategoryName(categories)
         )
     }
 }
-
-data class Place (
-    val place: String = ""
-)
 
 data class Category (
     val categoryName: String = "",

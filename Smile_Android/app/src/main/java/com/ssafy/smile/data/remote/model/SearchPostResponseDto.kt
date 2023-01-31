@@ -11,7 +11,7 @@ data class SearchPostResponseDto(
     val isHeart: Boolean = false,
     val hearts: Int = 0,
     val detailAddress: String = "",
-    val createdAt: LocalDateTime,
+    val createdAt: String,
     val category: String = "",
     val photoUrl: String = ""
 ){
