@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.user
 
 import android.util.Log
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -15,12 +16,13 @@ import com.ssafy.smile.databinding.FragmentLogInBinding
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
 
 private const val TAG = "LogInFragment_스마일"
 class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::bind, R.layout.fragment_log_in) {
 
-    private val userViewModel by activityViewModels<UserViewModel>()
+    private val userViewModel: UserViewModel by viewModels()
 
     private val callback : (OAuthToken?, Throwable?) -> Unit = { token, error ->
         // 에러가 난 경우
@@ -110,6 +112,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     SharedPreferencesUtil(requireContext()).putAuthToken("Bearer ${it.data.token}")
                     SharedPreferencesUtil(requireContext()).putAuthTime(System.currentTimeMillis())
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
+                    SharedPreferencesUtil(requireContext()).putUserId(it.data.userId)
                     findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
                     showToast(requireContext(), "로그인 되었습니다.", Types.ToastType.BASIC)
                 }
