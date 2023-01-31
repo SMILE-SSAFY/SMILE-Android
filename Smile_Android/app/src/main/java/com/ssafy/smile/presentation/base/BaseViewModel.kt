@@ -17,9 +17,14 @@ abstract class BaseViewModel : ViewModel() {
     private val _roleLiveData : MutableLiveData<Types.Role> = MutableLiveData<Types.Role>()
     val getRoleLiveData : LiveData<Types.Role> = _roleLiveData
 
+    fun getRole(context: Context){
+        val role = SharedPreferencesUtil(context).getRole()
+        _roleLiveData.postValue(Types.Role.getRoleType(role?:Types.Role.USER.getValue()))
+    }
+
     fun changeRole(context: Context, role: Types.Role){
         SharedPreferencesUtil(context).changeRole(role)
-        _roleLiveData.postValue(role)
+        getRole(context)
     }
 
     private val _onBackPressed = MutableLiveData<Any>()

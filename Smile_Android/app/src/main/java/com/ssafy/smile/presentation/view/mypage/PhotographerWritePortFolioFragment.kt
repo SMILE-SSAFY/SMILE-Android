@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.mypage
 
+import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.ssafy.smile.presentation.adapter.PlaceRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
+private const val TAG = "PhotographerWritePortFo"
 // TODO : 빈칸 체크 & 동적 리사이클러뷰 View 다듬기
 class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographerPortfolioBinding>
     (FragmentWritePhotographerPortfolioBinding::bind, R.layout.fragment_write_photographer_portfolio) {
@@ -66,11 +68,12 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), "작가 프로필이 성공적으로 등록되었습니다.")
-                        SharedPreferencesUtil(requireContext()).changeRole(Types.Role.PHOTOGRAPHER)
+                        showToast(requireContext(), getString(R.string.msg_photographer_success), Types.ToastType.SUCCESS)
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set("Role", Types.Role.PHOTOGRAPHER.getValue())
                         moveToPop()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "포트폴리오 등록"), Types.ToastType.ERROR)
                         dismissLoadingDialog()
                     }
                 }
@@ -111,7 +114,7 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
                 }
             })
         }.also { binding.layoutPhotographerPlace.rvPhotographerPlace.adapter = it }
-        placeRVAdapter.setListData(arrayListOf<PlaceDomainDto>(PlaceDomainDto(true,"서울특별시", "강남구")))
+        placeRVAdapter.setListData(arrayListOf(PlaceDomainDto(true,"서울특별시", "강남구")))
 
         binding.layoutPhotographerAccount.apply {
             tvPhotographerAccount.setAdapter(Spinners.getSelectedArrayAdapter(requireContext(), R.array.spinner_account))
