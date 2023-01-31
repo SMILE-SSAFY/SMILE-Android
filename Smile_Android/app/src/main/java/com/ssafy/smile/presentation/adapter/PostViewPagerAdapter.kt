@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.databinding.ViewpagerPostImageItemBinding
 
 class PostViewPagerAdapter(val context: Context, val datas: MutableList<String>): RecyclerView.Adapter<PostViewPagerAdapter.PostViewPagerViewHolder>() {
@@ -12,7 +13,7 @@ class PostViewPagerAdapter(val context: Context, val datas: MutableList<String>)
         fun bind(data: String) {
             binding.apply {
                 Glide.with(context)
-                    .load(data)
+                    .load(Constants.IMAGE_BASE_URL+data)
                     .into(binding.ivImage)
             }
         }

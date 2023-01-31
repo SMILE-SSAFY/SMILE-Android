@@ -23,4 +23,7 @@ object Constants {
     // ERROR MESSAGE - PHOTOGRAPHER
     const val ERROR_DELETE_PHOTOGRAPHER = "HAS_RESERVATION"
 
+    // s3 image
+    const val IMAGE_BASE_URL = "https://smile-bucket.s3.ap-northeast-2.amazonaws.com/"
+
 }

@@ -3,8 +3,6 @@ package com.ssafy.smile.common.util
 import android.content.Context
 import android.location.Geocoder
 import com.naver.maps.geometry.LatLng
-import com.ssafy.smile.data.remote.model.Category
-import com.ssafy.smile.data.remote.model.Place
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,7 +37,7 @@ object CommonUtils {
     fun getCategoryName(category: ArrayList<String>): String {
         return when (category.size) {
             1 -> {
-                "#${category[0]}}"
+                "#${category[0]}"
             }
             2 -> {
                 "#${category[0]}  #${category[1]}"
@@ -50,16 +48,16 @@ object CommonUtils {
         }
     }
 
-    fun getPlace(places: ArrayList<Place>): String {
+    fun getPlace(places: ArrayList<String>): String {
         return when (places.size) {
             1 -> {
-                "${places[0].place}}"
+                "${places[0]}"
             }
             2 -> {
-                "${places[0].place}, ${places[1].place}"
+                "${places[0]}, ${places[1]}"
             }
             else -> {
-                "${places[0].place}, ${places[1].place}, ..."
+                "${places[0]}, ${places[1]}, ..."
             }
         }
     }
@@ -69,4 +67,7 @@ object CommonUtils {
         return "${makeComma(category[0])}원 부터~"
     }
 
+    fun deleteQuote(str: String): String {
+        return str.replace("\"", "")
+    }
 }

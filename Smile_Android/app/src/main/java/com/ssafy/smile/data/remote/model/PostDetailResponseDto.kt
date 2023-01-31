@@ -2,30 +2,40 @@ package com.ssafy.smile.data.remote.model
 
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.domain.model.PostDomainDto
-import java.util.Date
+import kotlin.collections.ArrayList
 
+private const val TAG = "PostDetailResponseDto_스마일"
 data class PostDetailResponseDto (
-    val index: Long = 0,
-    val photographerId: Long = 0,
-    val photoUrl: ArrayList<String> = arrayListOf(),
-    val latitude: Float = 0f,
-    val longitude: Float = 0f,
-    val heart: Int = 0,
+    val id: Long = 0,
+    val photographerName: String = "",
+    val isMe: Boolean = false,
+    val isHeart: Boolean = false,
+    val hearts: Int = 0,
+    val detailAddress: String = "",
+    val createdAt: String = "",
     val category: String = "",
-    val createdAt: Date = Date()
+    val photoUrls: String = ""
 ){
     fun toPostDomainDto(): PostDomainDto{
         return PostDomainDto(
-            isMe = true,
-            photographerId = photographerId,
-            photographerName = "홍길동",
-            latitude = latitude,
-            longitude = longitude,
-            photoUrl = photoUrl,
-            isLike = false,
-            heart = heart.toString(),
-            category = "#${category}",
-            createdAt = CommonUtils.dateToString(createdAt)
+            isMe,
+            isHeart,
+            hearts,
+            CommonUtils.deleteQuote(detailAddress),
+            createdAt,
+            "#${CommonUtils.deleteQuote(category)}",
+            photographerName,
+            photoUrlToDomain(photoUrls)
         )
+    }
+    private fun photoUrlToDomain(photoUrls: String): ArrayList<String> {
+        val res = arrayListOf<String>()
+
+        val photoUrlString = photoUrls.replace("[", "").replace("]", "")
+        photoUrlString.split(", ").forEach { str ->
+            res.add(str.trim { it <= ' ' })
+        }
+
+        return res
     }
 }

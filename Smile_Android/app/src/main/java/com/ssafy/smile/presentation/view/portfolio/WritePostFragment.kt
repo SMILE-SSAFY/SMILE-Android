@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
@@ -21,7 +22,7 @@ import kotlin.math.abs
 
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
 
-    private val viewModel : WritePostViewModel by viewModels()
+    private val viewModel : WritePostViewModel by navGraphViewModels(R.id.portfolioGraph)
 
     private lateinit var imageRvAdapter: ImageRVAdapter
     private val spinnerAdapter: ArrayAdapter<String> by lazy {
