@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
+/***
+ * redis 설정
+ * @author 신민철
+ */
 @Configuration
 public class RedisConfig {
     @Value("${spring.redis.host}")
