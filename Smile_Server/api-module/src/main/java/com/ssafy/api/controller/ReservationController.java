@@ -73,9 +73,8 @@ public class ReservationController {
 
         status.setReservationId(reservationId);
         status.setUserId(user.getId());
-//        reservationService.changeStatus(status);
-//        return ResponseEntity.ok(HttpStatus.OK);
-        return ResponseEntity.ok(reservationService.changeStatus(status));
+        reservationService.changeStatus(status);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }
