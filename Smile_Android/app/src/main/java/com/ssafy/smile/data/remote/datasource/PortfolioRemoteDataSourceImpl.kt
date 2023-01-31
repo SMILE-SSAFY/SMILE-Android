@@ -18,12 +18,12 @@ class PortfolioRemoteDataSourceImpl(private val portfolioApiService: PortfolioAp
     override suspend fun uploadPost(images: MutableMap<String, RequestBody>) : Response<Any>{
         return portfolioApiService.uploadPost(images)
     }
-    override suspend fun uploadPost(latitude: Float, longitude: Float,
+    override suspend fun uploadPost(latitude: Double, longitude: Double,
                                     detailAddress: String, category: String, images : List<MultipartBody.Part>): Response<Any>{
         return portfolioApiService.uploadPost(latitude, longitude, detailAddress, category, images)
     }
 
-    override suspend fun uploadPost(latitude: Float, longitude: Float,
+    override suspend fun uploadPost(latitude: Double, longitude: Double,
                                     detailAddress: String, category: String, images : HashMap<String, List<MultipartBody.Part>>): Response<Any>{
         return portfolioApiService.uploadPost(latitude, longitude, detailAddress, category, images)
     }

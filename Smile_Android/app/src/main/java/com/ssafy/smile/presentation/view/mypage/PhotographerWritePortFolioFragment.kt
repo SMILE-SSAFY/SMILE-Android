@@ -15,13 +15,13 @@ import com.ssafy.smile.domain.model.Spinners
 import com.ssafy.smile.presentation.adapter.CategoryRVAdapter
 import com.ssafy.smile.presentation.adapter.PlaceRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteViewModel
+import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
 // TODO : 빈칸 체크 & 동적 리사이클러뷰 View 다듬기
 class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographerPortfolioBinding>
     (FragmentWritePhotographerPortfolioBinding::bind, R.layout.fragment_write_photographer_portfolio) {
     private val navArgs : RegisterPortFolioGraphArgs by navArgs()
-    private val viewModel : PhotographerWriteViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
+    private val viewModel : PhotographerWriteGraphViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
     private lateinit var categoryRVAdapter: CategoryRVAdapter
     private lateinit var placeRVAdapter : PlaceRVAdapter
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btn_address_search"
+    android:background="@drawable/rectangle_blue400_stroke_radius_8"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="10sp"
+    android:clickable="true"
+    android:focusable="true">
+    <ImageButton
+        android:id="@+id/icon_address_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:src="@drawable/ic_search"
+        android:layout_marginHorizontal="5dp"
+        android:background="@color/transparent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:text="@string/address_search_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray400"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/icon_address_search"
+        app:layout_constraintTop_toTopOf="@id/icon_address_search"
+        app:layout_constraintBottom_toBottomOf="@id/icon_address_search"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

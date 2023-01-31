@@ -20,8 +20,8 @@ interface PortfolioApiService {
 
     @Multipart
     @POST("/api/article")
-    suspend fun uploadPost(@Part("latitude") latitude : Float,
-                           @Part("longitude") longitude : Float,
+    suspend fun uploadPost(@Part("latitude") latitude : Double,
+                           @Part("longitude") longitude : Double,
                            @Part("detailAddress") detailAddress : String,
                            @Part("category") category: String,
                            @Part imageList : List<MultipartBody.Part>
@@ -30,8 +30,8 @@ interface PortfolioApiService {
     @Multipart
     @POST("/api/article")
     suspend fun uploadPost(
-                           @Part("latitude") latitude : Float,
-                           @Part("longitude") longitude : Float,
+                           @Part("latitude") latitude : Double,
+                           @Part("longitude") longitude : Double,
                            @Part("detailAddress") detailAddress : String,
                            @Part("category") category: String,
                            @PartMap imageList : HashMap<String, List<MultipartBody.Part>>
