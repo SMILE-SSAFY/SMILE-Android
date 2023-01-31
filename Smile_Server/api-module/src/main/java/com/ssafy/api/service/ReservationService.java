@@ -4,10 +4,12 @@ import com.ssafy.api.dto.Photographer.PlacesForListDto;
 import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
 import com.ssafy.api.dto.Reservation.CategoryDetailDto;
 import com.ssafy.api.dto.Reservation.PhotographerInfoDto;
+import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.core.code.ReservationStatus;
+import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Places;
@@ -15,15 +17,15 @@ import com.ssafy.core.entity.Reservation;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
-import com.ssafy.core.repository.PhotographerNCategoriesRepository;
-import com.ssafy.core.repository.PhotographerNPlacesRepository;
-import com.ssafy.core.repository.PhotographerRepository;
-import com.ssafy.core.repository.ReservationRepository;
 import com.ssafy.core.repository.UserRepository;
+import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
+import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
+import com.ssafy.core.repository.photographer.PhotographerRepository;
+import com.ssafy.core.repository.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -37,7 +39,8 @@ import java.util.Map;
 /**
  * 예약 관련 Service
  *
- * author @김정은
+ * @author 김정은
+ * @author 서재건
  */
 @Service
 @RequiredArgsConstructor
@@ -157,5 +160,36 @@ public class ReservationService {
 
         reservation.updateStatus(statusDto.getStatus());
         reservationRepository.save(reservation);
+    }
+
+    /**
+     * 작가 예약 목록 조회
+     *
+     * @param user
+     * @return List<ReservationPhotographerDto>
+     */
+    @Transactional(readOnly = true)
+    public List<ReservationListDto> findPhotographerReservation(User user) {
+        log.info("작가 예약 목록 조회 시작");
+        if (!user.getRole().equals(Role.PHOTOGRAPHER)) {
+            throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
+        }
+        log.info("Role 작가 확인");
+
+        List<Reservation> reservationList = reservationRepository.findReservationsByPhotographerId(user.getId());
+        if (reservationList.isEmpty()) {
+            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
+        }
+        log.info("예약 목록 조회");
+
+        List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
+            ReservationListDto reservationPhotographer = new ReservationListDto();
+            User reservationUser = reservation.getUser();
+            reservationPhotographerList.add(
+                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
+            );
+        }
+        return reservationPhotographerList;
     }
 }
