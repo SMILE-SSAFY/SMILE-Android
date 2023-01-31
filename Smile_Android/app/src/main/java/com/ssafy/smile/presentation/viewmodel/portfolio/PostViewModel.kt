@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.PostDetailResponseDto
+import com.ssafy.smile.data.remote.model.PostHeartDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
 
 class PostViewModel: BaseViewModel() {
     private val postRepository = Application.repositoryInstances.getPostRepository()
+    private val heartRepository = Application.repositoryInstances.getHeartRepository()
 
     // 게시물 조회 결과를 관리하는 LiveData
     val getPostByIdResponse: LiveData<NetworkUtils.NetworkResponse<PostDetailResponseDto>>
@@ -30,6 +32,16 @@ class PostViewModel: BaseViewModel() {
     fun deletePostById(articleId: Long) {
         viewModelScope.launch {
             postRepository.deletePostById(articleId)
+        }
+    }
+
+    // 게시물 좋아요 결과를 관리하는 LiveData
+    val postHeartResponse: LiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
+        get() = heartRepository.postHeartResponseLiveData
+    // 게시물 좋아요를 수행하는 함수
+    fun postHeart(articleId: Long) {
+        viewModelScope.launch {
+            heartRepository.postHeart(articleId)
         }
     }
 }

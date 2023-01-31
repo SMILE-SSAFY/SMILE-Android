@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.home
 
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
@@ -79,6 +80,13 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 override fun onClick(view: View, position: Int) {
                     searchViewModel.postHeart(recyclerData[position].articleId)
                 }
+            })
+            setItemClickListener(object: ResultPostRecyclerAdapter.OnItemClickListener{
+                override fun onClick(view: View, position: Int) {
+                    val action = SearchFragmentDirections.actionSearchResultFragmentToPostDetailFragment(recyclerData[position].articleId)
+                    findNavController().navigate(action)
+                }
+
             })
         }
 

@@ -20,7 +20,7 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
 
     private lateinit var portfolioRecyclerAdapter: PortfolioRecyclerAdapter
     private val recyclerData = mutableListOf<PostListItem>()
-    private var photographerId: Long = -1
+    private var photographerId = PortfolioFragment().photographerId
 
     override fun initView() {
         //TODO : 서버 통신 되면 주석 풀기
@@ -34,7 +34,6 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     }
 
     override fun setEvent() {
-        postItemClickListener()
     }
 
     private fun articlesResponseObserver() {
@@ -60,20 +59,18 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     }
 
     private fun initRecycler() {
-        portfolioRecyclerAdapter = PortfolioRecyclerAdapter(requireContext(), recyclerData)
+        portfolioRecyclerAdapter = PortfolioRecyclerAdapter(requireContext(), recyclerData).apply {
+            setItemClickListener(object : PortfolioRecyclerAdapter.OnItemClickListener {
+                override fun onClick(view: View, position: Int) {
+                    val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(recyclerData[position].articleId)
+                    findNavController().navigate(action)
+                }
+            })
+        }
 
         binding.recycler.apply {
             layoutManager = GridLayoutManager(requireContext(), 3)
             adapter = portfolioRecyclerAdapter
-        }
-    }
-
-    private fun postItemClickListener() {
-        portfolioRecyclerAdapter.onItemClickListener = object : PortfolioRecyclerAdapter.OnItemClickListener {
-            override fun onClick(view: View, position: Int) {
-                val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(recyclerData[position].articleId)
-                findNavController().navigate(action)
-            }
         }
     }
 }
