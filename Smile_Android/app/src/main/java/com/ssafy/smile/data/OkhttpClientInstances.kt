@@ -9,11 +9,11 @@ import javax.inject.Singleton
 
 
 object OkhttpClientInstances {
-    var interceptor = Interceptor { chain ->
+    private var interceptor = Interceptor { chain ->
         val accessToken = Application.authToken
-        var request = if (accessToken != null && accessToken != "") {
+        val request = if (accessToken != null && accessToken != "") {
             chain.request().newBuilder()
-              .addHeader("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJpZCI6IjEiLCJpYXQiOjE2NzQ4MDA1NzQsImV4cCI6MTY3NzM5MjU3NH0.51P7KyE3fBoT2r7NCzBSvY4X8zd1Efp1QzM3bbzv2PA")
+              .addHeader("Authorization", accessToken)
               .build()
         } else chain.request()
 

@@ -22,14 +22,13 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     private val portfolioViewModel by activityViewModels<PortfolioViewModel>()
     private val args: PortfolioFragmentArgs by navArgs()
-    var photographerId = args.photographerId
+    var photographerId = 15L
 
     override fun initView() {
         initToolbar()
         initViewPager()
-        //TODO : 서버 통신 되면 주석 풀기
-//        portfolioViewModel.getPortfolio(photographerId)
-//        setObserver()
+        portfolioViewModel.getPortfolio(photographerId)
+        setObserver()
     }
 
     private fun initToolbar(){

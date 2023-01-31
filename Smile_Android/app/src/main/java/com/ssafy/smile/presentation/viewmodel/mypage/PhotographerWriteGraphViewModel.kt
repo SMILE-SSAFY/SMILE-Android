@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
+import com.ssafy.smile.common.util.Constants.REQUEST_KEY_IMAGE_PROFILE
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.PhotographerRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
@@ -33,11 +34,13 @@ class PhotographerWriteGraphViewModel : BaseViewModel() {
         get() = photographerRepository.modifyPhotographerInfoResponseLiveData
 
     fun registerPhotographerInfo(photographerRequestDto: PhotographerRequestDto) = viewModelScope.launch{
-        photographerRepository.registerPhotographerInfo(photographerRequestDto)
+        val image = makeMultiPartBody(REQUEST_KEY_IMAGE_PROFILE, photographerRequestDto.profileImg)
+        photographerRepository.registerPhotographerInfo(image = image, photographerDto = photographerRequestDto.photographerDto)
     }
 
     fun modifyPhotographerInfo(photographerRequestDto: PhotographerRequestDto) = viewModelScope.launch{
-        photographerRepository.modifyPhotographerInfo(photographerRequestDto)
+        val image = makeMultiPartBody(REQUEST_KEY_IMAGE_PROFILE, photographerRequestDto.profileImg)
+        photographerRepository.modifyPhotographerInfo(image = image, photographerDto = photographerRequestDto.photographerDto)
     }
 
 }

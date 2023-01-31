@@ -3,7 +3,7 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/nav_group"
-app:startDestination="@id/mainFragment">
+app:startDestination="@id/splashFragment">
 <fragment
     android:id="@+id/splashFragment"
     android:name="com.ssafy.smile.presentation.view.splash.SplashFragment"
@@ -21,6 +21,15 @@ app:startDestination="@id/mainFragment">
     android:name="com.ssafy.smile.presentation.view.user.LogInFragment"
     android:label="fragment_log_in"
     tools:layout="@layout/fragment_log_in" >
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/logInFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim"
+        app:popUpTo="@id/mainFragment"
+        app:popUpToInclusive="true" />
     <action
         android:id="@+id/action_logInFragment_to_mainFragment"
         app:destination="@id/mainFragment" />
