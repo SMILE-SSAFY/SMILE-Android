@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -80,8 +81,9 @@ dependencies {
     // framework ktx dependency 추가
     implementation "androidx.fragment:fragment-ktx:1.4.1"
 
+    // FireStore SDK 추가
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
     // FCM 사용 위한 plugins
-    implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
     // permission Library 추가
