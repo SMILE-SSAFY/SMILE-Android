@@ -4,15 +4,12 @@ import android.os.Parcelable
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import kotlinx.parcelize.Parcelize
+import java.io.File
 
 @Parcelize
 data class PhotographerResponseDto(
-    val account: String,
-    val deleted: String,
-    val introduction: String,
-    val profileImg: String,             // TODO : String????
-    val category : CategoryDto,
-    val places : List<AddressDto>
+    val profileImg: File,
+    val photographerDto : PhotographerDto
 ) : Parcelable
 
 data class PhotographerByAddressResponseDto(
@@ -49,3 +46,4 @@ data class CategoryNoDes(
     val name: String = "",
     val price: String = ""
 )
+

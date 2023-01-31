@@ -46,10 +46,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
     }
 
     override fun setEvent() {
-        //TODO("Not yet implemented")
+        // TODO("Not yet implemented")
     }
-
-    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
 
     override fun onMapReady(naverMap: NaverMap) {
         with(naverMap) {
@@ -75,6 +73,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
             PermissionUtils.getLocationServicePermission(permissionListener)
         }else if (!checkLocationServicesStatus()) {
             PermissionUtils.showDialogForLocationServiceSetting(requireContext(),
+
                 action = { activityLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) },
                 cancelAction = {
                     showToast(requireContext(), "위치 서비스를 활성화하지 않으면\n지도를 사용하실 수 없습니다.", Types.ToastType.WARNING)
@@ -121,6 +120,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
     private fun moveToLatLng(latLng: LatLng){
         map?.moveCamera(CameraUpdate.scrollAndZoomTo(LatLng(latLng.latitude, latLng.longitude), 15.0))
     }
+
 
     //--------------------------------------------------------------------------------------------------------------------------------
 

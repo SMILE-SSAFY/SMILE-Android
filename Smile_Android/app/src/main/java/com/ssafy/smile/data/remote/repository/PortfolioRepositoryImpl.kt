@@ -38,22 +38,10 @@ class PortfolioRepositoryImpl(private val portfolioRemoteDataSource: PortfolioRe
         }
     }
 
-    override suspend fun uploadPost(images: MutableMap<String, RequestBody>){
-        safeApiCall(_postUploadResponseLiveData){
-            portfolioRemoteDataSource.uploadPost(images)
-        }
-    }
-    override suspend fun uploadPost(latitude: Double, longitude: Double,
-                                    detailAddress: String, category: String, images : List<MultipartBody.Part>){
+    override suspend fun uploadPost(latitude: Double, longitude: Double, detailAddress: String, category: String, images: List<MultipartBody.Part>) {
         safeApiCall(_postUploadResponseLiveData){
             portfolioRemoteDataSource.uploadPost(latitude, longitude, detailAddress, category, images)
         }
     }
 
-    override suspend fun uploadPost(latitude: Double, longitude: Double,
-                                    detailAddress: String, category: String, images : HashMap<String, List<MultipartBody.Part>>){
-        safeApiCall(_postUploadResponseLiveData){
-            portfolioRemoteDataSource.uploadPost(latitude, longitude, detailAddress, category, images)
-        }
-    }
 }

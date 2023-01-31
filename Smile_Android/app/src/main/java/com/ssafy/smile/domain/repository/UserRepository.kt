@@ -10,4 +10,5 @@ interface UserRepository {
     suspend fun checkPhoneNumber(phoneNumber: String)
     suspend fun login(loginDomainDto: LoginDomainDto)
     suspend fun kakaoLogin(token: KakaoLoginRequestDto)
+     suspend fun withDrawUser()
 }
