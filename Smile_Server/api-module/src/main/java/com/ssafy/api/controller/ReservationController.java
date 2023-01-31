@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.dto.Reservation.ReservationPhotographerDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.api.service.ReservationService;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 예약 관련 Controller
  *
- * author @김정은
+ * @author 김정은
+ * @author 서재건
  */
 @RestController
 @RequestMapping("/api/reservation")
@@ -77,4 +81,10 @@ public class ReservationController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    @GetMapping("/photographer")
+    public ResponseEntity<List<ReservationPhotographerDto>> findPhotographerReservation() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return ResponseEntity.ok().body(reservationService.findPhotographerReservation(user));
+    }
 }
