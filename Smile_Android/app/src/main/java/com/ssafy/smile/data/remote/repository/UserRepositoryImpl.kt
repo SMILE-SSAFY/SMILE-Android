@@ -33,6 +33,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     val kakaoLoginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _kakaoLoginResponseLiveData
 
+    private val _withDrawResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
+    val withDrawResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
+        get() = _withDrawResponseLiveData
+
     override suspend fun checkEmail(email: String) {
         safeApiCall(_checkEmailResponseLiveData) {
             userRemoteDataSource.checkEmail(email)
@@ -56,10 +60,15 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
             userRemoteDataSource.login(loginDomainDto.toLoginRequestDto())
         }
     }
-
     override suspend fun kakaoLogin(token: KakaoLoginRequestDto) {
         safeApiCall(_kakaoLoginResponseLiveData) {
             userRemoteDataSource.kakaoLogin(token)
+        }
+    }
+
+    override suspend fun withDrawUser() {
+        safeApiCall(_withDrawResponseLiveData){
+            userRemoteDataSource.withDraw()
         }
     }
 }

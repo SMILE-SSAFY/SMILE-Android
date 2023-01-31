@@ -1,18 +1,26 @@
 package com.ssafy.smile.presentation.base
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ssafy.smile.Application
-import com.ssafy.smile.common.sources.Event
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
+import com.ssafy.smile.common.util.SharedPreferencesUtil
+import com.ssafy.smile.common.view.sources.Event
+import com.ssafy.smile.common.util.convertToRequestBody
+import com.ssafy.smile.domain.model.Types
+import okhttp3.MultipartBody
 import java.io.File
 import java.util.concurrent.TimeUnit
 
 abstract class BaseViewModel : ViewModel() {
+
+    private val _roleLiveData : MutableLiveData<Types.Role> = MutableLiveData<Types.Role>()
+    val getRoleLiveData : LiveData<Types.Role> = _roleLiveData
+
+    fun changeRole(context: Context, role: Types.Role){
+        SharedPreferencesUtil(context).changeRole(role)
+        _roleLiveData.postValue(role)
+    }
 
     private val _onBackPressed = MutableLiveData<Any>()
     val onBackPressed: LiveData<Any> get() = _onBackPressed
@@ -36,7 +44,17 @@ abstract class BaseViewModel : ViewModel() {
         _error.value = Event(message)
     }
 
-    fun String?.convertToRequestBody() : RequestBody = requireNotNull(this).toRequestBody("text/plain".toMediaTypeOrNull())
-    fun File?.convertToRequestBody() : RequestBody = requireNotNull(this).asRequestBody("image/*".toMediaTypeOrNull())
+    fun makeMultiPartBody(jsonKey: String, file: File) : MultipartBody.Part {
+        val requestBody = file.convertToRequestBody()
+        return MultipartBody.Part.createFormData(jsonKey, file.name, requestBody)
+    }
+    fun makeMultiPartBodyList(jsonKey: String, images: List<File>): List<MultipartBody.Part> {
+        val imageList = arrayListOf<MultipartBody.Part>()
+        for (i in images.indices) {
+            val multipartBody = makeMultiPartBody(jsonKey, images[i])
+            imageList.add(multipartBody)
+        }
+        return imageList
+    }
 
 }

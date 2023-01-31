@@ -1,12 +1,15 @@
 package com.ssafy.smile.presentation.view.mypage
 
 
+import android.content.Intent
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.common.view.CommonDialog
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.databinding.FragmentMyPageBinding
@@ -15,16 +18,15 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.mypage.MyPageViewModel
+import java.io.IOException
 
 
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
     private val viewModel : MyPageViewModel by viewModels()
-    private var isPhotographer : Boolean = false   // TODO : 임시 처리 -> LiveData 처리 필요해보인다.. (setUserView, showPhotographerWriteDialog 동시 조절)
 
     override fun initView() {
         initToolbar()
         setObserver()
-        setPhotographerLayoutView(isPhotographer)
     }
     override fun setEvent() {
         setClickListener()
@@ -33,9 +35,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
         toolbar.initToolbar("마이페이지", false)
     }
-
     private fun setObserver(){
         viewModel.apply {
+            viewModel.getRoleLiveData.observe(viewLifecycleOwner){
+                val isPhotographer = it==Types.Role.PHOTOGRAPHER
+                setPhotographerLayoutView(isPhotographer)
+            }
+
             getPhotographerResponse.observe(viewLifecycleOwner){
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
@@ -49,10 +55,25 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        // TODO : sharedPreference - Role 값 변경 -> 이를 위에서 정의한 LiveData로 알려줘야 할 듯
+                        dismissLoadingDialog()
+                        changeRole(requireContext(), Types.Role.USER)
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
                         showToast(requireContext(), "정보 삭제 중에 오류가 발생했습니다.\n잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
+                    }
+                }
+            }
+            withDrawUserResponse.observe(viewLifecycleOwner){
+                when(it){
+                    is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
+                        logout()
+                    }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
+                        showToast(requireContext(), "회원 탈퇴 중에 오류가 발생했습니다.\n잠시 후, 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
             }
@@ -60,21 +81,28 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
     private fun setClickListener(){
         binding.apply {
-            layoutMyPageProfile.apply {  }
+            layoutMyPageProfile.apply {
+                btnLogout.setOnClickListener {  showLogoutDialog() }
+            }
             layoutMyPageUserDetails.apply {
                 tvCustomerReservation.setOnClickListener{ }
                 tvCustomerInterest.setOnClickListener { }
             }
             layoutMyPagePhotographer.apply {
                 clPhotographerWritePortfolio.setOnClickListener {
-                    showPhotographerWriteDialog(isPhotographer)
+                    if (smPhotographerWritePortfolio.isChecked) showPhotographerDeleteDialog()
+                    else showPhotographerWriteDialog()
                 }
                 tvPhotographerReservation.setOnClickListener {  }
-                tvPhotographerPortfolio.setOnClickListener { viewModel.getPhotographerInfo() }
+                tvPhotographerPortfolio.setOnClickListener {
+                    viewModel.getPhotographerInfo()
+                }
             }
             layoutMyPageUser.apply {
                 tvUserChangePassword.setOnClickListener {  }
-                tvUserWithDraw.setOnClickListener {  }
+                tvUserWithDraw.setOnClickListener {
+                    showPhotographerWithDrawDialog()
+                }
             }
         }
     }
@@ -89,19 +117,39 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             }
         }
     }
-    private fun showPhotographerWriteDialog(isPhotographer : Boolean){
-        if (isPhotographer){
-            val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.delete_photographer_portfolio), "등록 삭제"), { viewModel.deletePhotographerInfo() })
-            showDialog(dialog, viewLifecycleOwner)
-        }else {
-            MainFragmentDirections.actionMainFragmentToRegisterPortFolioGraph()
-            val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.add_photographer_portfolio), "작가 등록"), { moveToRegisterPortFolioGraph(null) })
-            showDialog(dialog, viewLifecycleOwner)
-        }
+    private fun logout() {
+        try {
+            removeUserInfo()
+            Intent(context, MainActivity::class.java).apply {
+                requireActivity().finish()
+                startActivity(this)
+            }
+            requireActivity().finish()
+        } catch (e: IOException) { findNavController().navigate(R.id.action_global_loginFragment) }
     }
-
+    private fun removeUserInfo(){
+        SharedPreferencesUtil(requireContext()).removeAuthToken()
+        SharedPreferencesUtil(requireContext()).removeFCMToken()
+    }
+    private fun showLogoutDialog(){
+        val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.logout), "로그아웃"), { logout() })
+        showDialog(dialog, viewLifecycleOwner)
+    }
+    private fun showPhotographerWriteDialog(){
+        val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.add_photographer_portfolio), "작가 등록"), { moveToRegisterPortFolioGraph(null) })
+        showDialog(dialog, viewLifecycleOwner)
+    }
+    private fun showPhotographerDeleteDialog(){
+        val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.delete_photographer_portfolio), "등록 삭제"), { viewModel.deletePhotographerInfo() })
+        showDialog(dialog, viewLifecycleOwner)
+    }
+    private fun showPhotographerWithDrawDialog(){
+        val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.withDraw_user), "회원 탈퇴"), { viewModel.withDrawUser() })
+        showDialog(dialog, viewLifecycleOwner)
+    }
     private fun moveToRegisterPortFolioGraph(photographerResponseDto: PhotographerResponseDto?) {
        val action = MainFragmentDirections.actionMainFragmentToRegisterPortFolioGraph(photographerResponseDto)
         findNavController().navigate(action)
     }
+
 }

@@ -27,4 +27,9 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
     override suspend fun kakaoLogin(token: KakaoLoginRequestDto): Response<UserResponseDto> {
         return userApiService.kakaoLogin(token)
     }
+
+    override suspend fun withDraw(): Response<String> {
+        return userApiService.withDraw()
+    }
+
 }
