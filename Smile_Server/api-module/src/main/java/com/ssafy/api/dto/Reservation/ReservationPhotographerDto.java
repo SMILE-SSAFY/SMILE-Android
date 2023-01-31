@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.sql.Date;
 import java.sql.Time;
 
@@ -23,15 +21,17 @@ import java.sql.Time;
 @Builder
 public class ReservationPhotographerDto {
 
-    @Enumerated(EnumType.ORDINAL)
     private ReservationStatus status;
+
     private String userName;
 
     private String phoneNumber;
 
     private int price;
 
-    private String category;
+    private String categoryName;
+
+    private String options;
 
     private Date date;
 
@@ -55,7 +55,8 @@ public class ReservationPhotographerDto {
                 .userName(name)
                 .phoneNumber(phoneNumber)
                 .price(reservation.getPrice())
-                .category(reservation.getCategoryName() + " " + reservation.getOptions())
+                .categoryName(reservation.getCategoryName())
+                .options(reservation.getOptions())
                 .date(reservation.getReservedAt())
                 .time(reservation.getReservedTime())
                 .address(reservation.getPlace())
