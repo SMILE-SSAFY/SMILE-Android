@@ -157,6 +157,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
-    private fun moveToAddressGraph() = findNavController().navigate(R.id.action_mainFragment_to_addressGraph)
+    private fun moveToAddressGraph() {
+        val action = MainFragmentDirections.actionMainFragmentToAddressGraph(true)
+        findNavController().navigate(action)
+    }
 
 }

@@ -4,6 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Toast Msg -->
     <string name="msg_address_success">선택하신 주소로 설정되었습니다.</string>
+    <string name="msg_address_failure">현재 주소는 선택하실 수 없습니다.</string>
     <!-- Address -->
     <string name="tv_address_selected">%s ▾</string>
     <string name="tv_address_unselected">주소를 등록해주세요 ▾</string>
