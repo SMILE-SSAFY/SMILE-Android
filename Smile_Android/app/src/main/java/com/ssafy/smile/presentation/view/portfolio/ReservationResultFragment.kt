@@ -10,7 +10,7 @@ import com.ssafy.smile.presentation.base.BaseFragment
 
 class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>(FragmentReservationResultBinding::bind, R.layout.fragment_reservation_result) {
 
-    private val args: ReservationFragmentArgs by navArgs()
+    private val args: ReservationResultFragmentArgs by navArgs()
 
     override fun initView() {
         initToolbar()
