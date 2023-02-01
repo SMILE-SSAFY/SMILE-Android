@@ -4,6 +4,7 @@ import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
+import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.api.service.ReservationService;
 import com.ssafy.core.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -118,5 +119,16 @@ public class ReservationController {
     public ResponseEntity<HttpStatus> addReview(@PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws IOException {
         reservationService.addReview(reservationId, reviewPostDto);
         return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    /***
+     * 해당 작가의 리뷰 리스트를 모두 보여줌
+     * @param photographerId 작가id
+     * @return List<reviewResDto>
+     */
+    @GetMapping("/review/list/{photographerId}")
+    public ResponseEntity<?> showReviewList(@PathVariable("photographerId") Long photographerId){
+        List<ReviewResDto> reviewResDtoList = reservationService.showReviewList(photographerId);
+        return new ResponseEntity<>(reviewResDtoList, HttpStatus.OK);
     }
 }
