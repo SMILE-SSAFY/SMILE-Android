@@ -13,6 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+/***
+ * 리뷰 엔티티
+ * @author 신민철
+ */
 @Data
 @Entity
 @Builder
