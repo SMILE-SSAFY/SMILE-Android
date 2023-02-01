@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.io.IOException;
 import java.util.List;
 
@@ -31,6 +30,7 @@ import java.util.List;
  *
  * @author 김정은
  * @author 서재건
+ * @author 신민철
  */
 @RestController
 @RequestMapping("/api/reservation")
@@ -142,6 +142,21 @@ public class ReservationController {
     @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<HttpStatus> deleteReview(@PathVariable("reviewId") Long reviewId){
         reservationService.deleteReview(reviewId);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /**
+     * 예약 취소
+     *
+     * @param reservationId
+     * @return HttpStatus.OK
+     */
+    @PutMapping("/cancel/{reservationId}")
+    public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        reservationService.changeCancelStatus(reservationId, user.getId());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }
