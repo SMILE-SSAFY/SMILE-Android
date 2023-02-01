@@ -9,6 +9,7 @@ import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
+import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
@@ -250,11 +251,59 @@ public class ReservationService {
                 .content(reviewPostDto.getContent())
                 .score(reviewPostDto.getScore())
                 .PhotoUrl(fileName)
-                .userId(user)
-                .photographerId(photographer)
-                .reservationId(reservation)
+                .user(user)
+                .photographer(photographer)
+                .reservation(reservation)
                 .build();
 
         reviewRepository.save(review);
+    }
+
+    /***
+     * 해당 작가에 달린 리뷰를 모두 보여주는 서비스
+     * @param photographerId 작가id
+     * @return reviewResDto 리뷰리스트
+     */
+    public List<ReviewResDto> showReviewList(Long photographerId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+        List<ReviewResDto> reviewResDtoList = new ArrayList<>();
+
+        List<Review> ReviewList = reviewRepository.findByPhotographer(photographer);
+
+        for(Review review : ReviewList){
+            boolean isMe = review.getUser() == user;
+            ReviewResDto resDto = ReviewResDto.builder()
+                    .reviewId(review.getId())
+                    .userId(user.getId())
+                    .isMe(isMe)
+                    .userName(user.getName())
+                    .score(review.getScore())
+                    .content(review.getContent())
+                    .photoUrl(review.getPhotoUrl())
+                    .build();
+            reviewResDtoList.add(resDto);
+        }
+        return reviewResDtoList;
+    }
+
+    /***
+     * 리뷰아이디를 통해 리뷰를 삭제
+     * 본인일 경우만 삭제 가능
+     * @param reviewId 리뷰아이디
+     */
+    public void deleteReview(Long reviewId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+
+        if(review.getUser().getId() == user.getId()){
+            reviewRepository.deleteById(reviewId);
+        }
+        throw new CustomException(ErrorCode.USER_MISMATCH);
     }
 }
