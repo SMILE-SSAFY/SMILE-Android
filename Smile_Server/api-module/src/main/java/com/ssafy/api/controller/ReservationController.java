@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.api.dto.Reservation.ReviewPostDto;
 import com.ssafy.api.service.ReservationService;
 import com.ssafy.core.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -103,5 +105,18 @@ public class ReservationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         return ResponseEntity.ok().body(reservationService.findUserReservation(user.getId()));
+    }
+
+    /***
+     * 리뷰 등록
+     * @param reservationId 예약 id
+     * @param reviewPostDto 리뷰 dto
+     * @return HttpStatus.CREATED
+     * @throws IOException 파일이 없을 때 에러
+     */
+    @PostMapping("/{reservationId}/review")
+    public ResponseEntity<HttpStatus> addReview(@PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws IOException {
+        reservationService.addReview(reservationId, reviewPostDto);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 }
