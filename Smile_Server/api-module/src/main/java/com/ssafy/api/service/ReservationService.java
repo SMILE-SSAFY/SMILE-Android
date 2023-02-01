@@ -8,15 +8,18 @@ import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.api.dto.Reservation.ReviewPostDto;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Places;
 import com.ssafy.core.entity.Reservation;
+import com.ssafy.core.entity.Review;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.ReviewRepository;
 import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
@@ -24,9 +27,12 @@ import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
@@ -51,6 +57,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final PhotographerNCategoriesRepository photographerNCategoriesRepository;
     private final PhotographerNPlacesRepository photographerNPlacesRepository;
+    private final S3UploaderService s3UploaderService;
+    private final ReviewRepository reviewRepository;
 
     /**
      * 예약 등록
@@ -218,5 +226,34 @@ public class ReservationService {
             );
         }
         return reservationPhotographerList;
+    }
+
+    /***
+     * 리뷰등록을 위한 서비스
+     * @param reservationId 예약아이디
+     * @param reviewPostDto 리뷰등록을 위한 dto
+     * @throws IOException 파일이 없을 때 생기는 에러
+     */
+
+    public void addReview(Long reservationId, ReviewPostDto reviewPostDto) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        String fileName = s3UploaderService.upload(reviewPostDto.getImage());
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(()->new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+
+        Photographer photographer = reservation.getPhotographer();
+
+        Review review = Review.builder()
+                .content(reviewPostDto.getContent())
+                .score(reviewPostDto.getScore())
+                .PhotoUrl(fileName)
+                .userId(user)
+                .photographerId(photographer)
+                .reservationId(reservation)
+                .build();
+
+        reviewRepository.save(review);
     }
 }

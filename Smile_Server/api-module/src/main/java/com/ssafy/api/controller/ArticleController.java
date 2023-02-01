@@ -44,7 +44,6 @@ public class ArticleController {
     public ResponseEntity<HttpStatus> uploadImage(ArticlePostDto articlePostDto) throws IOException {
         log.info(articlePostDto.toString());
         articleService.postArticle(articlePostDto);
-        log.info(articlePostDto.toString());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
