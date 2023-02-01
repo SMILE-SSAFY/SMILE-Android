@@ -321,12 +321,6 @@ public class ArticleService {
 
         List<ArticleQdslDto> articleList = articleRepository.findByCategoryName(userId, categoryNameList);
 
-        if (articleList.isEmpty()) {
-            log.info("해당 카테고리의 게시글이 없음");
-            throw new CustomException(ErrorCode.ARTICLE_NOT_FOUND);
-        }
-
-        log.info("해당 카테고리의 게시글 존재");
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (ArticleQdslDto articleQuerydsl : articleList) {
             String photoUrls = articleQuerydsl.getArticle().getPhotoUrls().replace("[", "").replace("]", "");
