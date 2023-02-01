@@ -68,6 +68,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<PhotographerHeart> photographerHearts;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
     /**
      * 유저 role을 통해 권한 생성
      *
