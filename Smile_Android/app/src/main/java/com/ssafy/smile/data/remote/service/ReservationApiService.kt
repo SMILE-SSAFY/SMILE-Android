@@ -1,14 +1,8 @@
 package com.ssafy.smile.data.remote.service
 
-import com.ssafy.smile.data.remote.model.ReservationListDto
-import com.ssafy.smile.data.remote.model.ReservationPhotographerDto
-import com.ssafy.smile.data.remote.model.ReservationRequestDto
-import com.ssafy.smile.data.remote.model.ReservationResponseDto
+import com.ssafy.smile.data.remote.model.*
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ReservationApiService {
     @GET("/api/reservation/{photographerId}")
@@ -19,4 +13,10 @@ interface ReservationApiService {
 
     @GET("/api/reservation/photographer")
     suspend fun getPhotographerReservationList(): Response<ArrayList<ReservationListDto>>
+
+    @PUT("/api/reservation/status/{reservationId}")
+    suspend fun changeReservationStatus(@Path("reservationId") reservationId: Long, @Body reservationChangeRequestDto: ReservationChangeRequestDto): Response<Any>
+
+    @PUT("/api/reservation/cancel/{reservationId}")
+    suspend fun cancelReservation(@Path("reservationId") reservationId: Long): Response<Any>
 }
