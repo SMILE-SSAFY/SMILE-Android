@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.ssafy.smile.common.view.CustomPhotographer
-        android:id="@+id/custom_photographer"
+    <com.ssafy.smile.common.view.CustomReservation
+        android:id="@+id/custom_reservation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

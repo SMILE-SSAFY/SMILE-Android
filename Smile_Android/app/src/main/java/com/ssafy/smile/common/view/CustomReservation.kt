@@ -92,9 +92,9 @@ class CustomReservation: ConstraintLayout {
 
     fun setChips(status: String) {
         when(status) {
-            "예약확인전" -> setChipColor(status, R.color.blue200)
+            "예약확정전" -> setChipColor(status, R.color.blue200)
             "예약확정" -> setChipColor(status, R.color.blue200)
-            "진행중" -> setChipColor(status, R.color.blue200)
+            "예약진행중" -> setChipColor(status, R.color.blue200)
             "완료" -> setChipColor(status, R.color.blue200)
             "예약취소" -> setChipColor(status, R.color.blue200)
         }
@@ -110,23 +110,23 @@ class CustomReservation: ConstraintLayout {
 
     fun setButtons(status: String, opposite: String) {
         when(opposite) {
-            "작가" -> setCustomerButtons(status)
-            "고객" -> setPhotographerButtons(status)
+            "작가님" -> setCustomerButtons(status)
+            "고객님" -> setPhotographerButtons(status)
         }
     }
 
     private fun setCustomerButtons(status: String) {
         when(status) {
-            "예약확인전" -> btnCancel.visibility = View.VISIBLE
+            "예약확정전" -> btnCancel.visibility = View.VISIBLE
             "예약확정" -> btnCancel.visibility = View.VISIBLE
-            "진행중" -> btnPayFix.visibility = View.VISIBLE
+            "예약진행중" -> btnPayFix.visibility = View.VISIBLE
             "완료" -> btnReview.visibility = View.VISIBLE
         }
     }
 
     private fun setPhotographerButtons(status: String) {
         when(status) {
-            "예약확인전" -> {
+            "예약확정전" -> {
                 btnCancel.visibility = View.VISIBLE
                 btnResFix.visibility = View.VISIBLE
             }

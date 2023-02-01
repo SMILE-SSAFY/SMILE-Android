@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.ReservationRemoteDateSource
+import com.ssafy.smile.data.remote.model.ReservationListDto
 import com.ssafy.smile.data.remote.model.ReservationPhotographerDto
 import com.ssafy.smile.data.remote.model.ReservationRequestDto
 import com.ssafy.smile.data.remote.model.ReservationResponseDto
@@ -19,6 +20,10 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     val postReservationLiveData: LiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
         get() = _postReservationLiveData
 
+    private val _photographerReservationListLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>()
+    val photographerReservationListLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
+        get() = _photographerReservationListLiveData
+
     override suspend fun getPhotographerReservationInfo(photographerId: Long) {
         safeApiCall(_photographerReservationInfoLiveData) {
             reservationRemoteDateSource.getPhotographerReservationInfo(photographerId)
@@ -28,6 +33,12 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     override suspend fun postReservation(reservationRequestDto: ReservationRequestDto) {
         safeApiCall(_postReservationLiveData) {
             reservationRemoteDateSource.postReservation(reservationRequestDto)
+        }
+    }
+
+    override suspend fun getPhotographerReservationList() {
+        safeApiCall(_photographerReservationListLiveData) {
+            reservationRemoteDateSource.getPhotographerReservationList()
         }
     }
 }
