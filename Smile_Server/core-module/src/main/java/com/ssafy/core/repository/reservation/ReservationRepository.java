@@ -14,5 +14,5 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryCustom {
     List<Reservation> findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(Long photographerId);
 
-    List<Reservation> findReservationsByUserId(Long userId);
+    List<Reservation> findByUserIdOrderByReservedAtDescReservedTimeDesc(Long userId);
 }
