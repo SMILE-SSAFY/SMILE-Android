@@ -203,7 +203,8 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<ReservationListDto> findUserReservation(Long userId) {
         log.info("유저 예약 목록 조회 시작");
-        List<Reservation> reservationList = reservationRepository.findReservationsByUserId(userId);
+        List<Reservation> reservationList =
+                reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
         if (reservationList.isEmpty()) {
             throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
         }
