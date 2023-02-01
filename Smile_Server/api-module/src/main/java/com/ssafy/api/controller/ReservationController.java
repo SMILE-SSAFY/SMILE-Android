@@ -4,6 +4,7 @@ import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
+import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.api.service.ReservationService;
 import com.ssafy.core.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -118,5 +121,27 @@ public class ReservationController {
     public ResponseEntity<HttpStatus> addReview(@PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws IOException {
         reservationService.addReview(reservationId, reviewPostDto);
         return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    /***
+     * 해당 작가의 리뷰 리스트를 모두 보여줌
+     * @param photographerId 작가id
+     * @return List<reviewResDto>
+     */
+    @GetMapping("/review/list/{photographerId}")
+    public ResponseEntity<?> showReviewList(@PathVariable("photographerId") Long photographerId){
+        List<ReviewResDto> reviewResDtoList = reservationService.showReviewList(photographerId);
+        return new ResponseEntity<>(reviewResDtoList, HttpStatus.OK);
+    }
+
+    /***
+     * 리뷰아이디를 통해 리뷰삭제
+     * @param reviewId 리뷰아이디
+     * @return HttpStatus.OK
+     */
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<HttpStatus> deleteReview(@PathVariable("reviewId") Long reviewId){
+        reservationService.deleteReview(reviewId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
