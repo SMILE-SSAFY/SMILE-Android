@@ -27,7 +27,8 @@ data class ReservationResponseDto(
             toDomainTime(time),
             address,
             categoryName,
-            "${CommonUtils.makeComma(price)} 원"
+            "${CommonUtils.makeComma(price)} 원",
+            status
         )
     }
 

@@ -103,7 +103,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     if (smPhotographerWritePortfolio.isChecked) showPhotographerDeleteDialog()
                     else showPhotographerWriteDialog()
                 }
-                tvPhotographerReservation.setOnClickListener {  }
+                tvPhotographerReservation.setOnClickListener {
+                    findNavController().navigate(R.id.action_mainFragment_to_photographerReservationList)
+                }
                 tvPhotographerPortfolio.setOnClickListener {
                     viewModel.getPhotographerInfo()
                 }

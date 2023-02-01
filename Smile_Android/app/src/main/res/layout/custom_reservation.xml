@@ -24,16 +24,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginHorizontal="20dp"
+                android:gravity="end"
                 android:orientation="horizontal">
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="예약확인전"
+                    android:textColor="@color/blue200"
+                    android:fontFamily="@font/ibm_plex_sans_regular"
+                    android:textSize="9sp"
+                    android:visibility="gone"
+                    app:chipBackgroundColor="@color/white"
+                    app:chipStrokeColor="@color/blue200"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="6dp"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginHorizontal="20dp"
                 android:orientation="horizontal">
 
@@ -160,7 +173,63 @@
                         style="@style/TvT5"
                         android:textColor="@color/black"/>
                 </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/btn_res_fix"
+                    style="@style/BtnSmallRectangleRadius2"
+                    android:layout_width="95dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/smile_green"
+                    android:text="예약확정"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_check"
+                    app:iconTint="@color/smile_green"
+                    app:strokeColor="@color/smile_green"/>
+                <Button
+                    android:id="@+id/btn_cancel"
+                    style="@style/BtnSmallRectangleRadius2"
+                    android:layout_width="95dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/smile_red"
+                    android:text="예약취소"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_cancel"
+                    app:iconTint="@color/smile_red"
+                    app:strokeColor="@color/smile_red"/>
+                <Button
+                    android:id="@+id/btn_pay_fix"
+                    style="@style/BtnSmallRectangleRadius2"
+                    android:layout_width="95dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/smile_green"
+                    android:text="결제확정"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_check"
+                    app:iconTint="@color/smile_green"
+                    app:strokeColor="@color/smile_green"/>
+                <Button
+                    android:id="@+id/btn_review"
+                    style="@style/BtnSmallRectangleRadius2"
+                    android:layout_width="95dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/blue400"
+                    android:text="리뷰작성"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_review"
+                    app:iconTint="@color/blue400"
+                    app:strokeColor="@color/blue400"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
