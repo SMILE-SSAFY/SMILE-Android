@@ -360,7 +360,10 @@ public class ArticleService {
      */
 
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
-        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y1, y2, x1, x2);
+        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y2, y1, x1, x2);
+        if (articleList.isEmpty()){
+            return new ArrayList<>();
+        }
         // k값 최적화 필요
         KMeans clusters = PartitionClustering.run(20, ()->KMeans.fit(getGeoPointArray(articleList),2));
 
