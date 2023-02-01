@@ -85,7 +85,7 @@ data class ReservationListDto(
     fun toCustomReservationDomainDto(): CustomReservationDomainDto {
         return CustomReservationDomainDto(
             reservationId,
-            "고객님",
+            "",
             name,
             phoneNumber,
             date,

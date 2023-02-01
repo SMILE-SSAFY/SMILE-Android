@@ -95,7 +95,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 btnLogout.setOnClickListener {  showLogoutDialog() }
             }
             layoutMyPageUserDetails.apply {
-                tvCustomerReservation.setOnClickListener{ }
+                tvCustomerReservation.setOnClickListener{
+                    findNavController().navigate(R.id.action_mainFragment_to_customerReservationListFragment)
+                }
                 tvCustomerInterest.setOnClickListener { }
             }
             layoutMyPagePhotographer.apply {

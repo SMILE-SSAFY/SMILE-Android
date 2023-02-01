@@ -21,6 +21,10 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     val photographerReservationListLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
         get() = _photographerReservationListLiveData
 
+    private val _customerReservationListLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>()
+    val customerReservationListLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
+        get() = _customerReservationListLiveData
+
     private val _changeReservationStatusLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
     val changeReservationStatusLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _changeReservationStatusLiveData
@@ -44,6 +48,12 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     override suspend fun getPhotographerReservationList() {
         safeApiCall(_photographerReservationListLiveData) {
             reservationRemoteDateSource.getPhotographerReservationList()
+        }
+    }
+
+    override suspend fun getCustomerReservationList() {
+        safeApiCall(_customerReservationListLiveData) {
+            reservationRemoteDateSource.getCustomerReservationList()
         }
     }
 

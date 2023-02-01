@@ -132,7 +132,7 @@ class CustomCalendarDialog(context: Context, private val unableDate: ArrayList<D
         val calendar = Calendar.getInstance()
         val calList = ArrayList<CalendarDay>()
 
-        for (day in 1 until calendar.get(Calendar.DAY_OF_MONTH)) {
+        for (day in 1 .. calendar.get(Calendar.DAY_OF_MONTH)) {
             calList.add(CalendarDay.from(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, day))
         }
 

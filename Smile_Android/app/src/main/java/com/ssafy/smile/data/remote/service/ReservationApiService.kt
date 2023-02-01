@@ -14,6 +14,9 @@ interface ReservationApiService {
     @GET("/api/reservation/photographer")
     suspend fun getPhotographerReservationList(): Response<ArrayList<ReservationListDto>>
 
+    @GET("/api/reservation/user")
+    suspend fun getCustomerReservationList(): Response<ArrayList<ReservationListDto>>
+
     @PUT("/api/reservation/status/{reservationId}")
     suspend fun changeReservationStatus(@Path("reservationId") reservationId: Long, @Body reservationChangeRequestDto: ReservationChangeRequestDto): Response<Any>
 

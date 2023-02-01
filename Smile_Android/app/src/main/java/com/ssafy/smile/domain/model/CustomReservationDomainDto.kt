@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CustomReservationDomainDto(
     val reservationId: Long = 0,
-    val opposite: String = "",
+    var opposite: String = "",
     val name: String = "",
     val phoneNumber: String = "",
     val resDate: String = "",
