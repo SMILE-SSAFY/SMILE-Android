@@ -176,7 +176,8 @@ public class ReservationService {
         }
         log.info("Role 작가 확인");
 
-        List<Reservation> reservationList = reservationRepository.findReservationsByPhotographerId(user.getId());
+        List<Reservation> reservationList =
+                reservationRepository.findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(user.getId());
         if (reservationList.isEmpty()) {
             throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
         }
