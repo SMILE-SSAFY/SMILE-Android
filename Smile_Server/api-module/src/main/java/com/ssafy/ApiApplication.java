@@ -17,7 +17,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class ApiApplication {
 
     public static void main(String[] args) {
-        System.setProperty("spring.config.name", "application,application-real,application-aws,application-coolsms,application-kakao");
+        System.setProperty("spring.config.name",
+                "application,application-real,application-aws,application-coolsms,application-kakao");
         SpringApplication.run(ApiApplication.class, args);
     }
 
