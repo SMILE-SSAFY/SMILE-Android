@@ -30,8 +30,9 @@ import java.util.List;
 /**
  * 유저 Entity
  *
- * author @서재건
- * author @김정은
+ * @author 신민철
+ * @author 신민철
+ * @author 신민철
  */
 @Entity
 @Builder
