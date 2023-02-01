@@ -1,10 +1,12 @@
 package com.ssafy.core.repository.photographer;
 
+import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /***
@@ -12,7 +14,7 @@ import java.util.Optional;
  * @author 신민철
  */
 
-public interface PhotographerHeartRepository extends JpaRepository<PhotographerHeart, Long> {
+public interface PhotographerHeartRepository extends JpaRepository<PhotographerHeart, Long>, PhotographerHeartRepositoryCustom{
     Optional<PhotographerHeart> findByUserAndPhotographer(User user, Photographer photographer);
 
     void deleteByUserAndPhotographer(User user, Photographer photographer);
