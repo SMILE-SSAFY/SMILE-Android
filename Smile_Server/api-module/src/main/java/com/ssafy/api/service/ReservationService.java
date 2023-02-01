@@ -274,7 +274,6 @@ public class ReservationService {
 
         List<Review> ReviewList = reviewRepository.findByPhotographer(photographer);
 
-
         for(Review review : ReviewList){
             boolean isMe = review.getUser() == user;
             ReviewResDto resDto = ReviewResDto.builder()
@@ -304,7 +303,8 @@ public class ReservationService {
 
         if(review.getUser().getId() == user.getId()){
             reviewRepository.deleteById(reviewId);
-        } throw new CustomException(ErrorCode.USER_MISMATCH);
+        }
+        throw new CustomException(ErrorCode.USER_MISMATCH);
 
     }
 
