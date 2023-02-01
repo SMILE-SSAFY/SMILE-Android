@@ -305,8 +305,5 @@ public class ReservationService {
             reviewRepository.deleteById(reviewId);
         }
         throw new CustomException(ErrorCode.USER_MISMATCH);
-
     }
-
-
 }
