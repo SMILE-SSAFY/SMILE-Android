@@ -30,8 +30,9 @@ import java.util.List;
 /**
  * 유저 Entity
  *
- * author @서재건
- * author @김정은
+ * @author 서재건
+ * @author 김정은
+ * @author 신민철
  */
 @Entity
 @Builder
@@ -67,6 +68,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<PhotographerHeart> photographerHearts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Review> reviews;
 
     /**
      * 유저 role을 통해 권한 생성

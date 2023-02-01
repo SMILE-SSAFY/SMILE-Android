@@ -23,6 +23,7 @@ import java.util.List;
  *
  * @author 김정은
  * @author 서재건
+ * @author 신민철
  */
 @Entity
 @Table(name = "photographer")
@@ -51,11 +52,15 @@ public class Photographer implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerNPlaces> places;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerNCategories> categories;
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerHeart> hearts;
+
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
+    private List<Review> reviews;
 
     /**
      * 프로필 이미지 변경
