@@ -242,12 +242,6 @@ public class PhotographerService {
                 photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
         log.info("카테고리로 작가 조회");
 
-        if (photographerList.isEmpty()) {
-            log.info("해당 카테고리의 작가가 없음");
-            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
-        }
-
-        log.info("해당 카테고리를 가진 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
         for (PhotographerQdslDto photographerQuerydsl : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
@@ -268,12 +262,6 @@ public class PhotographerService {
                 photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1]);
         log.info("주변 작가 조회");
 
-        if (photographerList.isEmpty()) {
-            log.info("주변 작가가 없음");
-            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
-        }
-
-        log.info("주변 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
         for (PhotographerQdslDto photographerQuerydsl : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));

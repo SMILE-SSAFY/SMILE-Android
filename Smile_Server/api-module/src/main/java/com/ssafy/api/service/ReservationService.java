@@ -188,9 +188,6 @@ public class ReservationService {
 
         List<Reservation> reservationList =
                 reservationRepository.findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(user.getId());
-        if (reservationList.isEmpty()) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
         log.info("작가 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
@@ -212,13 +209,9 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public List<ReservationListDto> findUserReservation(Long userId) {
-        log.info("유저 예약 목록 조회 시작");
+        log.info("유저 예약 목록 조회");
         List<Reservation> reservationList =
                 reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
-        if (reservationList.isEmpty()) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
-        log.info("유저 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
