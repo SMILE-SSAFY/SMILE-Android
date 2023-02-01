@@ -54,6 +54,13 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="BtnSmallRectangleRadius2" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="iconSize">14dp</item>
+    </style>
+
     <style name="BtnSmallRectangleBlue400Radius8" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/rectangle_blue400_stroke_radius_8</item>
         <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
@@ -73,16 +80,6 @@
         <item name="checkedIconVisible">false</item>
         <item name="rippleColor">@color/transparent</item>
         <item name="chipCornerRadius">8dp</item>
-    </style>
-
-    <style name="ChipSmallRectangleRadius4" parent="@style/Widget.MaterialComponents.Chip.Filter">
-        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:checkable">false</item>
-        <item name="rippleColor">@color/transparent</item>
-        <item name="chipCornerRadius">4dp</item>
-        <item name="chipBackgroundColor">@color/white</item>
-        <item name="chipStrokeWidth">1dp</item>
     </style>
 
     <!-- EditText -->
@@ -161,6 +158,11 @@
     <style name="TvT5" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
         <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="TvT6" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">9sp</item>
     </style>
 
 

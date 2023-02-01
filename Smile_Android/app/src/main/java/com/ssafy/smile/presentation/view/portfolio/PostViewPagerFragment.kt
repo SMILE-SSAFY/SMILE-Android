@@ -24,7 +24,6 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
     private val recyclerData = mutableListOf<PostListResponseDto>()
 
     override fun initView() {
-        portfolioViewModel.getPosts(PortfolioFragment().photographerId)
         setObserver()
         initRecycler()
     }
