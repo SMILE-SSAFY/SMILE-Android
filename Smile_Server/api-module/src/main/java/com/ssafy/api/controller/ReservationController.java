@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -130,5 +132,16 @@ public class ReservationController {
     public ResponseEntity<?> showReviewList(@PathVariable("photographerId") Long photographerId){
         List<ReviewResDto> reviewResDtoList = reservationService.showReviewList(photographerId);
         return new ResponseEntity<>(reviewResDtoList, HttpStatus.OK);
+    }
+
+    /***
+     * 리뷰아이디를 통해 리뷰삭제
+     * @param reviewId 리뷰아이디
+     * @return HttpStatus.OK
+     */
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<HttpStatus> deleteReview(@PathVariable("reviewId") Long reviewId){
+        reservationService.deleteReview(reviewId);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
