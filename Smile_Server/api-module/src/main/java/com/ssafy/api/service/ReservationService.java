@@ -290,4 +290,23 @@ public class ReservationService {
         }
         return reviewResDtoList;
     }
+
+    /***
+     * 리뷰아이디를 통해 리뷰를 삭제
+     * 본인일 경우만 삭제 가능
+     * @param reviewId 리뷰아이디
+     */
+    public void deleteReview(Long reviewId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+
+        if(review.getUser().getId() == user.getId()){
+            reviewRepository.deleteById(reviewId);
+        } throw new CustomException(ErrorCode.USER_MISMATCH);
+
+    }
+
+
 }
