@@ -37,6 +37,7 @@ import smile.clustering.PartitionClustering;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -339,19 +340,23 @@ public class ArticleService {
                         .clusterId(Long.valueOf(i))
                         .numOfCluster(clusters.size[i])
                         .centroidLat(centroids[0])
-                        .centroidLong(centroids[1])
+                        .centroidLng(centroids[1])
                         .build();
                 clusterResults.add(clusterDto);
             }
         }
 
-        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+        log.info(Arrays.toString(clusters.y));
+        log.info(Arrays.toString(clusters.size));
+
         int clusterIdx = 0;
         for (int i = 0; i < clusters.size.length-1; i ++){
+            Long clusterId = (long) i;
+            List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
             for (int j = 0; j < clusters.size[i]; j ++ ){
 
                 Article article = articleList.get(clusterIdx);
-                Long clusterId = (long) clusters.y[clusterIdx];
+
                 clusterIdx++;
                 User articleAuthor = article.getUser();
 
@@ -374,18 +379,16 @@ public class ArticleService {
                         .photoUrl(photoUrlList.get(0).trim())
                         .build();
                 articleSearchDtoList.add(articleSearchDto);
-
-                ArticleCluster articleCluster = ArticleCluster.builder()
-                        .Id(clusterId)
-                        .articleSearchDtoList(articleSearchDtoList)
-                        .build();
-                articleClusterRepository.save(articleCluster);
             }
+            ArticleCluster articleCluster = ArticleCluster.builder()
+                    .Id(clusterId)
+                    .articleSearchDtoList(articleSearchDtoList)
+                    .build();
+            articleClusterRepository.save(articleCluster);
         }
 
-        log.info(Arrays.toString(clusters.y));
-        log.info(Arrays.toString(clusters.size));
         log.info(Arrays.deepToString((clusters.centroids)));
+        log.info(clusterResults.toString());
         log.info(articleClusterRepository.findAll().toString());
 
 
