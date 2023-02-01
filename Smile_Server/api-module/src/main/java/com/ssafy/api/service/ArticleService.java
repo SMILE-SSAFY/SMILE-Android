@@ -332,9 +332,9 @@ public class ArticleService {
 
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
-            Double a = centroids[0];
-            Double b = centroids[1];
-            if (!a.isNaN()&&!b.isNaN()) {
+            Double centroidX = centroids[0];
+            Double centroidY = centroids[1];
+            if (!centroidX.isNaN()&&!centroidY.isNaN()) {
                 ArticleClusterDto clusterDto = ArticleClusterDto.builder()
                         .clusterId(Long.valueOf(i))
                         .numOfCluster(clusters.size[i])
