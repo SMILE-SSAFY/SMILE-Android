@@ -1,5 +1,6 @@
 package com.ssafy.smile.data.remote.service
 
+import com.ssafy.smile.data.remote.model.ReservationListDto
 import com.ssafy.smile.data.remote.model.ReservationPhotographerDto
 import com.ssafy.smile.data.remote.model.ReservationRequestDto
 import com.ssafy.smile.data.remote.model.ReservationResponseDto
@@ -15,4 +16,7 @@ interface ReservationApiService {
 
     @POST("/api/reservation")
     suspend fun postReservation(@Body reservationRequestDto: ReservationRequestDto): Response<ReservationResponseDto>
+
+    @GET("/api/reservation/photographer")
+    suspend fun getPhotographerReservationList(): Response<ArrayList<ReservationListDto>>
 }
