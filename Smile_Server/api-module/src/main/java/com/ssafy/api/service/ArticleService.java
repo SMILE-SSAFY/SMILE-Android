@@ -38,7 +38,6 @@ import smile.clustering.PartitionClustering;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
