@@ -261,8 +261,8 @@ public class ReservationService {
 
     /***
      * 해당 작가에 달린 리뷰를 모두 보여주는 서비스
-     * @param photographerId
-     * @return reviewResDto
+     * @param photographerId 작가id
+     * @return reviewResDto 리뷰리스트
      */
     public List<ReviewResDto> showReviewList(Long photographerId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -274,10 +274,13 @@ public class ReservationService {
 
         List<Review> ReviewList = reviewRepository.findByPhotographer(photographer);
 
+
         for(Review review : ReviewList){
+            boolean isMe = review.getUser() == user;
             ReviewResDto resDto = ReviewResDto.builder()
                     .reviewId(review.getId())
                     .userId(user.getId())
+                    .isMe(isMe)
                     .userName(user.getName())
                     .score(review.getScore())
                     .content(review.getContent())
