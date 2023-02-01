@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+/**
+ * 결제 관련 Service Class
+ *
+ * @author 김정은
+ */
 @Service
 @Slf4j
 public class PayService {
@@ -16,23 +21,6 @@ public class PayService {
 
     @Value("pay.private-key")
     private String privateKey;
-
-    /**
-     * 토큰 발급 받기
-     */
-    public void getAccessToken(){
-        try {
-            Bootpay bootpay = new Bootpay(restApiKey, privateKey); // Rest API Application ID & Private KEY
-            HashMap res = bootpay.getAccessToken();
-            if(res.get("error_code") == null) { //success
-                System.out.println("goGetToken success: " + res);
-            } else {
-                System.out.println("goGetToken false: " + res);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 결제 승인
@@ -49,9 +37,9 @@ public class PayService {
 
             HashMap res = bootpay.confirm(receiptId);
             if(res.get("error_code") == null) { //success
-                System.out.println("confirm success: " + res);
+                log.info("confirm success: " + res);
             } else {
-                System.out.println("confirm false: " + res);
+                log.info("confirm false: " + res);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,9 +65,9 @@ public class PayService {
 
             HashMap res = bootpay.receiptCancel(cancel);
             if(res.get("error_code") == null) { //success
-                System.out.println("receiptCancel success: " + res);
+                log.info("receiptCancel success: " + res);
             } else {
-                System.out.println("receiptCancel false: " + res);
+                log.info("receiptCancel false: " + res);
             }
         } catch (Exception e) {
             e.printStackTrace();
