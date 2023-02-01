@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.PostListResponseDto
+import com.ssafy.smile.data.remote.model.ReservationChangeRequestDto
 import com.ssafy.smile.databinding.FragmentPhotographerReservationListBinding
 import com.ssafy.smile.domain.model.CustomReservationDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -62,7 +63,18 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
     }
 
     private fun initRecycler() {
-        photographerReservationListRecyclerAdapter = PhotographerReservationListRecyclerAdapter(requireContext(), recyclerData)
+        photographerReservationListRecyclerAdapter = PhotographerReservationListRecyclerAdapter(requireContext(), recyclerData).apply {
+            setCancelClickListener(object : PhotographerReservationListRecyclerAdapter.OnCancelClickListener{
+                override fun onClick(view: View, position: Int) {
+                    photographerReservationListViewModel.cancelReservation(recyclerData[position].reservationId)
+                }
+            })
+            setResFixClickListener(object : PhotographerReservationListRecyclerAdapter.OnResFixClickListener{
+                override fun onClick(view: View, position: Int) {
+                    photographerReservationListViewModel.changeReservationStatus(recyclerData[position].reservationId, ReservationChangeRequestDto(1))
+                }
+            })
+        }
 
         binding.recycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
