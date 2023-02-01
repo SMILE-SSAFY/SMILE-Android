@@ -390,6 +390,13 @@ public class ArticleService {
         log.info(articleClusterRepository.findAll().toString());
 
 
+
+        log.info(Arrays.toString(clusters.y));
+        log.info(Arrays.toString(clusters.size));
+        log.info(Arrays.deepToString((clusters.centroids)));
+        log.info(articleClusterRepository.findAll().toString());
+
+
         return clusterResults;
     }
 
@@ -490,5 +497,4 @@ public class ArticleService {
          }
          return geoPointArray;
      }
-
 }
