@@ -57,6 +57,9 @@ public class Photographer implements Serializable {
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerHeart> hearts;
 
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
+    private List<Reservation> reservations;
+
     /**
      * 프로필 이미지 변경
      *
