@@ -17,5 +17,5 @@ public class ArticleClusterDto {
 
     private Double centroidLat;
 
-    private Double centroidLong;
+    private Double centroidLng;
 }
