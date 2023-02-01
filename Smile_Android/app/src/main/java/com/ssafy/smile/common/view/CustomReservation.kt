@@ -75,7 +75,6 @@ class CustomReservation: ConstraintLayout {
     }
 
     fun setAttrs(data: CustomReservationDomainDto) {
-        tvOpposite.text = data.opposite
         tvName.text = data.name
         tvPhoneNumber.text = data.phoneNumber
         tvReservationDate.text = data.resDate
@@ -93,10 +92,10 @@ class CustomReservation: ConstraintLayout {
     fun setChips(status: String) {
         when(status) {
             "예약확정전" -> setChipColor(status, R.color.blue200)
-            "예약확정" -> setChipColor(status, R.color.blue200)
-            "예약진행중" -> setChipColor(status, R.color.blue200)
-            "완료" -> setChipColor(status, R.color.blue200)
-            "예약취소" -> setChipColor(status, R.color.blue200)
+            "예약확정" -> setChipColor(status, R.color.blue400)
+            "예약진행중" -> setChipColor(status, R.color.blue400)
+            "완료" -> setChipColor(status, R.color.gray500)
+            "예약취소" -> setChipColor(status, R.color.gray500)
         }
     }
 

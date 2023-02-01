@@ -9,7 +9,7 @@
         android:id="@+id/custom_reservation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:opposite="고객님"
+        app:opposite="작가님"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

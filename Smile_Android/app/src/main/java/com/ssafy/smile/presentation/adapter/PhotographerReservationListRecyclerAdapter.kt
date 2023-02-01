@@ -25,6 +25,7 @@ class PhotographerReservationListRecyclerAdapter(val context: Context, val datas
     inner class PhotographerReservationListViewHolder(val binding: RecyclerPhotographerReservationItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: CustomReservationDomainDto, position: Int) {
             binding.apply {
+                data.opposite = "고객님"
                 customReservation.setAttrs(data)
 
                 val cancelBtn = customReservation.btnCancel

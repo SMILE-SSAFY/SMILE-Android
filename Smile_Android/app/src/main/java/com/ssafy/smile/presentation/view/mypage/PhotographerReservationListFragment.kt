@@ -84,7 +84,7 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
 
     private fun initToolbar(){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("마이페이지", true) { moveToPopUpSelf() }
+        toolbar.initToolbar("예약 일정 현황", true) { moveToPopUpSelf() }
     }
 
     private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_customerReservationListFragment_pop)

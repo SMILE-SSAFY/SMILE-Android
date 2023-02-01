@@ -17,6 +17,10 @@ class ReservationRemoteDateSourceImpl(private val reservationApiService: Reserva
         return reservationApiService.getPhotographerReservationList()
     }
 
+    override suspend fun getCustomerReservationList(): Response<ArrayList<ReservationListDto>> {
+        return reservationApiService.getCustomerReservationList()
+    }
+
     override suspend fun changeReservationStatus(reservationId: Long, reservationChangeRequestDto: ReservationChangeRequestDto): Response<Any> {
         return reservationApiService.changeReservationStatus(reservationId, reservationChangeRequestDto)
     }
