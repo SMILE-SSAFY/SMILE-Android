@@ -129,7 +129,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                             true
                         }
                         R.id.action_portfolio -> {
-                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId)
+                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId, -1L)
                             findNavController().navigate(action)
                             true
                         }
@@ -168,7 +168,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             })
             setItemClickListener(object: HomeRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId)
+                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId, -1L)
                     findNavController().navigate(action)
                 }
 

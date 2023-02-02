@@ -1,22 +1,12 @@
 package com.ssafy.smile.data.remote.model
 
-import android.os.Parcelable
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
-import kotlinx.parcelize.Parcelize
-import java.io.File
 
-@Parcelize
-data class PhotographerResponseDto(
-    val profileImg: File,
-    val photographerDto : PhotographerDto
-) : Parcelable
-
-
-data class PhotographerByAddressResponseDto(
+data class PhotographerHeartResponseDto(
     val photographerId: Long = 0,
     val name: String = "",
-    val profileImg: String? = "",
+    val profileImg: String = "",
     val places: ArrayList<Place> = arrayListOf(),
     val categories: ArrayList<CategoryNoDes> = arrayListOf(),
     val hasHeart: Boolean = false,
@@ -47,12 +37,3 @@ data class PhotographerByAddressResponseDto(
         )
     }
 }
-
-data class CategoryNoDes(
-    val name: String = "",
-    val price: String = ""
-)
-
-data class Place (
-    val place: String = ""
-)
