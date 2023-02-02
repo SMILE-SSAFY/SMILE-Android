@@ -33,10 +33,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun onResume() {
         super.onResume()
         homeViewModel.getCurrentAddressInfo()
-//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
-//            homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
-//        }
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
+            homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,8 +49,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         userId = getUserId()
         initToolbar()
         homeViewModel.getCurrentAddressInfo()
-//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-//        setObserver()
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+        setObserver()
         initRecycler()
     }
 

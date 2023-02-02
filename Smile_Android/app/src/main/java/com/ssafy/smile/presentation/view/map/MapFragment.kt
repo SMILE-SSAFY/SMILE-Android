@@ -59,13 +59,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
 
     override fun onResume() {
         super.onResume()
-//        map?.let { onMapReady(it) }
+        map?.let { onMapReady(it) }
     }
 
     override fun initView() {
-//        (childFragmentManager.findFragmentById(R.id.mapView) as MapFragment).getMapAsync(this)
-//        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        (childFragmentManager.findFragmentById(R.id.mapView) as MapFragment).getMapAsync(this)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
     override fun setEvent() {
