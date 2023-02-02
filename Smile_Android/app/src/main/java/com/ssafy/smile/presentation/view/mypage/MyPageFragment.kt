@@ -98,7 +98,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 tvCustomerReservation.setOnClickListener{
                     findNavController().navigate(R.id.action_mainFragment_to_customerReservationListFragment)
                 }
-                tvCustomerInterest.setOnClickListener { }
+                tvCustomerInterest.setOnClickListener {
+                    moveToMyInterestFragment()
+                }
             }
             layoutMyPagePhotographer.apply {
                 clPhotographerWritePortfolio.setOnClickListener {
@@ -159,6 +161,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private fun showPhotographerWithDrawDialog(){
         val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.withDraw_user), "회원 탈퇴"), { viewModel.withDrawUser() })
         showDialog(dialog, viewLifecycleOwner)
+    }
+    private fun moveToMyInterestFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_myInterestFragment)
     }
     private fun moveToRegisterPortFolioGraph(photographerResponseDto: PhotographerResponseDto?) {
        val action = MainFragmentDirections.actionMainFragmentToRegisterPortFolioGraph(photographerResponseDto)

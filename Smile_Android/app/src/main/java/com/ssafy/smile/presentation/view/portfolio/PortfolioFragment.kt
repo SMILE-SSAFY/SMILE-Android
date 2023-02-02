@@ -28,11 +28,21 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     override fun initView() {
         initToolbar()
+        checkNavArgs()
         setPhotographerId()
         initViewPager()
         portfolioViewModel.getPortfolio(photographerId)
         portfolioViewModel.getPosts(photographerId)
         setObserver()
+    }
+
+    private fun checkNavArgs(){
+        if (args.photographerId<0 && args.postId<0) {
+            showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 불러오는"), Types.ToastType.ERROR)
+            moveToPopUpSelf()
+        }
+        else if (args.photographerId<0) PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(args.postId)
+        else if (args.postId<0) setPhotographerId()
     }
 
     private fun setPhotographerId() {

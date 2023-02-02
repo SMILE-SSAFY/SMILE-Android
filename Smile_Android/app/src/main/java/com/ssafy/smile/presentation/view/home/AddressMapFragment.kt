@@ -31,7 +31,6 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.PermissionUtils
-import com.ssafy.smile.common.util.getString
 import com.ssafy.smile.databinding.FragmentAddressMapBinding
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -99,30 +98,30 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
         }
     }
 
-    override fun onMapReady(naverMap: NaverMap) {
-        with(naverMap) {
+    override fun onMapReady(nMap: NaverMap) {
+        with(nMap) {
             uiSettings.isLocationButtonEnabled = false
             uiSettings.isZoomGesturesEnabled = true
             uiSettings.isZoomControlEnabled = false
             locationTrackingMode = LocationTrackingMode.Follow
         }
-        this.map = naverMap
-        naverMap.locationSource = locationSource
+        this.map = nMap
+        nMap.locationSource = locationSource
         currentMarker = Marker().apply {
-            position = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
-            map = naverMap
+            position = LatLng(nMap.cameraPosition.target.latitude, nMap.cameraPosition.target.longitude)
+            map = nMap
             icon = OverlayImage.fromResource(R.drawable.ic_marker)
             width = 80
             height = 110
         }
-        startLocationUpdates(naverMap)
+        startLocationUpdates(nMap)
         checkIsServiceAvailable()
     }
 
     private fun checkIsServiceAvailable() : Boolean{
         if (!checkPermission()) {
             val permissionListener = object : PermissionListener {
-                override fun onPermissionGranted() { }
+                override fun onPermissionGranted() { map?.let { startLocationUpdates(it) } }
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
                     showToast(requireContext(), getString(R.string.permission_error_service_denied), Types.ToastType.WARNING)
                 }
@@ -141,22 +140,22 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
     }
 
 
-    private fun startLocationUpdates(naverMap: NaverMap) {
+    private fun startLocationUpdates(nMap: NaverMap) {
         binding.btnFindCurrentLocation.setOnClickListener {
             map?.let {
                 it.locationSource = locationSource
                 it.locationTrackingMode = LocationTrackingMode.Follow
             }
         }
-        naverMap.addOnCameraChangeListener { _, _ ->
-            currentMarker?.position = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
+        nMap.addOnCameraChangeListener { _, _ ->
+            currentMarker?.position = LatLng(nMap.cameraPosition.target.latitude, nMap.cameraPosition.target.longitude)
             setButtonDisable("위치 이동 중")
         }
 
-        naverMap.addOnCameraIdleListener {
-            val latLng = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
+        nMap.addOnCameraIdleListener {
+            val latLng = LatLng(nMap.cameraPosition.target.latitude, nMap.cameraPosition.target.longitude)
             currentMarker?.position = latLng
-            val addressGeoDto = AddressUtils.getGeoFromPoints(requireContext(), naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
+            val addressGeoDto = AddressUtils.getGeoFromPoints(requireContext(), nMap.cameraPosition.target.latitude, nMap.cameraPosition.target.longitude)
             if (addressGeoDto.type == Types.GeoAddress.ADDRESS) {
                 addressDomainDto = AddressDomainDto().apply {
                     address = addressGeoDto.address
@@ -170,12 +169,12 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
 
         mFusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let { currentPosition = LatLng(it.latitude, it.longitude) }
-            naverMap.locationOverlay.run {
+            nMap.locationOverlay.run {
                 isVisible = true
                 position = currentPosition
             }
             moveToLatLng(currentPosition)
-            currentMarker?.position = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
+            currentMarker?.position = LatLng(nMap.cameraPosition.target.latitude, nMap.cameraPosition.target.longitude)
         }
 
         binding.btnAddressAdd.setOnClickListener {
