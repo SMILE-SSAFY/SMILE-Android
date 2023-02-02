@@ -32,7 +32,7 @@ class CustomerReservationListRecyclerAdapter(val context: Context, val datas: Mu
         fun bind(data: CustomReservationDomainDto, position: Int) {
             binding.apply {
                 data.opposite = "작가님"
-                customReservation.setAttrs(data)
+                customReservation.setAttrs(data, true)
 
                 val cancelBtn = customReservation.btnCancel
                 cancelBtn.setOnClickListener {

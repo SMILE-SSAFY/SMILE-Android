@@ -37,7 +37,7 @@
                     android:text="예약확인전"
                     android:textColor="@color/blue200"
                     android:textSize="9sp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:chipBackgroundColor="@color/white"
                     app:chipCornerRadius="6dp"
                     app:chipStrokeColor="@color/blue200"
