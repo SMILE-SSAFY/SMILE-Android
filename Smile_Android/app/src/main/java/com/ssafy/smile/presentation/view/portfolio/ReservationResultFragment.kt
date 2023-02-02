@@ -30,7 +30,8 @@ class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>
                     args.reservationResult.location,
                     args.reservationResult.category,
                     args.reservationResult.cost
-                )
+                ),
+                false
             )
         }
     }
