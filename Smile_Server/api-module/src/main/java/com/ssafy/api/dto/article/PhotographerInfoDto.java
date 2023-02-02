@@ -31,4 +31,5 @@ public class PhotographerInfoDto {
     private String introduction;
     private List<String> categories;
     private List<String> places;
+    private int minPrice;
 }
