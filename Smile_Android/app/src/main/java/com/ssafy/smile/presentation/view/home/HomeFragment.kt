@@ -31,6 +31,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onResume() {
         super.onResume()
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }

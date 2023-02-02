@@ -91,5 +91,15 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
     private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_customerReservationListFragment_pop)
 
     override fun setEvent() {
+        setRefreshLayoutEvent()
+    }
+
+    private fun setRefreshLayoutEvent() {
+        binding.apply {
+            refreshLayout.setOnRefreshListener {
+                customerReservationListViewModel.getCustomerReservationList()
+                refreshLayout.isRefreshing = false
+            }
+        }
     }
 }

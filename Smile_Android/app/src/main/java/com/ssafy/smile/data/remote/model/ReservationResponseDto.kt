@@ -69,8 +69,9 @@ data class ResCategoryDetail(
     val options: String = ""
 )
 
+
 data class ReservationListDto(
-    val reservationId: Long = 0,
+    val reservationId: Long = 999,
     val address: String = "",
     val categoryName: String = "",
     val options: String = "",
