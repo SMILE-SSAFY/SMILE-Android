@@ -26,8 +26,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
         val scope = CoroutineScope(Dispatchers.Main)
 
         scope.launch {
-            delay(3000)
-
             val splashAnim = AnimationUtils.loadAnimation(requireContext(), R.anim.animation_splash)
             binding.apply {
                 ivLogo.visibility = View.VISIBLE

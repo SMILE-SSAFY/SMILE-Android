@@ -9,7 +9,8 @@ data class ReservationRequestDto(
     var address: String = "",
     var detailAddress: String = "",
     var date: String = "",
-    var time: String = ""
+    var time: String = "",
+    var receiptId: String = ""
 )
 
 data class ReservationChangeRequestDto(
