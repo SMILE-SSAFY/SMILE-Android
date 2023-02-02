@@ -32,7 +32,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/logInFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_signUpGraph"
             app:destination="@id/signUpGraph" />
@@ -67,6 +69,9 @@
             app:destination="@id/portfolioGraph">
             <argument
                 android:name="photographerId"
+                app:argType="long" />
+            <argument
+                android:name="postId"
                 app:argType="long" />
         </action>
         <action
@@ -132,9 +137,24 @@
     </fragment>
     <fragment
         android:id="@+id/myInterestFragment"
-        android:name="com.ssafy.smile.presentation.view.mypage.MyInterestFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.myInterest.MyInterestFragment"
         android:label="fragment_my_interest"
-        tools:layout="@layout/fragment_my_interest" />
+        tools:layout="@layout/fragment_my_interest" >
+        <action
+            android:id="@+id/action_myInterestFragment_pop"
+            app:popUpTo="@id/myInterestFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_myInterestFragment_to_portfolioGraph"
+            app:destination="@id/portfolioGraph" >
+            <argument
+                android:name="photographerId"
+                app:argType="long" />
+            <argument
+                android:name="postId"
+                app:argType="long" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/photographerReservationList"
         android:name="com.ssafy.smile.presentation.view.mypage.PhotographerReservationListFragment"
@@ -198,6 +218,9 @@
             tools:layout="@layout/fragment_portfolio" >
             <argument
                 android:name="photographerId"
+                app:argType="long" />
+            <argument
+                android:name="postId"
                 app:argType="long" />
             <action
                 android:id="@+id/action_portfolioFragment_to_reviewFragment"
