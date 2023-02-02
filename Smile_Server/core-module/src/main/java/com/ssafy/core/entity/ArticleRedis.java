@@ -1,21 +1,21 @@
-package com.ssafy.core.dto;
+package com.ssafy.core.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.time.LocalDateTime;
 
-/***
- * 게시글 검색결과 반환 Dto
- *
- * @author 신민철
- */
 @Data
+@RedisHash(value = "article")
 @Builder
-@AllArgsConstructor
-public class ArticleSearchDto {
-    private Long articleId;
+public class ArticleRedis {
+    @Id
+    private Long id;
+    @Indexed
+    private Long clusterId;
 
     private String photographerName;
 
@@ -34,4 +34,5 @@ public class ArticleSearchDto {
     private String category;
 
     private String photoUrl;
+
 }
