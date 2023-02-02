@@ -50,6 +50,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final S3UploaderService s3UploaderService;
@@ -251,6 +252,8 @@ public class ArticleService {
         User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
+        log.info(String.valueOf(isHeart));
+        log.info(String.valueOf(article));
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
         } else {
