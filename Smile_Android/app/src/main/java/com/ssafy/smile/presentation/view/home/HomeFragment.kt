@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
@@ -31,10 +32,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onResume() {
         super.onResume()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
-            homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
-        }
+        homeViewModel.getCurrentAddressInfo()
+//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
+//            homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,10 +47,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun initView() {
         isPhotographer = getRole()
         userId = getUserId()
-        setAddress()
         initToolbar()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-        setObserver()
+        homeViewModel.getCurrentAddressInfo()
+//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+//        setObserver()
         initRecycler()
     }
 
@@ -56,6 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         getPhotographerInfoByAddressResponseObserver()
         photographerHeartResponseObserver()
         getRoleObserver()
+        getAddressObserver()
     }
 
     private fun getRoleObserver() {
@@ -100,6 +103,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
+        }
+    }
+
+    private fun getAddressObserver() {
+        homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
+            curAddress = it.address
+            curAddress = CommonUtils.getAddress(requireContext(), it.latitude.toFloat(), it.longitude.toFloat())
+
+            Log.d(TAG, "address : ${it.address}")
+            Log.d(TAG, "longitude : ${it.longitude}")
+            Log.d(TAG, "latitude : ${it.latitude}")
+            Log.d(TAG, "getaddress() : ${CommonUtils.getAddress(requireContext(), it.latitude.toFloat(), it.longitude.toFloat())}")
         }
     }
 
@@ -153,11 +168,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.getValue()
 
     private fun getUserId(): Long = SharedPreferencesUtil(requireContext()).getUserId()
-
-    private fun setAddress() {
-        //TODO : 주소록 구현 후 curAddress 변수로 주소 가져오기
-        curAddress = "강원도 양구군"
-    }
 
     private fun initRecycler() {
         homeRecyclerAdapter = HomeRecyclerAdapter(requireContext(), recyclerData).apply {
