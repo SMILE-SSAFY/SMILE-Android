@@ -1,21 +1,16 @@
 package com.ssafy.smile.presentation.view.mypage.myInterest
 
-import android.util.Log
 import android.view.View
 import android.widget.CheckedTextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentMyInterestPhotographerBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
-import com.ssafy.smile.domain.model.CustomPostDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.MyInterestPhotographerRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.view.home.SearchFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.mypage.MyInterestViewModel
 
 
@@ -38,8 +33,10 @@ class MyInterestPhotographerFragment : BaseFragment<FragmentMyInterestPhotograph
             getPhotographerHeartListResponse.observe(viewLifecycleOwner){
                 when(it) {
                     is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         if (it.data.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
@@ -50,6 +47,7 @@ class MyInterestPhotographerFragment : BaseFragment<FragmentMyInterestPhotograph
                         }
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
                         showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "관심 작가를 불러오는"), Types.ToastType.WARNING)
                     }
                 }
@@ -78,7 +76,7 @@ class MyInterestPhotographerFragment : BaseFragment<FragmentMyInterestPhotograph
                 }
                 override fun onClickHeart(view: CheckedTextView, position: Int, photographerDto: CustomPhotographerDomainDto) {
                     view.isChecked = !(view.isChecked)
-                    viewModel.photographerHeart(photographerDto.photographerId)
+                    viewModel.postPhotographerHeart(photographerDto.photographerId)
                 }
             })
         }

@@ -35,12 +35,12 @@ class MyInterestViewModel : BaseViewModel() {
         heartRepository.getPhotographerHeartList()
     }
 
-    fun photographerHeart(photographerId: Long) {
+    fun postPhotographerHeart(photographerId: Long) {
         viewModelScope.launch {
             heartRepository.photographerHeart(photographerId)
         }
     }
-    fun postHeart(articleId: Long) {
+    fun postArticleHeart(articleId: Long) {
         viewModelScope.launch {
             heartRepository.postHeart(articleId)
         }

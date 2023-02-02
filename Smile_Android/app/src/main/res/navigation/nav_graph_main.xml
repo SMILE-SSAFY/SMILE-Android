@@ -246,6 +246,15 @@
                 android:id="@+id/action_portfolioFragment_pop"
                 app:popUpTo="@id/portfolioFragment"
                 app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_portfolioFragment_to_postDetailFragment_withPop"
+                app:destination="@id/postDetailFragment"
+                app:popUpTo="@id/portfolioFragment"
+                app:popUpToInclusive="true" >
+                <argument
+                    android:name="postId"
+                    app:argType="long" />
+            </action>
         </fragment>
         <fragment
             android:id="@+id/postDetailFragment"
