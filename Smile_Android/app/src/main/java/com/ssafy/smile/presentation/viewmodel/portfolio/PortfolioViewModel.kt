@@ -14,6 +14,9 @@ class PortfolioViewModel: BaseViewModel() {
     private val portfolioRepository = Application.repositoryInstances.getPortfolioRepository()
     private val heartRepository = Application.repositoryInstances.getHeartRepository()
 
+    // 작가 id
+    var photographerId: Long = 0
+
     // 포트폴리오 화면 결과를 관리하는 LiveData
     val getPortfolioResponse: LiveData<NetworkUtils.NetworkResponse<PortfolioResponseDto>>
         get() = portfolioRepository.getPortfolioResponseLiveData

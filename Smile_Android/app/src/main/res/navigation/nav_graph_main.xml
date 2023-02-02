@@ -124,7 +124,12 @@
         android:id="@+id/customerReservationListFragment"
         android:name="com.ssafy.smile.presentation.view.mypage.CustomerReservationListFragment"
         android:label="fragment_customer_reservation_list"
-        tools:layout="@layout/fragment_customer_reservation_list" />
+        tools:layout="@layout/fragment_customer_reservation_list">
+        <action
+            android:id="@+id/action_customerReservationListFragment_pop"
+            app:popUpTo="@id/customerReservationListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/myInterestFragment"
         android:name="com.ssafy.smile.presentation.view.mypage.MyInterestFragment"

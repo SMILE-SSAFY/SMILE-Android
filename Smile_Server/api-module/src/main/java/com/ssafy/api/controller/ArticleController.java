@@ -158,4 +158,15 @@ public class ArticleController {
         return new ResponseEntity<>(articleClusterListDto, HttpStatus.OK);
     }
 
+    /***
+     * 내가 좋아요 누른 작가 목록
+     * @return 좋아요 누른 게시글
+     *
+     */
+    @GetMapping("/heart/list")
+    public ResponseEntity<?> getHeartedArticle(){
+        List<ArticleSearchDto> articleSearchDtoList = articleService.getHeartedArticle();
+        return new ResponseEntity<>(articleSearchDtoList, HttpStatus.OK);
+    }
+
 }

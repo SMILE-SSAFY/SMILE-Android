@@ -27,6 +27,7 @@ import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,6 +50,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final S3UploaderService s3UploaderService;
@@ -250,6 +252,8 @@ public class ArticleService {
         User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
+        log.info(String.valueOf(isHeart));
+        log.info(String.valueOf(article));
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
         } else {
@@ -260,49 +264,6 @@ public class ArticleService {
                 .articleId(articleId)
                 .isHeart(!isHeart)
                 .build();
-    }
-
-    /***
-     * 범위안의 게시글을 리턴
-     * @param y1 좌상 위도
-     * @param x1 좌상 경도
-     * @param y2 우하 위도
-     * @param x2 우하 경도
-     * @return 게시글 리스트
-     */
-    public List<ArticleSearchDto> searchArticleNear(Double y1, Double x1, Double y2, Double x2){
-
-        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y1, y2, x1, x2);
-        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
-        User logInUser = getLogInUser();
-
-        // 각각의 게시글을 Dto로 만들어서 List에 등록
-        for (Article article : articleList) {
-
-            Long articleId = article.getId();
-            User articleAuthor = article.getUser();
-            boolean isHearted = isHearted(logInUser, article);
-            Long hearts = articleHeartRepository.countByArticle(article);
-
-            String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
-            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
-
-            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
-                    .articleId(articleId)
-                    .photographerName(articleAuthor.getName())
-                    .latitude(article.getLatitude())
-                    .longitude(article.getLongitude())
-                    .detailAddress(article.getDetailAddress())
-                    .isHeart(isHearted)
-                    .hearts(hearts)
-                    .createdAt(article.getCreatedAt())
-                    .category(article.getCategory())
-                    .photoUrl(photoUrlList.get(0).trim())
-                    .build();
-
-            articleSearchDtoList.add(articleSearchDto);
-        }
-        return articleSearchDtoList;
     }
 
     /**
@@ -321,12 +282,6 @@ public class ArticleService {
 
         List<ArticleQdslDto> articleList = articleRepository.findByCategoryName(userId, categoryNameList);
 
-        if (articleList.isEmpty()) {
-            log.info("해당 카테고리의 게시글이 없음");
-            throw new CustomException(ErrorCode.ARTICLE_NOT_FOUND);
-        }
-
-        log.info("해당 카테고리의 게시글 존재");
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (ArticleQdslDto articleQuerydsl : articleList) {
             String photoUrls = articleQuerydsl.getArticle().getPhotoUrls().replace("[", "").replace("]", "");
@@ -360,7 +315,9 @@ public class ArticleService {
      */
 
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
-        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y2, y1, x1, x2);
+        articleClusterRepository.deleteAll();
+
+        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()){
             return new ArrayList<>();
         }
@@ -373,56 +330,64 @@ public class ArticleService {
 
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
-            ArticleClusterDto clusterDto = ArticleClusterDto.builder()
-                    .clusterId(Long.valueOf(i))
-                    .numOfCluster(clusters.size[i])
-                    .centroidLat(centroids[0])
-                    .centroidLong(centroids[1])
-                    .build();
-            clusterResults.add(clusterDto);
+            double centroidX = centroids[0];
+            double centroidY = centroids[1];
+            if (!Double.isNaN(centroidX) &&!Double.isNaN(centroidY)) {
+                ArticleClusterDto clusterDto = ArticleClusterDto.builder()
+                        .clusterId((long) i)
+                        .numOfCluster(clusters.size[i])
+                        .centroidLat(centroids[0])
+                        .centroidLng(centroids[1])
+                        .build();
+                clusterResults.add(clusterDto);
             }
-        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
-        for (int j = 0; j < clusters.y.length; j++){
+        }
 
-            Article article = articleList.get(j);
-            Long clusterId = Long.valueOf(clusters.y[j]);
+        log.info(Arrays.toString(clusters.y));
+        log.info(Arrays.toString(clusters.size));
 
-            if (j>=1){
-                if (clusterId != clusters.y[j-1]){
-                    articleSearchDtoList = new ArrayList<>();
-                }
+        int listIdx = 0;
+        for (int i = 0; i < clusters.size.length-1; i ++){
+            Long clusterId = (long) i;
+            List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+            for (int j = 0; j < clusters.size[i]; j ++ ){
+
+                Article article = articleList.get(listIdx);
+
+                listIdx++;
+                User articleAuthor = article.getUser();
+
+                boolean isHearted = isHearted(logInUser, article);
+                Long hearts = articleHeartRepository.countByArticle(article);
+
+                String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
+                List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
+
+                ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
+                        .articleId(article.getId())
+                        .photographerName(articleAuthor.getName())
+                        .latitude(article.getLatitude())
+                        .longitude(article.getLongitude())
+                        .detailAddress(article.getDetailAddress())
+                        .isHeart(isHearted)
+                        .hearts(hearts)
+                        .createdAt(article.getCreatedAt())
+                        .category(article.getCategory())
+                        .photoUrl(photoUrlList.get(0).trim())
+                        .build();
+                articleSearchDtoList.add(articleSearchDto);
             }
-
-
-            User articleAuthor = article.getUser();
-
-            boolean isHearted = isHearted(logInUser, article);
-            Long hearts = articleHeartRepository.countByArticle(article);
-
-            String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
-            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
-
-            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
-                    .articleId(article.getId())
-                    .photographerName(articleAuthor.getName())
-                    .latitude(article.getLatitude())
-                    .longitude(article.getLongitude())
-                    .detailAddress(article.getDetailAddress())
-                    .isHeart(isHearted)
-                    .hearts(hearts)
-                    .createdAt(article.getCreatedAt())
-                    .category(article.getCategory())
-                    .photoUrl(photoUrlList.get(0).trim())
-                    .build();
-            articleSearchDtoList.add(articleSearchDto);
-
             ArticleCluster articleCluster = ArticleCluster.builder()
                     .Id(clusterId)
                     .articleSearchDtoList(articleSearchDtoList)
                     .build();
             articleClusterRepository.save(articleCluster);
         }
-        articleClusterRepository.findAll().forEach(System.out::println);
+
+        log.info(Arrays.deepToString((clusters.centroids)));
+        log.info(clusterResults.toString());
+        log.info(articleClusterRepository.findAll().toString());
+
         return clusterResults;
     }
 
@@ -438,6 +403,43 @@ public class ArticleService {
                 .clusterId(Id)
                 .articleSearchDtoList(articleCluster.getArticleSearchDtoList())
                 .build();
+    }
+
+    /***
+     * 내가 좋아요 누른 게시글 목록
+     * @return 내가 좋아요 누른 게시글 목록
+     */
+    public List<ArticleSearchDto> getHeartedArticle(){
+        User user = getLogInUser();
+        List<ArticleHeart> articleHeartList = articleHeartRepository.findByUser(user);
+
+        List<ArticleSearchDto> results = new ArrayList<>();
+
+        for(ArticleHeart articleHeart : articleHeartList){
+
+            Article article = articleHeart.getArticle();
+            User articleAuthor = article.getUser();
+            Long hearts = articleHeartRepository.countByArticle(article);
+            String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
+            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
+
+
+            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
+                    .articleId(article.getId())
+                    .photographerName(articleAuthor.getName())
+                    .latitude(article.getLatitude())
+                    .longitude(article.getLongitude())
+                    .detailAddress(article.getDetailAddress())
+                    .isHeart(true)
+                    .hearts(hearts)
+                    .createdAt(article.getCreatedAt())
+                    .category(article.getCategory())
+                    .photoUrl(photoUrlList.get(0).trim())
+                    .build();
+            results.add(articleSearchDto);
+        }
+
+        return results;
     }
 
     /***
@@ -465,9 +467,9 @@ public class ArticleService {
      * @return user
      */
     private User getLogInUser(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        return userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return user;
     }
 
     /***

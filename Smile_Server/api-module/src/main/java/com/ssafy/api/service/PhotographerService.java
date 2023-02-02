@@ -26,6 +26,7 @@ import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -242,12 +243,6 @@ public class PhotographerService {
                 photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
         log.info("카테고리로 작가 조회");
 
-        if (photographerList.isEmpty()) {
-            log.info("해당 카테고리의 작가가 없음");
-            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
-        }
-
-        log.info("해당 카테고리를 가진 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
         for (PhotographerQdslDto photographerQuerydsl : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
@@ -268,12 +263,6 @@ public class PhotographerService {
                 photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1]);
         log.info("주변 작가 조회");
 
-        if (photographerList.isEmpty()) {
-            log.info("주변 작가가 없음");
-            throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
-        }
-
-        log.info("주변 작가가 있음");
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
         for (PhotographerQdslDto photographerQuerydsl : photographerList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
@@ -320,4 +309,40 @@ public class PhotographerService {
     private Boolean isHearted(User user, Photographer photographer){
         return photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent();
     }
+
+    /***
+     * 내가 좋아요 누른 작가 찾기
+     * @return List<PhotographerForListDto> 내가 좋아요 누른 작가리스트
+     */
+    public List<PhotographerForListDto> getPhotographerListByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        List<PhotographerHeart> photographerList = photographerHeartRepository.findByUser(user);
+
+        log.info(photographerList.toString());
+
+        if (photographerList.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        List<PhotographerForListDto> photographerForList = new ArrayList<>();
+        List<PhotographerQdslDto> photographerQdslDtoList = new ArrayList<>();
+
+        for (PhotographerHeart photographerHeart : photographerList){
+            photographerQdslDtoList.add(
+            PhotographerQdslDto.builder()
+                    .photographer(photographerHeart.getPhotographer())
+                    .heart(photographerHeartRepository.countByPhotographer(photographerHeart.getPhotographer()))
+                    .hasHeart(true)
+                    .build());
+
+        }
+        for (PhotographerQdslDto photographerQuerydsl : photographerQdslDtoList) {
+            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+        }
+
+        return photographerForList;
+    }
+
 }
