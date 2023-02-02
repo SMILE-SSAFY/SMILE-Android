@@ -2,6 +2,7 @@ package com.ssafy.smile.data.local.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import com.ssafy.smile.data.local.database.entity.AddressEntity
 import com.ssafy.smile.data.local.datasource.AddressLocalDataSource
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.repository.AddressRepository
@@ -22,6 +23,11 @@ class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalData
         return addressLocalDataSource.deleteAddress(address.makeToAddressEntity())
     }
 
+    override fun getCurrentAddress(): LiveData<AddressDomainDto> {
+        return addressLocalDataSource.getCurrentAddress().map { entity ->
+            entity.makeToAddressDomainDto()
+        }
+    }
 
     override fun getAddressList(): LiveData<List<AddressDomainDto>> {
         return addressLocalDataSource.getAddressList().map {  list ->
