@@ -26,5 +26,6 @@
         <attr name="rLocation" format="string" />
         <attr name="rCategory" format="string" />
         <attr name="cost" format="string" />
+        <attr name="status" format="string" />
     </declare-styleable>
 </resources>

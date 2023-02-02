@@ -70,4 +70,8 @@ object CommonUtils {
     fun deleteQuote(str: String): String {
         return str.replace("\"", "")
     }
+
+    fun combineCategoryAndOption(category: String, option: String): String {
+        return "$category $option"
+    }
 }
