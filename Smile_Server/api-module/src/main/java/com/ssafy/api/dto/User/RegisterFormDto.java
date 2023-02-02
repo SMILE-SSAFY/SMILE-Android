@@ -7,7 +7,8 @@ import lombok.Data;
 /**
  * 회원가입 Dto
  *
- * author @서재건
+ * @author 서재건
+ * @author 김정은
  */
 @Data
 public class RegisterFormDto {
