@@ -330,11 +330,11 @@ public class ArticleService {
 
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
-            Double centroidX = centroids[0];
-            Double centroidY = centroids[1];
-            if (!centroidX.isNaN()&&!centroidY.isNaN()) {
+            double centroidX = centroids[0];
+            double centroidY = centroids[1];
+            if (!Double.isNaN(centroidX) &&!Double.isNaN(centroidY)) {
                 ArticleClusterDto clusterDto = ArticleClusterDto.builder()
-                        .clusterId(Long.valueOf(i))
+                        .clusterId((long) i)
                         .numOfCluster(clusters.size[i])
                         .centroidLat(centroids[0])
                         .centroidLng(centroids[1])
