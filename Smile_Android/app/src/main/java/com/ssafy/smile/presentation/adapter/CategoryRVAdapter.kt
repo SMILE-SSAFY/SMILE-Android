@@ -75,7 +75,7 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
                     setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, R.array.spinner_category))
                     setOnItemClickListener { _, _, position, _ ->
                         dto.name = this.getString()
-                        dto.categoryId = position
+                        dto.categoryId = position + 1
                     }
                     setText(dto.name)
                 }

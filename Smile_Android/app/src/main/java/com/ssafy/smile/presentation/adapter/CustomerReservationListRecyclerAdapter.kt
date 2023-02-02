@@ -20,7 +20,7 @@ class CustomerReservationListRecyclerAdapter(val context: Context, val datas: Mu
         fun onClick(view: View, position: Int)
     }
     lateinit var onPayFixClickListener : OnPayFixClickListener
-    fun setPayFixClickListener(onResFixClickListener: OnPayFixClickListener) { this.onPayFixClickListener = onPayFixClickListener }
+    fun setPayFixClickListener(onPayFixClickListener: OnPayFixClickListener) { this.onPayFixClickListener = onPayFixClickListener }
 
     interface OnReviewClickListener {
         fun onClick(view: View, position: Int)

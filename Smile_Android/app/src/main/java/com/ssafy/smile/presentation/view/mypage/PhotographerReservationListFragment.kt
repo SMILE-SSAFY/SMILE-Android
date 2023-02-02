@@ -90,5 +90,15 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
     private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_customerReservationListFragment_pop)
 
     override fun setEvent() {
+        setRefreshLayoutEvent()
+    }
+
+    private fun setRefreshLayoutEvent() {
+        binding.apply {
+            refreshLayout.setOnRefreshListener {
+                photographerReservationListViewModel.getPhotographerReservationList()
+                refreshLayout.isRefreshing = false
+            }
+        }
     }
 }
