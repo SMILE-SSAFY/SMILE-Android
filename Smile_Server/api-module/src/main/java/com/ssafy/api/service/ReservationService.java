@@ -77,6 +77,7 @@ public class ReservationService {
         Reservation savedReservation = Reservation.builder()
                 .photographer(Photographer.builder().id(reservation.getPhotographerId()).build())
                 .user(User.builder().id(reservation.getUserId()).build())
+                .receiptId(reservation.getReceiptId())
                 .price(reservation.getPrice())
                 .categoryName(reservation.getCategoryName())
                 .options(reservation.getOptions())
