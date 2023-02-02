@@ -153,17 +153,20 @@ public class PhotographerService {
         log.info(photographer.getProfileImg());
         log.info(findPhotographer.getProfileImg());
 
-        if(!photographer.isDeleted()){
-            if (!file.isEmpty()) {  // 이미지가 수정되었을 때
-                // 이미지 삭제
-                s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
+        if(!photographer.isDeleted()){  // 이미지가 변경되지 않았을 때
+            if(file.isEmpty()){ // 이미지가 없을 때
+                photographer.setProfileImg(findPhotographer.getProfileImg());
+            } else {    // 이미지가 새로 등록되었을 때(기존 이미지 null)
                 String fileName = s3UploaderService.upload(file);
                 photographer.setProfileImg(fileName);
-            } else {    // 이미지가 수정되지 않았을 때
-                photographer.setProfileImg(findPhotographer.getProfileImg());
             }
-        } else {    // 이미지가 삭제되었을 때
+        } else {
+            // 기존 이미지 삭제
             s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
+            if(!file.isEmpty()) {    // 이미지가 수정되었을 때
+                String fileName = s3UploaderService.upload(file);
+                photographer.setProfileImg(fileName);
+            }
         }
 
         // 활동지역 변환
