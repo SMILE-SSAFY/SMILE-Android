@@ -1,5 +1,5 @@
 
-# --------------------- 서울특별시
+-- 서울특별시
 INSERT Into places(id, first, second) values ("00", "서울특별시", "강남구");
 INSERT Into places(id, first, second) values ("01", "서울특별시", "강동구");
 INSERT Into places(id, first, second) values ("02", "서울특별시", "강북구");
@@ -26,7 +26,7 @@ INSERT Into places(id, first, second) values ("022", "서울특별시", "종로�
 INSERT Into places(id, first, second) values ("023", "서울특별시", "중구");
 INSERT Into places(id, first, second) values ("024", "서울특별시", "중랑구");
 
-# --------------------- 인천광역시
+-- 인천광역시
 INSERT Into places(id, first, second) values ("10", "인천광역시", "강화군");
 INSERT Into places(id, first, second) values ("11", "인천광역시", "계양구");
 INSERT Into places(id, first, second) values ("12", "인천광역시", "남구");
@@ -38,7 +38,7 @@ INSERT Into places(id, first, second) values ("17", "인천광역시", "연수�
 INSERT Into places(id, first, second) values ("18", "인천광역시", "웅진군");
 INSERT Into places(id, first, second) values ("19", "인천광역시", "중구");
 
-# --------------------- 부산광역시
+-- 부산광역시
 INSERT Into places(id, first, second) values ("20", "부산광역시", "강서구");
 INSERT Into places(id, first, second) values ("21", "부산광역시", "금정구");
 INSERT Into places(id, first, second) values ("22", "부산광역시", "기장군");
@@ -56,14 +56,14 @@ INSERT Into places(id, first, second) values ("213", "부산광역시", "영도�
 INSERT Into places(id, first, second) values ("214", "부산광역시", "중구");
 INSERT Into places(id, first, second) values ("215", "부산광역시", "해운대구");
 
-# --------------------- 대전광역시
+-- 대전광역시
 INSERT Into places(id, first, second) values ("30", "대전광역시", "대덕구");
 INSERT Into places(id, first, second) values ("31", "대전광역시", "동구");
 INSERT Into places(id, first, second) values ("32", "대전광역시", "서구");
 INSERT Into places(id, first, second) values ("33", "대전광역시", "유성구");
 INSERT Into places(id, first, second) values ("34", "대전광역시", "중구");
 
-# --------------------- 대구광역시
+-- 대구광역시
 INSERT Into places(id, first, second) values ("40", "대구광역시", "중구");
 INSERT Into places(id, first, second) values ("41", "대구광역시", "동구");
 INSERT Into places(id, first, second) values ("42", "대구광역시", "서구");
@@ -73,24 +73,24 @@ INSERT Into places(id, first, second) values ("45", "대구광역시", "수성�
 INSERT Into places(id, first, second) values ("46", "대구광역시", "달서구");
 INSERT Into places(id, first, second) values ("47", "대구광역시", "달성군");
 
-# --------------------- 울산광역시
+-- 울산광역시
 INSERT Into places(id, first, second) values ("50", "울산광역시", "남구");
 INSERT Into places(id, first, second) values ("51", "울산광역시", "동구");
 INSERT Into places(id, first, second) values ("52", "울산광역시", "북구");
 INSERT Into places(id, first, second) values ("53", "울산광역시", "울주군");
 INSERT Into places(id, first, second) values ("54", "울산광역시", "중구");
 
-# --------------------- 광주광역시
+-- 광주광역시
 INSERT Into places(id, first, second) values ("60", "광주광역시", "동구");
 INSERT Into places(id, first, second) values ("61", "광주광역시", "서구");
 INSERT Into places(id, first, second) values ("62", "광주광역시", "남구");
 INSERT Into places(id, first, second) values ("63", "광주광역시", "북구");
 INSERT Into places(id, first, second) values ("64", "광주광역시", "광산구");
 
-# --------------------- 세종특별자치시
+-- 세종특별자치시
 INSERT Into places(id, first, second) values ("70", "세종특별자치시", "");
 
-# --------------------- 경기도
+-- 경기도
 INSERT Into places(id, first, second) values ("80", "경기도", "가평군");
 INSERT Into places(id, first, second) values ("81", "경기도", "고양시");
 INSERT Into places(id, first, second) values ("82", "경기도", "과천시");
@@ -123,7 +123,7 @@ INSERT Into places(id, first, second) values ("828", "경기도", "포천시");
 INSERT Into places(id, first, second) values ("829", "경기도", "하남시");
 INSERT Into places(id, first, second) values ("830", "경기도", "화성시");
 
-# --------------------- 강원도
+-- 강원도
 INSERT Into places(id, first, second) values ("90", "강원도", "강릉시");
 INSERT Into places(id, first, second) values ("91", "강원도", "고성군");
 INSERT Into places(id, first, second) values ("92", "강원도", "동해시");
@@ -143,7 +143,7 @@ INSERT Into places(id, first, second) values ("915", "강원도", "홍천군");
 INSERT Into places(id, first, second) values ("916", "강원도", "화천군");
 INSERT Into places(id, first, second) values ("917", "강원도", "횡성군");
 
-# --------------------- 경상남도
+-- 경상남도
 INSERT Into places(id, first, second) values ("100", "경상남도", "거제시");
 INSERT Into places(id, first, second) values ("101", "경상남도", "거창군");
 INSERT Into places(id, first, second) values ("102", "경상남도", "고성군");
@@ -163,7 +163,7 @@ INSERT Into places(id, first, second) values ("1015", "경상남도", "함안군
 INSERT Into places(id, first, second) values ("1016", "경상남도", "함양군");
 INSERT Into places(id, first, second) values ("1017", "경상남도", "합천군");
 
-# --------------------- 경상북도
+-- 경상북도
 INSERT Into places(id, first, second) values ("110", "경상북도", "경산시");
 INSERT Into places(id, first, second) values ("111", "경상북도", "경주시");
 INSERT Into places(id, first, second) values ("112", "경상북도", "고령군");
@@ -187,7 +187,7 @@ INSERT Into places(id, first, second) values ("1119", "경상북도", "청송군
 INSERT Into places(id, first, second) values ("1120", "경상북도", "칠곡군");
 INSERT Into places(id, first, second) values ("1121", "경상북도", "포항시");
 
-# --------------------- 전라남도
+-- 전라남도
 INSERT Into places(id, first, second) values ("120", "전라남도", "강진군");
 INSERT Into places(id, first, second) values ("121", "전라남도", "고흥군");
 INSERT Into places(id, first, second) values ("122", "전라남도", "곡성군");
@@ -211,7 +211,7 @@ INSERT Into places(id, first, second) values ("1219", "전라남도", "함평군
 INSERT Into places(id, first, second) values ("1220", "전라남도", "해남군");
 INSERT Into places(id, first, second) values ("1221", "전라남도", "화순군");
 
-# --------------------- 전라북도
+-- 전라북도
 INSERT Into places(id, first, second) values ("130", "전라북도", "고창군");
 INSERT Into places(id, first, second) values ("131", "전라북도", "군산시");
 INSERT Into places(id, first, second) values ("132", "전라북도", "김제시");
@@ -227,7 +227,7 @@ INSERT Into places(id, first, second) values ("1311", "전라북도", "전주시
 INSERT Into places(id, first, second) values ("1312", "전라북도", "정읍시");
 INSERT Into places(id, first, second) values ("1313", "전라북도", "진안군");
 
-# --------------------- 충청남도
+-- 충청남도
 INSERT Into places(id, first, second) values ("140", "충청남도", "계릉시");
 INSERT Into places(id, first, second) values ("141", "충청남도", "공주시");
 INSERT Into places(id, first, second) values ("142", "충청남도", "금산군");
@@ -244,7 +244,7 @@ INSERT Into places(id, first, second) values ("1412", "충청남도", "청양군
 INSERT Into places(id, first, second) values ("1413", "충청남도", "태안군");
 INSERT Into places(id, first, second) values ("1414", "충청남도", "홍성군");
 
-# --------------------- 충청북도
+-- 충청북도
 INSERT Into places(id, first, second) values ("150", "충청북도", "괴산군");
 INSERT Into places(id, first, second) values ("151", "충청북도", "단양군");
 INSERT Into places(id, first, second) values ("152", "충청북도", "보운군");
@@ -257,31 +257,31 @@ INSERT Into places(id, first, second) values ("158", "충청북도", "진천군"
 INSERT Into places(id, first, second) values ("159", "충청북도", "청주시");
 INSERT Into places(id, first, second) values ("1510", "충청북도", "충주시");
 
-# --------------------- 제주특별자치도
+-- 제주특별자치도
 INSERT Into places(id, first, second) values ("160", "제주특별자치도", "서귀포시");
 INSERT Into places(id, first, second) values ("161", "제주특별자치도", "제주시");
 
-# --------------------- 카테고리
-INSERT Into categories(name) values ("증명사진");
-INSERT Into categories(name) values ("프로필사진");
-INSERT Into categories(name) values ("바디프로필사진");
-INSERT Into categories(name) values ("졸업사진");
-INSERT Into categories(name) values ("커플사진");
-INSERT Into categories(name) values ("우정사진");
-INSERT Into categories(name) values ("가족사진");
-INSERT Into categories(name) values ("웨딩사진");
-INSERT Into categories(name) values ("아기사진");
-INSERT Into categories(name) values ("영정사진");
-INSERT Into categories(name) values ("보정사진");
-INSERT Into categories(name) values ("만삭사진");
-INSERT Into categories(name) values ("파티사진");
-INSERT Into categories(name) values ("반려동물사진");
-INSERT Into categories(name) values ("한복사진");
-INSERT Into categories(name) values ("건축물사진");
-INSERT Into categories(name) values ("차량사진");
-INSERT Into categories(name) values ("사물사진");
-INSERT Into categories(name) values ("풍경사진");
-INSERT Into categories(name) values ("개인화보사진");
-INSERT Into categories(name) values ("취업사진");
-INSERT Into categories(name) values ("단체사진");
+-- 카테고리
+INSERT Into categories(id, name) values (1, "증명사진");
+INSERT Into categories(id, name) values (2, "프로필사진");
+INSERT Into categories(id, name) values (3, "바디프로필사진");
+INSERT Into categories(id, name) values (4, "졸업사진");
+INSERT Into categories(id, name) values (5, "커플사진");
+INSERT Into categories(id, name) values (6, "우정사진");
+INSERT Into categories(id, name) values (7, "가족사진");
+INSERT Into categories(id, name) values (8, "웨딩사진");
+INSERT Into categories(id, name) values (9, "아기사진");
+INSERT Into categories(id, name) values (10, "영정사진");
+INSERT Into categories(id, name) values (11, "보정사진");
+INSERT Into categories(id, name) values (12, "만삭사진");
+INSERT Into categories(id, name) values (13, "파티사진");
+INSERT Into categories(id, name) values (14, "반려동물사진");
+INSERT Into categories(id, name) values (15, "한복사진");
+INSERT Into categories(id, name) values (16, "건축물사진");
+INSERT Into categories(id, name) values (17, "차량사진");
+INSERT Into categories(id, name) values (18, "사물사진");
+INSERT Into categories(id, name) values (19, "풍경사진");
+INSERT Into categories(id, name) values (20, "개인화보사진");
+INSERT Into categories(id, name) values (21, "취업사진");
+INSERT Into categories(id, name) values (22, "단체사진");
 
