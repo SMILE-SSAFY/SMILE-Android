@@ -27,6 +27,7 @@ import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -49,6 +50,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final S3UploaderService s3UploaderService;
@@ -250,6 +252,8 @@ public class ArticleService {
         User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
+        log.info(String.valueOf(isHeart));
+        log.info(String.valueOf(article));
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
         } else {
@@ -435,6 +439,43 @@ public class ArticleService {
     }
 
     /***
+     * 내가 좋아요 누른 게시글 목록
+     * @return 내가 좋아요 누른 게시글 목록
+     */
+    public List<ArticleSearchDto> getHeartedArticle(){
+        User user = getLogInUser();
+        List<ArticleHeart> articleHeartList = articleHeartRepository.findByUser(user);
+
+        List<ArticleSearchDto> results = new ArrayList<>();
+
+        for(ArticleHeart articleHeart : articleHeartList){
+
+            Article article = articleHeart.getArticle();
+            User articleAuthor = article.getUser();
+            Long hearts = articleHeartRepository.countByArticle(article);
+            String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
+            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
+
+
+            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
+                    .articleId(article.getId())
+                    .photographerName(articleAuthor.getName())
+                    .latitude(article.getLatitude())
+                    .longitude(article.getLongitude())
+                    .detailAddress(article.getDetailAddress())
+                    .isHeart(true)
+                    .hearts(hearts)
+                    .createdAt(article.getCreatedAt())
+                    .category(article.getCategory())
+                    .photoUrl(photoUrlList.get(0).trim())
+                    .build();
+            results.add(articleSearchDto);
+        }
+
+        return results;
+    }
+
+    /***
      *
      * @param user 유저
      * @param article 게시글
@@ -459,9 +500,9 @@ public class ArticleService {
      * @return user
      */
     private User getLogInUser(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        return userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return user;
     }
 
     /***
@@ -480,4 +521,5 @@ public class ArticleService {
          }
          return geoPointArray;
      }
+
 }
