@@ -33,6 +33,9 @@ class DataSourceInstances(appDatabase: AppDatabase, serviceInstances: ServiceIns
     @Singleton
     private val reservationRemoteDataSourceImpl: ReservationRemoteDateSourceImpl = ReservationRemoteDateSourceImpl(serviceInstances.getReservationApiService())
 
+    @Singleton
+    private val articleRemoteDataSourceImpl : ArticleRemoteDataSourceImpl = ArticleRemoteDataSourceImpl(serviceInstances.getArticleApiService())
+
     fun getAddressRemoteDataSource() : AddressLocalDataSourceImpl = addressLocalDataSourceImpl
     fun getUserRemoteDataSource(): UserRemoteDataSourceImpl = userRemoteDataSourceImpl
     fun getPortfolioRemoteDataSource(): PortfolioRemoteDataSourceImpl = portfolioRemoteDataSourceImpl
@@ -41,5 +44,6 @@ class DataSourceInstances(appDatabase: AppDatabase, serviceInstances: ServiceIns
     fun getPostRemoteDataSource(): PostRemoteDataSourceImpl = postRemoteDataSourceImpl
     fun getSearchRemoteDataSource(): SearchRemoteDataSourceImpl = searchRemoteDataSourceImpl
     fun getReservationRemoteDataSource(): ReservationRemoteDateSourceImpl = reservationRemoteDataSourceImpl
+    fun getArticleRemoteDataSource() : ArticleRemoteDataSourceImpl = articleRemoteDataSourceImpl
 
 }
