@@ -5,6 +5,7 @@ import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.data.*
 import com.ssafy.smile.data.local.database.AppDatabase
+import kr.co.bootpay.android.*;
 
 class Application : Application()  {
 
@@ -28,6 +29,7 @@ class Application : Application()  {
         super.onCreate()
         initContextInjection()
         kakaoInit()
+        bootPayInit()
     }
 
     private fun initContextInjection(){
@@ -46,4 +48,7 @@ class Application : Application()  {
         KakaoSdk.init(this, getString(R.string.kakao_native_key))
     }
 
+    private fun bootPayInit() {
+        BootpayAnalytics.init(this, getString(R.string.bootpay_key))
+    }
 }
