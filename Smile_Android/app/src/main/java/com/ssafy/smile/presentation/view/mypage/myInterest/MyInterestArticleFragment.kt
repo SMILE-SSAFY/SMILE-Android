@@ -4,12 +4,9 @@ import android.view.View
 import android.widget.CheckedTextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentMyInterestArticleBinding
-import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.CustomPostDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.MyInterestArticleRVAdapter
@@ -35,8 +32,11 @@ class MyInterestArticleFragment : BaseFragment<FragmentMyInterestArticleBinding>
         viewModel.apply {
             getArticleHeartListResponse.observe(viewLifecycleOwner){
                 when(it) {
-                    is NetworkUtils.NetworkResponse.Loading -> { }
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         if (it.data.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
@@ -47,6 +47,7 @@ class MyInterestArticleFragment : BaseFragment<FragmentMyInterestArticleBinding>
                         }
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
                         showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "관심 게시글을 불러오는"), Types.ToastType.WARNING)
                     }
                 }
@@ -75,7 +76,7 @@ class MyInterestArticleFragment : BaseFragment<FragmentMyInterestArticleBinding>
                 }
                 override fun onClickHeart(view: CheckedTextView, position: Int, articleDto: CustomPostDomainDto) {
                     view.isChecked = !(view.isChecked)
-                    viewModel.photographerHeart(articleDto.articleId)
+                    viewModel.postArticleHeart(articleDto.articleId)
                 }
             })
         }
