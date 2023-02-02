@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.dto.Photographer.PlacesForListDto;
 import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
 import com.ssafy.api.dto.Reservation.CategoryDetailDto;
+import com.ssafy.api.dto.Reservation.NotificationDTO;
 import com.ssafy.api.dto.Reservation.PhotographerInfoDto;
 import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
@@ -61,6 +62,7 @@ public class ReservationService {
     private final PhotographerNPlacesRepository photographerNPlacesRepository;
     private final S3UploaderService s3UploaderService;
     private final ReviewRepository reviewRepository;
+    private final NotificationService notificationService;
 
     /**
      * 예약 등록
@@ -155,7 +157,8 @@ public class ReservationService {
      *
      * @param statusDto
      */
-    public void changeStatus(ReservationStatusDto statusDto){
+    @Transactional
+    public void changeStatus(ReservationStatusDto statusDto) throws IOException {
         Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
@@ -171,6 +174,15 @@ public class ReservationService {
 
         reservation.updateStatus(statusDto.getStatus());
         reservationRepository.save(reservation);
+
+        // FCM 전송
+        if(statusDto.getStatus() == ReservationStatus.예약확정){
+            notificationService.sendDataMessageTo(NotificationDTO.builder()
+                            .requestId(statusDto.getUserId())
+                            .registrationToken(reservation.getUser().getFcmToken())
+                            .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                    .build());
+        }
     }
 
     /**
@@ -308,7 +320,8 @@ public class ReservationService {
      * @param reservationId
      * @param userId
      */
-    public void changeCancelStatus(Long reservationId, Long userId) {
+    @Transactional
+    public void changeCancelStatus(Long reservationId, Long userId) throws IOException {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
         log.info("예약 조회 완료");
@@ -330,5 +343,19 @@ public class ReservationService {
         log.info("예약 상태 : {}", reservation.getStatus());
 
         reservationRepository.save(reservation);
+
+        String token = "";
+        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
+            token = reservation.getPhotographer().getUser().getFcmToken();  // 사진작가에게 전달
+        } else {    // 사진작가가 취소한 경우
+            token = reservation.getUser().getFcmToken();    // 예약한 유저에게 전달
+        }
+
+        // FCM 전송
+        notificationService.sendDataMessageTo(NotificationDTO.builder()
+                .requestId(userId)
+                .registrationToken(token)
+                .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                .build());
     }
 }
