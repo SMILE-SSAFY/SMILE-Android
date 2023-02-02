@@ -147,4 +147,14 @@ public class PhotographerController {
                 photographerService.getPhotographerListByAddresss(user.getId(), address);
         return ResponseEntity.ok().body(photographerList);
     }
+
+    /***
+     * 내가 좋아요 누른 작가 조회
+     * @return photographerList 내가 좋아요 누른 작가 조회
+     */
+    @GetMapping("/heart/list")
+    public ResponseEntity<?> heartedPhotographer(){
+        List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByUser();
+        return new ResponseEntity<>(photographerList, HttpStatus.OK);
+    }
 }
