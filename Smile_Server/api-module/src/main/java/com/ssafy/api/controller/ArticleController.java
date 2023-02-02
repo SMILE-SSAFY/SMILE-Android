@@ -4,11 +4,16 @@ import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.core.entity.ArticleCluster;
+import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.User;
+import com.ssafy.core.repository.article.ArticleRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -152,10 +157,12 @@ public class ArticleController {
      * @param clusterId
      * @return 마커에 포함된 게시글
      */
-    @GetMapping("/list/cluster/{clusterId}")
-    public ResponseEntity<?> getClusterData(@PathVariable("clusterId") Long clusterId){
-        ArticleClusterListDto articleClusterListDto = articleService.getClusterByClusterId(clusterId);
-        return new ResponseEntity<>(articleClusterListDto, HttpStatus.OK);
+    @GetMapping("/list/cluster")
+    public ResponseEntity<?> getClusterData(@RequestParam("clusterId") Long clusterId,
+                                            @PageableDefault(size=9, sort="id", direction = Sort.Direction.DESC)
+                                            Pageable pageable){
+        List<ArticleRedis> articleRedisList = articleService.getArticleListByMarkerId(clusterId, pageable);
+        return new ResponseEntity<>(articleRedisList, HttpStatus.OK);
     }
 
     /***

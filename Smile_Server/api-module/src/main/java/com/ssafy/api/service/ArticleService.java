@@ -1,7 +1,6 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.article.ArticleClusterDto;
-import com.ssafy.api.dto.article.ArticleClusterListDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
@@ -12,21 +11,25 @@ import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.ArticleHeart;
+import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
-import com.ssafy.core.repository.ArticleClusterRepository;
+import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.article.ArticleHeartRepository;
+import com.ssafy.core.repository.article.ArticleRedisRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import smile.clustering.KMeans;
 import smile.clustering.PartitionClustering;
+import smile.clustering.XMeans;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -60,6 +64,7 @@ public class ArticleService {
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleClusterRepository articleClusterRepository;
+    private final ArticleRedisRepository articleRedisRepository;
 
     /***
      * article 생성
@@ -316,18 +321,18 @@ public class ArticleService {
      */
 
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
-        articleClusterRepository.deleteAll();
+        User logInUser = getLogInUser();
+        articleClusterRepository.findByUserId(logInUser.getId()).ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
 
         List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()){
             return new ArrayList<>();
         }
         // k값 최적화 필요
-        KMeans clusters = PartitionClustering.run(20, ()->KMeans.fit(getGeoPointArray(articleList),2));
+        XMeans clusters = XMeans.fit(getGeoPointArray(articleList),20);
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
-        User logInUser = getLogInUser();
 
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
@@ -350,7 +355,7 @@ public class ArticleService {
         int listIdx = 0;
         for (int i = 0; i < clusters.size.length-1; i ++){
             Long clusterId = (long) i;
-            List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+            List<ArticleRedis> articleRedisList = new ArrayList<>();
             for (int j = 0; j < clusters.size[i]; j ++ ){
 
                 Article article = articleList.get(listIdx);
@@ -364,8 +369,9 @@ public class ArticleService {
                 String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
                 List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
 
-                ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
-                        .articleId(article.getId())
+                ArticleRedis articleRedis = ArticleRedis.builder()
+                        .id(article.getId())
+                        .clusterId(clusterId)
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
                         .longitude(article.getLongitude())
@@ -376,11 +382,13 @@ public class ArticleService {
                         .category(article.getCategory())
                         .photoUrl(photoUrlList.get(0).trim())
                         .build();
-                articleSearchDtoList.add(articleSearchDto);
+                articleRedisList.add(articleRedis);
+                articleRedisRepository.save(articleRedis);
             }
             ArticleCluster articleCluster = ArticleCluster.builder()
-                    .Id(clusterId)
-                    .articleSearchDtoList(articleSearchDtoList)
+                    .id(clusterId)
+                    .userId(logInUser.getId())
+                    .articleRedisList(articleRedisList)
                     .build();
             articleClusterRepository.save(articleCluster);
         }
@@ -394,17 +402,19 @@ public class ArticleService {
 
     /***
      * 클러스터링 이후 해당 클러스터 별로 게시글 검색결과를 반환
-     * @param Id 클러스터 마커 id
+     * @param clusterId 클러스터 마커 id
+     * @param lastArticleId 게시글의 마지막 idx
      * @return 마커별 게시글 리스트
      */
 
-    public ArticleClusterListDto getClusterByClusterId(Long Id){
-        ArticleCluster articleCluster = articleClusterRepository.findById(Id).orElseThrow();
-        return ArticleClusterListDto.builder()
-                .clusterId(Id)
-                .articleSearchDtoList(articleCluster.getArticleSearchDtoList())
-                .build();
+    public List<ArticleRedis> getArticleListByMarkerId(Long clusterId, Pageable pageable){
+        Page<ArticleRedis> articleRedisPage = articleRedisRepository.findByClusterId(clusterId, pageable);
+        log.info(articleRedisPage.toString());
+        log.info(articleRedisPage.getContent().toString());
+        log.info(articleRedisRepository.findByClusterId(clusterId, pageable).toString());
+        return articleRedisPage.getContent();
     }
+
 
     /***
      * 내가 좋아요 누른 게시글 목록

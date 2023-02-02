@@ -1,12 +1,10 @@
 package com.ssafy.core.entity;
 
-import com.ssafy.core.dto.ArticleSearchDto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /***
@@ -14,12 +12,14 @@ import java.util.List;
  * Redis에 저장할 Entity
  */
 @Data
-@RedisHash(value = "articles", timeToLive = 1800)
+@RedisHash(value = "markers")
 @Builder
 public class ArticleCluster {
     @Id
-    private Long Id;
+    private Long id;
 
-    private List<ArticleSearchDto> articleSearchDtoList;
+    private Long userId;
+
+    private List<ArticleRedis> articleRedisList;
 
 }
