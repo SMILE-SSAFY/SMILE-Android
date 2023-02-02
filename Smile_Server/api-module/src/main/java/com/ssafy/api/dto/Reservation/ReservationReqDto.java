@@ -24,6 +24,8 @@ public class ReservationReqDto {
 
     private Long userId;
 
+    private String receiptId;
+
     private int price;
 
     private String categoryName;
