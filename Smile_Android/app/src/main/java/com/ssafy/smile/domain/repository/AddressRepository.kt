@@ -10,6 +10,7 @@ interface AddressRepository {
     suspend fun insertAddress(address: AddressDomainDto) : Long
     suspend fun selectAddress(address: AddressDomainDto) : Long
     suspend fun deleteAddress(address: AddressDomainDto) : Int
+    fun getCurrentAddress() : LiveData<AddressDomainDto>
     fun getAddressList() : LiveData<List<AddressDomainDto>>
     fun getAddressListWithSelection() : LiveData<List<AddressDomainDto>>
 }

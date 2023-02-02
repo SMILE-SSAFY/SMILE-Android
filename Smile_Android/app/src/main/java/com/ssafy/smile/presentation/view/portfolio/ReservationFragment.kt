@@ -226,7 +226,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             .build()
 
         timePicker.addOnPositiveButtonClickListener {
-            selectData.time = "${timePicker.hour}:${timePicker.minute}"
+            selectData.time = "${String.format("%02d", timePicker.hour)}:${String.format("%02d", timePicker.minute)}"
             setTimeText(timePicker.hour, timePicker.minute)
             isTimeChecked = true
         }
@@ -240,7 +240,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
         } else {
             "오전"
         }
-        val tHour = if (hour == 12) {
+        val tHour = if (hour % 12 == 0) {
             "12"
         } else {
             String.format("%02d", hour % 12)
