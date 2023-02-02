@@ -74,7 +74,7 @@ class CustomReservation: ConstraintLayout {
         typedArray.recycle()
     }
 
-    fun setAttrs(data: CustomReservationDomainDto) {
+    fun setAttrs(data: CustomReservationDomainDto, isList: Boolean) {
         tvName.text = data.name
         tvPhoneNumber.text = data.phoneNumber
         tvReservationDate.text = data.resDate
@@ -82,14 +82,18 @@ class CustomReservation: ConstraintLayout {
         tvPlace.text = data.location
         tvCategory.text = data.category
         tvCost.text = data.cost
-        setChips(data.status)
-        setButtons(data.status, data.opposite)
+
+        if (isList) {
+            setChips(data.status)
+            setButtons(data.status, data.opposite, data.isReview)
+        }
 
         invalidate()
         requestLayout()
     }
 
     fun setChips(status: String) {
+        statusChip.visibility = View.VISIBLE
         when(status) {
             "예약확정전" -> setChipColor(status, R.color.blue200)
             "예약확정" -> setChipColor(status, R.color.blue400)
@@ -107,29 +111,41 @@ class CustomReservation: ConstraintLayout {
         }
     }
 
-    fun setButtons(status: String, opposite: String) {
+    fun setButtons(status: String, opposite: String, isReview: Boolean) {
         when(opposite) {
-            "작가님" -> setCustomerButtons(status)
+            "작가님" -> setCustomerButtons(status, isReview)
             "고객님" -> setPhotographerButtons(status)
         }
     }
 
-    private fun setCustomerButtons(status: String) {
+    private fun setCustomerButtons(status: String, isReview: Boolean) {
         when(status) {
-            "예약확정전" -> btnCancel.visibility = View.VISIBLE
-            "예약확정" -> btnCancel.visibility = View.VISIBLE
-            "예약진행중" -> btnPayFix.visibility = View.VISIBLE
-            "완료" -> btnReview.visibility = View.VISIBLE
+            "예약확정전" -> setButtons(arrayListOf(btnCancel))
+            "예약확정" -> setButtons(arrayListOf(btnCancel))
+            "예약진행중" -> setButtons(arrayListOf(btnPayFix))
+            "완료" -> {
+                if (!isReview) {
+                    setButtons(arrayListOf(btnReview))
+                }
+            }
         }
     }
 
     private fun setPhotographerButtons(status: String) {
         when(status) {
-            "예약확정전" -> {
-                btnCancel.visibility = View.VISIBLE
-                btnResFix.visibility = View.VISIBLE
-            }
-            "예약확정" -> btnCancel.visibility = View.VISIBLE
+            "예약확정전" -> setButtons(arrayListOf(btnCancel, btnResFix))
+            "예약확정" -> setButtons(arrayListOf(btnCancel))
+        }
+    }
+
+    private fun setButtons(btnList: ArrayList<Button>) {
+        btnCancel.visibility = View.GONE
+        btnPayFix.visibility = View.GONE
+        btnResFix.visibility = View.GONE
+        btnReview.visibility = View.GONE
+
+        btnList.forEach { btn ->
+            btn.visibility = View.VISIBLE
         }
     }
 }

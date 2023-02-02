@@ -134,6 +134,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private fun logout() {
         try {
             removeUserInfo()
+
             Intent(context, MainActivity::class.java).apply {
                 requireActivity().finish()
                 startActivity(this)

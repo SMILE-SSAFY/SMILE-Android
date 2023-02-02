@@ -31,7 +31,8 @@ data class ReservationResponseDto(
             address,
             categoryName,
             "${CommonUtils.makeComma(price)} 원",
-            status
+            status,
+            reviewed
         )
     }
 
@@ -94,7 +95,8 @@ data class ReservationListDto(
             address,
             CommonUtils.combineCategoryAndOption(categoryName, options),
             "${CommonUtils.makeComma(price)} 원",
-            status
+            status,
+            reviewed
         )
     }
 }

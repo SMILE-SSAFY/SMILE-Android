@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
@@ -24,10 +23,17 @@ import com.ssafy.smile.databinding.FragmentReservationBinding
 import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.view.user.SignUp1FragmentDirections
 import com.ssafy.smile.presentation.viewmodel.portfolio.ReservationViewModel
 import java.util.*
 import java.util.regex.Pattern
+import kr.co.bootpay.android.*;
+import kr.co.bootpay.android.events.BootpayEventListener
+import kr.co.bootpay.android.models.BootExtra
+import kr.co.bootpay.android.models.BootItem
+import kr.co.bootpay.android.models.BootUser
+import kr.co.bootpay.android.models.Payload
+import org.json.JSONException
+import org.json.JSONObject
 
 private const val TAG = "ReservationFragment_스마일"
 class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentReservationBinding::bind, R.layout.fragment_reservation) {
@@ -62,6 +68,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
 
     private fun setPhotographerId() {
         photographerId = args.photographerId
+        selectData.photographerId = photographerId
     }
 
     private fun initToolbar() {
@@ -262,14 +269,21 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             val dialog = CommonDialog(
                 requireContext(),
                 DialogBody("잠깐!\n사진을 전송 받을 이메일이 맞나요?\n\n${etEmail.text}", "맞아요", "틀려요"),
-                {
-                    selectData.photographerId = photographerId
-                    reservationViewModel.postReservation(selectData)
-                },
+                { goBootPayRequest(getItemInfo()) },
                 { showToast(requireContext(), "이메일을 다시 입력해주세요") }
             )
             showDialog(dialog, viewLifecycleOwner)
         }
+    }
+
+    private fun getItemInfo(): BootItem {
+        val item = BootItem().apply {
+            id = "SMILE_ITEM_ID"
+            name = selectData.categoryName + selectData.options
+            qty = 1
+            price = selectData.price.toDouble()
+        }
+        return item
     }
 
     private fun etChangedListener(editText: EditText, type: String) {
@@ -306,5 +320,65 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
         val pattern = Pattern.compile(rule)
 
         return pattern.matcher(email).find()
+    }
+
+    private fun goBootPayRequest(itemInfo: BootItem) {
+        val extra = BootExtra().setCardQuota("0,2,3,6,12") // 5만원 이상 구매시 할부허용 범위
+        val items: MutableList<BootItem> = arrayListOf(itemInfo)
+        val payload = Payload().apply {
+            applicationId = getString(R.string.bootpay_key)
+            orderName = itemInfo.name
+            orderId = "SMILE_ORDER_ID"
+            price = itemInfo.price
+            setExtra(extra).items = items
+        }
+
+        bootPayEvent(payload)
+    }
+
+    private fun bootPayEvent(payload: Payload) {
+        Bootpay.init(requireFragmentManager(), requireContext())
+            .setPayload(payload)
+            .setEventListener(object : BootpayEventListener {
+                override fun onCancel(data: String) {
+                    Log.d(TAG, "bootpay cancel: $data")
+                }
+
+                override fun onError(data: String) {
+                    Log.d(TAG, "bootpay error: $data")
+                }
+
+                override fun onClose() {
+                    Log.d(TAG, "bootpay close")
+                    Bootpay.removePaymentWindow()
+                }
+
+                override fun onIssued(data: String) {
+                    Log.d(TAG, "bootpay issued: $data")
+                }
+
+                override fun onConfirm(data: String): Boolean {
+                    Log.d(TAG, "bootpay confirm: $data")
+                    return true
+                }
+
+                override fun onDone(data: String) {
+                    Log.d("bootpay done", data)
+                    getReceiptId(data)
+                }
+            }).requestPayment()
+    }
+
+    private fun getReceiptId(data: String) {
+        try {
+            val payData = JSONObject(data).getJSONObject("data")
+            val receiptId = payData.getString("receipt_id")
+
+            Log.d(TAG, "getReceiptId: ${receiptId}}")
+            selectData.receiptId = receiptId
+            reservationViewModel.postReservation(selectData)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
 }
