@@ -330,14 +330,27 @@ public class PhotographerService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
-        List<PhotographerQdslDto> photographerList = photographerHeartRepository.findByUser(user);
+        List<PhotographerHeart> photographerList = photographerHeartRepository.findByUser(user);
+
+        log.info(photographerList.toString());
 
         if (photographerList.isEmpty()){
             return new ArrayList<>();
         }
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (PhotographerQdslDto photographerQuerydsl : photographerList) {
+        List<PhotographerQdslDto> photographerQdslDtoList = new ArrayList<>();
+
+        for (PhotographerHeart photographerHeart : photographerList){
+            photographerQdslDtoList.add(
+            PhotographerQdslDto.builder()
+                    .photographer(photographerHeart.getPhotographer())
+                    .heart(photographerHeartRepository.countByPhotographer(photographerHeart.getPhotographer()))
+                    .hasHeart(true)
+                    .build());
+
+        }
+        for (PhotographerQdslDto photographerQuerydsl : photographerQdslDtoList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
 

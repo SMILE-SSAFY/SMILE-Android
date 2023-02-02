@@ -14,10 +14,11 @@ import java.util.Optional;
  * @author 신민철
  */
 
-public interface PhotographerHeartRepository extends JpaRepository<PhotographerHeart, Long>, PhotographerHeartRepositoryCustom{
+public interface PhotographerHeartRepository extends JpaRepository<PhotographerHeart, Long>{
     Optional<PhotographerHeart> findByUserAndPhotographer(User user, Photographer photographer);
 
     void deleteByUserAndPhotographer(User user, Photographer photographer);
 
     Long countByPhotographer(Photographer photographer);
+    List<PhotographerHeart> findByUser(User user);
 }
