@@ -2,6 +2,8 @@ package com.ssafy.smile.data.remote.model
 
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.domain.model.CustomReservationDomainDto
+import java.util.*
+import kotlin.collections.ArrayList
 
 data class ReservationResponseDto(
     val id: Long = 0,
@@ -20,6 +22,7 @@ data class ReservationResponseDto(
 ){
     fun toCustomReservationDomainDto(): CustomReservationDomainDto {
         return CustomReservationDomainDto(
+            id,
             "작가님",
             photographerName,
             phoneNumber,
@@ -27,7 +30,8 @@ data class ReservationResponseDto(
             toDomainTime(time),
             address,
             categoryName,
-            "${CommonUtils.makeComma(price)} 원"
+            "${CommonUtils.makeComma(price)} 원",
+            status
         )
     }
 
@@ -45,5 +49,52 @@ data class ReservationResponseDto(
         } else {
             "오전 $sTime"
         }
+    }
+}
+
+data class ReservationPhotographerDto(
+    val days: ArrayList<Date> = arrayListOf(),
+    val places: ArrayList<Place> = arrayListOf(),
+    val categories: ArrayList<ResCategory> = arrayListOf()
+)
+
+data class ResCategory(
+    val categoryId: Long = 0,
+    val categoryName: String = "",
+    val details: ArrayList<ResCategoryDetail> = arrayListOf()
+)
+
+data class ResCategoryDetail(
+    val price: Int = 0,
+    val options: String = ""
+)
+
+
+data class ReservationListDto(
+    val reservationId: Long = 999,
+    val address: String = "",
+    val categoryName: String = "",
+    val options: String = "",
+    val date: String = "",
+    val phoneNumber: String = "",
+    val price: Int = 0,
+    val reviewed: Boolean = false,
+    val status: String = "",
+    val time: String = "",
+    val name: String = "",
+) {
+    fun toCustomReservationDomainDto(): CustomReservationDomainDto {
+        return CustomReservationDomainDto(
+            reservationId,
+            "",
+            name,
+            phoneNumber,
+            date,
+            time,
+            address,
+            CommonUtils.combineCategoryAndOption(categoryName, options),
+            "${CommonUtils.makeComma(price)} 원",
+            status
+        )
     }
 }

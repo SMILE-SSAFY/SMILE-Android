@@ -29,6 +29,8 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
     }
 
     override fun initView() {
+        setObserver()
+        initRecycler()
     }
 
     private fun setObserver() {
@@ -40,7 +42,8 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
         searchViewModel.searchPhotographerResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    dismissLoadingDialog()
+                    //TODO : 이메일 체크 다이얼로그 문제와 동일
+//                    dismissLoadingDialog()
                     binding.apply {
                         tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
                     }
@@ -51,7 +54,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    dismissLoadingDialog()
+//                    dismissLoadingDialog()
                     if (it.errorCode == 404) {
                         showToast(requireContext(), "검색한 키워드의 작가가 존재하지 않습니다.", Types.ToastType.INFO)
                     } else {
@@ -59,7 +62,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
+//                    showLoadingDialog(requireContext())
                 }
             }
         }

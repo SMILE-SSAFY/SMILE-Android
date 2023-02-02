@@ -30,12 +30,14 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         initToolbar()
         setPhotographerId()
         initViewPager()
-//        portfolioViewModel.getPortfolio(photographerId)
-//        setObserver()
+        portfolioViewModel.getPortfolio(photographerId)
+        portfolioViewModel.getPosts(photographerId)
+        setObserver()
     }
 
     private fun setPhotographerId() {
-        photographerId = args.photographerId
+        portfolioViewModel.photographerId = args.photographerId
+        photographerId = portfolioViewModel.photographerId
     }
 
     private fun initToolbar(){
@@ -70,6 +72,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         binding.apply {
             refreshLayout.setOnRefreshListener {
                 portfolioViewModel.getPortfolio(photographerId)
+                portfolioViewModel.getPosts(photographerId)
                 refreshLayout.isRefreshing = false
             }
         }

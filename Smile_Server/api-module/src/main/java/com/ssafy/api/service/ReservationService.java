@@ -48,6 +48,7 @@ import java.util.Map;
  *
  * @author 김정은
  * @author 서재건
+ * @author 신민철
  */
 @Service
 @RequiredArgsConstructor
@@ -187,9 +188,6 @@ public class ReservationService {
 
         List<Reservation> reservationList =
                 reservationRepository.findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(user.getId());
-        if (reservationList.isEmpty()) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
         log.info("작가 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
@@ -211,13 +209,9 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public List<ReservationListDto> findUserReservation(Long userId) {
-        log.info("유저 예약 목록 조회 시작");
+        log.info("유저 예약 목록 조회");
         List<Reservation> reservationList =
                 reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
-        if (reservationList.isEmpty()) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
-        log.info("유저 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
@@ -305,5 +299,35 @@ public class ReservationService {
             reviewRepository.deleteById(reviewId);
         }
         throw new CustomException(ErrorCode.USER_MISMATCH);
+    }
+
+    /**
+     * 예약 취소
+     *
+     * @param reservationId
+     * @param userId
+     */
+    public void changeCancelStatus(Long reservationId, Long userId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+        log.info("예약 조회 완료");
+
+        // 해당하는 유저가 아닐 경우
+        if(reservation.getUser().getId() != userId
+                || reservation.getPhotographer().getId() != userId){
+            log.info("예약 상태 변경의 권한이 없음");
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (!(reservation.getStatus() == ReservationStatus.예약확정전
+                || reservation.getStatus() == ReservationStatus.예약확정)) {
+            log.info("예약을 취소할 수 없음");
+            throw new CustomException(ErrorCode.RESERVATION_NOT_CANCEL);
+        }
+
+        reservation.updateStatus(ReservationStatus.예약취소);
+        log.info("예약 상태 : {}", reservation.getStatus());
+
+        reservationRepository.save(reservation);
     }
 }

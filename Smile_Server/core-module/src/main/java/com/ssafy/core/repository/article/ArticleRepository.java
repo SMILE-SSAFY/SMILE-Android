@@ -13,5 +13,6 @@ import java.util.List;
  */
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleRepositoryCustom {
     List<Article> findByUserIdOrderByIdDesc(Long user_id);
-    List<Article> findAllByLatitudeBetweenAndLongitudeBetween(Double y2, Double y1, Double x1, Double x2);
+    List<Article> findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(Double y2, Double y1, Double x1, Double x2);
+    List<Article> findAllByLatitudeBetweenAndLongitudeBetweenOrderByHeartsDesc(Double y2, Double y1, Double x1, Double x2);
 }
