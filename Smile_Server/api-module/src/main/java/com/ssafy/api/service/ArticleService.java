@@ -166,6 +166,7 @@ public class ArticleService {
                 .introduction(photographer.getIntroduction())
                 .categories(categories)
                 .places(places)
+                .minPrice(photographer.getMinPrice())
                 .build();
     }
 

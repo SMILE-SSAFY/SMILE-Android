@@ -92,6 +92,7 @@ public class PhotographerService {
             log.info(places.get(0).getPlaces().getId());
         }
 
+        int minPrice = Integer.MAX_VALUE;
         // 카테고리 변환
         List<PhotographerNCategories> categories = new ArrayList<>();
         for(CategoriesReqDto category : photographer.getCategories()){
@@ -102,6 +103,7 @@ public class PhotographerService {
                     .description(category.getDescription())
                     .build()
             );
+            minPrice = Math.min(minPrice, category.getPrice());
         }
 
         Photographer savedPhotographer = Photographer.builder()
@@ -111,6 +113,7 @@ public class PhotographerService {
                 .account(photographer.getAccount())
                 .places(places)
                 .categories(categories)
+                .minPrice(minPrice)
                 .build();
 
         photographerRepository.save(savedPhotographer);
