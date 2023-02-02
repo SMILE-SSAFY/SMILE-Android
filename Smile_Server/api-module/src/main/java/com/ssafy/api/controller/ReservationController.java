@@ -76,7 +76,7 @@ public class ReservationController {
      * @return 정상일 때 OK
      */
     @PutMapping("/status/{reservationId}")
-    public ResponseEntity<?> changeStatus(@PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status){
+    public ResponseEntity<?> changeStatus(@PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
@@ -152,7 +152,7 @@ public class ReservationController {
      * @return HttpStatus.OK
      */
     @PutMapping("/cancel/{reservationId}")
-    public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) {
+    public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
