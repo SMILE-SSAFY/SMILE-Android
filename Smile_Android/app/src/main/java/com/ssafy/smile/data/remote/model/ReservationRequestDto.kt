@@ -11,3 +11,7 @@ data class ReservationRequestDto(
     var date: String = "",
     var time: String = ""
 )
+
+data class ReservationChangeRequestDto(
+    val status: Int = 0
+)

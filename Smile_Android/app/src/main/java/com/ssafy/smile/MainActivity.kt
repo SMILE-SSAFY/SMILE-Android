@@ -1,13 +1,17 @@
 package com.ssafy.smile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.smile.databinding.ActivityMainBinding
 
 
 // TODO : presentation 패키지 내부로 옮기기.
+private const val TAG = "MainActivity_스마일"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
