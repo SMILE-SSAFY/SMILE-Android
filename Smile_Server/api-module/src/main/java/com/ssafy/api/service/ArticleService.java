@@ -320,7 +320,7 @@ public class ArticleService {
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
         articleClusterRepository.deleteAll();
 
-        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetween(y2, y1, x1, x2);
+        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()){
             return new ArrayList<>();
         }
