@@ -346,15 +346,15 @@ public class ArticleService {
         log.info(Arrays.toString(clusters.y));
         log.info(Arrays.toString(clusters.size));
 
-        int clusterIdx = 0;
+        int listIdx = 0;
         for (int i = 0; i < clusters.size.length-1; i ++){
             Long clusterId = (long) i;
             List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
             for (int j = 0; j < clusters.size[i]; j ++ ){
 
-                Article article = articleList.get(clusterIdx);
+                Article article = articleList.get(listIdx);
 
-                clusterIdx++;
+                listIdx++;
                 User articleAuthor = article.getUser();
 
                 boolean isHearted = isHearted(logInUser, article);
