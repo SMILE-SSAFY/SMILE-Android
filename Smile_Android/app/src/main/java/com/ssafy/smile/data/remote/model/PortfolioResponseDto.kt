@@ -10,7 +10,7 @@ data class PortfolioResponseDto (
     val isHeart: Boolean = false,
     val hearts: Int = 0,
     val photographerName: String = "",
-    val profileImg: String = "",
+    val profileImg: String? = "",
     val introduction: String = "",
     val places: ArrayList<String> = arrayListOf(),
     val categories: ArrayList<String> = arrayListOf(),
