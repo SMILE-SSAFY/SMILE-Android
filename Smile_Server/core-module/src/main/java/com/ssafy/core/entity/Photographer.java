@@ -50,6 +50,8 @@ public class Photographer implements Serializable {
     @Column(length = 35, nullable = false)
     private String account;
 
+    private int minPrice;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerNPlaces> places;
 
@@ -58,6 +60,9 @@ public class Photographer implements Serializable {
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerHeart> hearts;
+
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
+    private List<Reservation> reservations;
 
     @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<Review> reviews;

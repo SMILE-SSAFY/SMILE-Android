@@ -85,6 +85,7 @@ public class UserService {
                     .name(registerFormDto.getName())
                     .phoneNumber(registerFormDto.getPhoneNumber())
                     .role(Role.USER)
+                    .fcmToken(registerFormDto.getFcmToken())
                     .build();
             log.info("[registerUser] User 객체 : {}", user.toString());
 

@@ -125,10 +125,10 @@ public class ArticleController {
      * @return 게시글리스트
      */
     @GetMapping("list")
-    public ResponseEntity<?> searchArticleNear(@RequestParam("cord1y") Double y1,
-                                    @RequestParam("cord1x") Double x1,
-                                    @RequestParam("cord2y") Double y2,
-                                    @RequestParam("cord2x") Double x2){
+    public ResponseEntity<?> searchArticleNear(@RequestParam("coord1y") Double y1,
+                                    @RequestParam("coord1x") Double x1,
+                                    @RequestParam("coord2y") Double y2,
+                                    @RequestParam("coord2x") Double x2){
         List<ArticleClusterDto> articleClusterDtoList = articleService.clusterTest(y1,x1,y2,x2);
         return new ResponseEntity<>(articleClusterDtoList, HttpStatus.OK);
     }
@@ -156,6 +156,17 @@ public class ArticleController {
     public ResponseEntity<?> getClusterData(@PathVariable("clusterId") Long clusterId){
         ArticleClusterListDto articleClusterListDto = articleService.getClusterByClusterId(clusterId);
         return new ResponseEntity<>(articleClusterListDto, HttpStatus.OK);
+    }
+
+    /***
+     * 내가 좋아요 누른 작가 목록
+     * @return 좋아요 누른 게시글
+     *
+     */
+    @GetMapping("/heart/list")
+    public ResponseEntity<?> getHeartedArticle(){
+        List<ArticleSearchDto> articleSearchDtoList = articleService.getHeartedArticle();
+        return new ResponseEntity<>(articleSearchDtoList, HttpStatus.OK);
     }
 
 }

@@ -21,24 +21,16 @@ import java.sql.Time;
 @Builder
 public class ReservationListDto {
 
+    private Long reservationId;
     private ReservationStatus status;
-
     private String name;
-
     private String phoneNumber;
-
     private int price;
-
     private String categoryName;
-
     private String options;
-
     private Date date;
-
     private Time time;
-
     private String address;
-
     private boolean isReviewed;
 
     /**
@@ -51,6 +43,7 @@ public class ReservationListDto {
      */
     public ReservationListDto of(Reservation reservation, String name, String phoneNumber){
         return ReservationListDto.builder()
+                .reservationId(reservation.getId())
                 .status(reservation.getStatus())
                 .name(name)
                 .phoneNumber(phoneNumber)

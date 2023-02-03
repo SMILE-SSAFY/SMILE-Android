@@ -2,6 +2,7 @@ package com.ssafy.smile.common.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.ssafy.smile.Application
 import com.ssafy.smile.domain.model.Types
@@ -118,6 +119,7 @@ class SharedPreferencesUtil (context: Context) {
         removeFCMToken()
         removeRole()
         removeUserId()
+        Log.d("싸피", "removeAllInfo: ${getAuthToken()}")
     }
 
 }
