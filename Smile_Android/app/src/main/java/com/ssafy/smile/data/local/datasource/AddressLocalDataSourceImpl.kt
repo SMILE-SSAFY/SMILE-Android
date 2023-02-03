@@ -22,10 +22,9 @@ class AddressLocalDataSourceImpl(private val addressDao: AddressDao) : AddressLo
         return addressDao.deleteAddress( address = address)
     }
 
-    override fun getCurrentAddress(): LiveData<AddressEntity> {
-        return addressDao.getAddressIsSelectedLiveData(true)
+    override suspend fun deleteAllAddress(): Int {
+        return addressDao.deleteAllAddress()
     }
-
 
     override fun getAddressList(): LiveData<List<AddressEntity>> {
         return addressDao.getAddressList()

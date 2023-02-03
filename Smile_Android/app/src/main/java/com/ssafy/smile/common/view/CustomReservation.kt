@@ -87,7 +87,7 @@ class CustomReservation: ConstraintLayout {
 
         if (isList) {
             setChips(data.status)
-            setButtons(data.status, data.opposite, data.isReview, data.reviewId)
+            setButtons(data.status, data.opposite, data.isReview)
         }
 
         invalidate()
@@ -113,14 +113,14 @@ class CustomReservation: ConstraintLayout {
         }
     }
 
-    fun setButtons(status: String, opposite: String, isReview: Boolean, reviewId: Long) {
+    fun setButtons(status: String, opposite: String, isReview: Boolean) {
         when(opposite) {
-            "작가님" -> setCustomerButtons(status, isReview, reviewId)
+            "작가님" -> setCustomerButtons(status, isReview)
             "고객님" -> setPhotographerButtons(status)
         }
     }
 
-    private fun setCustomerButtons(status: String, isReview: Boolean, reviewId: Long) {
+    private fun setCustomerButtons(status: String, isReview: Boolean) {
         when(status) {
             "예약확정전" -> setButtons(arrayListOf(btnCancel))
             "예약확정" -> setButtons(arrayListOf(btnCancel))

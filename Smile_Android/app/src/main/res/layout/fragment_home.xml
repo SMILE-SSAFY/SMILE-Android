@@ -26,7 +26,7 @@
                     style="@style/TvH3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="주소"
+                    android:text="주소를 등록해주세요"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -61,31 +61,47 @@
                 android:text="인기순" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chip_recent"
+                android:id="@+id/chip_review_avg"
                 style="@style/ChipMediumRectangleBlueRadius8"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:text="최신순" />
+                android:text="평점순" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chip_price"
+                android:id="@+id/chip_review_cnt"
                 style="@style/ChipMediumRectangleBlueRadius8"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:text="가격순" />
+                android:text="리뷰순" />
         </com.google.android.material.chip.ChipGroup>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_home"
+        <LinearLayout
+            android:id="@+id/layout_visibility"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="60dp"
-            android:paddingHorizontal="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chip_group" />
+            app:layout_constraintTop_toBottomOf="@+id/chip_group"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/layout_empty_view"
+                layout="@layout/layout_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_home"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingHorizontal="20dp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

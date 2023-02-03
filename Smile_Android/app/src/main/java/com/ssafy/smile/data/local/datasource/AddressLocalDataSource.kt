@@ -9,7 +9,7 @@ interface AddressLocalDataSource {
     suspend fun insertAddress(address: AddressEntity) : Long
     suspend fun selectAddress(address: AddressEntity) : Long
     suspend fun deleteAddress(address: AddressEntity) : Int
-    fun getCurrentAddress() : LiveData<AddressEntity>
+    suspend fun deleteAllAddress(): Int
     fun getAddressList() : LiveData<List<AddressEntity>>
     fun getAddressListWithSelection() : LiveData<List<AddressEntity>>
 }

@@ -177,6 +177,11 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                     showEmailCheckDialog()
                 }
             }
+            btnCancel.setOnClickListener {
+                val dialog = CommonDialog(requireContext(), DialogBody("예약을 취소하시겠습니까?", "예", "아니요"),
+                    { moveToPopUpSelf() })
+                showDialog(dialog, viewLifecycleOwner)
+            }
             tvPlace.setOnItemClickListener { _, _, _, _ ->
                 selectData.address = tvPlace.text.toString()
                 etPlaceDetail.isEnabled = true
