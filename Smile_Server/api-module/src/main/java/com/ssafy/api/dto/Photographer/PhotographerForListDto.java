@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * 작가 검색할 때 사용하는 Dto
  *
- * author @서재건
+ * @author 서재건
  */
 @Data
 @NoArgsConstructor
@@ -27,9 +26,10 @@ public class PhotographerForListDto {
     private String profileImg;
     private List<PlacesForListDto> places;
     private List<CategoriesForListDto> categories;
-    @Value("false")
     private boolean hasHeart;
     private int heart;
+    private double score;
+    private int reviews;
 
     /**
      * Photographer Entity에서 검색용 photographer DTO로 변경
@@ -62,6 +62,8 @@ public class PhotographerForListDto {
                 .categories(categories)
                 .heart(Math.toIntExact(photographerQuerydsl.getHeart()))
                 .hasHeart(photographerQuerydsl.isHasHeart())
+                .score(Math.round(photographerQuerydsl.getScore() * 10) / 10.0)
+                .reviews(Math.toIntExact(photographerQuerydsl.getReviews()))
                 .build();
     }
 }
