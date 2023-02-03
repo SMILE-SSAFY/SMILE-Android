@@ -389,7 +389,6 @@ public class ArticleService {
             ArticleCluster articleCluster = ArticleCluster.builder()
                     .id(clusterId)
                     .userId(logInUser.getId())
-                    .articleRedisList(articleRedisList)
                     .build();
             articleClusterRepository.save(articleCluster);
         }

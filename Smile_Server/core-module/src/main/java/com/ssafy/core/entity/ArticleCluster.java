@@ -19,7 +19,4 @@ public class ArticleCluster {
     private Long id;
 
     private Long userId;
-
-    private List<ArticleRedis> articleRedisList;
-
 }
