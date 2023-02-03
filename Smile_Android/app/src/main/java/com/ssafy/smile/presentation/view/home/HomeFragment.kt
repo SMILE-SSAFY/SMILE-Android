@@ -34,7 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun onResume() {
         super.onResume()
         homeViewModel.getAddressList()
-        homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "")
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -116,7 +116,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     homeRecyclerAdapter.notifyDataSetChanged()
-                    homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "")
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
@@ -133,7 +133,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             } else{
                 curAddress = it[0].address
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "")
                 setObserverAfterSetAddress()
             }
         }
@@ -147,7 +147,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setRefreshLayoutEvent() {
         binding.apply {
             refreshLayout.setOnRefreshListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "")
                 refreshLayout.isRefreshing = false
             }
         }
@@ -157,13 +157,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setChipEvent() {
         binding.apply {
             chipPopular.setOnClickListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "heart")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "heart")
             }
             chipReviewAvg.setOnClickListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "score")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "score")
             }
             chipReviewCnt.setOnClickListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "review")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, "review")
             }
         }
     }

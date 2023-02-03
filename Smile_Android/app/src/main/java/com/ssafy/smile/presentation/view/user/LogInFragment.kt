@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.ssafy.smile.Application
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
@@ -23,6 +25,8 @@ private const val TAG = "LogInFragment_스마일"
 class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::bind, R.layout.fragment_log_in) {
 
     private val userViewModel: UserViewModel by viewModels()
+
+    private lateinit var fcmToken: String
 
     private val callback : (OAuthToken?, Throwable?) -> Unit = { token, error ->
         // 에러가 난 경우
@@ -42,6 +46,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
     }
 
     override fun initView() {
+        getFirebaseToken()
         setObserver()
     }
 
@@ -140,7 +145,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
 
     private fun getLoginInfo(): LoginDomainDto {
         binding.apply {
-            return LoginDomainDto(etId.text.toString(), etPassword.text.toString())
+            return LoginDomainDto(etId.text.toString(), etPassword.text.toString(), fcmToken)
         }
     }
 
@@ -159,11 +164,22 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                 } else if (token != null) {
-                    userViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken))
+                    userViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken, fcmToken))
                 }
             }
         } else {
             UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
+        }
+    }
+
+    private fun getFirebaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let {
+                    fcmToken = it
+                    Application.sharedPreferences.putFCMToken(it)
+                }
+            } else error("FCM 토큰 얻기에 실패하였습니다. 잠시 후 다시 시도해주세요.")
         }
     }
 }
