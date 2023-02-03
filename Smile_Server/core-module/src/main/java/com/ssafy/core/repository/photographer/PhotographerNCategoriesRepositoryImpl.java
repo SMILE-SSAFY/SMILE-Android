@@ -10,6 +10,7 @@ import com.ssafy.core.entity.QCategories;
 import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerHeart;
 import com.ssafy.core.entity.QPhotographerNCategories;
+import com.ssafy.core.entity.QReview;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,11 +40,14 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
         QPhotographer photographer = QPhotographer.photographer;
         QPhotographerHeart photographerHeart = QPhotographerHeart.photographerHeart;
+        QReview review = QReview.review;
 
         return jpaQueryFactory
                 .select(Projections.constructor(PhotographerQdslDto.class,
                         photographer,
+                        review.score.avg().as("score"),
                         photographerHeart.id.count(),
+                        review.id.count(),
                         new CaseBuilder()
                                 .when(photographer.id.in(
                                         JPAExpressions
@@ -55,6 +59,7 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
                 ))
                 .from(photographer)
                 .leftJoin(photographerHeart).on(photographer.eq(photographerHeart.photographer))
+                .leftJoin(review).on(photographer.eq(review.photographer))
                 .join(photographerNCategories).on(photographer.eq(photographerNCategories.photographer))
                 .where(photographerNCategories.category.id.in(categoryIdList))
                 .groupBy(photographer.id)
