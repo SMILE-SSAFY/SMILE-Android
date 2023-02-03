@@ -12,7 +12,7 @@ import java.util.List;
  * Redis에 저장할 Entity
  */
 @Data
-@RedisHash(value = "markers")
+@RedisHash(value = "markers", timeToLive = 1800)
 @Builder
 public class ArticleCluster {
     @Id

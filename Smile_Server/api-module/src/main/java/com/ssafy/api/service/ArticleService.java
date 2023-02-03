@@ -28,16 +28,12 @@ import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import smile.clustering.KMeans;
-import smile.clustering.PartitionClustering;
 import smile.clustering.XMeans;
 
 import javax.transaction.Transactional;
@@ -353,6 +349,8 @@ public class ArticleService {
         log.info(Arrays.toString(clusters.size));
 
         int listIdx = 0;
+        double y = (y1+y2)/2;
+        double x = (x1+x2)/2;
         for (int i = 0; i < clusters.size.length-1; i ++){
             Long clusterId = (long) i;
             List<ArticleRedis> articleRedisList = new ArrayList<>();
@@ -365,6 +363,8 @@ public class ArticleService {
 
                 boolean isHearted = isHearted(logInUser, article);
                 Long hearts = articleHeartRepository.countByArticle(article);
+                double baseLength = 111000;
+                double distance = Math.sqrt(Math.pow((article.getLatitude()-y)*baseLength,2)+Math.pow(Math.cos(article.getLongitude()-x)*baseLength,2));
 
                 String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
                 List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
@@ -375,6 +375,7 @@ public class ArticleService {
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
                         .longitude(article.getLongitude())
+                        .distance(distance)
                         .detailAddress(article.getDetailAddress())
                         .isHeart(isHearted)
                         .hearts(hearts)
@@ -407,12 +408,47 @@ public class ArticleService {
      * @return 마커별 게시글 리스트
      */
 
-    public List<ArticleRedis> getArticleListByMarkerId(Long clusterId, Pageable pageable){
-        Page<ArticleRedis> articleRedisPage = articleRedisRepository.findByClusterId(clusterId, pageable);
-        log.info(articleRedisPage.toString());
-        log.info(articleRedisPage.getContent().toString());
-        log.info(articleRedisRepository.findByClusterId(clusterId, pageable).toString());
-        return articleRedisPage.getContent();
+    public List<ArticleRedis> getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
+        log.info(condition);
+        log.info(String.valueOf(condition.equals("time")));
+        if (condition.equals("time")) {
+            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
+            log.info(articleRedisPage.toString());
+            log.info(String.valueOf((int) ((pageId+1)*9)));
+            log.info(String.valueOf(articleRedisPage.size()-1));
+
+            Integer size = (int) ((pageId+1)*9);
+
+            if ((int)(pageId+1)*9 > articleRedisPage.size()){
+                size = articleRedisPage.size();
+            }
+            return articleRedisPage.subList(0, size);
+        } else if (condition.equals("heart")) {
+            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
+            log.info(articleRedisPage.toString());
+            log.info(String.valueOf((int) ((pageId+1)*9)));
+            log.info(String.valueOf(articleRedisPage.size()-1));
+
+            Integer size = (int) ((pageId+1)*9);
+
+            if ((int)(pageId+1)*9 > articleRedisPage.size()){
+                size = articleRedisPage.size();
+            }
+            return articleRedisPage.subList(0, size);
+        } else if (condition.equals("distance")) {
+            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
+            log.info(articleRedisPage.toString());
+            log.info(String.valueOf((int) ((pageId+1)*9)));
+            log.info(String.valueOf(articleRedisPage.size()-1));
+
+            Integer size = (int) ((pageId+1)*9);
+
+            if ((int)(pageId+1)*9 > articleRedisPage.size()){
+                size = articleRedisPage.size();
+            }
+            return articleRedisPage.subList(0, size);
+        }
+        return new ArrayList<>();
     }
 
 
