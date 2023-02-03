@@ -20,7 +20,7 @@ import java.util.*
 object ImageUtils {
 
 
-    fun getImageFileFromUri(context: Context, uri:Uri, quality: Int=50) : File {
+    fun getFileFromUri(context: Context, uri:Uri, quality: Int=50) : File {
         val path = context.contentResolver.getPathFromURI(uri)
         val resizedBitmap = resizeImage(context, uri)
         return resizedBitmap?.run {

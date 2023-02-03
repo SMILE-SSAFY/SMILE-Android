@@ -23,9 +23,13 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
     private lateinit var customerReservationListRecyclerAdapter: CustomerReservationListRecyclerAdapter
     private val recyclerData = mutableListOf<CustomReservationDomainDto>()
 
+    override fun onResume() {
+        super.onResume()
+        customerReservationListViewModel.getCustomerReservationList()
+    }
+
     override fun initView() {
         initToolbar()
-        customerReservationListViewModel.getCustomerReservationList()
         setObserver()
         initRecycler()
     }
@@ -124,16 +128,20 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
             })
             setReviewClickListener(object : CustomerReservationListRecyclerAdapter.OnReviewClickListener{
                 override fun onClick(view: View, position: Int) {
-                    // TODO : 리뷰 쓰기로 이동
+                    val reservationId = recyclerData[position].reservationId
+                    val photographerName = recyclerData[position].name
+                    val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reservationId)
+                    findNavController().navigate(action)
+                    
                 }
-
             })
             setReviewCheckClickListener(object : CustomerReservationListRecyclerAdapter.OnReviewCheckClickListener{
                 override fun onClick(view: View, position: Int) {
+                    val photographerName = recyclerData[position].name
                     val reviewId = recyclerData[position].reviewId
-                    // TODO : 리뷰 확인으로 이동
+                    val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reviewId)
+                    findNavController().navigate(action)
                 }
-
             })
         }
 
@@ -162,4 +170,5 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
             }
         }
     }
+
 }
