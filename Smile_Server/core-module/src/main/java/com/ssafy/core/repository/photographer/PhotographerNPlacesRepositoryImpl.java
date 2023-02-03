@@ -1,5 +1,6 @@
 package com.ssafy.core.repository.photographer;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -48,6 +49,16 @@ public class PhotographerNPlacesRepositoryImpl implements PhotographerNPlacesRep
         QPhotographerHeart photographerHeart = QPhotographerHeart.photographerHeart;
         QReview review = QReview.review;
 
+        // TODO : 시/도 문자열 갯수 체크 최적화
+        BooleanBuilder builder = new BooleanBuilder();
+        if (first.length() == 2) {
+            char[] chars = first.toCharArray();
+            String siDo = chars[0] + "%" + chars[1] + "%";
+            builder.and(places.first.like(siDo));
+        } else {
+            builder.and(places.first.eq(first));
+        }
+
         return jpaQueryFactory
                 .select(Projections.constructor(PhotographerQdslDto.class,
                         photographer,
@@ -68,7 +79,7 @@ public class PhotographerNPlacesRepositoryImpl implements PhotographerNPlacesRep
                 .leftJoin(review).on(photographer.eq(review.photographer))
                 .join(photographerNPlaces).on(photographer.eq(photographerNPlaces.photographer))
                 .join(places).on(places.eq(photographerNPlaces.places))
-                .where(places.first.eq(first), places.second.eq(second))
+                .where(builder, places.second.eq(second))
                 .groupBy(photographer.id)
                 .orderBy(findCriteria(criteria, photographerHeart.id.count(), review.score.avg(), photographer.id, review.id.count()))
                 .fetch();
