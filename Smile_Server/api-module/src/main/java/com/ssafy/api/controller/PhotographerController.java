@@ -145,7 +145,7 @@ public class PhotographerController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByAddresss(user.getId(), address, criteria);
+                photographerService.getPhotographerListByAddresss(user.getId(), address, "");
         return ResponseEntity.ok().body(photographerList);
     }
 
