@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import java.time.LocalDateTime;
 
 @Data
-@RedisHash(value = "article")
+@RedisHash(value = "article", timeToLive = 1800)
 @Builder
 public class ArticleRedis {
     @Id
@@ -22,6 +22,8 @@ public class ArticleRedis {
     private Double latitude;
 
     private Double longitude;
+
+    private Double distance;
 
     private Boolean isHeart;
 

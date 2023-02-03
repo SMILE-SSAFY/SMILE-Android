@@ -3,17 +3,14 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.core.dto.ArticleSearchDto;
-import com.ssafy.core.entity.ArticleCluster;
+
 import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.repository.article.ArticleRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -159,9 +155,9 @@ public class ArticleController {
      */
     @GetMapping("/list/cluster")
     public ResponseEntity<?> getClusterData(@RequestParam("clusterId") Long clusterId,
-                                            @PageableDefault(size=9, sort="id", direction = Sort.Direction.DESC)
-                                            Pageable pageable){
-        List<ArticleRedis> articleRedisList = articleService.getArticleListByMarkerId(clusterId, pageable);
+                                            @RequestParam("condition") String condition,
+                                            @RequestParam("page") Long page){
+        List<ArticleRedis> articleRedisList = articleService.getArticleListByMarkerId(clusterId, condition, page);
         return new ResponseEntity<>(articleRedisList, HttpStatus.OK);
     }
 
