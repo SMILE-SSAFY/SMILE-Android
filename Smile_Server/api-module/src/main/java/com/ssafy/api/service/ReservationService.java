@@ -27,13 +27,27 @@ import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.reservation.ReservationRepository;
+import kr.co.bootpay.Bootpay;
+import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
@@ -63,6 +77,12 @@ public class ReservationService {
     private final S3UploaderService s3UploaderService;
     private final ReviewRepository reviewRepository;
     private final NotificationService notificationService;
+
+    @Value("${pay.rest-api}")
+    private String restApiKey;
+
+    @Value("${pay.private-key}")
+    private String privateKey;
 
     /**
      * 예약 등록
@@ -319,6 +339,7 @@ public class ReservationService {
      *
      * @param reservationId
      * @param userId
+     * @throws IOException
      */
     @Transactional
     public void changeCancelStatus(Long reservationId, Long userId) throws IOException {
@@ -339,17 +360,23 @@ public class ReservationService {
             throw new CustomException(ErrorCode.RESERVATION_NOT_CANCEL);
         }
 
+        String token = "", name = "";
+        User user = reservation.getUser();  // 예약한 유저
+        User photographer = reservation.getPhotographer().getUser();    // 예약된 사진작가
+        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
+            token = photographer.getFcmToken();  // 사진작가에게 전달
+            name = user.getName();     // 유저이름으로 취소
+        } else {    // 사진작가가 취소한 경우
+            token = user.getFcmToken();    // 예약한 유저에게 전달
+            name = photographer.getName(); // 사진작가 이름으로 취소
+        }
+
+        cancelPay(reservation.getReceiptId(), name);
+
         reservation.updateStatus(ReservationStatus.예약취소);
         log.info("예약 상태 : {}", reservation.getStatus());
 
         reservationRepository.save(reservation);
-
-        String token = "";
-        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
-            token = reservation.getPhotographer().getUser().getFcmToken();  // 사진작가에게 전달
-        } else {    // 사진작가가 취소한 경우
-            token = reservation.getUser().getFcmToken();    // 예약한 유저에게 전달
-        }
 
         // FCM 전송
         notificationService.sendDataMessageTo(NotificationDTO.builder()
@@ -357,5 +384,33 @@ public class ReservationService {
                 .registrationToken(token)
                 .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
                 .build());
+    }
+
+    /**
+     * 결제취소
+     *
+     * @param receiptId 결제 영수증 번호
+     */
+    public void cancelPay(String receiptId, String userName){
+        try {
+            Bootpay bootpay = new Bootpay(restApiKey, privateKey);
+            HashMap<String, Object> token = bootpay.getAccessToken();
+            if(token.get("error_code") != null) { //failed
+                return;
+            }
+            Cancel cancel = new Cancel();
+            cancel.receiptId = receiptId;
+            cancel.cancelUsername = userName;
+            cancel.cancelMessage = "사용자 단순 변심";
+
+            HashMap<String, Object> res = bootpay.receiptCancel(cancel);
+            if(res.get("error_code") == null) { //success
+                log.info("receiptCancel success: " + res);
+            } else {
+                log.error("receiptCancel false: " + res);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
