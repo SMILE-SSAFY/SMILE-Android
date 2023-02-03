@@ -184,7 +184,7 @@ public class ReservationService {
 
         // 해당하는 유저가 아닐 경우
         if(reservation.getUser().getId() != statusDto.getUserId()
-                || reservation.getPhotographer().getId() != statusDto.getUserId()){
+                && reservation.getPhotographer().getId() != statusDto.getUserId()){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -349,7 +349,7 @@ public class ReservationService {
 
         // 해당하는 유저가 아닐 경우
         if(reservation.getUser().getId() != userId
-                || reservation.getPhotographer().getId() != userId){
+                && reservation.getPhotographer().getId() != userId){
             log.info("예약 상태 변경의 권한이 없음");
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
