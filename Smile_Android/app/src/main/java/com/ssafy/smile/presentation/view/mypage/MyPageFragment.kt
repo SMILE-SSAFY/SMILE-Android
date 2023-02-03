@@ -31,14 +31,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun onResume() {
         super.onResume()
-//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
-//            viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
-//        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
+            viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+        }
     }
 
     override fun initView() {
         initToolbar()
-//        setObserver()
+        viewModel.getMyPageInfo()
+        setObserver()
     }
 
     override fun setEvent() {
@@ -51,6 +52,20 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
     private fun setObserver(){
         viewModel.apply {
+            myPageResponse.observe(viewLifecycleOwner){
+                when(it) {
+                    is NetworkUtils.NetworkResponse.Failure -> {}
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
+                        binding.apply {
+                            layoutMyPageProfile.tvProfileName.text = it.data.name
+                        }
+                    }
+                }
+            }
             viewModel.getRoleLiveData.observe(viewLifecycleOwner){
                 val isPhotographer = it==Types.Role.PHOTOGRAPHER
                 setPhotographerLayoutView(isPhotographer)

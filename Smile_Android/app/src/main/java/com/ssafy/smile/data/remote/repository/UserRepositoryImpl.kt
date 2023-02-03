@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.UserRemoteDataSource
 import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
+import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
@@ -36,6 +37,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     private val _withDrawResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
     val withDrawResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
         get() = _withDrawResponseLiveData
+
+    private val _myPageLiveData = MutableLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>()
+    val myPageLiveData: LiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
+        get() = _myPageLiveData
 
     override suspend fun checkEmail(email: String) {
         safeApiCall(_checkEmailResponseLiveData) {
@@ -69,6 +74,12 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     override suspend fun withDrawUser() {
         safeApiCall(_withDrawResponseLiveData){
             userRemoteDataSource.withDraw()
+        }
+    }
+
+    override suspend fun myPage() {
+        safeApiCall(_myPageLiveData) {
+            userRemoteDataSource.myPage()
         }
     }
 }

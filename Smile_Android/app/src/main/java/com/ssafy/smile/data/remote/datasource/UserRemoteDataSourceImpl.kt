@@ -1,9 +1,6 @@
 package com.ssafy.smile.data.remote.datasource
 
-import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
-import com.ssafy.smile.data.remote.model.LoginRequestDto
-import com.ssafy.smile.data.remote.model.SignUpRequestDto
-import com.ssafy.smile.data.remote.model.UserResponseDto
+import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.data.remote.service.UserApiService
 import retrofit2.Response
 
@@ -30,6 +27,10 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
 
     override suspend fun withDraw(): Response<String> {
         return userApiService.withDraw()
+    }
+
+    override suspend fun myPage(): Response<MyPageResponseDto> {
+        return userApiService.myPage()
     }
 
 }
