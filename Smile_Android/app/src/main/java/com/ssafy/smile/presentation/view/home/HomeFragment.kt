@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
@@ -32,8 +33,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onResume() {
         super.onResume()
-        homeViewModel.getCurrentAddressInfo()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+        homeViewModel.getAddressList()
+        homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -48,17 +49,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         isPhotographer = getRole()
         userId = getUserId()
         initToolbar()
-        homeViewModel.getCurrentAddressInfo()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-        setObserver()
+        homeViewModel.getAddressList()
+        setObserverBeforeSetAddress()
         initRecycler()
     }
 
-    private fun setObserver() {
-        getPhotographerInfoByAddressResponseObserver()
-        photographerHeartResponseObserver()
+    private fun setObserverBeforeSetAddress() {
         getRoleObserver()
         getAddressObserver()
+    }
+
+    private fun setObserverAfterSetAddress() {
+        getPhotographerInfoByAddressResponseObserver()
+        photographerHeartResponseObserver()
     }
 
     private fun getRoleObserver() {
@@ -73,11 +76,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    recyclerData.clear()
-                    it.data.forEach { data ->
-                        recyclerData.add(data.toCustomPhotographerDomainDto())
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        homeRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "해당 주소에 작가님이 존재하지 않습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { data ->
+                            recyclerData.add(data.toCustomPhotographerDomainDto())
+                        }
+                        Log.d(TAG, "getPhotographerInfoByAddressResponseObserver: ${recyclerData}")
+                        homeRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    homeRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -90,6 +101,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            rvHome.visibility = recyclerView
+        }
+    }
+
     private fun photographerHeartResponseObserver() {
         homeViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
             when(it) {
@@ -97,7 +116,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     homeRecyclerAdapter.notifyDataSetChanged()
-                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+                    homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
@@ -107,29 +126,46 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     private fun getAddressObserver() {
-        homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
-            curAddress = it.address
-            curAddress = CommonUtils.getAddress(requireContext(), it.latitude.toFloat(), it.longitude.toFloat())
-
-            Log.d(TAG, "address : ${it.address}")
-            Log.d(TAG, "longitude : ${it.longitude}")
-            Log.d(TAG, "latitude : ${it.latitude}")
-            Log.d(TAG, "getaddress() : ${CommonUtils.getAddress(requireContext(), it.latitude.toFloat(), it.longitude.toFloat())}")
+        homeViewModel.getAddressListResponse.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
+                curAddress = getString(R.string.tv_address_unselected)
+                binding.tvToolbarAddress.text = curAddress
+            } else{
+                curAddress = it[0].address
+                binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                setObserverAfterSetAddress()
+            }
         }
     }
 
     override fun setEvent() {
         setRefreshLayoutEvent()
+        setChipEvent()
     }
 
     private fun setRefreshLayoutEvent() {
         binding.apply {
             refreshLayout.setOnRefreshListener {
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
                 refreshLayout.isRefreshing = false
             }
         }
         setClickListener()
+    }
+
+    private fun setChipEvent() {
+        binding.apply {
+            chipPopular.setOnClickListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "heart")
+            }
+            chipReviewAvg.setOnClickListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "score")
+            }
+            chipReviewCnt.setOnClickListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "review")
+            }
+        }
     }
 
     private fun initToolbar() {
