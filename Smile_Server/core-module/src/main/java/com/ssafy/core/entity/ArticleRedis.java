@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import java.time.LocalDateTime;
 
 /***
+ * @author 신민철
  * redis에 cache로 article 정보를 저장
  */
 @Data
