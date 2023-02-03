@@ -8,7 +8,7 @@
     <string name="msg_address_failure">현재 주소는 선택하실 수 없습니다.</string>
     <!-- Address -->
     <string name="tv_address_selected">%s ▾</string>
-    <string name="tv_address_unselected">주소를 등록해주세요 ▾</string>
+    <string name="tv_address_unselected">주소를 등록해주세요</string>
     <string name="tv_address_empty">최근 검색 목록이 존재하지 않습니다.</string>
     <string name="address_search_tv">지번, 도로명, 건물명으로 검색</string>
     <string name="address_map_tv">지도를 움직여 위치를 설정해주세요</string>

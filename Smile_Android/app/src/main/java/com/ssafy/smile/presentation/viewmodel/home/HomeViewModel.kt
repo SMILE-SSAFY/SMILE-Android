@@ -22,11 +22,11 @@ class HomeViewModel: BaseViewModel() {
     val photographerHeartResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
-    val getCurrentAddressResponse: LiveData<AddressDomainDto>
-        get() = addressRepository.getCurrentAddress()
+    val getAddressListResponse: LiveData<List<AddressDomainDto>>
+        get() = addressRepository.getAddressList()
 
-    fun getPhotographerInfoByAddressInfo(address: String) = viewModelScope.launch{
-        photographerRepository.getPhotographerInfoByAddress(address)
+    fun getPhotographerInfoByAddressInfo(address: String, criteria: String) = viewModelScope.launch{
+        photographerRepository.getPhotographerInfoByAddress(address, criteria)
     }
 
     // 작가 좋아요를 수행하는 함수
@@ -36,9 +36,9 @@ class HomeViewModel: BaseViewModel() {
         }
     }
 
-    fun getCurrentAddressInfo(){
+    fun getAddressList(){
         viewModelScope.launch {
-            addressRepository.getCurrentAddress()
+            addressRepository.getAddressList()
         }
     }
 }
