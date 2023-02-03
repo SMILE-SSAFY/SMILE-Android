@@ -150,7 +150,9 @@ public class ArticleController {
 
     /***
      * 클러스터링시 마커에 포함된 게시글 확인
-     * @param clusterId
+     * @param clusterId 마커 id
+     * @param condition 정렬 기준
+     * @param page 보고 싶은 페이지
      * @return 마커에 포함된 게시글
      */
     @GetMapping("/list/cluster")
