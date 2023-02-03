@@ -12,10 +12,11 @@ data class PhotographerResponseDto(
     val photographerDto : PhotographerDto
 ) : Parcelable
 
+
 data class PhotographerByAddressResponseDto(
     val photographerId: Long = 0,
     val name: String = "",
-    val profileImg: String = "",
+    val profileImg: String? = "",
     val places: ArrayList<Place> = arrayListOf(),
     val categories: ArrayList<CategoryNoDes> = arrayListOf(),
     val hasHeart: Boolean = false,

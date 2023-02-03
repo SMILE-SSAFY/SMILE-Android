@@ -9,6 +9,8 @@ build/
 /**/src/main/resources/application-aws.yml
 /**/src/main/resources/application-coolsms.yml
 /**/src/main/resources/application-kakao.yml
+/**/src/main/resources/application-pay.yml
+/**/src/main/resources/firebase/firebase_service_key.json
 
 ### STS ###
 .apt_generated

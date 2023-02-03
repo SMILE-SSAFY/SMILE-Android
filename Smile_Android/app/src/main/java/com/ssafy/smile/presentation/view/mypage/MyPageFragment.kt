@@ -95,15 +95,21 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 btnLogout.setOnClickListener {  showLogoutDialog() }
             }
             layoutMyPageUserDetails.apply {
-                tvCustomerReservation.setOnClickListener{ }
-                tvCustomerInterest.setOnClickListener { }
+                tvCustomerReservation.setOnClickListener{
+                    findNavController().navigate(R.id.action_mainFragment_to_customerReservationListFragment)
+                }
+                tvCustomerInterest.setOnClickListener {
+                    moveToMyInterestFragment()
+                }
             }
             layoutMyPagePhotographer.apply {
                 clPhotographerWritePortfolio.setOnClickListener {
                     if (smPhotographerWritePortfolio.isChecked) showPhotographerDeleteDialog()
                     else showPhotographerWriteDialog()
                 }
-                tvPhotographerReservation.setOnClickListener {  }
+                tvPhotographerReservation.setOnClickListener {
+                    findNavController().navigate(R.id.action_mainFragment_to_photographerReservationList)
+                }
                 tvPhotographerPortfolio.setOnClickListener {
                     viewModel.getPhotographerInfo()
                 }
@@ -130,6 +136,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private fun logout() {
         try {
             removeUserInfo()
+
             Intent(context, MainActivity::class.java).apply {
                 requireActivity().finish()
                 startActivity(this)
@@ -155,6 +162,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private fun showPhotographerWithDrawDialog(){
         val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.withDraw_user), "회원 탈퇴"), { viewModel.withDrawUser() })
         showDialog(dialog, viewLifecycleOwner)
+    }
+    private fun moveToMyInterestFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_myInterestFragment)
     }
     private fun moveToRegisterPortFolioGraph(photographerResponseDto: PhotographerResponseDto?) {
        val action = MainFragmentDirections.actionMainFragmentToRegisterPortFolioGraph(photographerResponseDto)

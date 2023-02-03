@@ -12,7 +12,7 @@ import java.util.List;
  * @author 서재건
  */
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryCustom {
-    List<Reservation> findReservationsByPhotographerId(Long photographerId);
+    List<Reservation> findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(Long photographerId);
 
-    List<Reservation> findReservationsByUserId(Long userId);
+    List<Reservation> findByUserIdOrderByReservedAtDescReservedTimeDesc(Long userId);
 }

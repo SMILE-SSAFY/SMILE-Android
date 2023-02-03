@@ -19,12 +19,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 예약 관련 Entity
@@ -58,6 +57,8 @@ public class Reservation {
     @Builder.Default
     private ReservationStatus status = ReservationStatus.예약확정전;
 
+    private String receiptId;
+
     private int price;
 
     private String categoryName;
@@ -80,8 +81,8 @@ public class Reservation {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Review> reviews;
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Review review;
 
     /**
      * 예약 상태 변경

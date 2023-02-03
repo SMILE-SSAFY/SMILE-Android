@@ -25,7 +25,6 @@ import javax.persistence.Table;
 public class Categories {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

@@ -21,6 +21,7 @@ class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>
         binding.apply {
             customReservation.setAttrs(
                 CustomReservationDomainDto(
+                    args.reservationResult.reservationId,
                     args.reservationResult.opposite,
                     args.reservationResult.name,
                     args.reservationResult.phoneNumber,
@@ -29,7 +30,8 @@ class ReservationResultFragment : BaseFragment<FragmentReservationResultBinding>
                     args.reservationResult.location,
                     args.reservationResult.category,
                     args.reservationResult.cost
-                )
+                ),
+                false
             )
         }
     }

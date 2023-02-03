@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
@@ -31,6 +32,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onResume() {
         super.onResume()
+        homeViewModel.getCurrentAddressInfo()
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -44,8 +47,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun initView() {
         isPhotographer = getRole()
         userId = getUserId()
-        setAddress()
         initToolbar()
+        homeViewModel.getCurrentAddressInfo()
         homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
         setObserver()
         initRecycler()
@@ -55,6 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         getPhotographerInfoByAddressResponseObserver()
         photographerHeartResponseObserver()
         getRoleObserver()
+        getAddressObserver()
     }
 
     private fun getRoleObserver() {
@@ -102,6 +106,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
+    private fun getAddressObserver() {
+        homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
+            curAddress = it.address
+            curAddress = CommonUtils.getAddress(requireContext(), it.latitude.toFloat(), it.longitude.toFloat())
+
+            Log.d(TAG, "address : ${it.address}")
+            Log.d(TAG, "longitude : ${it.longitude}")
+            Log.d(TAG, "latitude : ${it.latitude}")
+            Log.d(TAG, "getaddress() : ${CommonUtils.getAddress(requireContext(), it.latitude.toFloat(), it.longitude.toFloat())}")
+        }
+    }
+
     override fun setEvent() {
         setRefreshLayoutEvent()
     }
@@ -128,7 +144,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                             true
                         }
                         R.id.action_portfolio -> {
-                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId)
+                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId, -1L)
                             findNavController().navigate(action)
                             true
                         }
@@ -149,14 +165,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
-    private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.toString()
+    private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.getValue()
 
     private fun getUserId(): Long = SharedPreferencesUtil(requireContext()).getUserId()
-
-    private fun setAddress() {
-        //TODO : 주소록 구현 후 curAddress 변수로 주소 가져오기
-        curAddress = "강원도 양구군"
-    }
 
     private fun initRecycler() {
         homeRecyclerAdapter = HomeRecyclerAdapter(requireContext(), recyclerData).apply {
@@ -167,7 +178,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             })
             setItemClickListener(object: HomeRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId)
+                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId, -1L)
                     findNavController().navigate(action)
                 }
 

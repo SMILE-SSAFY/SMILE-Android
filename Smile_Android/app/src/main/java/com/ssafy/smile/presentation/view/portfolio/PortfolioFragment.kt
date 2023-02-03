@@ -18,6 +18,7 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
+import kotlin.math.log
 
 private const val TAG = "PortfolioFragment_스마일"
 class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortfolioBinding::bind, R.layout.fragment_portfolio) {
@@ -28,14 +29,29 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     override fun initView() {
         initToolbar()
+        checkNavArgs()
         setPhotographerId()
         initViewPager()
-//        portfolioViewModel.getPortfolio(photographerId)
-//        setObserver()
+        portfolioViewModel.getPortfolio(photographerId)
+        portfolioViewModel.getPosts(photographerId)
+        setObserver()
+    }
+
+    private fun checkNavArgs(){
+        if (args.photographerId<0 && args.postId<0) {
+            showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 불러오는"), Types.ToastType.ERROR)
+            moveToPopUpSelf()
+        }
+        else if (args.postId>0) {
+            val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragmentWithPop(args.postId)
+            findNavController().navigate(action)
+        }
+        else setPhotographerId()
     }
 
     private fun setPhotographerId() {
-        photographerId = args.photographerId
+        portfolioViewModel.photographerId = args.photographerId
+        photographerId = portfolioViewModel.photographerId
     }
 
     private fun initToolbar(){
@@ -70,6 +86,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         binding.apply {
             refreshLayout.setOnRefreshListener {
                 portfolioViewModel.getPortfolio(photographerId)
+                portfolioViewModel.getPosts(photographerId)
                 refreshLayout.isRefreshing = false
             }
         }
@@ -94,8 +111,10 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    Log.d(TAG, "portfolioResponseObserver: ${it.errorCode}")
-                    showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    if (args.postId<0){
+                        Log.d(TAG, "portfolioResponseObserver: ${it.errorCode}")
+                        showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())

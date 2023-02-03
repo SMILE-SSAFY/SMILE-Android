@@ -3,12 +3,14 @@ package com.ssafy.api.service;
 import com.ssafy.api.dto.Photographer.PlacesForListDto;
 import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
 import com.ssafy.api.dto.Reservation.CategoryDetailDto;
+import com.ssafy.api.dto.Reservation.NotificationDTO;
 import com.ssafy.api.dto.Reservation.PhotographerInfoDto;
 import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
+import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
@@ -47,6 +49,7 @@ import java.util.Map;
  *
  * @author 김정은
  * @author 서재건
+ * @author 신민철
  */
 @Service
 @RequiredArgsConstructor
@@ -59,6 +62,7 @@ public class ReservationService {
     private final PhotographerNPlacesRepository photographerNPlacesRepository;
     private final S3UploaderService s3UploaderService;
     private final ReviewRepository reviewRepository;
+    private final NotificationService notificationService;
 
     /**
      * 예약 등록
@@ -75,6 +79,7 @@ public class ReservationService {
         Reservation savedReservation = Reservation.builder()
                 .photographer(Photographer.builder().id(reservation.getPhotographerId()).build())
                 .user(User.builder().id(reservation.getUserId()).build())
+                .receiptId(reservation.getReceiptId())
                 .price(reservation.getPrice())
                 .categoryName(reservation.getCategoryName())
                 .options(reservation.getOptions())
@@ -152,7 +157,8 @@ public class ReservationService {
      *
      * @param statusDto
      */
-    public void changeStatus(ReservationStatusDto statusDto){
+    @Transactional
+    public void changeStatus(ReservationStatusDto statusDto) throws IOException {
         Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
@@ -168,6 +174,15 @@ public class ReservationService {
 
         reservation.updateStatus(statusDto.getStatus());
         reservationRepository.save(reservation);
+
+        // FCM 전송
+        if(statusDto.getStatus() == ReservationStatus.예약확정){
+            notificationService.sendDataMessageTo(NotificationDTO.builder()
+                            .requestId(statusDto.getUserId())
+                            .registrationToken(reservation.getUser().getFcmToken())
+                            .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                    .build());
+        }
     }
 
     /**
@@ -184,10 +199,8 @@ public class ReservationService {
         }
         log.info("Role 작가 확인");
 
-        List<Reservation> reservationList = reservationRepository.findReservationsByPhotographerId(user.getId());
-        if (reservationList.isEmpty()) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
+        List<Reservation> reservationList =
+                reservationRepository.findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(user.getId());
         log.info("작가 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
@@ -209,12 +222,9 @@ public class ReservationService {
      */
     @Transactional(readOnly = true)
     public List<ReservationListDto> findUserReservation(Long userId) {
-        log.info("유저 예약 목록 조회 시작");
-        List<Reservation> reservationList = reservationRepository.findReservationsByUserId(userId);
-        if (reservationList.isEmpty()) {
-            throw new CustomException(ErrorCode.RESERVATION_NOT_FOUND);
-        }
         log.info("유저 예약 목록 조회");
+        List<Reservation> reservationList =
+                reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
@@ -248,11 +258,104 @@ public class ReservationService {
                 .content(reviewPostDto.getContent())
                 .score(reviewPostDto.getScore())
                 .PhotoUrl(fileName)
-                .userId(user)
-                .photographerId(photographer)
-                .reservationId(reservation)
+                .user(user)
+                .photographer(photographer)
+                .reservation(reservation)
                 .build();
 
         reviewRepository.save(review);
+    }
+
+    /***
+     * 해당 작가에 달린 리뷰를 모두 보여주는 서비스
+     * @param photographerId 작가id
+     * @return reviewResDto 리뷰리스트
+     */
+    public List<ReviewResDto> showReviewList(Long photographerId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
+        List<ReviewResDto> reviewResDtoList = new ArrayList<>();
+
+        List<Review> ReviewList = reviewRepository.findByPhotographer(photographer);
+
+        for(Review review : ReviewList){
+            boolean isMe = review.getUser() == user;
+            ReviewResDto resDto = ReviewResDto.builder()
+                    .reviewId(review.getId())
+                    .userId(user.getId())
+                    .isMe(isMe)
+                    .userName(user.getName())
+                    .score(review.getScore())
+                    .content(review.getContent())
+                    .photoUrl(review.getPhotoUrl())
+                    .build();
+            reviewResDtoList.add(resDto);
+        }
+        return reviewResDtoList;
+    }
+
+    /***
+     * 리뷰아이디를 통해 리뷰를 삭제
+     * 본인일 경우만 삭제 가능
+     * @param reviewId 리뷰아이디
+     */
+    public void deleteReview(Long reviewId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+
+        if(review.getUser().getId() == user.getId()){
+            reviewRepository.deleteById(reviewId);
+        }
+        throw new CustomException(ErrorCode.USER_MISMATCH);
+    }
+
+    /**
+     * 예약 취소
+     *
+     * @param reservationId
+     * @param userId
+     */
+    @Transactional
+    public void changeCancelStatus(Long reservationId, Long userId) throws IOException {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
+        log.info("예약 조회 완료");
+
+        // 해당하는 유저가 아닐 경우
+        if(reservation.getUser().getId() != userId
+                || reservation.getPhotographer().getId() != userId){
+            log.info("예약 상태 변경의 권한이 없음");
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (!(reservation.getStatus() == ReservationStatus.예약확정전
+                || reservation.getStatus() == ReservationStatus.예약확정)) {
+            log.info("예약을 취소할 수 없음");
+            throw new CustomException(ErrorCode.RESERVATION_NOT_CANCEL);
+        }
+
+        reservation.updateStatus(ReservationStatus.예약취소);
+        log.info("예약 상태 : {}", reservation.getStatus());
+
+        reservationRepository.save(reservation);
+
+        String token = "";
+        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
+            token = reservation.getPhotographer().getUser().getFcmToken();  // 사진작가에게 전달
+        } else {    // 사진작가가 취소한 경우
+            token = reservation.getUser().getFcmToken();    // 예약한 유저에게 전달
+        }
+
+        // FCM 전송
+        notificationService.sendDataMessageTo(NotificationDTO.builder()
+                .requestId(userId)
+                .registrationToken(token)
+                .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                .build());
     }
 }

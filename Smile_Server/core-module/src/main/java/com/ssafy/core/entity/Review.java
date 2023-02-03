@@ -35,13 +35,13 @@ public class Review {
 
     @OneToOne
     @JoinColumn(name = "reservation_id")
-    private Reservation reservationId;
+    private Reservation reservation;
 
     @ManyToOne
     @JoinColumn(name = "photographer_id")
-    private Photographer photographerId;
+    private Photographer photographer;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 }
