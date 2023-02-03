@@ -1,10 +1,8 @@
 package com.ssafy.smile.data.remote.service
 
-import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.common.util.Constants.BASE_URL_PHOTOGRAPHER
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerDto
-import com.ssafy.smile.data.remote.model.PhotographerRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -29,6 +27,6 @@ interface PhotographerApiService {
     suspend fun deletePhotographerInfo() : Response<String>
 
     @GET("$BASE_URL_PHOTOGRAPHER/list")
-    suspend fun getPhotographerInfoByAddress(@Query("address") address:String): Response<ArrayList<PhotographerByAddressResponseDto>>
+    suspend fun getPhotographerInfoByAddress(@Query("address") address:String, @Query("criteria") criteria: String): Response<ArrayList<PhotographerByAddressResponseDto>>
 
 }

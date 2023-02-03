@@ -1,5 +1,6 @@
 package com.ssafy.smile.data.local.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.ssafy.smile.data.local.database.entity.AddressEntity
@@ -8,6 +9,7 @@ import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.repository.AddressRepository
 import com.ssafy.smile.presentation.base.BaseRepository
 
+private const val TAG = "AddressRepositoryImpl_스마일"
 class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalDataSource): BaseRepository(), AddressRepository {
 
 
@@ -23,10 +25,8 @@ class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalData
         return addressLocalDataSource.deleteAddress(address.makeToAddressEntity())
     }
 
-    override fun getCurrentAddress(): LiveData<AddressDomainDto> {
-        return addressLocalDataSource.getCurrentAddress().map { entity ->
-            entity.makeToAddressDomainDto()
-        }
+    override suspend fun deleteAllAddress(): Int {
+        return addressLocalDataSource.deleteAllAddress()
     }
 
     override fun getAddressList(): LiveData<List<AddressDomainDto>> {

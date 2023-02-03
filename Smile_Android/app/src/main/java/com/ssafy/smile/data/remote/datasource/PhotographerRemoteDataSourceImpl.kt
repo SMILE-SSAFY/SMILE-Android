@@ -26,7 +26,7 @@ class PhotographerRemoteDataSourceImpl(private val photographerApiService: Photo
         return photographerApiService.deletePhotographerInfo()
     }
 
-    override suspend fun getPhotographerInfoByAddress(address:String): Response<ArrayList<PhotographerByAddressResponseDto>> {
-        return photographerApiService.getPhotographerInfoByAddress(address)
+    override suspend fun getPhotographerInfoByAddress(address:String, criteria: String): Response<ArrayList<PhotographerByAddressResponseDto>> {
+        return photographerApiService.getPhotographerInfoByAddress(address, criteria)
     }
 }

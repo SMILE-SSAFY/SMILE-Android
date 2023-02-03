@@ -39,6 +39,7 @@
             android:id="@+id/sm_photographer_write_portfolio"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginEnd="20dp"
             android:clickable="false"
             android:scaleX="1"
             android:scaleY="1"

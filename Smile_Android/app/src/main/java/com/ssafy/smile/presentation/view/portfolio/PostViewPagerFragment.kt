@@ -43,11 +43,19 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    recyclerData.clear()
-                    it.data.forEach { post ->
-                        recyclerData.add(post)
+
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        portfolioRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "아직 등록한 게시물이 없습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { post ->
+                            recyclerData.add(post)
+                        }
+                        portfolioRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    portfolioRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -55,6 +63,14 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                     showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
+        }
+    }
+
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            recycler.visibility = recyclerView
         }
     }
 

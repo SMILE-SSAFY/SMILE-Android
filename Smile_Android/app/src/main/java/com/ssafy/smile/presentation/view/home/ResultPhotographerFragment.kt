@@ -44,14 +44,23 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                 is NetworkUtils.NetworkResponse.Success -> {
                     //TODO : 이메일 체크 다이얼로그 문제와 동일
 //                    dismissLoadingDialog()
+
                     binding.apply {
                         tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
                     }
-                    recyclerData.clear()
-                    it.data.forEach { data ->
-                        recyclerData.add(data.toCustomPhotographerDomainDto())
+
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        resultPhotographerRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "검색 결과가 존재하지 않습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { data ->
+                            recyclerData.add(data.toCustomPhotographerDomainDto())
+                        }
+                        resultPhotographerRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
 //                    dismissLoadingDialog()
@@ -65,6 +74,14 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
 //                    showLoadingDialog(requireContext())
                 }
             }
+        }
+    }
+
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            rvPhotographerResult.visibility = recyclerView
         }
     }
 
