@@ -317,19 +317,22 @@ public class ArticleService {
      */
 
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
+
+        // User를 조회하고 user가 이전에 clustering한 데이터를 cache로 가지고 있을 경우 삭제
         User logInUser = getLogInUser();
         articleClusterRepository.findByUserId(logInUser.getId()).ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
 
+        // 지도 범위 내의 모든 게시글을 조회
         List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()){
             return new ArrayList<>();
         }
-        // k값 최적화 필요
+        // k값 최적화 필요, 클러스터링 라이브러리 이용
         XMeans clusters = XMeans.fit(getGeoPointArray(articleList),20);
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
-
+        // 클러스터링한 데이터 내에서 마커찍기 + 마커마다 게시글 개수 return
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
             double centroidX = centroids[0];
@@ -351,6 +354,7 @@ public class ArticleService {
         int listIdx = 0;
         double y = (y1+y2)/2;
         double x = (x1+x2)/2;
+        // 마커별 게시글을 cache로 저장
         for (int i = 0; i < clusters.size.length-1; i ++){
             Long clusterId = (long) i;
             List<ArticleRedis> articleRedisList = new ArrayList<>();
@@ -363,6 +367,7 @@ public class ArticleService {
 
                 boolean isHearted = isHearted(logInUser, article);
                 Long hearts = articleHeartRepository.countByArticle(article);
+                // 위도, 경도 기반 중심좌표와 게시글의 거리 계산
                 double baseLength = 111000;
                 double distance = Math.sqrt(Math.pow((article.getLatitude()-y)*baseLength,2)+Math.pow(Math.cos(article.getLongitude()-x)*baseLength,2));
 
@@ -386,6 +391,7 @@ public class ArticleService {
                 articleRedisList.add(articleRedis);
                 articleRedisRepository.save(articleRedis);
             }
+            // 해당 유저가 만든 클러스터를 cache로 저장
             ArticleCluster articleCluster = ArticleCluster.builder()
                     .id(clusterId)
                     .userId(logInUser.getId())
@@ -401,15 +407,17 @@ public class ArticleService {
     }
 
     /***
-     * 클러스터링 이후 해당 클러스터 별로 게시글 검색결과를 반환
+     * 클러스터링 이후 해당 클러스터 별로 cache를 조회하여 게시글 검색결과를 반환
      * @param clusterId 클러스터 마커 id
-     * @param lastArticleId 게시글의 마지막 idx
+     * @param condition distance, title, heart 순으로 조회 가능ㄷ
+     * @param pageId 늘어날 수록 조회하는 게시글 증가
      * @return 마커별 게시글 리스트
      */
 
     public List<ArticleRedis> getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
         log.info(condition);
         log.info(String.valueOf(condition.equals("time")));
+        // 최신순 조회
         if (condition.equals("time")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
             log.info(articleRedisPage.toString());
@@ -417,11 +425,12 @@ public class ArticleService {
             log.info(String.valueOf(articleRedisPage.size()-1));
 
             Integer size = (int) ((pageId+1)*9);
-
+            // cache를 paging
             if ((int)(pageId+1)*9 > articleRedisPage.size()){
                 size = articleRedisPage.size();
             }
             return articleRedisPage.subList(0, size);
+            // 좋아요순 조회
         } else if (condition.equals("heart")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
             log.info(articleRedisPage.toString());
@@ -434,6 +443,7 @@ public class ArticleService {
                 size = articleRedisPage.size();
             }
             return articleRedisPage.subList(0, size);
+            // 거리순 조회
         } else if (condition.equals("distance")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
             log.info(articleRedisPage.toString());
