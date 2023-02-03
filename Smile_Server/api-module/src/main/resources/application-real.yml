@@ -15,6 +15,7 @@ spring:
       - aws
       - coolsms
       - kakao
+      - pay
   # Random Key
   jwt:
     secret: DvqcGn8mnFjqSL4a
