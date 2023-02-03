@@ -2,6 +2,7 @@ package com.ssafy.smile.data.remote.datasource
 
 import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.data.remote.service.ReservationApiService
+import okhttp3.MultipartBody
 import retrofit2.Response
 
 class ReservationRemoteDateSourceImpl(private val reservationApiService: ReservationApiService): ReservationRemoteDateSource {
@@ -27,4 +28,21 @@ class ReservationRemoteDateSourceImpl(private val reservationApiService: Reserva
     override suspend fun cancelReservation(reservationId: Long): Response<Any> {
         return reservationApiService.cancelReservation(reservationId)
     }
+
+    override suspend fun getPhotographerReviewList(photographerId: Long): Response<List<PhotographerReviewDto>> {
+        return reservationApiService.getPhotographerReviewList(photographerId)
+    }
+
+    override suspend fun postReview(reservationId: Long, score: Float, content: String, image: MultipartBody.Part): Response<Any> {
+        return reservationApiService.postReview(reservationId, score, content, image)
+    }
+
+    override suspend fun getReview(reviewId: Long): Response<ReviewDto> {
+        return reservationApiService.getReview(reviewId)
+    }
+
+    override suspend fun deleteReview(reviewId: Long): Response<Any> {
+        return reservationApiService.deleteReview(reviewId)
+    }
+
 }

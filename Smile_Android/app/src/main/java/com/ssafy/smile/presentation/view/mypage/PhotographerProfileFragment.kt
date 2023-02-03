@@ -28,8 +28,7 @@ class PhotographerProfileFragment() : BaseBottomSheetDialogFragment<FragmentPhot
             }
             layoutSelectImageGallery.setOnClickListener {
                 actionGalleryPermission(requireContext(), 1, "프로필 사진은 한 장만 선택가능합니다."){
-                    val profileBitmap = ImageUtils.resizeImage(requireContext(), it[0])
-                    viewModel.profileBitmap = profileBitmap
+                    viewModel.profileBitmap = ImageUtils.resizeImage(requireContext(), it[0])
                     findNavController().navigate(R.id.photographerProfileCropFragment)
                 }
             }
