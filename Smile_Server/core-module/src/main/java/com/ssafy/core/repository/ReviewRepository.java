@@ -9,7 +9,8 @@ import java.util.List;
 /***
  * review repo
  * @author 신민철
+ * @author 서재건
  */
-public interface ReviewRepository extends JpaRepository<Review, Long> {
+public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRepositoryCustom {
     List<Review> findByPhotographer(Photographer photographer);
 }
