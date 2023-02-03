@@ -431,4 +431,19 @@ public class ReservationService {
             e.printStackTrace();
         }
     }
+
+    /***
+     * 리뷰 조회
+     * @param reviewId
+     * @return 리뷰 디테일
+     */
+    public ReviewDetailDto reviewDetail(Long reviewId){
+        Review result = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        return ReviewDetailDto.builder()
+                .id(reviewId)
+                .photoUrl(result.getPhotoUrl())
+                .content(result.getContent())
+                .score(result.getScore())
+                .build();
+    }
 }
