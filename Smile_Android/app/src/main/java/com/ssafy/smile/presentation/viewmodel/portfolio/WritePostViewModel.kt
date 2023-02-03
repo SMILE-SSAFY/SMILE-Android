@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-private const val TAG = "WritePostViewModel_스마일"
 class WritePostViewModel : BaseViewModel() {
     private val portfolioRepository = Application.repositoryInstances.getPortfolioRepository()
 
