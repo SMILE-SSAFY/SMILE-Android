@@ -361,12 +361,14 @@ public class ReservationService {
         }
 
         String token = "", name = "";
+        User user = reservation.getUser();  // 예약한 유저
+        User photographer = reservation.getPhotographer().getUser();    // 예약된 사진작가
         if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
-            token = reservation.getPhotographer().getUser().getFcmToken();  // 사진작가에게 전달
-            name = reservation.getUser().getName();     // 유저이름으로 취소
+            token = photographer.getFcmToken();  // 사진작가에게 전달
+            name = user.getName();     // 유저이름으로 취소
         } else {    // 사진작가가 취소한 경우
-            token = reservation.getUser().getFcmToken();    // 예약한 유저에게 전달
-            name = reservation.getPhotographer().getUser().getName(); // 사진작가 이름으로 취소
+            token = user.getFcmToken();    // 예약한 유저에게 전달
+            name = photographer.getName(); // 사진작가 이름으로 취소
         }
 
         cancelPay(reservation.getReceiptId(), name);
