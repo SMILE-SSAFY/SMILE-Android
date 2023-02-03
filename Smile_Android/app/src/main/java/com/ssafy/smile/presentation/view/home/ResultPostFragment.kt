@@ -45,14 +45,23 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
 //                    dismissLoadingDialog()
+
                     binding.apply {
                         tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
                     }
-                    recyclerData.clear()
-                    it.data.forEach { data ->
-                        recyclerData.add(data.toCustomPostDomainDto())
+
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        resultPostRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "검색 결과가 존재하지 않습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { data ->
+                            recyclerData.add(data.toCustomPostDomainDto())
+                        }
+                        resultPostRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    resultPostRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
 //                    dismissLoadingDialog()
@@ -63,6 +72,14 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                     }
                 }
             }
+        }
+    }
+
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            rvPostResult.visibility = recyclerView
         }
     }
 
@@ -101,7 +118,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
             })
         }
 
-        binding.rvPhotographerResult.apply {
+        binding.rvPostResult.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = resultPostRecyclerAdapter
         }

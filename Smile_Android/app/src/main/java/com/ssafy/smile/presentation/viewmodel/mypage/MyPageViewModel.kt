@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
+import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MyPageViewModel() : BaseViewModel() {
     private val photographerRepository = Application.repositoryInstances.getPhotographerRepository()
     private val userRepository = Application.repositoryInstances.getUserRepository()
+    private val addressRepository = Application.repositoryInstances.getAddressRepository()
 
     val getPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
         get() = photographerRepository.getPhotographerInfoResponseLiveData
@@ -31,6 +34,10 @@ class MyPageViewModel() : BaseViewModel() {
 
     fun withDrawUser() = viewModelScope.launch {
         userRepository.withDrawUser()
+    }
+
+    suspend fun deleteAllAddress() = viewModelScope.launch(Dispatchers.IO) {
+        addressRepository.deleteAllAddress()
     }
 
 }
