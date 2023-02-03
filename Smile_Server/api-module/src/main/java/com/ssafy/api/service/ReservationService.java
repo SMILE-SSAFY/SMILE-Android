@@ -9,6 +9,7 @@ import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationResDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.api.dto.Reservation.ReviewDetailDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
 import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.core.code.ReservationStatus;
@@ -375,5 +376,20 @@ public class ReservationService {
                 .registrationToken(token)
                 .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
                 .build());
+    }
+
+    /***
+     * 리뷰 조회
+     * @param reviewId
+     * @return 리뷰 디테일
+     */
+    public ReviewDetailDto reviewDetail(Long reviewId){
+        Review result = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        return ReviewDetailDto.builder()
+                .id(reviewId)
+                .photoUrl(result.getPhotoUrl())
+                .content(result.getContent())
+                .score(result.getScore())
+                .build();
     }
 }
