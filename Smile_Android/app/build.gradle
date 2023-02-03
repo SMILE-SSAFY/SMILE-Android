@@ -132,7 +132,11 @@ dependencies {
 
     // custom calendar view Library 추가
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
-    
+
+    // custom ratingBar view Library 추가
+    implementation 'tw.com.oneup.www:reviewbar:1.0.2'
+
     // swipe refresh layout dependency 추가
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 }

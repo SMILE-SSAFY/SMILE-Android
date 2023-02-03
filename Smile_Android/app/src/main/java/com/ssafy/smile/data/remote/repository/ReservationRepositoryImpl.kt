@@ -7,6 +7,7 @@ import com.ssafy.smile.data.remote.datasource.ReservationRemoteDateSource
 import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.domain.repository.ReservationRepository
 import com.ssafy.smile.presentation.base.BaseRepository
+import okhttp3.MultipartBody
 
 class ReservationRepositoryImpl(private val reservationRemoteDateSource: ReservationRemoteDateSource): ReservationRepository, BaseRepository() {
     private val _photographerReservationInfoLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>()
@@ -32,6 +33,23 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     private val _cancelReservationLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
     val cancelReservationLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _cancelReservationLiveData
+
+    private val _getPhotographerReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>()
+    val getPhotographerReviewLiveData: LiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>
+        get() = _getPhotographerReviewLiveData
+
+    private val _postReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
+    val postReviewLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = _postReviewLiveData
+
+    private val _getReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReviewDto>>()
+    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewDto>>
+        get() = _getReviewLiveData
+
+    private val _deleteReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
+    val deleteReviewLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = _deleteReviewLiveData
+
 
     override suspend fun getPhotographerReservationInfo(photographerId: Long) {
         safeApiCall(_photographerReservationInfoLiveData) {
@@ -66,6 +84,30 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     override suspend fun cancelReservation(reservationId: Long) {
         safeApiCall(_cancelReservationLiveData) {
             reservationRemoteDateSource.cancelReservation(reservationId)
+        }
+    }
+
+    override suspend fun postReview(reservationId: Long, score: Float, content: String, image: MultipartBody.Part){
+        safeApiCall(_postReviewLiveData){
+            reservationRemoteDateSource.postReview(reservationId, score, content, image)
+        }
+    }
+
+    override suspend fun getPhotographerReviewList(photographerId: Long) {
+        safeApiCall(_getPhotographerReviewLiveData){
+            reservationRemoteDateSource.getPhotographerReviewList(photographerId)
+        }
+    }
+
+    override suspend fun getReview(reviewId: Long) {
+        safeApiCall(_getReviewLiveData){
+            reservationRemoteDateSource.getReview(reviewId)
+        }
+    }
+
+    override suspend fun deleteReview(reviewId: Long) {
+        safeApiCall(_deleteReviewLiveData){
+            reservationRemoteDateSource.deleteReview(reviewId)
         }
     }
 }
