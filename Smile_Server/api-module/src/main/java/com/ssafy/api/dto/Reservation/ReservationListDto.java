@@ -32,6 +32,7 @@ public class ReservationListDto {
     private Time time;
     private String address;
     private boolean isReviewed;
+    private Long reviewId;
 
     /**
      * Entity에서 DTO로 변환
@@ -41,7 +42,7 @@ public class ReservationListDto {
      * @param phoneNumber
      * @return  ReservationPhotographerDto
      */
-    public ReservationListDto of(Reservation reservation, String name, String phoneNumber){
+    public ReservationListDto of(Reservation reservation, String name, String phoneNumber, Long reviewId, Boolean isReviewed){
         return ReservationListDto.builder()
                 .reservationId(reservation.getId())
                 .status(reservation.getStatus())
@@ -53,7 +54,8 @@ public class ReservationListDto {
                 .date(reservation.getReservedAt())
                 .time(reservation.getReservedTime())
                 .address(reservation.getPlace())
-                .isReviewed(reservation.isReviewed())
+                .isReviewed(isReviewed)
+                .reviewId(reviewId)
                 .build();
     }
 
