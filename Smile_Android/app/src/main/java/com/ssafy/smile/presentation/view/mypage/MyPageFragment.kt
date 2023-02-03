@@ -31,15 +31,16 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun onResume() {
         super.onResume()
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
-            viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
-        }
+//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
+//            viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+//        }
     }
 
     override fun initView() {
         initToolbar()
-        setObserver()
+//        setObserver()
     }
+
     override fun setEvent() {
         setClickListener()
     }
