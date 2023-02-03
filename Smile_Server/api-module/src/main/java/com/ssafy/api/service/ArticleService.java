@@ -1,7 +1,6 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.article.ArticleClusterDto;
-import com.ssafy.api.dto.article.ArticleClusterListDto;
 import com.ssafy.api.dto.article.ArticleDetailDto;
 import com.ssafy.api.dto.article.ArticleHeartDto;
 import com.ssafy.api.dto.article.ArticleListDto;
@@ -12,16 +11,18 @@ import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.ArticleHeart;
+import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerNCategories;
 import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
-import com.ssafy.core.repository.ArticleClusterRepository;
+import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.article.ArticleHeartRepository;
+import com.ssafy.core.repository.article.ArticleRedisRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
@@ -33,8 +34,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import smile.clustering.KMeans;
-import smile.clustering.PartitionClustering;
+import smile.clustering.XMeans;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -60,6 +60,7 @@ public class ArticleService {
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleClusterRepository articleClusterRepository;
+    private final ArticleRedisRepository articleRedisRepository;
 
     /***
      * article 생성
@@ -166,6 +167,7 @@ public class ArticleService {
                 .introduction(photographer.getIntroduction())
                 .categories(categories)
                 .places(places)
+                .minPrice(photographer.getMinPrice())
                 .build();
     }
 
@@ -315,19 +317,22 @@ public class ArticleService {
      */
 
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
-        articleClusterRepository.deleteAll();
 
+        // User를 조회하고 user가 이전에 clustering한 데이터를 cache로 가지고 있을 경우 삭제
+        User logInUser = getLogInUser();
+        articleClusterRepository.findByUserId(logInUser.getId()).ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
+
+        // 지도 범위 내의 모든 게시글을 조회
         List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()){
             return new ArrayList<>();
         }
-        // k값 최적화 필요
-        KMeans clusters = PartitionClustering.run(20, ()->KMeans.fit(getGeoPointArray(articleList),2));
+        // k값 최적화 필요, 클러스터링 라이브러리 이용
+        XMeans clusters = XMeans.fit(getGeoPointArray(articleList),20);
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
-        User logInUser = getLogInUser();
-
+        // 클러스터링한 데이터 내에서 마커찍기 + 마커마다 게시글 개수 return
         for (int i = 0; i < clusters.size.length-1; i++) {
             double[] centroids = clusters.centroids[i];
             double centroidX = centroids[0];
@@ -347,9 +352,12 @@ public class ArticleService {
         log.info(Arrays.toString(clusters.size));
 
         int listIdx = 0;
+        double y = (y1+y2)/2;
+        double x = (x1+x2)/2;
+        // 마커별 게시글을 cache로 저장
         for (int i = 0; i < clusters.size.length-1; i ++){
             Long clusterId = (long) i;
-            List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+            List<ArticleRedis> articleRedisList = new ArrayList<>();
             for (int j = 0; j < clusters.size[i]; j ++ ){
 
                 Article article = articleList.get(listIdx);
@@ -359,15 +367,20 @@ public class ArticleService {
 
                 boolean isHearted = isHearted(logInUser, article);
                 Long hearts = articleHeartRepository.countByArticle(article);
+                // 위도, 경도 기반 중심좌표와 게시글의 거리 계산
+                double baseLength = 111000;
+                double distance = Math.sqrt(Math.pow((article.getLatitude()-y)*baseLength,2)+Math.pow(Math.cos(article.getLongitude()-x)*baseLength,2));
 
                 String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
                 List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
 
-                ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
-                        .articleId(article.getId())
+                ArticleRedis articleRedis = ArticleRedis.builder()
+                        .id(article.getId())
+                        .clusterId(clusterId)
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
                         .longitude(article.getLongitude())
+                        .distance(distance)
                         .detailAddress(article.getDetailAddress())
                         .isHeart(isHearted)
                         .hearts(hearts)
@@ -375,11 +388,13 @@ public class ArticleService {
                         .category(article.getCategory())
                         .photoUrl(photoUrlList.get(0).trim())
                         .build();
-                articleSearchDtoList.add(articleSearchDto);
+                articleRedisList.add(articleRedis);
+                articleRedisRepository.save(articleRedis);
             }
+            // 해당 유저가 만든 클러스터를 cache로 저장
             ArticleCluster articleCluster = ArticleCluster.builder()
-                    .Id(clusterId)
-                    .articleSearchDtoList(articleSearchDtoList)
+                    .id(clusterId)
+                    .userId(logInUser.getId())
                     .build();
             articleClusterRepository.save(articleCluster);
         }
@@ -392,18 +407,59 @@ public class ArticleService {
     }
 
     /***
-     * 클러스터링 이후 해당 클러스터 별로 게시글 검색결과를 반환
-     * @param Id 클러스터 마커 id
+     * 클러스터링 이후 해당 클러스터 별로 cache를 조회하여 게시글 검색결과를 반환
+     * @param clusterId 클러스터 마커 id
+     * @param condition distance, title, heart 순으로 조회 가능ㄷ
+     * @param pageId 늘어날 수록 조회하는 게시글 증가
      * @return 마커별 게시글 리스트
      */
 
-    public ArticleClusterListDto getClusterByClusterId(Long Id){
-        ArticleCluster articleCluster = articleClusterRepository.findById(Id).orElseThrow();
-        return ArticleClusterListDto.builder()
-                .clusterId(Id)
-                .articleSearchDtoList(articleCluster.getArticleSearchDtoList())
-                .build();
+    public List<ArticleRedis> getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
+        log.info(condition);
+        log.info(String.valueOf(condition.equals("time")));
+        // 최신순 조회
+        if (condition.equals("time")) {
+            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
+            log.info(articleRedisPage.toString());
+            log.info(String.valueOf((int) ((pageId+1)*9)));
+            log.info(String.valueOf(articleRedisPage.size()-1));
+
+            Integer size = (int) ((pageId+1)*9);
+            // cache를 paging
+            if ((int)(pageId+1)*9 > articleRedisPage.size()){
+                size = articleRedisPage.size();
+            }
+            return articleRedisPage.subList(0, size);
+            // 좋아요순 조회
+        } else if (condition.equals("heart")) {
+            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
+            log.info(articleRedisPage.toString());
+            log.info(String.valueOf((int) ((pageId+1)*9)));
+            log.info(String.valueOf(articleRedisPage.size()-1));
+
+            Integer size = (int) ((pageId+1)*9);
+
+            if ((int)(pageId+1)*9 > articleRedisPage.size()){
+                size = articleRedisPage.size();
+            }
+            return articleRedisPage.subList(0, size);
+            // 거리순 조회
+        } else if (condition.equals("distance")) {
+            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
+            log.info(articleRedisPage.toString());
+            log.info(String.valueOf((int) ((pageId+1)*9)));
+            log.info(String.valueOf(articleRedisPage.size()-1));
+
+            Integer size = (int) ((pageId+1)*9);
+
+            if ((int)(pageId+1)*9 > articleRedisPage.size()){
+                size = articleRedisPage.size();
+            }
+            return articleRedisPage.subList(0, size);
+        }
+        return new ArrayList<>();
     }
+
 
     /***
      * 내가 좋아요 누른 게시글 목록

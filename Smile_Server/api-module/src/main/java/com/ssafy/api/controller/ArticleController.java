@@ -3,8 +3,10 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
 import com.ssafy.core.dto.ArticleSearchDto;
-import com.ssafy.core.entity.ArticleCluster;
+
+import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.User;
+import com.ssafy.core.repository.article.ArticleRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -149,13 +150,17 @@ public class ArticleController {
 
     /***
      * 클러스터링시 마커에 포함된 게시글 확인
-     * @param clusterId
+     * @param clusterId 마커 id
+     * @param condition 정렬 기준
+     * @param page 보고 싶은 페이지
      * @return 마커에 포함된 게시글
      */
-    @GetMapping("/list/cluster/{clusterId}")
-    public ResponseEntity<?> getClusterData(@PathVariable("clusterId") Long clusterId){
-        ArticleClusterListDto articleClusterListDto = articleService.getClusterByClusterId(clusterId);
-        return new ResponseEntity<>(articleClusterListDto, HttpStatus.OK);
+    @GetMapping("/list/cluster")
+    public ResponseEntity<?> getClusterData(@RequestParam("clusterId") Long clusterId,
+                                            @RequestParam("condition") String condition,
+                                            @RequestParam("page") Long page){
+        List<ArticleRedis> articleRedisList = articleService.getArticleListByMarkerId(clusterId, condition, page);
+        return new ResponseEntity<>(articleRedisList, HttpStatus.OK);
     }
 
     /***

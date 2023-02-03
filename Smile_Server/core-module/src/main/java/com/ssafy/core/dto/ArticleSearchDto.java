@@ -33,5 +33,5 @@ public class ArticleSearchDto {
 
     private String category;
 
-    private  String photoUrl;
+    private String photoUrl;
 }

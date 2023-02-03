@@ -50,6 +50,8 @@ public class Photographer implements Serializable {
     @Column(length = 35, nullable = false)
     private String account;
 
+    private int minPrice;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photographer")
     private List<PhotographerNPlaces> places;
 
