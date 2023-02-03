@@ -261,6 +261,18 @@
                     app:icon="@drawable/ic_review"
                     app:iconTint="@color/blue400"
                     app:strokeColor="@color/blue400"/>
+                <Button
+                    android:id="@+id/btn_review_check"
+                    style="@style/BtnSmallRectangleRadius2"
+                    android:layout_width="95dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/blue400"
+                    android:text="리뷰확인"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_review"
+                    app:iconTint="@color/blue400"
+                    app:strokeColor="@color/blue400"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
