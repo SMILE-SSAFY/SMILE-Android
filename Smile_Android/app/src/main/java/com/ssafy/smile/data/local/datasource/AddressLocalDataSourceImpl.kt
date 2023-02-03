@@ -23,7 +23,7 @@ class AddressLocalDataSourceImpl(private val addressDao: AddressDao) : AddressLo
     }
 
     override fun getCurrentAddress(): LiveData<AddressEntity> {
-        return liveData { addressDao.getAddressIsSelected(true) }
+        return addressDao.getAddressIsSelectedLiveData(true)
     }
 
 

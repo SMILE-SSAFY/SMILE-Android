@@ -22,7 +22,7 @@ class HomeViewModel: BaseViewModel() {
     val photographerHeartResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
-    val getCurrentAddressResponseLiveData: LiveData<AddressDomainDto>
+    val getCurrentAddressResponse: LiveData<AddressDomainDto>
         get() = addressRepository.getCurrentAddress()
 
     fun getPhotographerInfoByAddressInfo(address: String) = viewModelScope.launch{
@@ -37,6 +37,8 @@ class HomeViewModel: BaseViewModel() {
     }
 
     fun getCurrentAddressInfo(){
-        addressRepository.getCurrentAddress()
+        viewModelScope.launch {
+            addressRepository.getCurrentAddress()
+        }
     }
 }

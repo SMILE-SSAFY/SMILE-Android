@@ -374,7 +374,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             val payData = JSONObject(data).getJSONObject("data")
             val receiptId = payData.getString("receipt_id")
 
-            Log.d(TAG, "getReceiptId: ${receiptId}}")
+            Log.d(TAG, "getReceiptId: $receiptId")
             selectData.receiptId = receiptId
             reservationViewModel.postReservation(selectData)
         } catch (e: JSONException) {
