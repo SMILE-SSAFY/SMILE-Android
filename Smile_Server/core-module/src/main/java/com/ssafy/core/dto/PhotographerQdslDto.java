@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PhotographerQdslDto {
     private Photographer photographer;
-    private double score;
+    private double avgScore;
     private Long heart;
-    private Long reviews;
+    private Long reviewCount;
     private boolean hasHeart;
 }

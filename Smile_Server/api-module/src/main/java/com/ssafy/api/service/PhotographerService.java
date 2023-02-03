@@ -340,8 +340,8 @@ public class PhotographerService {
                     .photographer(photographer)
                     .heart(photographerHeartRepository.countByPhotographer(photographer))
                     .hasHeart(true)
-                    .score(review.getScore())
-                    .reviews(review.getReviews())
+                    .avgScore(review.getAvgScore())
+                    .reviewCount(review.getReviewCount())
                     .build());
         }
         for (PhotographerQdslDto photographerQuerydsl : photographerQdslDtoList) {

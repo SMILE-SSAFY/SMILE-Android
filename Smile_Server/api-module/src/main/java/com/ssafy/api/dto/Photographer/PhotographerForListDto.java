@@ -28,8 +28,8 @@ public class PhotographerForListDto {
     private List<CategoriesForListDto> categories;
     private boolean hasHeart;
     private int heart;
-    private double score;
-    private int reviews;
+    private double avgScore;
+    private int reviewCount;
 
     /**
      * Photographer Entity에서 검색용 photographer DTO로 변경
@@ -62,8 +62,8 @@ public class PhotographerForListDto {
                 .categories(categories)
                 .heart(Math.toIntExact(photographerQuerydsl.getHeart()))
                 .hasHeart(photographerQuerydsl.isHasHeart())
-                .score(Math.round(photographerQuerydsl.getScore() * 10) / 10.0)
-                .reviews(Math.toIntExact(photographerQuerydsl.getReviews()))
+                .avgScore(Math.round(photographerQuerydsl.getAvgScore() * 10) / 10.0)
+                .reviewCount(Math.toIntExact(photographerQuerydsl.getReviewCount()))
                 .build();
     }
 }

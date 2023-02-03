@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewQdslDto {
-    private double score;
-    private Long reviews;
+    private double avgScore;
+    private Long reviewCount;
 }
