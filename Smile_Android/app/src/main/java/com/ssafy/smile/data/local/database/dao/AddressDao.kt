@@ -19,6 +19,9 @@ interface AddressDao {
     @Query("SELECT * FROM address WHERE selected = :isSelected")
     fun getAddressIsSelected(isSelected: Boolean = true) : AddressEntity?
 
+    @Query("SELECT * FROM address WHERE selected = :isSelected")
+    fun getAddressIsSelectedLiveData(isSelected: Boolean = true) : LiveData<AddressEntity>
+
     @Query("SELECT * FROM address ORDER by time DESC")
     fun getAddressList() : LiveData<List<AddressEntity>>
 
