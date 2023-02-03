@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.index.Indexed;
 
 import java.time.LocalDateTime;
 
+/***
+ * redis에 cache로 article 정보를 저장
+ */
 @Data
 @RedisHash(value = "article", timeToLive = 1800)
 @Builder
