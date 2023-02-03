@@ -9,6 +9,6 @@ interface PhotographerRepository {
     suspend fun getPhotographerInfo()
     suspend fun modifyPhotographerInfo(photographerDto: PhotographerDto, image: MultipartBody.Part)
     suspend fun deletePhotographerInfo()
-    suspend fun getPhotographerInfoByAddress(address:String)
+    suspend fun getPhotographerInfoByAddress(address:String, criteria: String)
 }
 
