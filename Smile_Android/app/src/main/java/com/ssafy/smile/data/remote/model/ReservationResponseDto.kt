@@ -32,7 +32,8 @@ data class ReservationResponseDto(
             categoryName,
             "${CommonUtils.makeComma(price)} 원",
             status,
-            reviewed
+            reviewed,
+            -1
         )
     }
 
@@ -72,7 +73,8 @@ data class ResCategoryDetail(
 
 
 data class ReservationListDto(
-    val reservationId: Long = 999,
+    val reservationId: Long = 0,
+    val reviewId : Long = -1L,
     val address: String = "",
     val categoryName: String = "",
     val options: String = "",
@@ -96,7 +98,8 @@ data class ReservationListDto(
             CommonUtils.combineCategoryAndOption(categoryName, options),
             "${CommonUtils.makeComma(price)} 원",
             status,
-            reviewed
+            reviewed,
+            reviewId
         )
     }
 }

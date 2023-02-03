@@ -75,6 +75,13 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
                 }
 
             })
+            setReviewCheckClickListener(object : CustomerReservationListRecyclerAdapter.OnReviewCheckClickListener{
+                override fun onClick(view: View, position: Int) {
+                    val reviewId = recyclerData[position].reviewId
+                    // TODO : 리뷰 확인으로 이동
+                }
+
+            })
         }
 
         binding.recycler.apply {

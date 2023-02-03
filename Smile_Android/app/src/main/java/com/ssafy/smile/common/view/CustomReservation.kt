@@ -26,6 +26,7 @@ class CustomReservation: ConstraintLayout {
     lateinit var btnCancel: Button
     lateinit var btnPayFix: Button
     lateinit var btnReview: Button
+    lateinit var btnReviewCheck: Button
 
     constructor(context: Context) : super(context)
 
@@ -51,6 +52,7 @@ class CustomReservation: ConstraintLayout {
         btnCancel = findViewById(R.id.btn_cancel)
         btnPayFix = findViewById(R.id.btn_pay_fix)
         btnReview = findViewById(R.id.btn_review)
+        btnReviewCheck = findViewById(R.id.btn_review_check)
     }
 
     // attrs.xml 파일로부터 속성 정보 확보 - typedArray
@@ -85,7 +87,7 @@ class CustomReservation: ConstraintLayout {
 
         if (isList) {
             setChips(data.status)
-            setButtons(data.status, data.opposite, data.isReview)
+            setButtons(data.status, data.opposite, data.isReview, data.reviewId)
         }
 
         invalidate()
@@ -111,14 +113,14 @@ class CustomReservation: ConstraintLayout {
         }
     }
 
-    fun setButtons(status: String, opposite: String, isReview: Boolean) {
+    fun setButtons(status: String, opposite: String, isReview: Boolean, reviewId: Long) {
         when(opposite) {
-            "작가님" -> setCustomerButtons(status, isReview)
+            "작가님" -> setCustomerButtons(status, isReview, reviewId)
             "고객님" -> setPhotographerButtons(status)
         }
     }
 
-    private fun setCustomerButtons(status: String, isReview: Boolean) {
+    private fun setCustomerButtons(status: String, isReview: Boolean, reviewId: Long) {
         when(status) {
             "예약확정전" -> setButtons(arrayListOf(btnCancel))
             "예약확정" -> setButtons(arrayListOf(btnCancel))
@@ -126,6 +128,8 @@ class CustomReservation: ConstraintLayout {
             "완료" -> {
                 if (!isReview) {
                     setButtons(arrayListOf(btnReview))
+                } else {
+                    setButtons(arrayListOf(btnReviewCheck))
                 }
             }
         }
@@ -143,6 +147,7 @@ class CustomReservation: ConstraintLayout {
         btnPayFix.visibility = View.GONE
         btnResFix.visibility = View.GONE
         btnReview.visibility = View.GONE
+        btnReviewCheck.visibility = View.GONE
 
         btnList.forEach { btn ->
             btn.visibility = View.VISIBLE
