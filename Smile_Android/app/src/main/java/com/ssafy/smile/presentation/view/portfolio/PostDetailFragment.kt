@@ -95,7 +95,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             ctvLike.isChecked = post.isHeart
             tvLike.text = post.hearts.toString()
             tvCategory.text = post.category
-            tvCreatedAt.text = post.createdAt
+            tvCreatedAt.text = post.createdAt.substring(0, 10)
         }
         initViewPager()
     }

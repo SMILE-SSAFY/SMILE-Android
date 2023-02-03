@@ -5,19 +5,15 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.data.remote.model.ReservationChangeRequestDto
 import com.ssafy.smile.databinding.FragmentPhotographerReservationListBinding
 import com.ssafy.smile.domain.model.CustomReservationDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PhotographerReservationListRecyclerAdapter
-import com.ssafy.smile.presentation.adapter.PortfolioRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.view.portfolio.PortfolioFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerReservationListViewModel
 
 private const val TAG = "PhotographerReservation_스마일"
@@ -36,6 +32,43 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
 
     private fun setObserver() {
         photographerReservationListObserver()
+        changeReservationObserver()
+    }
+
+    private fun changeReservationObserver() {
+        photographerReservationListViewModel.changeReservationStatusResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    Log.d(TAG, "changeReservationObserver: ${it.errorCode}")
+                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    photographerReservationListViewModel.getPhotographerReservationList()
+                }
+            }
+        }
+
+        photographerReservationListViewModel.cancelReservationResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    Log.d(TAG, "changeReservationObserver: ${it.errorCode}")
+                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    photographerReservationListViewModel.getPhotographerReservationList()
+                }
+            }
+        }
     }
 
     private fun photographerReservationListObserver() {
@@ -45,13 +78,20 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
                     showLoadingDialog(requireContext())
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    Log.d(TAG, "photographerReservationListObserver: ${it.data}")
                     dismissLoadingDialog()
-                    recyclerData.clear()
-                    it.data.forEach { reservation ->
-                        recyclerData.add(reservation.toCustomReservationDomainDto())
+
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        photographerReservationListRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "예약 내역이 존재하지 않습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { reservation ->
+                            recyclerData.add(reservation.toCustomReservationDomainDto())
+                        }
+                        photographerReservationListRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    photographerReservationListRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -59,6 +99,14 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
                     showToast(requireContext(), "작가 예약 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
+        }
+    }
+
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            recycler.visibility = recyclerView
         }
     }
 

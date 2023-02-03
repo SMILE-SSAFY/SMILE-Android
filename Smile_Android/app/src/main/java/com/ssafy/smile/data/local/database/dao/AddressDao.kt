@@ -13,14 +13,14 @@ interface AddressDao {
     @Delete
     suspend fun deleteAddress(address: AddressEntity) : Int
 
+    @Query("DELETE FROM address")
+    suspend fun deleteAllAddress(): Int
+
     @Query("UPDATE address SET selected = :isSelected WHERE address = :address")
     fun updateAddressSelected(isSelected: Boolean, address: String) : Int
 
     @Query("SELECT * FROM address WHERE selected = :isSelected")
     fun getAddressIsSelected(isSelected: Boolean = true) : AddressEntity?
-
-    @Query("SELECT * FROM address WHERE selected = :isSelected")
-    fun getAddressIsSelectedLiveData(isSelected: Boolean = true) : LiveData<AddressEntity>
 
     @Query("SELECT * FROM address ORDER by time DESC")
     fun getAddressList() : LiveData<List<AddressEntity>>

@@ -32,6 +32,7 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
 
     private fun setObserver() {
         customerReservationListObserver()
+        changeReservationObserver()
     }
 
     private fun customerReservationListObserver() {
@@ -42,11 +43,19 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    recyclerData.clear()
-                    it.data.forEach { reservation ->
-                        recyclerData.add(reservation.toCustomReservationDomainDto())
+
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        customerReservationListRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "예약 내역이 존재하지 않습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { reservation ->
+                            recyclerData.add(reservation.toCustomReservationDomainDto())
+                        }
+                        customerReservationListRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    customerReservationListRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -54,6 +63,50 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
                     showToast(requireContext(), "고객 예약 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
+        }
+    }
+
+    private fun changeReservationObserver() {
+        customerReservationListViewModel.changeReservationStatusResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    Log.d(TAG, "changeReservationObserver: ${it.errorCode}")
+                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    customerReservationListViewModel.getCustomerReservationList()
+                }
+            }
+        }
+
+        customerReservationListViewModel.cancelReservationResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Failure -> {
+                    dismissLoadingDialog()
+                    Log.d(TAG, "changeReservationObserver: ${it.errorCode}")
+                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
+                is NetworkUtils.NetworkResponse.Success -> {
+                    dismissLoadingDialog()
+                    customerReservationListViewModel.getCustomerReservationList()
+                }
+            }
+        }
+    }
+
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            recycler.visibility = recyclerView
         }
     }
 
