@@ -207,8 +207,17 @@ public class ReservationService {
         for (Reservation reservation : reservationList) {
             ReservationListDto reservationPhotographer = new ReservationListDto();
             User reservationUser = reservation.getUser();
+            Review review = reservation.getReview();
+            Long reviewId;
+            Boolean isReviewed = false;
+            if (review == null){
+                reviewId = null;
+            } else {
+                reviewId = review.getId();
+                isReviewed = true;
+            }
             reservationPhotographerList.add(
-                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
+                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber(), reviewId, isReviewed)
             );
         }
         return reservationPhotographerList;
@@ -230,8 +239,17 @@ public class ReservationService {
         for (Reservation reservation : reservationList) {
             ReservationListDto reservationPhotographer = new ReservationListDto();
             User reservationUser = reservation.getPhotographer().getUser();
+            Review review = reservation.getReview();
+            Long reviewId;
+            Boolean isReviewed = false;
+            if (review == null){
+                reviewId = null;
+            } else {
+                reviewId = review.getId();
+                isReviewed = true;
+            }
             reservationPhotographerList.add(
-                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
+                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber(), reviewId, isReviewed)
             );
         }
         return reservationPhotographerList;
