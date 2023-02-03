@@ -9,6 +9,7 @@ import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.PhotographerQdslDto;
+import com.ssafy.core.dto.ReviewQdslDto;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
@@ -19,11 +20,13 @@ import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
+import com.ssafy.core.repository.ReviewRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -47,21 +50,16 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class PhotographerService {
-    @Autowired
-    private PhotographerNCategoriesRepository photographerNCategoriesRepository;
-    @Autowired
-    private PhotographerNPlacesRepository photographerNPlacesRepository;
-    @Autowired
-    private PhotographerRepository photographerRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private S3UploaderService s3UploaderService;
-    @Autowired
-    private PhotographerHeartRepository photographerHeartRepository;
-    @Autowired
-    private CategoriesRepository categoriesRepository;
+    private final ReviewRepository reviewRepository;
+    private final PhotographerNCategoriesRepository photographerNCategoriesRepository;
+    private final PhotographerNPlacesRepository photographerNPlacesRepository;
+    private final PhotographerRepository photographerRepository;
+    private final UserRepository userRepository;
+    private final S3UploaderService s3UploaderService;
+    private final PhotographerHeartRepository photographerHeartRepository;
+    private final CategoriesRepository categoriesRepository;
 
     /**
      * 작가 등록
@@ -261,12 +259,13 @@ public class PhotographerService {
      * 주변 작가 조회
      *
      * @param address
+     * @param criteria
      * @return List<PhotographerForListDto>
      */
-    public List<PhotographerForListDto> getPhotographerListByAddresss(Long userId, String address) {
+    public List<PhotographerForListDto> getPhotographerListByAddresss(Long userId, String address, String criteria) {
         String[] addresssList = address.split(" ");
         List<PhotographerQdslDto> photographerList =
-                photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1]);
+                photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
         log.info("주변 작가 조회");
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
@@ -336,13 +335,17 @@ public class PhotographerService {
         List<PhotographerQdslDto> photographerQdslDtoList = new ArrayList<>();
 
         for (PhotographerHeart photographerHeart : photographerList){
+            Photographer photographer = photographerHeart.getPhotographer();
+            ReviewQdslDto review = reviewRepository.findByPhotographerId(photographer.getId());
+
             photographerQdslDtoList.add(
             PhotographerQdslDto.builder()
-                    .photographer(photographerHeart.getPhotographer())
-                    .heart(photographerHeartRepository.countByPhotographer(photographerHeart.getPhotographer()))
+                    .photographer(photographer)
+                    .heart(photographerHeartRepository.countByPhotographer(photographer))
                     .hasHeart(true)
+                    .avgScore(review.getAvgScore())
+                    .reviewCount(review.getReviewCount())
                     .build());
-
         }
         for (PhotographerQdslDto photographerQuerydsl : photographerQdslDtoList) {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));

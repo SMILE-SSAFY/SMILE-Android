@@ -19,9 +19,10 @@ public interface PhotographerNPlacesRepositoryCustom {
      * @param userId
      * @param first
      * @param second
+     * @param criteria
      * @return List<PhotographerQuerydslDto>
      */
-    List<PhotographerQdslDto> findPhotographerByAddress(Long userId, String first, String second);
+    List<PhotographerQdslDto> findPhotographerByAddress(Long userId, String first, String second, String criteria);
 
     /**
      * 사진작가 별 활동지역 검색
