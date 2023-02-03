@@ -15,7 +15,7 @@ public class ReviewResDto {
 
     private Long userId;
 
-    private Integer score;
+    private Double score;
 
     private String userName;
 

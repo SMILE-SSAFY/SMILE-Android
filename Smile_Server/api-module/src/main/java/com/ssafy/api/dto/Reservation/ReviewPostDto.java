@@ -8,11 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
  * 리뷰 등록을 위한 dto
  * @author 신민철
  */
-@Data
 @Builder
+@Data
 public class ReviewPostDto {
 
-    private Integer score;
+    private Double score;
 
     private String content;
 
