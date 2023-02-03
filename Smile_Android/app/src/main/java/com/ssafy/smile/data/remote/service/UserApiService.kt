@@ -1,9 +1,6 @@
 package com.ssafy.smile.data.remote.service
 
-import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
-import com.ssafy.smile.data.remote.model.LoginRequestDto
-import com.ssafy.smile.data.remote.model.SignUpRequestDto
-import com.ssafy.smile.data.remote.model.UserResponseDto
+import com.ssafy.smile.data.remote.model.*
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -29,5 +26,8 @@ interface UserApiService {
 
     @DELETE("/api/user")
     suspend fun withDraw(): Response<String>
+
+    @GET("/api/user")
+    suspend fun myPage(): Response<MyPageResponseDto>
 
 }
