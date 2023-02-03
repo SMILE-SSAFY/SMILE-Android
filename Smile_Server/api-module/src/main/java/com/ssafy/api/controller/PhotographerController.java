@@ -144,9 +144,8 @@ public class PhotographerController {
     public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(@Param("address") String address, @Param("criteria") String criteria) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
-        // FIX 프론트에서 데이터 보내줄 때 criteria 적용
         List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByAddresss(user.getId(), address, "");
+                photographerService.getPhotographerListByAddresss(user.getId(), address, criteria);
         return ResponseEntity.ok().body(photographerList);
     }
 
