@@ -27,6 +27,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
 import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
@@ -96,6 +99,7 @@ public class UserService {
         LoginUserDto loginUserDto = LoginUserDto.builder()
                 .email(registerFormDto.getEmail())
                 .password(registerFormDto.getPassword())
+                .fcmToken(registerFormDto.getFcmToken())
                 .build();
 
         return login(loginUserDto);
@@ -110,13 +114,29 @@ public class UserService {
      */
     public TokenRoleDto login(LoginUserDto loginUserDto) {
         log.info("user 로그인 진행");
-        User user = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        User user;
+        user = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         log.info("user 객체 반환");
 
         if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
             throw new CustomException(INVALID_PASSWORD);
         }
         log.info("유저 존재 및 비밀번호 일치");
+
+        List<String> fcmTokenList = new ArrayList<>(Arrays.asList(user.getFcmToken().split(",")));
+        boolean flag = true;
+        for (String fcmToken : fcmTokenList) {
+            if (fcmToken.equals(loginUserDto.getFcmToken())) {
+                log.info("동일 fcmToken");
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            user.updateFcmToken(user.getFcmToken() + "," + loginUserDto.getFcmToken());
+            user = userRepository.save(user);
+            log.info("fcmToken 추가 : {}", user.getFcmToken());
+        }
 
         String token = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole().getName());
         log.info("jwt token 생성");
@@ -186,11 +206,13 @@ public class UserService {
     /**
      * 카카오 로그인을 통해 회원가입 하고 로그인하여 jwt 토큰을 발행한다.
      *
+     * TODO: 카카오는 모바일 통한 확인 필요
+     *
      * @param accessToken
-     * @return
-     * 카카오로부터 받은 정보로 회원 가입 후 로그인 진행하여 jwt 토큰 리턴
+     * @param fcmToken
+     * @return 카카오로부터 받은 정보로 회원 가입 후 로그인 진행하여 jwt 토큰 리턴
      */
-    public TokenRoleDto kakaoLogin(String accessToken) {
+    public TokenRoleDto kakaoLogin(String accessToken, String fcmToken) {
         log.info("accessToken : {}", accessToken);
         ResponseEntity<String> profileResponse = kakaoProfileResponse(accessToken);
         log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
@@ -205,10 +227,10 @@ public class UserService {
                 .password(kakaoPassword)
                 .name(kakaoProfileDto.getProperties().getNickname())
                 .phoneNumber("11112345678")
+                .fcmToken(fcmToken)
                 .build();
 
         return registerUser(registerFormDto);
-
     }
 
     /**
@@ -311,5 +333,28 @@ public class UserService {
         String token = jwtTokenProvider.resolveToken(request);
         Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
         return userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
+    /**
+     * 로그아웃하며 fcmToken 삭제
+     *
+     * @param fcmToken
+     */
+    public void logout(String fcmToken) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+
+        log.info("삭제할 fcmToken : {}", fcmToken);
+        log.info("user fcmToken : {}", user.getFcmToken());
+
+        List<String> fcmTokenList = new ArrayList<>(Arrays.asList(user.getFcmToken().split(",")));
+        String deletedFcmToken = fcmTokenList.stream()
+                .filter(fcm -> !fcm.equals(fcmToken))
+                .collect(Collectors.joining(","));
+
+        log.info("삭제 후 fcmToken : {}", deletedFcmToken);
+
+        user.updateFcmToken(deletedFcmToken);
+        userRepository.save(user);
     }
 }
