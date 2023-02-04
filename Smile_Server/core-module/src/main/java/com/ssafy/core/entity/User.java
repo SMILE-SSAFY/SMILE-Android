@@ -168,5 +168,15 @@ public class User implements UserDetails {
     public void updateRole(Role role){
         this.role = role;
     }
+
+    /**
+     * fcmToken 변경
+     * 
+     * @param fcmToken
+     */
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
 }
 
