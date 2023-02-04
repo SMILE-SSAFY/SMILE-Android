@@ -4,9 +4,9 @@ import android.content.Context
 import android.location.Geocoder
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 object CommonUtils {
 
@@ -27,6 +27,28 @@ object CommonUtils {
             e.printStackTrace()
         }
         return addr
+    }
+
+    fun getDiffTime(date : Date) : String{
+        val now = System.currentTimeMillis()
+        val time = date.time
+        val diff = now - time
+        val result : String = if(diff >= 24*60*60*1000){            // 하루가 넘을 때
+            SimpleDateFormat("yyyy-MM-dd HH:mm").format(time).toString()
+        } else if(diff >= 60*60*1000){                              //한 시간 넘을 때
+            "${diff/(60*60*1000)}시간전"
+        }else{                                                          //한 시간 전
+            "${diff/(60*1000)}분전"
+        }
+        return result
+    }
+
+    fun stringToDate(dateStr :String) : Date? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        var date : Date? = null
+        try { date = dateFormat.parse(dateStr) }
+        catch (e: ParseException) { e.printStackTrace() }
+        return date
     }
 
     fun dateToString(date: Date): String{
@@ -51,7 +73,7 @@ object CommonUtils {
     fun getPlace(places: ArrayList<String>): String {
         return when (places.size) {
             1 -> {
-                "${places[0]}"
+                places[0]
             }
             2 -> {
                 "${places[0]}, ${places[1]}"
@@ -74,4 +96,5 @@ object CommonUtils {
     fun combineCategoryAndOption(category: String, option: String): String {
         return "$category $option"
     }
+
 }

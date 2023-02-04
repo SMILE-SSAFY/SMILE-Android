@@ -486,7 +486,7 @@
     </navigation>
     <fragment
         android:id="@+id/reviewDetailFragment"
-        android:name="com.ssafy.smile.presentation.view.portfolio.ReviewDetailFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.ReviewDetailFragment"
         android:label="fragment_review_detail"
         tools:layout="@layout/fragment_review_detail" >
         <argument

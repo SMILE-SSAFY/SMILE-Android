@@ -1,14 +1,12 @@
 package com.ssafy.smile.domain.model
 
-import com.ssafy.smile.data.remote.model.PhotographerReviewDto
-
 data class PhotographerReviewDomainDto(
-    val reviewId : Int,
+    val reviewId : Long,
     val userId : String,
-    val score : Double,
+    val score : Float,
     val userName : String,
     val content : String,
-    val photoUrl : String?=null
-){
-    fun makeToDto() = PhotographerReviewDto(reviewId, userId, score, userName, content, photoUrl)
-}
+    val photoUrl : String,
+    val createdAt : String,
+    val isMe : Boolean
+)
