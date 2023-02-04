@@ -36,7 +36,7 @@
                 android:id="@+id/tv_empty_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="------가 없습니다."
+                android:text=""
                 android:textSize="14sp"
                 android:background="@color/transparent"
                 style="@style/TvT2"/>

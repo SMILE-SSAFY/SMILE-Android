@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
+import com.ssafy.smile.data.remote.model.PhotographerReviewDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
 import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PortfolioViewModel: BaseViewModel() {
     private val portfolioRepository = Application.repositoryInstances.getPortfolioRepository()
     private val heartRepository = Application.repositoryInstances.getHeartRepository()
+    private val reviewRepository = Application.repositoryInstances.getReservationRepository()
 
     // 작가 id
     var photographerId: Long = 0
@@ -49,4 +52,23 @@ class PortfolioViewModel: BaseViewModel() {
             heartRepository.photographerHeart(photographerId)
         }
     }
+
+    val photographerReviewListResponse: LiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>
+        get() = reviewRepository.getPhotographerReviewLiveData
+
+    fun getPhotographerReviewList(photographerId: Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            reviewRepository.getPhotographerReviewList(photographerId)
+        }
+    }
+
+    val deleteReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = reviewRepository.deleteReviewLiveData
+
+    fun deleteReview(reviewId:Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            reviewRepository.deleteReview(reviewId)
+        }
+    }
+
 }

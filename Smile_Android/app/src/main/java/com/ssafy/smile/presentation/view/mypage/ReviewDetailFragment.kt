@@ -1,4 +1,4 @@
-package com.ssafy.smile.presentation.view.portfolio
+package com.ssafy.smile.presentation.view.mypage
 
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +17,6 @@ import com.ssafy.smile.common.view.CommonDialog
 import com.ssafy.smile.data.remote.model.ReviewResponseDto
 import com.ssafy.smile.databinding.FragmentReviewDetailBinding
 import com.ssafy.smile.domain.model.DialogBody
-import com.ssafy.smile.domain.model.ReviewDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.portfolio.ReviewDetailViewModel
