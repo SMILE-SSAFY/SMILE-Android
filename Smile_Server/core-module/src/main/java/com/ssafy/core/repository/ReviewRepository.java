@@ -12,5 +12,5 @@ import java.util.List;
  * @author 서재건
  */
 public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRepositoryCustom {
-    List<Review> findByPhotographer(Photographer photographer);
+    List<Review> findAllByPhotographer(Photographer photographer);
 }

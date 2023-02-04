@@ -121,7 +121,7 @@ public class UserService {
         }
         log.info("유저 존재 및 비밀번호 일치");
 
-        if (!user.getFcmToken().contains(loginUserDto.getFcmToken())) {
+        if (user.getFcmToken() == null || !user.getFcmToken().contains(loginUserDto.getFcmToken())) {
             user.updateFcmToken(user.getFcmToken() + loginUserDto.getFcmToken()+ "," );
             user = userRepository.save(user);
             log.info("fcmToken 추가 : {}", user.getFcmToken());
