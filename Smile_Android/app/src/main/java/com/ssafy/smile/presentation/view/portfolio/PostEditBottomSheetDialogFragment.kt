@@ -1,24 +1,22 @@
 package com.ssafy.smile.presentation.view.portfolio
 
 import android.util.Log
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.CommonDialog
-import com.ssafy.smile.common.view.LoadingDialog
 import com.ssafy.smile.databinding.FragmentPostEditBottomSheetDialogBinding
 import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseBottomSheetDialogFragment
-import com.ssafy.smile.presentation.viewmodel.portfolio.PostViewModel
+import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioGraphViewModel
 
 private const val TAG = "PostEditBottomSheetDialogFragment_싸피"
 class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<FragmentPostEditBottomSheetDialogBinding>(FragmentPostEditBottomSheetDialogBinding::inflate) {
 
-    private val postViewModel: PostViewModel by navGraphViewModels(R.id.portfolioGraph)
+    private val portfolioGraphViewModel: PortfolioGraphViewModel by navGraphViewModels(R.id.portfolioGraph)
     private val args: PostEditBottomSheetDialogFragmentArgs by navArgs()
 
     override fun initView() {
@@ -36,14 +34,14 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
             }
             layoutDelete.setOnClickListener {
                 val dialog = CommonDialog(requireContext(), DialogBody("게시글을 삭제 하시겠습니까?\n(게시글 삭제시 복구할 수 없습니다)", "확인", "취소"),
-                    { postViewModel.deletePostById(args.postId) })
+                    { portfolioGraphViewModel.deletePostById(args.postId) })
                 showDialog(dialog, viewLifecycleOwner)
             }
         }
     }
 
     private fun deletePostByIdResponseObserver() {
-        postViewModel.deletePostByIdResponse.observe(viewLifecycleOwner) {
+        portfolioGraphViewModel.deletePostByIdResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     showToast(requireContext(), "삭제되었습니다.", Types.ToastType.BASIC)

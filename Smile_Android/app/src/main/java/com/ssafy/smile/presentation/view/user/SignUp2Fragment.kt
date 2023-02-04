@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
@@ -21,12 +20,12 @@ import com.ssafy.smile.databinding.FragmentSignUp2Binding
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.SignUpGraphViewModel
 
 private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
-    private val userViewModel: UserViewModel by navGraphViewModels(R.id.signUpGraph)
+    private val userViewModel: SignUpGraphViewModel by navGraphViewModels(R.id.signUpGraph)
     private val args: SignUp2FragmentArgs by navArgs()
 
     private lateinit var fcmToken: String
