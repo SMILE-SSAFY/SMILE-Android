@@ -5,13 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.data.remote.model.ReviewDto
-import com.ssafy.smile.domain.model.AddressDomainDto
-import com.ssafy.smile.domain.model.PostDto
+import com.ssafy.smile.data.remote.model.ReviewRequestDto
+import com.ssafy.smile.data.remote.model.ReviewResponseDto
 import com.ssafy.smile.domain.model.ReviewDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 import java.io.File
 
 class ReviewDetailViewModel : BaseViewModel()  {
@@ -24,6 +22,15 @@ class ReviewDetailViewModel : BaseViewModel()  {
     private val _reviewDataResponse : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     val reviewDataResponse : MutableLiveData<Boolean>
         get() = _reviewDataResponse
+
+    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>
+        get() = reservationRepository.getReviewLiveData
+
+    val postReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = reservationRepository.postReviewLiveData
+
+    val deleteReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = reservationRepository.deleteReviewLiveData
 
     fun uploadData(reviewDto : ReviewDomainDto){
         reviewData.score = reviewDto.score
@@ -51,15 +58,6 @@ class ReviewDetailViewModel : BaseViewModel()  {
         if (reviewData.score==null || reviewData.content ==null || reviewData.image==null) return false
         return true
     }
-
-    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewDto>>
-        get() = reservationRepository.getReviewLiveData
-
-    val postReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
-        get() = reservationRepository.postReviewLiveData
-
-    val deleteReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
-        get() = reservationRepository.deleteReviewLiveData
 
     fun getReviewInfo(reviewId: Long) {
         viewModelScope.launch {

@@ -37,7 +37,7 @@ class ReservationRemoteDateSourceImpl(private val reservationApiService: Reserva
         return reservationApiService.postReview(reservationId, score, content, image)
     }
 
-    override suspend fun getReview(reviewId: Long): Response<ReviewDto> {
+    override suspend fun getReview(reviewId: Long): Response<ReviewResponseDto> {
         return reservationApiService.getReview(reviewId)
     }
 
