@@ -141,7 +141,7 @@ public class UserController {
      */
     @PostMapping("/sns")
     public ResponseEntity<TokenRoleDto> kakaoLogin(@RequestBody Map<String, String> param) {
-        TokenRoleDto tokenRoleDto = userService.kakaoLogin(param.get("token"));
+        TokenRoleDto tokenRoleDto = userService.kakaoLogin(param.get("token"), param.get("fcmToken"));
         return ResponseEntity.ok().body(tokenRoleDto);
     }
 
@@ -154,6 +154,18 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<HttpStatus> removeUser(HttpServletRequest request) {
         userService.removeUser(request);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /**
+     * 로그아웃하며 fcmToken 삭제
+     *
+     * @param param
+     * @return OK
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<HttpStatus> logout(@RequestBody Map<String, String> param) {
+        userService.logout(param.get("fcmToken"));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
