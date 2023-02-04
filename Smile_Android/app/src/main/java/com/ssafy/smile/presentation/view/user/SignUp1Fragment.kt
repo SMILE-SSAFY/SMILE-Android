@@ -3,11 +3,9 @@ package com.ssafy.smile.presentation.view.user
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
@@ -15,14 +13,13 @@ import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentSignUp1Binding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.SignUpGraphViewModel
 import java.util.regex.Pattern
 
 
 private const val TAG = "SignUp1Fragment_스마일"
 class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Binding::bind, R.layout.fragment_sign_up1) {
-
-    private val userViewModel: UserViewModel by navGraphViewModels(R.id.signUpGraph)
+    private val signUpGraphViewModel: SignUpGraphViewModel by navGraphViewModels(R.id.signUpGraph)
 
     var idInput = false
     var pwdInput = false
@@ -61,7 +58,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             etChangedListener(etPasswordCheck, "pwdChk")
 
             btnDoubleCheck.setOnClickListener {
-                userViewModel.checkEmail(etId.text.toString())
+                signUpGraphViewModel.checkEmail(etId.text.toString())
             }
 
             btnPasswordCheck.setOnClickListener {
@@ -93,7 +90,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
     }
 
     private fun emailCheckResponseObserver() {
-        userViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
+        signUpGraphViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
                     //TODO : 로딩 다이얼로그 고치기
@@ -203,4 +200,5 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
 
         return pattern.matcher(password).find()
     }
+
 }

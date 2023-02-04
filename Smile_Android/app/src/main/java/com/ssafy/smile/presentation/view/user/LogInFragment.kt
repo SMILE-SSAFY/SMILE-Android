@@ -1,7 +1,6 @@
 package com.ssafy.smile.presentation.view.user
 
 import android.util.Log
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
@@ -18,13 +17,13 @@ import com.ssafy.smile.databinding.FragmentLogInBinding
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
-import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.LoginViewModel
+import com.ssafy.smile.presentation.viewmodel.user.SignUpGraphViewModel
 
 private const val TAG = "LogInFragment_스마일"
 class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::bind, R.layout.fragment_log_in) {
 
-    private val userViewModel: UserViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
 
     private lateinit var fcmToken: String
 
@@ -37,7 +36,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
         else if (token != null) {
             UserApiClient.instance.me { user, error ->
                 if (user != null) {
-                    userViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken))
+                    loginViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken))
                 } else {
                     Log.d(TAG,"카카오 로그인 실패 - $error")
                 }
@@ -60,7 +59,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
             btnLogin.setOnClickListener {
                 if (checkValid()) {
                     val loginInfo = getLoginInfo()
-                    userViewModel.login(loginInfo)
+                    loginViewModel.login(loginInfo)
                 }
             }
 
@@ -75,7 +74,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
     }
 
     private fun loginResponseObserver() {
-        userViewModel.loginResponse.observe(viewLifecycleOwner) {
+        loginViewModel.loginResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
@@ -107,7 +106,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
     }
 
     private fun kakaoLoginResponseObserver() {
-        userViewModel.kakaoLoginResponse.observe(viewLifecycleOwner) {
+        loginViewModel.kakaoLoginResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -164,7 +163,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                 } else if (token != null) {
-                    userViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken, fcmToken))
+                    loginViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken, fcmToken))
                 }
             }
         } else {
