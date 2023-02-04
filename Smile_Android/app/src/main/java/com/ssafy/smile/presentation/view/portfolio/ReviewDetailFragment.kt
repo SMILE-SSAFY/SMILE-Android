@@ -9,10 +9,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.Constants.IMAGE_BASE_URL
 import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.PermissionUtils
+import com.ssafy.smile.common.view.CommonDialog
+import com.ssafy.smile.data.remote.model.ReviewResponseDto
 import com.ssafy.smile.databinding.FragmentReviewDetailBinding
+import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.domain.model.ReviewDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
@@ -58,8 +62,7 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
-                        viewModel.uploadData(it.data.makeToDomainDto())
-                        setReviewShowView(it.data.makeToDomainDto())
+                        setReviewShowView(it.data)
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
@@ -75,6 +78,7 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
+                        showToast(requireContext(), "리뷰가 작성되었습니다.", Types.ToastType.SUCCESS)
                         moveToPopUpSelf()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
@@ -82,6 +86,10 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
                         showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "리뷰 등록"), Types.ToastType.WARNING)
                     }
                 }
+            }
+            deleteReviewResponse.observe(viewLifecycleOwner){
+                showToast(requireContext(), "리뷰가 삭제되었습니다.", Types.ToastType.SUCCESS)
+                moveToPopUpSelf()
             }
         }
     }
@@ -109,19 +117,27 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
             etReviewInfo.addTextChangedListener {
                 viewModel.uploadContentData(etReviewInfo.text.toString())
             }
+            btnUpload.visibility = View.VISIBLE
             btnUpload.setOnClickListener {
                 viewModel.postReviewInfo(reservationId)
             }
         }
     }
 
-    // TODO : 리뷰 조회 페이지
-    private fun setReviewShowView(reviewDto: ReviewDomainDto){
+    private fun setReviewShowView(reviewDto: ReviewResponseDto){
         initToolbar("리뷰 조회")
         binding.apply {
-            ratingBar.isEnabled = false
+            ratingBar.setIndicatorEnable(true)                  // TODO : ratingBar 클릭 막기
+            setImageViewVisibility(true)
+            setGalleryViewVisibility(false)
+            tilPhotographerInfo.isEnabled = false
+            btnImageClose.visibility = View.GONE
             btnUpload.visibility = View.GONE
-
+            btnDelete.visibility = View.VISIBLE
+            btnDelete.setOnClickListener { showReviewDeleteDialog() }
+            ratingBar.setReviewScore(reviewDto.score)
+            etReviewInfo.setText(reviewDto.content)
+            Glide.with(requireContext()).load(IMAGE_BASE_URL + reviewDto.photoUrl).into(binding.ivImage)
         }
     }
 
@@ -151,6 +167,11 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
     private fun initToolbar(toolbarTitle : String){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
         toolbar.initToolbar(toolbarTitle, true) { moveToPopUpSelf() }
+    }
+
+    private fun showReviewDeleteDialog(){
+        val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.delete_review), "삭제"), { viewModel.deleteReviewInfo(reviewId) })
+        showDialog(dialog, viewLifecycleOwner)
     }
 
     private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_reviewDetailFragment_pop)

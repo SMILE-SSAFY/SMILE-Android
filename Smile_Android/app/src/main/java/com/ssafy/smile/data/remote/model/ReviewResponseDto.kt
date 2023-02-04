@@ -4,12 +4,10 @@ import com.ssafy.smile.domain.model.ReviewDomainDto
 import java.io.File
 import java.sql.Timestamp
 
-data class ReviewDto(
+data class ReviewResponseDto(
     val score : Float,
     val content : String,
-    val image : File?,
+    val photoUrl : String,
     val timestamp: Timestamp,
-){
-    fun makeToDomainDto() = ReviewDomainDto(score, content, image)
-}
+)
 
