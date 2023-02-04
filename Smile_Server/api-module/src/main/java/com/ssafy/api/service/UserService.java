@@ -15,9 +15,9 @@ import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
-import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.model.Message;
@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import static com.ssafy.core.exception.ErrorCode.INVALID_PASSWORD;
 import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
@@ -88,9 +87,8 @@ public class UserService {
                     .name(registerFormDto.getName())
                     .phoneNumber(registerFormDto.getPhoneNumber())
                     .role(Role.USER)
-                    .fcmToken(registerFormDto.getFcmToken())
+                    .fcmToken(registerFormDto.getFcmToken() + ",")
                     .build();
-            log.info("[registerUser] User 객체 : {}", user.toString());
 
             User savedUser = userRepository.save(user);
             log.info("[registerUser] 회원등록 완료");
@@ -123,17 +121,8 @@ public class UserService {
         }
         log.info("유저 존재 및 비밀번호 일치");
 
-        List<String> fcmTokenList = new ArrayList<>(Arrays.asList(user.getFcmToken().split(",")));
-        boolean flag = true;
-        for (String fcmToken : fcmTokenList) {
-            if (fcmToken.equals(loginUserDto.getFcmToken())) {
-                log.info("동일 fcmToken");
-                flag = false;
-                break;
-            }
-        }
-        if (flag) {
-            user.updateFcmToken(user.getFcmToken() + "," + loginUserDto.getFcmToken());
+        if (!user.getFcmToken().contains(loginUserDto.getFcmToken())) {
+            user.updateFcmToken(user.getFcmToken() + loginUserDto.getFcmToken()+ "," );
             user = userRepository.save(user);
             log.info("fcmToken 추가 : {}", user.getFcmToken());
         }
@@ -347,10 +336,7 @@ public class UserService {
         log.info("삭제할 fcmToken : {}", fcmToken);
         log.info("user fcmToken : {}", user.getFcmToken());
 
-        List<String> fcmTokenList = new ArrayList<>(Arrays.asList(user.getFcmToken().split(",")));
-        String deletedFcmToken = fcmTokenList.stream()
-                .filter(fcm -> !fcm.equals(fcmToken))
-                .collect(Collectors.joining(","));
+        String deletedFcmToken = user.getFcmToken().replace(fcmToken + ",", "");
 
         log.info("삭제 후 fcmToken : {}", deletedFcmToken);
 
