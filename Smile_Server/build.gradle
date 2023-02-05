@@ -2,6 +2,14 @@
 buildscript {
     ext {
         queryDslVersion = "5.0.0"
+        springBootVersion = '2.7.7'
+    }
+    repositories {
+        maven {url 'https://repo.spring.io/release'}
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
@@ -38,9 +46,14 @@ subprojects {
     group = 'com.ssafy'
     version = '1.0'
     sourceCompatibility = '11'
+    compileJava.options.encoding = 'UTF-8'
 
     repositories {
         mavenCentral()
+
+        flatDir {
+            dirs 'libs'
+        }
     }
 
     dependencies {
@@ -85,9 +98,47 @@ subprojects {
     }
 }
 
-project(':api-module') {
+project(":core-module") {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    bootJar.enabled = false
+    jar.enabled = true
+
     dependencies {
-        compileOnly project(':core-module')
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+    }
+}
+
+project(":api-module") {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    bootJar {
+        archivesBaseName = 'ssafy'
+        archiveFileName = "ssafy-api-module-0.0.1.jar"
+        archiveVersion = "0.0.1"
+    }
+    dependencies {
+        implementation project(':core-module')
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+    }
+}
+
+project(':batch-module') {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    bootJar {
+        archivesBaseName = 'ssafy'
+        archiveFileName = "ssafy-batch-module-0.0.1.jar"
+        archiveVersion = "0.0.1"
+    }
+    dependencies {
+        implementation project(':core-module')
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
     }
 }
 
@@ -113,6 +164,6 @@ configurations {
     querydsl.extendsFrom compileClasspath
 }
 // querydsl 컴파일시 사용할 옵션 설정
-compileQuerydsl{
+compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }

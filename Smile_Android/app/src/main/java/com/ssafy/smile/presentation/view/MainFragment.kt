@@ -13,6 +13,7 @@ import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 
 
+// TODO : 시작 화면을 Home으로 + 네트워크 연결 안된 경우 ERROR 처리.
 class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind, R.layout.fragment_main) {
 
     private val viewModel : MainViewModel by viewModels()
