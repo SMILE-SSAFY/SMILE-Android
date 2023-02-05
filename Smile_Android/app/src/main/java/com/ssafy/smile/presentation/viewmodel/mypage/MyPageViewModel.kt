@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
@@ -15,6 +16,9 @@ class MyPageViewModel() : BaseViewModel() {
     private val userRepository = Application.repositoryInstances.getUserRepository()
     private val addressRepository = Application.repositoryInstances.getAddressRepository()
 
+    val myPageResponse: LiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
+        get() = userRepository.myPageLiveData
+
     val getPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
         get() = photographerRepository.getPhotographerInfoResponseLiveData
 
@@ -23,6 +27,12 @@ class MyPageViewModel() : BaseViewModel() {
 
     val withDrawUserResponse : LiveData<NetworkUtils.NetworkResponse<String>>
         get() = userRepository.withDrawResponseLiveData
+
+    fun getMyPageInfo() {
+        viewModelScope.launch {
+            userRepository.myPage()
+        }
+    }
 
     fun getPhotographerInfo() = viewModelScope.launch{
         photographerRepository.getPhotographerInfo()

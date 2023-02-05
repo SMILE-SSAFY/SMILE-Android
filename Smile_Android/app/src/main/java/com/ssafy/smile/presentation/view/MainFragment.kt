@@ -1,19 +1,21 @@
 package com.ssafy.smile.presentation.view
 
 
+import android.util.Log
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentMainBinding
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 
-
 // TODO : 시작 화면을 Home으로 + 네트워크 연결 안된 경우 ERROR 처리.
+private const val TAG = "MainFragment_싸피"
 class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind, R.layout.fragment_main) {
 
     private val viewModel : MainViewModel by viewModels()
@@ -23,6 +25,7 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
         binding.apply {
             initViewPager()
         }
+        Log.d(TAG, "initView: ${SharedPreferencesUtil(requireContext()).getAuthToken()}")
     }
 
     override fun setEvent() {
