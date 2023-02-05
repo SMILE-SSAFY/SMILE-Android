@@ -8,6 +8,7 @@ import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel: BaseViewModel() {
@@ -23,14 +24,14 @@ class LoginViewModel: BaseViewModel() {
 
     // 로그인을 수행하는 함수
     fun login(loginDomainDto: LoginDomainDto) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userRepository.login(loginDomainDto)
         }
     }
 
     // 카카오 로그인을 수행하는 함수
     fun kakaoLogin(token: KakaoLoginRequestDto) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userRepository.kakaoLogin(token)
         }
     }

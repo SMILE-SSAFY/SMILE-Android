@@ -94,13 +94,13 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
                     //TODO : 로딩 다이얼로그 고치기
-//                    showLoadingDialog(requireContext())
+                    showLoadingDialog(requireContext())
                     setIdCheckVisibility(View.GONE, View.GONE)
                     idDoubleCheck = false
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     //TODO : 로딩 다이얼로그 고치기
-//                    dismissLoadingDialog()
+                    dismissLoadingDialog()
                     idDoubleCheck = if (it.data == "OK") {
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
                         true
@@ -110,7 +110,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     //TODO : 로딩 다이얼로그 고치기
-//                    dismissLoadingDialog()
+                    dismissLoadingDialog()
                     idDoubleCheck = false
                     if (it.errorCode == 400) {
                         setIdCheckVisibility(View.GONE, View.VISIBLE)

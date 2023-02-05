@@ -9,6 +9,7 @@ import com.ssafy.smile.data.remote.model.PostHeartDto
 import com.ssafy.smile.data.remote.model.SearchPhotographerResponseDto
 import com.ssafy.smile.data.remote.model.SearchPostResponseDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchViewModel: BaseViewModel() {
@@ -50,14 +51,14 @@ class SearchViewModel: BaseViewModel() {
 
     // 작가 좋아요를 수행하는 함수
     fun photographerHeart(photographerId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             heartRepository.photographerHeart(photographerId)
         }
     }
 
     // 게시물 좋아요를 수행하는 함수
     fun postHeart(articleId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             heartRepository.postHeart(articleId)
         }
     }
