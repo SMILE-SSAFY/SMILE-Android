@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.naver.maps.geometry.LatLng
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.ClusterDto
 import com.ssafy.smile.data.remote.model.PostSearchRequestDto
 import com.ssafy.smile.presentation.base.BaseViewModel
@@ -14,7 +15,7 @@ class MapViewModel : BaseViewModel() {
     private val articleRepository = Application.repositoryInstances.getArticleRepository()
     private val postRepository = Application.repositoryInstances.getPostRepository()
 
-    val getArticleClusterInfoResponse: LiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>
+    val getArticleClusterInfoResponse: SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>
         get() = articleRepository.getArticleClusterInfoResponseLiveData
 
     val getPostSearchListResponse: LiveData<NetworkUtils.NetworkResponse<PostSearchRequestDto>>

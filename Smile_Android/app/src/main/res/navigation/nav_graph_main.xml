@@ -515,7 +515,7 @@
             app:popUpTo="@id/reviewDetailFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <dialog
+    <fragment
         android:id="@+id/mapListFragment"
         android:name="com.ssafy.smile.presentation.view.map.MapListFragment"
         android:label="fragment_map_list"
@@ -532,5 +532,5 @@
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
-    </dialog>
+    </fragment>
 </navigation>
