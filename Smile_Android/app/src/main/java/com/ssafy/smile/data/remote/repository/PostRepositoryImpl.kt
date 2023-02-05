@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.datasource.PostRemoteDataSource
 import com.ssafy.smile.data.remote.model.PostDetailResponseDto
+import com.ssafy.smile.data.remote.model.PostSearchRequestDto
 import com.ssafy.smile.domain.repository.PostRepository
 import com.ssafy.smile.presentation.base.BaseRepository
 
@@ -17,6 +18,10 @@ class PostRepositoryImpl(private val postRemoteDataSource: PostRemoteDataSource)
     val deletePostByIdLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _deletePostByIdLiveData
 
+    private val _getPostSearchListByIdLiveData = MutableLiveData<NetworkUtils.NetworkResponse<PostSearchRequestDto>>()
+    val getPostSearchListByIdLiveData: LiveData<NetworkUtils.NetworkResponse<PostSearchRequestDto>>
+        get() = _getPostSearchListByIdLiveData
+
     override suspend fun getPostById(articleId: Long) {
         safeApiCall(_getPostByIdLiveData){
             postRemoteDataSource.getPostById(articleId)
@@ -28,4 +33,13 @@ class PostRepositoryImpl(private val postRemoteDataSource: PostRemoteDataSource)
             postRemoteDataSource.deletePostById(articleId)
         }
     }
+
+
+    override suspend fun getPostSearchListById(clusterId: Long, condition: String, page: Int) {
+        safeApiCall(_getPostSearchListByIdLiveData){
+            postRemoteDataSource.getPostSearchListById(clusterId, condition, page)
+        }
+    }
+
+
 }

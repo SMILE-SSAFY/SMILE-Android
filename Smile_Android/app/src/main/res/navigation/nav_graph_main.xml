@@ -91,6 +91,14 @@
                 app:argType="boolean"
                 android:defaultValue="true" />      <!-- TODO : Animation 추가 -->
         </action>
+        <action
+            android:id="@+id/action_mainFragment_to_mapListFragment"
+            app:destination="@id/mapListFragment">
+            <argument
+                android:name="clusterId"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/findAddressFragment"
@@ -235,7 +243,8 @@
             tools:layout="@layout/fragment_portfolio" >
             <argument
                 android:name="photographerId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
             <argument
                 android:name="postId"
                 app:argType="long" />
@@ -505,5 +514,23 @@
             android:id="@+id/action_reviewDetailFragment_pop"
             app:popUpTo="@id/reviewDetailFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapListFragment"
+        android:name="com.ssafy.smile.presentation.view.map.MapListFragment"
+        android:label="fragment_map_list"
+        tools:layout="@layout/fragment_map_list" >
+        <argument
+            android:name="clusterId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_mapListFragment_to_portfolioGraph"
+            app:destination="@id/portfolioGraph">
+            <argument
+                android:name="postId"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        </action>
     </fragment>
 </navigation>

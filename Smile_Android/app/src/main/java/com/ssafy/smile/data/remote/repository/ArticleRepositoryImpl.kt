@@ -3,6 +3,7 @@ package com.ssafy.smile.data.remote.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.ArticleRemoteDataSource
 import com.ssafy.smile.data.remote.model.ClusterDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
@@ -12,8 +13,8 @@ import retrofit2.Response
 
 class ArticleRepositoryImpl(private val articleRemoteDataSource: ArticleRemoteDataSource): BaseRepository(), ArticleRepository {
 
-    private val _getArticleClusterInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>()
-    val getArticleClusterInfoResponseLiveData: LiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>
+    private val _getArticleClusterInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>()
+    val getArticleClusterInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>
         get() = _getArticleClusterInfoResponseLiveData
 
     override suspend fun getArticleClusterInfo(coord1x: Double, coord1y: Double, coord2x: Double, coord2y: Double){
