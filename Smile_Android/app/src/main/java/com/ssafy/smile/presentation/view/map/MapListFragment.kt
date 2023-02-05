@@ -66,10 +66,8 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                             setRVView(false)
                         }else{
                             setEmptyView(false)
-
-                            val isEnd = it.data.isEndPage               // TODO : 끝 처리
                             val list = it.data.articleRedisList.map { postSearchDto -> (postSearchDto.makeToDomainDto()).makeToRVDto() }
-                            setRVView(true, list as ArrayList<PostSearchRVDomainDto>)
+                            setRVView(true, it.data.isEndPage, list as ArrayList<PostSearchRVDomainDto>)
                         }
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
@@ -89,6 +87,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                     .toList()
                     .filter { (it as Chip).isChecked }
                     .forEach {
+                        clusterPostRvAdapter.page = 0
                         when((it as Chip).text){
                             "인기순" -> getPostPostSearchList(Types.PostSearchType.HEART, clusterPostRvAdapter.page)
                             "최신순" -> getPostPostSearchList(Types.PostSearchType.TIME, clusterPostRvAdapter.page)
@@ -108,6 +107,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 chipCreated.isEnabled = true
                 chipDistance.isEnabled = true
                 searchType = Types.PostSearchType.HEART
+                clusterPostRvAdapter.page = 0
                 getPostPostSearchList(searchType, 0)
             }
             chipCreated.setOnClickListener {
@@ -115,6 +115,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 chipCreated.isEnabled = false
                 chipDistance.isEnabled = true
                 searchType = Types.PostSearchType.TIME
+                clusterPostRvAdapter.page = 0
                 getPostPostSearchList(searchType, 0)
             }
             chipDistance.setOnClickListener {
@@ -122,6 +123,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 chipCreated.isEnabled = true
                 chipDistance.isEnabled = false
                 searchType = Types.PostSearchType.DISTANCE
+                clusterPostRvAdapter.page = 0
                 getPostPostSearchList(searchType, 0)
             }
         }
@@ -144,7 +146,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                     val lastVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
                     val itemTotalCount = recyclerView.adapter!!.itemCount-1
 
-                    if (!binding.rvPost.canScrollVertically(1) && lastVisibleItemPosition == itemTotalCount) {
+                    if (!binding.rvPost.canScrollVertically(1) && lastVisibleItemPosition == itemTotalCount && !clusterPostRvAdapter.isEnd) {
                         clusterPostRvAdapter.page += 1
                         clusterPostRvAdapter.dismissProgress()
                         getPostPostSearchList(searchType, clusterPostRvAdapter.page)
@@ -161,10 +163,10 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         }else binding.layoutEmptyView.layoutEmptyView.visibility = View.GONE
     }
 
-    private fun setRVView(isSet : Boolean, itemList : ArrayList<PostSearchRVDomainDto> = arrayListOf()){
+    private fun setRVView(isSet : Boolean, isEnd : Boolean=true, itemList : ArrayList<PostSearchRVDomainDto> = arrayListOf()){
         if (isSet) {
             binding.layoutRvPost.visibility = View.VISIBLE
-            clusterPostRvAdapter.setListData(searchType, itemList)
+            clusterPostRvAdapter.setListData(searchType, isEnd, itemList)
         } else binding.layoutRvPost.visibility = View.GONE
     }
 

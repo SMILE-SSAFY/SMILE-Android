@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,22 +22,25 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
 
     private val itemList : ArrayList<PostSearchRVDomainDto> = arrayListOf()
     private var listType : Types.PostSearchType = Types.PostSearchType.HEART
+    var isEnd : Boolean = false
     var page : Int = 0
 
 
-    fun setListData(type : Types.PostSearchType, dataList: ArrayList<PostSearchRVDomainDto>){
-        if (listType!=type){
+    fun setListData(type : Types.PostSearchType, isEnd : Boolean, dataList: ArrayList<PostSearchRVDomainDto>){
+        this.isEnd = isEnd
+        if (page==0){
             listType = type
             itemList.clear()
             itemList.addAll(dataList)
-            itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
+            if (!isEnd) itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
             notifyDataSetChanged()
         }else{
             itemList.addAll(dataList)
-            itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
-            notifyItemRangeInserted((page - 1)*PAGING_NUM, PAGING_NUM)
+            if (!isEnd) itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
+            notifyItemRangeInserted((page)*PAGING_NUM, dataList.size)
         }
     }
+
     fun dismissProgress(){ itemList.removeAt(itemList.lastIndex) }
 
     override fun getItemViewType(position: Int): Int {

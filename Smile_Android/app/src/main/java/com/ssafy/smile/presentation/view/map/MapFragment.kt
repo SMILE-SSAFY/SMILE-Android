@@ -58,6 +58,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
     private var presentLatLngBounds : Pair<LatLng, LatLng>?= null
     private val clusterList : ArrayList<ClusterDto> = arrayListOf()
     private val markerList : ArrayList<Marker> = arrayListOf()
+    private var isInitialized : Boolean = false
 
     override fun onResume() {
         super.onResume()
@@ -82,11 +83,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        if (it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
+                        if (isInitialized && it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
                         else {
                             updateClusterInfo(it.data)
                             map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }
                         }
+                        isInitialized = true
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "게시글 정보를 가져오는"), Types.ToastType.ERROR)
