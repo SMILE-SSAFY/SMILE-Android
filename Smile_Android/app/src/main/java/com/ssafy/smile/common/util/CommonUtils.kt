@@ -2,6 +2,7 @@ package com.ssafy.smile.common.util
 
 import android.content.Context
 import android.location.Geocoder
+import android.util.Log
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
 import java.text.ParseException
@@ -40,11 +41,11 @@ object CommonUtils {
         val time = date.time
         val diff = now - time
         val result : String = if(diff >= 24*60*60*1000){            // 하루가 넘을 때
-            SimpleDateFormat("MM-dd HH:mm").format(time).toString()
+            SimpleDateFormat("MM월 dd일").format(time).toString()
         } else if(diff >= 60*60*1000){                              //한 시간 넘을 때
-            "${diff/(60*60*1000)}시간전"
+            "${diff/(60*60*1000)}시간 전"
         }else{                                                          //한 시간 전
-            "${diff/(60*1000)}분전"
+            "${diff/(60*1000)}분 전"
         }
         return result
     }

@@ -4,32 +4,54 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ssafy.smile.R
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.ssafy.smile.common.util.CommonUtils
-import com.ssafy.smile.databinding.ItemRvAddressBinding
 import com.ssafy.smile.databinding.ItemRvClusterPostBinding
-import com.ssafy.smile.domain.model.AddressDomainDto
+import com.ssafy.smile.databinding.ItemRvClusterProgressBinding
 import com.ssafy.smile.domain.model.PostSearchDomainDto
+import com.ssafy.smile.domain.model.PostSearchRVDomainDto
 import com.ssafy.smile.domain.model.Types
 
-class ClusterPostRVAdapter() : RecyclerView.Adapter<ClusterPostRVAdapter.Holder>() {
+class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
+    companion object{
+        private const val PAGING_NUM = 9
+        private const val VIEW_TYPE_CONTENT = 0
+        private const val VIEW_TYPE_PROGRESS = 1
+    }
 
-    private val itemList : ArrayList<PostSearchDomainDto> = arrayListOf()
+    private val itemList : ArrayList<PostSearchRVDomainDto> = arrayListOf()
     private var listType : Types.PostSearchType = Types.PostSearchType.HEART
+    var page : Int = 0
 
-    fun setListData(type : Types.PostSearchType, dataList: ArrayList<PostSearchDomainDto>){
-        itemList.clear()
-        itemList.addAll(dataList)
-        listType = type
-        notifyDataSetChanged()
+
+    fun setListData(type : Types.PostSearchType, dataList: ArrayList<PostSearchRVDomainDto>){
+        if (listType!=type){
+            listType = type
+            itemList.clear()
+            itemList.addAll(dataList)
+            itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
+            notifyDataSetChanged()
+        }else{
+            itemList.addAll(dataList)
+            itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
+            notifyItemRangeInserted((page - 1)*PAGING_NUM, PAGING_NUM)
+        }
+    }
+    fun dismissProgress(){ itemList.removeAt(itemList.lastIndex) }
+
+    override fun getItemViewType(position: Int): Int {
+        return when(itemList[position].type){
+            Types.PagingRVType.CONTENT -> VIEW_TYPE_CONTENT
+            Types.PagingRVType.PROGRESS -> VIEW_TYPE_PROGRESS
+        }
     }
 
 
-    inner class Holder(private val binding: ItemRvClusterPostBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class Holder(private val binding: ItemRvClusterPostBinding) : ViewHolder(binding.root){
         fun bindInfo(position: Int, postSearchDto: PostSearchDomainDto){
             binding.apply {
                 tvCategory.text = postSearchDto.category
-                tvCreatedAt.text = CommonUtils.getDiffTime(postSearchDto.createdAt)
+                tvCreatedAt.text = CommonUtils.stringToDate(postSearchDto.createdAt)?.let { CommonUtils.getDiffTime(it) }
                 tvDistance.text = CommonUtils.getDiffDistance(postSearchDto.distance)
                 tvLike.text = postSearchDto.hearts.toString()
                 tvName.text = postSearchDto.photographerName
@@ -50,7 +72,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ClusterPostRVAdapter.Holder>
                     }
                 }
             }
-            itemView.setOnClickListener { itemClickListener.onClickItem(it, position, itemList[position]) }
+            itemView.setOnClickListener { itemClickListener.onClickItem(it, position, postSearchDto) }
         }
         private fun showCreatedAtVisibility(isVisible : Boolean){
             if (isVisible) binding.tvCreatedAt.visibility = View.VISIBLE
@@ -62,19 +84,33 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ClusterPostRVAdapter.Holder>
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        return  Holder(ItemRvClusterPostBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    inner class ProgressHolder(private val binding: ItemRvClusterProgressBinding) : ViewHolder(binding.root) { }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_CONTENT -> {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemRvClusterPostBinding.inflate(layoutInflater, parent, false)
+                Holder(binding)
+            }
+            else -> {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemRvClusterProgressBinding.inflate(layoutInflater, parent, false)
+                ProgressHolder(binding)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: Holder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dto = itemList[position]
-        holder.apply {
-            bindInfo(position, dto)
-            itemView.tag = dto
+        if(holder is Holder){
+            dto.postSearchDto?.let { holder.bindInfo(position, it) }
+            holder.itemView.tag = dto
         }
     }
 
     override fun getItemCount(): Int = itemList.size
+
 
     interface ItemClickListener{
         fun onClickItem(view: View, position: Int, postSearchDto: PostSearchDomainDto)

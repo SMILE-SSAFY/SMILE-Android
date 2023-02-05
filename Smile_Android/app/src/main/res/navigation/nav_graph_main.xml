@@ -96,7 +96,8 @@
             app:destination="@id/mapListFragment">
             <argument
                 android:name="clusterId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
         </action>
     </fragment>
     <fragment
@@ -242,7 +243,8 @@
             tools:layout="@layout/fragment_portfolio" >
             <argument
                 android:name="photographerId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
             <argument
                 android:name="postId"
                 app:argType="long" />
@@ -520,13 +522,15 @@
         tools:layout="@layout/fragment_map_list" >
         <argument
             android:name="clusterId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="-1L" />
         <action
             android:id="@+id/action_mapListFragment_to_portfolioGraph"
             app:destination="@id/portfolioGraph">
             <argument
                 android:name="postId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
         </action>
     </dialog>
 </navigation>

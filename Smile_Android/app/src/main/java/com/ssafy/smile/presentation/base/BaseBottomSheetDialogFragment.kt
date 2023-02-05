@@ -26,6 +26,7 @@ abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mLoadingDialog = LoadingDialog(requireContext())
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme)
     }
 

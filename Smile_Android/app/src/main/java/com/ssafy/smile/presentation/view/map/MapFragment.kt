@@ -61,7 +61,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
 
     override fun onResume() {
         super.onResume()
-        map?.let { onMapReady(it) }
+        checkIsServiceAvailable()
     }
 
     override fun initView() {
@@ -100,6 +100,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         binding.apply {
             btnFindArticles.setOnClickListener {
                 presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
+                showToast(requireContext(), "게시글 정보를 재검색합니다.")
             }
             btnFindCurrentLocation.setOnClickListener {
                 map?.let {
