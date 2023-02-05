@@ -36,7 +36,7 @@ interface ReservationApiService {
                            @Part image : MultipartBody.Part) : Response<Any>
 
     @GET("/api/reservation/review/{reviewId}")
-    suspend fun getReview(@Path("reviewId") reviewId: Long) : Response<ReviewDto>
+    suspend fun getReview(@Path("reviewId") reviewId: Long) : Response<ReviewResponseDto>
 
     @DELETE("/api/reservation/review/{reviewId}")
     suspend fun deleteReview(@Path("reviewId") reviewId: Long) : Response<Any>

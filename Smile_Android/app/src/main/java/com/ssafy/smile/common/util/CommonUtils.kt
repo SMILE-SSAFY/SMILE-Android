@@ -8,7 +8,6 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 object CommonUtils {
 
@@ -35,6 +34,7 @@ object CommonUtils {
         return if (meter < 1000) meter.toInt().toString() + "m"
         else (meter / 1000).toInt().toString() + "km"
     }
+
 
     fun getDiffTime(date : Date) : String{
         val now = System.currentTimeMillis()
@@ -80,7 +80,7 @@ object CommonUtils {
     fun getPlace(places: ArrayList<String>): String {
         return when (places.size) {
             1 -> {
-                "${places[0]}"
+                places[0]
             }
             2 -> {
                 "${places[0]}, ${places[1]}"
@@ -103,4 +103,5 @@ object CommonUtils {
     fun combineCategoryAndOption(category: String, option: String): String {
         return "$category $option"
     }
+
 }
