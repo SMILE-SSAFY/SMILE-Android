@@ -1,11 +1,6 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.article.ArticleClusterDto;
-import com.ssafy.api.dto.article.ArticleDetailDto;
-import com.ssafy.api.dto.article.ArticleHeartDto;
-import com.ssafy.api.dto.article.ArticleListDto;
-import com.ssafy.api.dto.article.ArticlePostDto;
-import com.ssafy.api.dto.article.PhotographerInfoDto;
+import com.ssafy.api.dto.article.*;
 import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.core.entity.Article;
@@ -414,9 +409,10 @@ public class ArticleService {
      * @return 마커별 게시글 리스트
      */
 
-    public List<ArticleRedis> getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
+    public ArticleClusterListDto getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
         log.info(condition);
         log.info(String.valueOf(condition.equals("time")));
+        Boolean isEndPage = false;
         // 최신순 조회
         if (condition.equals("time")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
@@ -428,8 +424,12 @@ public class ArticleService {
             // cache를 paging
             if ((int)(pageId+1)*9 > articleRedisPage.size()){
                 size = articleRedisPage.size();
+                isEndPage = true;
             }
-            return articleRedisPage.subList(0, size);
+            return ArticleClusterListDto.builder()
+                    .isEndPage(isEndPage)
+                    .articleRedisList(articleRedisPage.subList(size-9,size))
+                    .build();
             // 좋아요순 조회
         } else if (condition.equals("heart")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
@@ -438,11 +438,15 @@ public class ArticleService {
             log.info(String.valueOf(articleRedisPage.size()-1));
 
             Integer size = (int) ((pageId+1)*9);
-
+            // cache를 paging
             if ((int)(pageId+1)*9 > articleRedisPage.size()){
                 size = articleRedisPage.size();
+                isEndPage = true;
             }
-            return articleRedisPage.subList(0, size);
+            return ArticleClusterListDto.builder()
+                    .isEndPage(isEndPage)
+                    .articleRedisList(articleRedisPage.subList(size-9,size))
+                    .build();
             // 거리순 조회
         } else if (condition.equals("distance")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
@@ -451,13 +455,17 @@ public class ArticleService {
             log.info(String.valueOf(articleRedisPage.size()-1));
 
             Integer size = (int) ((pageId+1)*9);
-
+            // cache를 paging
             if ((int)(pageId+1)*9 > articleRedisPage.size()){
                 size = articleRedisPage.size();
+                isEndPage = true;
             }
-            return articleRedisPage.subList(0, size);
+            return ArticleClusterListDto.builder()
+                    .isEndPage(isEndPage)
+                    .articleRedisList(articleRedisPage.subList(size-9,size))
+                    .build();
         }
-        return new ArrayList<>();
+        return ArticleClusterListDto.builder().build();
     }
 
 
