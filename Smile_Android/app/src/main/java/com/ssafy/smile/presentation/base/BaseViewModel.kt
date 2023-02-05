@@ -22,6 +22,10 @@ abstract class BaseViewModel : ViewModel() {
         _roleLiveData.postValue(Types.Role.getRoleType(role?:Types.Role.USER.getValue()))
     }
 
+    fun putRole(context: Context, role: Types.Role){
+        SharedPreferencesUtil(context).putRole(role)
+    }
+
     fun changeRole(context: Context, role: Types.Role){
         SharedPreferencesUtil(context).changeRole(role)
         getRole(context)

@@ -7,6 +7,7 @@ import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.ReservationChangeRequestDto
 import com.ssafy.smile.data.remote.model.ReservationListDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PhotographerReservationListViewModel: BaseViewModel() {
@@ -22,14 +23,14 @@ class PhotographerReservationListViewModel: BaseViewModel() {
     val changeReservationStatusResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = reservationRepository.changeReservationStatusLiveData
 
-    fun changeReservationStatus(reservationId: Long, reservationChangeRequestDto: ReservationChangeRequestDto) = viewModelScope.launch{
+    fun changeReservationStatus(reservationId: Long, reservationChangeRequestDto: ReservationChangeRequestDto) = viewModelScope.launch(Dispatchers.IO){
         reservationRepository.changeReservationStatus(reservationId, reservationChangeRequestDto)
     }
 
     val cancelReservationResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = reservationRepository.cancelReservationLiveData
 
-    fun cancelReservation(reservationId: Long) = viewModelScope.launch{
+    fun cancelReservation(reservationId: Long) = viewModelScope.launch(Dispatchers.IO){
         reservationRepository.cancelReservation(reservationId)
     }
 }

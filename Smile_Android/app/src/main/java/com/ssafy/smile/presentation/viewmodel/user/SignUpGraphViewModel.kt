@@ -9,6 +9,7 @@ import com.ssafy.smile.data.remote.model.UserResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SignUpGraphViewModel: BaseViewModel() {
@@ -28,21 +29,21 @@ class SignUpGraphViewModel: BaseViewModel() {
 
     // 이메일 중복 여부 확인을 수행하는 함수
     fun checkEmail(email: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userRepository.checkEmail(email)
         }
     }
 
     // 회원가입을 수행하는 함수
     fun signUp(signUpDomainDto: SignUpDomainDto) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userRepository.signUp(signUpDomainDto)
         }
     }
 
     // 핸드폰 인증을 수행하는 함수
     fun checkPhoneNumber(phoneNumber: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userRepository.checkPhoneNumber(phoneNumber)
         }
     }

@@ -73,7 +73,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
         get() = postRepository.deletePostByIdLiveData
 
     fun deletePostById(articleId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             postRepository.deletePostById(articleId)
         }
     }
@@ -83,7 +83,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
         get() = heartRepository.postHeartResponseLiveData
 
     fun postHeart(articleId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             heartRepository.postHeart(articleId)
         }
     }
@@ -102,7 +102,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
         get() = reservationRepository.postReservationLiveData
 
     fun postReservation(reservationRequestDto: ReservationRequestDto) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             reservationRepository.postReservation(reservationRequestDto)
         }
     }
