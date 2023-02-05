@@ -21,4 +21,7 @@ public class LoginUserDto {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String fcmToken;
 }

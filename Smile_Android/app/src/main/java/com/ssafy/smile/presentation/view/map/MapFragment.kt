@@ -5,39 +5,62 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.PointF
 import android.location.Location
 import android.location.LocationManager
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.gun0912.tedpermission.PermissionListener
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.MapFragment
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.AddressUtils
+import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.PermissionUtils
+import com.ssafy.smile.data.remote.model.ClusterDto
 import com.ssafy.smile.databinding.FragmentMapBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.viewmodel.map.MapViewModel
+
 
 class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R.layout.fragment_map),
     OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private val viewModel : MapViewModel by viewModels()
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         private const val UPDATE_INTERVAL = 1000
         private const val FASTEST_UPDATE_INTERVAL = 500
+
+        private val DeviceWidth: Int = Resources.getSystem().displayMetrics.widthPixels
+        private val DeviceHeight: Int = Resources.getSystem().displayMetrics.heightPixels
     }
 
     private var map: NaverMap? = null
+    private var locationSource : FusedLocationSource ? = null
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private var currentPosition: LatLng = LatLng(37.56, 126.97)
-    private var locationSource : FusedLocationSource ? = null
+    private var presentLatLngBounds : Pair<LatLng, LatLng>?= null
+    private val clusterList : ArrayList<ClusterDto> = arrayListOf()
+    private val markerList : ArrayList<Marker> = arrayListOf()
+
+    override fun onResume() {
+        super.onResume()
+        map?.let { onMapReady(it) }
+    }
 
     override fun initView() {
         (childFragmentManager.findFragmentById(R.id.mapView) as MapFragment).getMapAsync(this)
@@ -46,26 +69,82 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
     }
 
     override fun setEvent() {
-        // TODO("Not yet implemented")
+        setObserver()
+        setClickListener()
     }
 
-    override fun onMapReady(naverMap: NaverMap) {
-        with(naverMap) {
+    private fun setObserver() {
+        viewModel.apply {
+            getArticleClusterInfoResponse.observe(viewLifecycleOwner){
+                when(it) {
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                    }
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        if (it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
+                        else {
+                            updateClusterInfo(it.data)
+                            map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }
+                        }
+                    }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "게시글 정보를 가져오는"), Types.ToastType.ERROR)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setClickListener(){
+        binding.apply {
+            btnFindArticles.setOnClickListener {
+                presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
+            }
+            btnFindCurrentLocation.setOnClickListener {
+                map?.let {
+                    it.locationSource = locationSource
+                    it.locationTrackingMode = LocationTrackingMode.Follow
+                }
+            }
+        }
+    }
+
+    private fun updateClusterInfo(clusterDtoList : List<ClusterDto>){
+        clusterList.clear()
+        clusterList.addAll(clusterDtoList)
+    }
+
+    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){
+        for (marker in markerList){ marker.map = null }
+        markerList.clear()
+        for (cluster in clusterDtoList){
+            val marker = Marker().apply {
+                captionText = cluster.numOfCluster.toString()
+                position = LatLng(cluster.centroidLat, cluster.centroidLng)
+                icon = OverlayImage.fromResource(R.drawable.oval_blue400_radius_4)
+                width = 70
+                height = 70
+                map = nMap
+            }
+            markerList.add(marker)
+        }
+    }
+
+    override fun onMapReady(nMap: NaverMap) {
+        with(nMap) {
             uiSettings.isLocationButtonEnabled = false
             uiSettings.isZoomGesturesEnabled = true
             uiSettings.isZoomControlEnabled = false
             locationTrackingMode = LocationTrackingMode.Follow
         }
-        this.map = naverMap
-        naverMap.locationSource = locationSource
-        startLocationUpdates(naverMap)
-        checkIsServiceAvailable()
+        this.map = nMap
+        nMap.locationSource = locationSource
+        if (checkIsServiceAvailable()) startLocationUpdates(nMap)
     }
 
     private fun checkIsServiceAvailable() : Boolean{
         if (!checkPermission()) {
             val permissionListener = object : PermissionListener {
-                override fun onPermissionGranted() { }
+                override fun onPermissionGranted() { map?.let { startLocationUpdates(it) } }
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
                     showToast(requireContext(), getString(R.string.permission_error_service_denied), Types.ToastType.WARNING)
                 }
@@ -73,7 +152,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
             PermissionUtils.getLocationServicePermission(permissionListener)
         }else if (!checkLocationServicesStatus()) {
             PermissionUtils.showDialogForLocationServiceSetting(requireContext(),
-
                 action = { activityLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) },
                 cancelAction = {
                     showToast(requireContext(), "위치 서비스를 활성화하지 않으면\n지도를 사용하실 수 없습니다.", Types.ToastType.WARNING)
@@ -83,37 +161,21 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         return false
     }
 
-    private fun startLocationUpdates(naverMap: NaverMap) {
-//        binding.btnFindCurrentLocation.setOnClickListener {
-//            map?.let {
-//                it.locationSource = locationSource
-//                it.locationTrackingMode = LocationTrackingMode.Follow
-//            }
-//        }
 
-        naverMap.addOnCameraChangeListener { _, _ ->
-            //currentMarker?.position = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
-            //makeButtonUnEnable("위치 이동 중")
-        }
-
-        naverMap.addOnCameraIdleListener {
-//            val latLng = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
-//            currentMarker?.position = latLng
-//            val addressGeoDto = AddressUtils.getGeoFromPoints(requireContext(), naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
-//            if (addressGeoDto.type == AddressGeoDto.GeoAddress.ADDRESS) makeButtonEnable(addressGeoDto.address, latLng)
-//            else makeButtonUnEnable(addressGeoDto.address)
+    private fun startLocationUpdates(nMap: NaverMap) {
+        nMap.addOnCameraIdleListener {
+            presentLatLngBounds = getBoundsLatLng(nMap)
+            presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
         }
 
         mFusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let { currentPosition = LatLng(it.latitude, it.longitude) }
-            naverMap.locationOverlay.run {
+            nMap.locationOverlay.run {
                 isVisible = true
                 position = currentPosition
             }
             moveToLatLng(currentPosition)
-            //currentMarker?.position = LatLng(naverMap.cameraPosition.target.latitude, naverMap.cameraPosition.target.longitude)
         }
-
 
     }
 
@@ -121,6 +183,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         map?.moveCamera(CameraUpdate.scrollAndZoomTo(LatLng(latLng.latitude, latLng.longitude), 15.0))
     }
 
+    private fun getBoundsLatLng(nMap: NaverMap, width: Float = DeviceWidth.toFloat(), height: Float = DeviceHeight.toFloat()): Pair<LatLng, LatLng> {
+        val projection: Projection  = nMap.projection
+        val northWest = projection.fromScreenLocation(PointF(0F, 0F))
+        val southEast = projection.fromScreenLocation(PointF(width, height))
+        return Pair(northWest, southEast)
+    }
 
     //--------------------------------------------------------------------------------------------------------------------------------
 

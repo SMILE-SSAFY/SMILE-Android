@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 /***
  * 리뷰 엔티티
@@ -27,11 +28,13 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer score;
+    private Double score;
 
     private String content;
 
     private String PhotoUrl;
+
+    private LocalDateTime createdAt;
 
     @OneToOne
     @JoinColumn(name = "reservation_id")

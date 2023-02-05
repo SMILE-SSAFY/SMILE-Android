@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
@@ -21,6 +22,8 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.mypage.MyPageViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
@@ -98,7 +101,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 tvCustomerReservation.setOnClickListener{
                     findNavController().navigate(R.id.action_mainFragment_to_customerReservationListFragment)
                 }
-                tvCustomerInterest.setOnClickListener { }
+                tvCustomerInterest.setOnClickListener {
+                    moveToMyInterestFragment()
+                }
             }
             layoutMyPagePhotographer.apply {
                 clPhotographerWritePortfolio.setOnClickListener {
@@ -134,6 +139,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private fun logout() {
         try {
             removeUserInfo()
+
             Intent(context, MainActivity::class.java).apply {
                 requireActivity().finish()
                 startActivity(this)
@@ -142,7 +148,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         } catch (e: IOException) { findNavController().navigate(R.id.action_global_loginFragment) }
     }
     private fun removeUserInfo(){
-       SharedPreferencesUtil(requireContext()).removeAllInfo()
+        SharedPreferencesUtil(requireContext()).removeAllInfo()
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.deleteAllAddress()
+        }
     }
     private fun showLogoutDialog(){
         val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.logout), "로그아웃"), { logout() })
@@ -159,6 +168,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     private fun showPhotographerWithDrawDialog(){
         val dialog = CommonDialog(requireContext(), DialogBody(resources.getString(R.string.withDraw_user), "회원 탈퇴"), { viewModel.withDrawUser() })
         showDialog(dialog, viewLifecycleOwner)
+    }
+    private fun moveToMyInterestFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_myInterestFragment)
     }
     private fun moveToRegisterPortFolioGraph(photographerResponseDto: PhotographerResponseDto?) {
        val action = MainFragmentDirections.actionMainFragmentToRegisterPortFolioGraph(photographerResponseDto)

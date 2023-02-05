@@ -1,11 +1,15 @@
 package com.ssafy.smile
 
 import android.app.Application
+import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.data.*
 import com.ssafy.smile.data.local.database.AppDatabase
+import kr.co.bootpay.android.*;
 
+private const val TAG = "Application_싸피"
 class Application : Application()  {
 
     companion object{
@@ -28,6 +32,8 @@ class Application : Application()  {
         super.onCreate()
         initContextInjection()
         kakaoInit()
+        bootPayInit()
+        getFirebaseToken()
     }
 
     private fun initContextInjection(){
@@ -46,4 +52,17 @@ class Application : Application()  {
         KakaoSdk.init(this, getString(R.string.kakao_native_key))
     }
 
+    private fun bootPayInit() {
+        BootpayAnalytics.init(this, getString(R.string.bootpay_key))
+    }
+
+    private fun getFirebaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let {
+                    sharedPreferences.putFCMToken(it)
+                }
+            } else error("FCM 토큰 얻기에 실패하였습니다. 잠시 후 다시 시도해주세요.")
+        }
+    }
 }

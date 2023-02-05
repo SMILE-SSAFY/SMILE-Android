@@ -32,6 +32,9 @@ class RepositoryInstances(dataSourceInstances: DataSourceInstances) {
     @Singleton
     private val reservationRepository: ReservationRepositoryImpl = ReservationRepositoryImpl(dataSourceInstances.getReservationRemoteDataSource())
 
+    @Singleton
+    private val articleRepository : ArticleRepositoryImpl = ArticleRepositoryImpl(dataSourceInstances.getArticleRemoteDataSource())
+
     fun getAddressRepository() : AddressRepositoryImpl = addressRepository
     fun getUserRepository(): UserRepositoryImpl = userRepository
     fun getPortfolioRepository(): PortfolioRepositoryImpl = portfolioRepository
@@ -40,4 +43,5 @@ class RepositoryInstances(dataSourceInstances: DataSourceInstances) {
     fun getPostRepository(): PostRepositoryImpl = postRepository
     fun getSearchRepository(): SearchRepositoryImpl = searchRepository
     fun getReservationRepository(): ReservationRepositoryImpl = reservationRepository
+    fun getArticleRepository() : ArticleRepositoryImpl = articleRepository
 }

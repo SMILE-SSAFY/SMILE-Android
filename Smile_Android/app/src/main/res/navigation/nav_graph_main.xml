@@ -32,7 +32,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/logInFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_signUpGraph"
             app:destination="@id/signUpGraph" />
@@ -67,6 +69,9 @@
             app:destination="@id/portfolioGraph">
             <argument
                 android:name="photographerId"
+                app:argType="long" />
+            <argument
+                android:name="postId"
                 app:argType="long" />
         </action>
         <action
@@ -129,12 +134,44 @@
             android:id="@+id/action_customerReservationListFragment_pop"
             app:popUpTo="@id/customerReservationListFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_customerReservationListFragment_to_reviewDetailFragment"
+            app:destination="@id/reviewDetailFragment">
+            <argument
+                android:name="photographerName"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="@null" />
+            <argument
+                android:name="reservationId"
+                app:argType="long"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="reviewId"
+                app:argType="long"
+                android:defaultValue="-1L" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/myInterestFragment"
-        android:name="com.ssafy.smile.presentation.view.mypage.MyInterestFragment"
+        android:name="com.ssafy.smile.presentation.view.mypage.myInterest.MyInterestFragment"
         android:label="fragment_my_interest"
-        tools:layout="@layout/fragment_my_interest" />
+        tools:layout="@layout/fragment_my_interest" >
+        <action
+            android:id="@+id/action_myInterestFragment_pop"
+            app:popUpTo="@id/myInterestFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_myInterestFragment_to_portfolioGraph"
+            app:destination="@id/portfolioGraph" >
+            <argument
+                android:name="photographerId"
+                app:argType="long" />
+            <argument
+                android:name="postId"
+                app:argType="long" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/photographerReservationList"
         android:name="com.ssafy.smile.presentation.view.mypage.PhotographerReservationListFragment"
@@ -199,9 +236,9 @@
             <argument
                 android:name="photographerId"
                 app:argType="long" />
-            <action
-                android:id="@+id/action_portfolioFragment_to_reviewFragment"
-                app:destination="@id/reviewFragment" />
+            <argument
+                android:name="postId"
+                app:argType="long" />
             <action
                 android:id="@+id/action_portfolioFragment_to_reservationFragment"
                 app:destination="@id/reservationFragment">
@@ -223,6 +260,15 @@
                 android:id="@+id/action_portfolioFragment_pop"
                 app:popUpTo="@id/portfolioFragment"
                 app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_portfolioFragment_to_postDetailFragment_withPop"
+                app:destination="@id/postDetailFragment"
+                app:popUpTo="@id/portfolioFragment"
+                app:popUpToInclusive="true" >
+                <argument
+                    android:name="postId"
+                    app:argType="long" />
+            </action>
         </fragment>
         <fragment
             android:id="@+id/postDetailFragment"
@@ -316,11 +362,6 @@
                     android:defaultValue="false" />
             </action>
         </fragment>
-        <fragment
-            android:id="@+id/reviewFragment"
-            android:name="com.ssafy.smile.presentation.view.portfolio.ReviewFragment"
-            android:label="fragment_review"
-            tools:layout="@layout/fragment_review" />
     </navigation>
     <navigation
         android:id="@+id/registerPortFolioGraph"
@@ -442,4 +483,27 @@
                 app:popUpToInclusive="true" />
         </dialog>
     </navigation>
+    <fragment
+        android:id="@+id/reviewDetailFragment"
+        android:name="com.ssafy.smile.presentation.view.portfolio.ReviewDetailFragment"
+        android:label="fragment_review_detail"
+        tools:layout="@layout/fragment_review_detail" >
+        <argument
+            android:name="photographerName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="reservationId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="reviewId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_reviewDetailFragment_pop"
+            app:popUpTo="@id/reviewDetailFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

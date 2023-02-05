@@ -57,6 +57,8 @@ public class Reservation {
     @Builder.Default
     private ReservationStatus status = ReservationStatus.예약확정전;
 
+    private String receiptId;
+
     private int price;
 
     private String categoryName;
