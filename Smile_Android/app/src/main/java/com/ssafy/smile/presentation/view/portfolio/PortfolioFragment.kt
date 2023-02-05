@@ -87,6 +87,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
             refreshLayout.setOnRefreshListener {
                 portfolioViewModel.getPortfolio(photographerId)
                 portfolioViewModel.getPosts(photographerId)
+                portfolioViewModel.getPhotographerReviewList(photographerId)
                 refreshLayout.isRefreshing = false
             }
         }

@@ -1,6 +1,6 @@
 package com.ssafy.smile.domain.model
 
-import com.ssafy.smile.data.remote.model.ReviewDto
+import com.ssafy.smile.data.remote.model.ReviewRequestDto
 import java.io.File
 import java.sql.Timestamp
 
@@ -10,5 +10,5 @@ data class ReviewDomainDto(
     var image : File?=null,
     var timeStamp : Timestamp?=null
 ){
-    fun makeToDto() = ReviewDto(score!!, content!!, image!!, timeStamp!!)
+    fun makeToDto() = ReviewRequestDto(score!!, content!!, image!!, timeStamp!!)
 }

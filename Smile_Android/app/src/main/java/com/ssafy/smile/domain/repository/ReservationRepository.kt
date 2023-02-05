@@ -2,9 +2,7 @@ package com.ssafy.smile.domain.repository
 
 import com.ssafy.smile.data.remote.model.ReservationChangeRequestDto
 import com.ssafy.smile.data.remote.model.ReservationRequestDto
-import com.ssafy.smile.data.remote.model.ReviewDto
 import okhttp3.MultipartBody
-import retrofit2.Response
 
 interface ReservationRepository {
     suspend fun getPhotographerReservationInfo(photographerId: Long)
