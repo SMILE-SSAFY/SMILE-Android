@@ -58,9 +58,9 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
         }
     }
 
-    override suspend fun getPhotographerInfoByAddress(address:String){
+    override suspend fun getPhotographerInfoByAddress(address:String, criteria: String){
         safeApiCall(_getPhotographerInfoByAddressResponseLiveData){
-            photographerRemoteDataSource.getPhotographerInfoByAddress(address)
+            photographerRemoteDataSource.getPhotographerInfoByAddress(address, criteria)
         }
     }
 }

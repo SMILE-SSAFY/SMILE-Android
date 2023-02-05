@@ -28,11 +28,17 @@ class CustomerReservationListRecyclerAdapter(val context: Context, val datas: Mu
     lateinit var onReviewClickListener : OnReviewClickListener
     fun setReviewClickListener(onReviewClickListener: OnReviewClickListener) { this.onReviewClickListener = onReviewClickListener }
 
+    interface OnReviewCheckClickListener {
+        fun onClick(view: View, position: Int)
+    }
+    lateinit var onReviewCheckClickListener : OnReviewCheckClickListener
+    fun setReviewCheckClickListener(onReviewCheckClickListener: OnReviewCheckClickListener) { this.onReviewCheckClickListener = onReviewCheckClickListener }
+
     inner class CustomerReservationListViewHolder(val binding: RecyclerCustomerReservationItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: CustomReservationDomainDto, position: Int) {
             binding.apply {
                 data.opposite = "작가님"
-                customReservation.setAttrs(data)
+                customReservation.setAttrs(data, true)
 
                 val cancelBtn = customReservation.btnCancel
                 cancelBtn.setOnClickListener {
@@ -47,6 +53,11 @@ class CustomerReservationListRecyclerAdapter(val context: Context, val datas: Mu
                 val reviewBtn = customReservation.btnReview
                 reviewBtn.setOnClickListener {
                     onReviewClickListener.onClick(it, position)
+                }
+
+                val reviewCheckBtn = customReservation.btnReviewCheck
+                reviewCheckBtn.setOnClickListener {
+                    onReviewCheckClickListener.onClick(it, position)
                 }
             }
         }

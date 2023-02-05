@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.api.dto.Reservation.ReviewDetailDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
 import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.api.service.ReservationService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,7 +78,7 @@ public class ReservationController {
      * @return 정상일 때 OK
      */
     @PutMapping("/status/{reservationId}")
-    public ResponseEntity<?> changeStatus(@PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status){
+    public ResponseEntity<?> changeStatus(@PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
@@ -124,6 +126,18 @@ public class ReservationController {
     }
 
     /***
+     * 리뷰 디테일 조회
+     * @param reviewId
+     * @return 리뷰 디테일
+     */
+    @GetMapping("/review/{reviewId}")
+    public ResponseEntity<?> reviewDetail(@PathVariable Long reviewId){
+        ReviewDetailDto result = reservationService.reviewDetail(reviewId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    /***
      * 해당 작가의 리뷰 리스트를 모두 보여줌
      * @param photographerId 작가id
      * @return List<reviewResDto>
@@ -152,7 +166,7 @@ public class ReservationController {
      * @return HttpStatus.OK
      */
     @PutMapping("/cancel/{reservationId}")
-    public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) {
+    public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 

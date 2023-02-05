@@ -14,5 +14,7 @@ data class CustomReservationDomainDto(
     val location: String = "",
     val category: String = "",
     val cost: String = "",
-    val status: String = ""
+    val status: String = "",
+    val isReview: Boolean = false,
+    val reviewId: Long = -1
 ): Parcelable

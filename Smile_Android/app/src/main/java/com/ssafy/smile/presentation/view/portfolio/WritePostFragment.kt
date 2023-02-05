@@ -1,10 +1,8 @@
 package com.ssafy.smile.presentation.view.portfolio
 
-import android.os.Parcelable
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.ssafy.smile.R
@@ -106,7 +104,7 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         binding.apply {
             btnPictureContent.setOnClickListener {
                 actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount), "최대 ${abs(3-imageRvAdapter.itemCount)}장까지 선택 가능합니다."){
-                    val fileList = it.map { uri -> ImageUtils.getImageFileFromUri(requireContext(), uri) }
+                    val fileList = it.map { uri -> ImageUtils.getFileFromUri(requireContext(), uri) }
                     imageRvAdapter.setListData(ArrayList(fileList))
                     viewModel.uploadImageData(getImageData())
                 }

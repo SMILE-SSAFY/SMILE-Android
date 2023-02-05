@@ -26,6 +26,7 @@ class CustomReservation: ConstraintLayout {
     lateinit var btnCancel: Button
     lateinit var btnPayFix: Button
     lateinit var btnReview: Button
+    lateinit var btnReviewCheck: Button
 
     constructor(context: Context) : super(context)
 
@@ -51,6 +52,7 @@ class CustomReservation: ConstraintLayout {
         btnCancel = findViewById(R.id.btn_cancel)
         btnPayFix = findViewById(R.id.btn_pay_fix)
         btnReview = findViewById(R.id.btn_review)
+        btnReviewCheck = findViewById(R.id.btn_review_check)
     }
 
     // attrs.xml 파일로부터 속성 정보 확보 - typedArray
@@ -74,7 +76,7 @@ class CustomReservation: ConstraintLayout {
         typedArray.recycle()
     }
 
-    fun setAttrs(data: CustomReservationDomainDto) {
+    fun setAttrs(data: CustomReservationDomainDto, isList: Boolean) {
         tvName.text = data.name
         tvPhoneNumber.text = data.phoneNumber
         tvReservationDate.text = data.resDate
@@ -82,14 +84,18 @@ class CustomReservation: ConstraintLayout {
         tvPlace.text = data.location
         tvCategory.text = data.category
         tvCost.text = data.cost
-        setChips(data.status)
-        setButtons(data.status, data.opposite)
+
+        if (isList) {
+            setChips(data.status)
+            setButtons(data.status, data.opposite, data.isReview)
+        }
 
         invalidate()
         requestLayout()
     }
 
     fun setChips(status: String) {
+        statusChip.visibility = View.VISIBLE
         when(status) {
             "예약확정전" -> setChipColor(status, R.color.blue200)
             "예약확정" -> setChipColor(status, R.color.blue400)
@@ -107,29 +113,44 @@ class CustomReservation: ConstraintLayout {
         }
     }
 
-    fun setButtons(status: String, opposite: String) {
+    fun setButtons(status: String, opposite: String, isReview: Boolean) {
         when(opposite) {
-            "작가님" -> setCustomerButtons(status)
+            "작가님" -> setCustomerButtons(status, isReview)
             "고객님" -> setPhotographerButtons(status)
         }
     }
 
-    private fun setCustomerButtons(status: String) {
+    private fun setCustomerButtons(status: String, isReview: Boolean) {
         when(status) {
-            "예약확정전" -> btnCancel.visibility = View.VISIBLE
-            "예약확정" -> btnCancel.visibility = View.VISIBLE
-            "예약진행중" -> btnPayFix.visibility = View.VISIBLE
-            "완료" -> btnReview.visibility = View.VISIBLE
+            "예약확정전" -> setButtons(arrayListOf(btnCancel))
+            "예약확정" -> setButtons(arrayListOf(btnCancel))
+            "예약진행중" -> setButtons(arrayListOf(btnPayFix))
+            "완료" -> {
+                if (!isReview) {
+                    setButtons(arrayListOf(btnReview))
+                } else {
+                    setButtons(arrayListOf(btnReviewCheck))
+                }
+            }
         }
     }
 
     private fun setPhotographerButtons(status: String) {
         when(status) {
-            "예약확정전" -> {
-                btnCancel.visibility = View.VISIBLE
-                btnResFix.visibility = View.VISIBLE
-            }
-            "예약확정" -> btnCancel.visibility = View.VISIBLE
+            "예약확정전" -> setButtons(arrayListOf(btnCancel, btnResFix))
+            "예약확정" -> setButtons(arrayListOf(btnCancel))
+        }
+    }
+
+    private fun setButtons(btnList: ArrayList<Button>) {
+        btnCancel.visibility = View.GONE
+        btnPayFix.visibility = View.GONE
+        btnResFix.visibility = View.GONE
+        btnReview.visibility = View.GONE
+        btnReviewCheck.visibility = View.GONE
+
+        btnList.forEach { btn ->
+            btn.visibility = View.VISIBLE
         }
     }
 }

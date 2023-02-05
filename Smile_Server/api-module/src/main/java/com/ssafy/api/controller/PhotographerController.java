@@ -137,14 +137,15 @@ public class PhotographerController {
      * 주변 작가 조회
      *
      * @param address
+     * @param criteria
      * @return List<PhotographerForListDto>
      */
     @GetMapping("/list")
-    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(@Param("address") String address) {
+    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(@Param("address") String address, @Param("criteria") String criteria) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByAddresss(user.getId(), address);
+                photographerService.getPhotographerListByAddresss(user.getId(), address, criteria);
         return ResponseEntity.ok().body(photographerList);
     }
 

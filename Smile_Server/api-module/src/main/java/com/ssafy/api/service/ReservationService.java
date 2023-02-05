@@ -1,15 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.PlacesForListDto;
-import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
-import com.ssafy.api.dto.Reservation.CategoryDetailDto;
-import com.ssafy.api.dto.Reservation.PhotographerInfoDto;
-import com.ssafy.api.dto.Reservation.ReservationListDto;
-import com.ssafy.api.dto.Reservation.ReservationReqDto;
-import com.ssafy.api.dto.Reservation.ReservationResDto;
-import com.ssafy.api.dto.Reservation.ReservationStatusDto;
-import com.ssafy.api.dto.Reservation.ReviewPostDto;
-import com.ssafy.api.dto.Reservation.ReviewResDto;
+import com.ssafy.api.dto.Reservation.*;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
@@ -26,8 +18,11 @@ import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.reservation.ReservationRepository;
+import kr.co.bootpay.Bootpay;
+import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -61,6 +56,13 @@ public class ReservationService {
     private final PhotographerNPlacesRepository photographerNPlacesRepository;
     private final S3UploaderService s3UploaderService;
     private final ReviewRepository reviewRepository;
+    private final NotificationService notificationService;
+
+    @Value("${pay.rest-api}")
+    private String restApiKey;
+
+    @Value("${pay.private-key}")
+    private String privateKey;
 
     /**
      * 예약 등록
@@ -77,6 +79,7 @@ public class ReservationService {
         Reservation savedReservation = Reservation.builder()
                 .photographer(Photographer.builder().id(reservation.getPhotographerId()).build())
                 .user(User.builder().id(reservation.getUserId()).build())
+                .receiptId(reservation.getReceiptId())
                 .price(reservation.getPrice())
                 .categoryName(reservation.getCategoryName())
                 .options(reservation.getOptions())
@@ -154,13 +157,14 @@ public class ReservationService {
      *
      * @param statusDto
      */
-    public void changeStatus(ReservationStatusDto statusDto){
+    @Transactional
+    public void changeStatus(ReservationStatusDto statusDto) throws IOException {
         Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
         // 해당하는 유저가 아닐 경우
         if(reservation.getUser().getId() != statusDto.getUserId()
-                || reservation.getPhotographer().getId() != statusDto.getUserId()){
+                && reservation.getPhotographer().getId() != statusDto.getUserId()){
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -170,6 +174,15 @@ public class ReservationService {
 
         reservation.updateStatus(statusDto.getStatus());
         reservationRepository.save(reservation);
+
+        // FCM 전송
+        if(statusDto.getStatus() == ReservationStatus.예약확정){
+            notificationService.sendDataMessageTo(NotificationDTO.builder()
+                            .requestId(statusDto.getUserId())
+                            .registrationToken(reservation.getUser().getFcmToken())
+                            .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                    .build());
+        }
     }
 
     /**
@@ -194,8 +207,17 @@ public class ReservationService {
         for (Reservation reservation : reservationList) {
             ReservationListDto reservationPhotographer = new ReservationListDto();
             User reservationUser = reservation.getUser();
+            Review review = reservation.getReview();
+            Long reviewId;
+            Boolean isReviewed = false;
+            if (review == null){
+                reviewId = null;
+            } else {
+                reviewId = review.getId();
+                isReviewed = true;
+            }
             reservationPhotographerList.add(
-                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
+                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber(), reviewId, isReviewed)
             );
         }
         return reservationPhotographerList;
@@ -217,8 +239,17 @@ public class ReservationService {
         for (Reservation reservation : reservationList) {
             ReservationListDto reservationPhotographer = new ReservationListDto();
             User reservationUser = reservation.getPhotographer().getUser();
+            Review review = reservation.getReview();
+            Long reviewId;
+            Boolean isReviewed = false;
+            if (review == null){
+                reviewId = null;
+            } else {
+                reviewId = review.getId();
+                isReviewed = true;
+            }
             reservationPhotographerList.add(
-                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber())
+                    reservationPhotographer.of(reservation, reservationUser.getName(), reservationUser.getPhoneNumber(), reviewId, isReviewed)
             );
         }
         return reservationPhotographerList;
@@ -246,6 +277,7 @@ public class ReservationService {
                 .score(reviewPostDto.getScore())
                 .PhotoUrl(fileName)
                 .user(user)
+                .createdAt(LocalDateTime.now())
                 .photographer(photographer)
                 .reservation(reservation)
                 .build();
@@ -258,6 +290,7 @@ public class ReservationService {
      * @param photographerId 작가id
      * @return reviewResDto 리뷰리스트
      */
+    @Transactional
     public List<ReviewResDto> showReviewList(Long photographerId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
@@ -266,7 +299,9 @@ public class ReservationService {
 
         List<ReviewResDto> reviewResDtoList = new ArrayList<>();
 
-        List<Review> ReviewList = reviewRepository.findByPhotographer(photographer);
+        List<Review> ReviewList = reviewRepository.findAllByPhotographer(photographer);
+
+        log.info(ReviewList.toString());
 
         for(Review review : ReviewList){
             boolean isMe = review.getUser() == user;
@@ -274,10 +309,11 @@ public class ReservationService {
                     .reviewId(review.getId())
                     .userId(user.getId())
                     .isMe(isMe)
-                    .userName(user.getName())
+                    .userName(photographer.getUser().getName())
                     .score(review.getScore())
                     .content(review.getContent())
                     .photoUrl(review.getPhotoUrl())
+                    .createdAt(review.getCreatedAt())
                     .build();
             reviewResDtoList.add(resDto);
         }
@@ -306,15 +342,17 @@ public class ReservationService {
      *
      * @param reservationId
      * @param userId
+     * @throws IOException
      */
-    public void changeCancelStatus(Long reservationId, Long userId) {
+    @Transactional
+    public void changeCancelStatus(Long reservationId, Long userId) throws IOException {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
         log.info("예약 조회 완료");
 
         // 해당하는 유저가 아닐 경우
         if(reservation.getUser().getId() != userId
-                || reservation.getPhotographer().getId() != userId){
+                && reservation.getPhotographer().getId() != userId){
             log.info("예약 상태 변경의 권한이 없음");
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
@@ -325,9 +363,73 @@ public class ReservationService {
             throw new CustomException(ErrorCode.RESERVATION_NOT_CANCEL);
         }
 
+        String token = "", name = "";
+        User user = reservation.getUser();  // 예약한 유저
+        User photographer = reservation.getPhotographer().getUser();    // 예약된 사진작가
+        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
+            token = photographer.getFcmToken();  // 사진작가에게 전달
+            name = user.getName();     // 유저이름으로 취소
+        } else {    // 사진작가가 취소한 경우
+            token = user.getFcmToken();    // 예약한 유저에게 전달
+            name = photographer.getName(); // 사진작가 이름으로 취소
+        }
+
+        cancelPay(reservation.getReceiptId(), name);
+
         reservation.updateStatus(ReservationStatus.예약취소);
         log.info("예약 상태 : {}", reservation.getStatus());
 
         reservationRepository.save(reservation);
+
+        // FCM 전송
+        notificationService.sendDataMessageTo(NotificationDTO.builder()
+                .requestId(userId)
+                .registrationToken(token)
+                .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                .build());
+    }
+
+    /**
+     * 결제취소
+     *
+     * @param receiptId 결제 영수증 번호
+     */
+    public void cancelPay(String receiptId, String userName){
+        try {
+            Bootpay bootpay = new Bootpay(restApiKey, privateKey);
+            HashMap<String, Object> token = bootpay.getAccessToken();
+            if(token.get("error_code") != null) { //failed
+                return;
+            }
+            Cancel cancel = new Cancel();
+            cancel.receiptId = receiptId;
+            cancel.cancelUsername = userName;
+            cancel.cancelMessage = "사용자 단순 변심";
+
+            HashMap<String, Object> res = bootpay.receiptCancel(cancel);
+            if(res.get("error_code") == null) { //success
+                log.info("receiptCancel success: " + res);
+            } else {
+                log.error("receiptCancel false: " + res);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /***
+     * 리뷰 조회
+     * @param reviewId
+     * @return 리뷰 디테일
+     */
+    public ReviewDetailDto reviewDetail(Long reviewId){
+        Review result = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        return ReviewDetailDto.builder()
+                .id(reviewId)
+                .createdAt(result.getCreatedAt())
+                .photoUrl(result.getPhotoUrl())
+                .content(result.getContent())
+                .score(result.getScore())
+                .build();
     }
 }

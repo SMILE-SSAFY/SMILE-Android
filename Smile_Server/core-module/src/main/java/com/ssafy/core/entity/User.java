@@ -63,12 +63,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String fcmToken;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ArticleHeart> articleHearts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<PhotographerHeart> photographerHearts;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Review> reviews;
 
@@ -166,5 +169,15 @@ public class User implements UserDetails {
     public void updateRole(Role role){
         this.role = role;
     }
+
+    /**
+     * fcmToken 변경
+     * 
+     * @param fcmToken
+     */
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
 }
 

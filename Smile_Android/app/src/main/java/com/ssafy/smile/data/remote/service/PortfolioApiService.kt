@@ -1,8 +1,7 @@
 package com.ssafy.smile.data.remote.service
 
-import com.ssafy.smile.common.util.Constants.BASE_URL_PORTFOLIO
+import com.ssafy.smile.common.util.Constants.BASE_URL_ARTICLE
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.http.*
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
 import com.ssafy.smile.data.remote.model.PostListResponseDto
@@ -16,7 +15,7 @@ interface PortfolioApiService {
     suspend fun getPosts(@Path("photographerId") photographerId: Long): Response<ArrayList<PostListResponseDto>>
 
     @Multipart
-    @POST(BASE_URL_PORTFOLIO)
+    @POST(BASE_URL_ARTICLE)
     suspend fun uploadPost(@Part("latitude") latitude : Double,
                            @Part("longitude") longitude : Double,
                            @Part("detailAddress") detailAddress : String,

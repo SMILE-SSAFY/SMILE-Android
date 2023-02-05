@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.AddressUtils
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
@@ -31,7 +33,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onResume() {
         super.onResume()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+        homeViewModel.getAddressList()
+        homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -45,17 +48,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun initView() {
         isPhotographer = getRole()
         userId = getUserId()
-        setAddress()
         initToolbar()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
-        setObserver()
+        homeViewModel.getAddressList()
+        setObserverBeforeSetAddress()
         initRecycler()
     }
 
-    private fun setObserver() {
+    private fun setObserverBeforeSetAddress() {
+        getRoleObserver()
+        getAddressObserver()
+    }
+
+    private fun setObserverAfterSetAddress() {
         getPhotographerInfoByAddressResponseObserver()
         photographerHeartResponseObserver()
-        getRoleObserver()
     }
 
     private fun getRoleObserver() {
@@ -70,11 +76,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    recyclerData.clear()
-                    it.data.forEach { data ->
-                        recyclerData.add(data.toCustomPhotographerDomainDto())
+                    if (it.data.size == 0) {
+                        recyclerData.clear()
+                        homeRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.VISIBLE, View.GONE, "해당 주소에 작가님이 존재하지 않습니다")
+                    } else {
+                        recyclerData.clear()
+                        it.data.forEach { data ->
+                            recyclerData.add(data.toCustomPhotographerDomainDto())
+                        }
+                        Log.d(TAG, "getPhotographerInfoByAddressResponseObserver: ${recyclerData}")
+                        homeRecyclerAdapter.notifyDataSetChanged()
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
-                    homeRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
@@ -87,6 +101,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            rvHome.visibility = recyclerView
+        }
+    }
+
     private fun photographerHeartResponseObserver() {
         homeViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
             when(it) {
@@ -94,7 +116,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     homeRecyclerAdapter.notifyDataSetChanged()
-                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+                    homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
@@ -103,18 +125,47 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
+    private fun getAddressObserver() {
+        homeViewModel.getAddressListResponse.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
+                curAddress = getString(R.string.tv_address_unselected)
+                binding.tvToolbarAddress.text = curAddress
+            } else{
+                curAddress = it[0].address
+                binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                setObserverAfterSetAddress()
+            }
+        }
+    }
+
     override fun setEvent() {
         setRefreshLayoutEvent()
+        setChipEvent()
     }
 
     private fun setRefreshLayoutEvent() {
         binding.apply {
             refreshLayout.setOnRefreshListener {
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress)
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
                 refreshLayout.isRefreshing = false
             }
         }
         setClickListener()
+    }
+
+    private fun setChipEvent() {
+        binding.apply {
+            chipPopular.setOnClickListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "heart")
+            }
+            chipReviewAvg.setOnClickListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "score")
+            }
+            chipReviewCnt.setOnClickListener {
+                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "review")
+            }
+        }
     }
 
     private fun initToolbar() {
@@ -129,7 +180,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                             true
                         }
                         R.id.action_portfolio -> {
-                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId)
+                            val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(userId, -1L)
                             findNavController().navigate(action)
                             true
                         }
@@ -154,11 +205,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     private fun getUserId(): Long = SharedPreferencesUtil(requireContext()).getUserId()
 
-    private fun setAddress() {
-        //TODO : 주소록 구현 후 curAddress 변수로 주소 가져오기
-        curAddress = "강원도 양구군"
-    }
-
     private fun initRecycler() {
         homeRecyclerAdapter = HomeRecyclerAdapter(requireContext(), recyclerData).apply {
             setPhotographerHeartItemClickListener(object : HomeRecyclerAdapter.OnPhotographerHeartItemClickListener{
@@ -168,7 +214,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             })
             setItemClickListener(object: HomeRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId)
+                    val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId, -1L)
                     findNavController().navigate(action)
                 }
 

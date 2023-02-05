@@ -18,5 +18,7 @@ data class AddressEntity(
     @ColumnInfo(name = "selected")
     val isSelected : Boolean
 ){
-    fun makeToAddressDomainDto() = AddressDomainDto(address, latitude, longitude, dateTime, isSelected)
+    fun makeToAddressDomainDto(): AddressDomainDto {
+        return AddressDomainDto(address, latitude, longitude, dateTime, isSelected)
+    }
 }

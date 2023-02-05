@@ -14,5 +14,5 @@ interface PhotographerRemoteDataSource {
     suspend fun getPhotographerInfo() : Response<PhotographerResponseDto>
     suspend fun modifyPhotographerInfo(photographerDto: PhotographerDto,image:MultipartBody.Part) : Response<PhotographerResponseDto>
     suspend fun deletePhotographerInfo() : Response<String>
-    suspend fun getPhotographerInfoByAddress(address:String): Response<ArrayList<PhotographerByAddressResponseDto>>
+    suspend fun getPhotographerInfoByAddress(address:String, criteria: String): Response<ArrayList<PhotographerByAddressResponseDto>>
 }
