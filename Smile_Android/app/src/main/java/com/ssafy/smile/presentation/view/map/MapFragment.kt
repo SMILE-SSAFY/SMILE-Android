@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.gun0912.tedpermission.PermissionListener
@@ -32,6 +33,7 @@ import com.ssafy.smile.data.remote.model.ClusterDto
 import com.ssafy.smile.databinding.FragmentMapBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.map.MapViewModel
 
 
@@ -113,7 +115,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         clusterList.addAll(clusterDtoList)
     }
 
-    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){
+    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){            // TODO : 코루틴처리 + 클러스터 커스텀
         for (marker in markerList){ marker.map = null }
         markerList.clear()
         for (cluster in clusterDtoList){
@@ -121,6 +123,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                 captionText = cluster.numOfCluster.toString()
                 position = LatLng(cluster.centroidLat, cluster.centroidLng)
                 icon = OverlayImage.fromResource(R.drawable.oval_blue400_radius_4)
+                setOnClickListener {
+                    val action = MainFragmentDirections.actionMainFragmentToMapListFragment(cluster.clusterId)
+                    findNavController().navigate(action)
+                    true
+                }
                 width = 70
                 height = 70
                 map = nMap

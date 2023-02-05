@@ -17,9 +17,15 @@ object Types {
             }
         }
     }
+    enum class PostSearchType(private val typeStr : String){
+        TIME("time"), HEART("heart"), DISTANCE("distance");
+        fun getValue() : String = typeStr
+    }
+
     enum class GeoAddress(msg : String) {
         NETWORK_ERROR("네트워크 오류"), GPS_ERROR("잘못된 GPS 좌표"), ENCODING_ERROR("알 수 없는 주소"), ADDRESS("")
     }
+
     enum class Region(private val region:String) {
         SEOUL("서울특별시"), INCHEON("인천광역시"), PUSAN("부산광역시"),
         DAEGU("대구광역시"), DAEJEON("대전광역시"), ULSAN("울산광역시"),
