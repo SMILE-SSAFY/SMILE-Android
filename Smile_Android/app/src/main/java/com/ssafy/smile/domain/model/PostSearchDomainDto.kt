@@ -1,16 +1,23 @@
 package com.ssafy.smile.domain.model
 
-import java.util.*
-
 data class PostSearchDomainDto(
-    val articleId : Long,
+    val clusterId : Long,
+    val id : Long,
     val photographerName : String,
     val latitude : Double,
     val longitude : Double,
     val distance : Double,
+    val isHeart : Boolean,
     val hearts : Int,
     val detailAddress : String,
-    val createdAt : Date,
+    val createdAt : String,
     val category : String,
     val photoUrl : String
+){
+    fun makeToRVDto() = PostSearchRVDomainDto(Types.PagingRVType.CONTENT, this)
+}
+
+data class PostSearchRVDomainDto(
+    val type : Types.PagingRVType,
+    val postSearchDto: PostSearchDomainDto?=null
 )

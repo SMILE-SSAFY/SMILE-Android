@@ -18,7 +18,7 @@ object Types {
         }
     }
     enum class PostSearchType(private val typeStr : String){
-        TIME("time"), HEART("heart"), DISTANCE("distance");
+        HEART("heart"), TIME("time"), DISTANCE("distance");
         fun getValue() : String = typeStr
     }
 
@@ -34,5 +34,11 @@ object Types {
         JEONRANAMDO("전라남도"), JEONRABUKDO("전라북도"), CHOONCHUNGNAMDO("충청남도"), CHOONCHUNGBUKDO("충청북도"), JEJUDO("제주특별자치도");
 
         fun getValue() : String = region
+    }
+
+    enum class PagingRVType(private val isData : Boolean) {
+        CONTENT(true), PROGRESS(false);
+
+        fun getValue() : Boolean = isData
     }
 }
