@@ -1,18 +1,12 @@
 package com.ssafy.smile.presentation.view.mypage.myInterest
 
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentMyInterestBinding
-import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.MyInterestViewPagerAdapter
-import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.mypage.MyInterestViewModel
 
 class MyInterestFragment : BaseFragment<FragmentMyInterestBinding>(FragmentMyInterestBinding::bind, R.layout.fragment_my_interest) {
 

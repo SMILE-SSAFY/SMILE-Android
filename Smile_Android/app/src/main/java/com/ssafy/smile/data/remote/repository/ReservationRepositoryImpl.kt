@@ -42,8 +42,8 @@ class ReservationRepositoryImpl(private val reservationRemoteDateSource: Reserva
     val postReviewLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _postReviewLiveData
 
-    private val _getReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReviewDto>>()
-    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewDto>>
+    private val _getReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>()
+    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>
         get() = _getReviewLiveData
 
     private val _deleteReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()

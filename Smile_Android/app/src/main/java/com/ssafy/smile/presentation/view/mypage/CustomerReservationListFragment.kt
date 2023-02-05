@@ -132,14 +132,13 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
                     val photographerName = recyclerData[position].name
                     val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reservationId)
                     findNavController().navigate(action)
-                    
                 }
             })
             setReviewCheckClickListener(object : CustomerReservationListRecyclerAdapter.OnReviewCheckClickListener{
                 override fun onClick(view: View, position: Int) {
                     val photographerName = recyclerData[position].name
                     val reviewId = recyclerData[position].reviewId
-                    val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reviewId)
+                    val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reviewId = reviewId)
                     findNavController().navigate(action)
                 }
             })

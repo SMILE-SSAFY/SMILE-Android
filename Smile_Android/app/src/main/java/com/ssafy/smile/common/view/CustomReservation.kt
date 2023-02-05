@@ -127,7 +127,7 @@ class CustomReservation: ConstraintLayout {
             "예약진행중" -> setButtons(arrayListOf(btnPayFix))
             "완료" -> {
                 if (!isReview) {
-                    setButtons(arrayListOf(btnReview))
+                    setButtons(arrayListOf(btnReview))              // TODO : 리뷰 작성 -> 삭제 후, 뷰 반영 X. + 서버 통신 에러
                 } else {
                     setButtons(arrayListOf(btnReviewCheck))
                 }
