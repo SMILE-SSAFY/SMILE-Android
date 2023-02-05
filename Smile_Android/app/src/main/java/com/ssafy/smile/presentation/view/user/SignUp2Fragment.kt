@@ -7,10 +7,11 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import com.google.firebase.messaging.FirebaseMessaging
+import com.ssafy.smile.Application
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
@@ -19,13 +20,15 @@ import com.ssafy.smile.databinding.FragmentSignUp2Binding
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.user.UserViewModel
+import com.ssafy.smile.presentation.viewmodel.user.SignUpGraphViewModel
 
 private const val TAG = "SignUp2Fragment_스마일"
 class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Binding::bind, R.layout.fragment_sign_up2) {
 
-    private val userViewModel: UserViewModel by navGraphViewModels(R.id.signUpGraph)
+    private val userViewModel: SignUpGraphViewModel by navGraphViewModels(R.id.signUpGraph)
     private val args: SignUp2FragmentArgs by navArgs()
+
+    private lateinit var fcmToken: String
 
     var nameInput = false
     var phoneInput = false
@@ -37,6 +40,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     override fun initView() {
         initToolbar()
+        getFirebaseToken()
         setObserver()
     }
 
@@ -210,7 +214,18 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 
     private fun getSignUpInfo(): SignUpDomainDto {
         binding.apply {
-            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etPhone.text.toString())
+            return SignUpDomainDto(args.id, args.password, etName.text.toString(), etPhone.text.toString(), fcmToken)
+        }
+    }
+
+    private fun getFirebaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let {
+                    fcmToken = it
+                    Application.sharedPreferences.putFCMToken(it)
+                }
+            } else error("FCM 토큰 얻기에 실패하였습니다. 잠시 후 다시 시도해주세요.")
         }
     }
 }

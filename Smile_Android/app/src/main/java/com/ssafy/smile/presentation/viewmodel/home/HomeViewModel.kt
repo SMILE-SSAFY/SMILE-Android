@@ -8,6 +8,7 @@ import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel: BaseViewModel() {
@@ -31,7 +32,7 @@ class HomeViewModel: BaseViewModel() {
 
     // 작가 좋아요를 수행하는 함수
     fun photographerHeart(photographerId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             heartRepository.photographerHeart(photographerId)
         }
     }

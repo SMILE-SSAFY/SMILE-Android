@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.Constants.REQUEST_KEY_IMAGE_LIST
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.PostDto
 import com.ssafy.smile.presentation.base.BaseViewModel
@@ -14,9 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-class WritePostViewModel : BaseViewModel() {
+class PortfolioGraphViewModel : BaseViewModel() {
     private val portfolioRepository = Application.repositoryInstances.getPortfolioRepository()
+    private val postRepository = Application.repositoryInstances.getPostRepository()
+    private val heartRepository = Application.repositoryInstances.getHeartRepository()
+    private val reservationRepository = Application.repositoryInstances.getReservationRepository()
 
+    // 게시물 작성
     private val postData : PostDto = PostDto()
     private val _postDataResponse : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
     val postDataResponse : MutableLiveData<Boolean>
@@ -51,6 +56,55 @@ class WritePostViewModel : BaseViewModel() {
             post.ArticlePostReq.category,
             makeMultiPartBodyList(REQUEST_KEY_IMAGE_LIST, post.image)
         )
+    }
+
+    // 게시물 조회
+    val getPostByIdResponse: LiveData<NetworkUtils.NetworkResponse<PostDetailResponseDto>>
+        get() = postRepository.getPostByIdLiveData
+
+    fun getPostById(articleId: Long) {
+        viewModelScope.launch {
+            postRepository.getPostById(articleId)
+        }
+    }
+
+    // 게시물 삭제
+    val deletePostByIdResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = postRepository.deletePostByIdLiveData
+
+    fun deletePostById(articleId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            postRepository.deletePostById(articleId)
+        }
+    }
+
+    // 게시물 좋아요
+    val postHeartResponse: LiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
+        get() = heartRepository.postHeartResponseLiveData
+
+    fun postHeart(articleId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            heartRepository.postHeart(articleId)
+        }
+    }
+
+    // 예약
+    val photographerReservationResponse: LiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>
+        get() = reservationRepository.photographerReservationInfoLiveData
+
+    fun getPhotographerReservationInfo(photographerId: Long) {
+        viewModelScope.launch {
+            reservationRepository.getPhotographerReservationInfo(photographerId)
+        }
+    }
+
+    val postReservationResponse: LiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
+        get() = reservationRepository.postReservationLiveData
+
+    fun postReservation(reservationRequestDto: ReservationRequestDto) {
+        viewModelScope.launch(Dispatchers.IO) {
+            reservationRepository.postReservation(reservationRequestDto)
+        }
     }
 
 }

@@ -31,11 +31,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private var isPhotographer = true
     private var curAddress = ""
     private var userId = -1L
+    private var filter = ""
 
     override fun onResume() {
         super.onResume()
         homeViewModel.getAddressList()
-        homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -117,7 +118,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     homeRecyclerAdapter.notifyDataSetChanged()
-                    homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
@@ -134,7 +135,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             } else{
                 curAddress = it[0].address
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
             }
         }
@@ -148,7 +149,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setRefreshLayoutEvent() {
         binding.apply {
             refreshLayout.setOnRefreshListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "")
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 refreshLayout.isRefreshing = false
             }
         }
@@ -158,13 +159,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setChipEvent() {
         binding.apply {
             chipPopular.setOnClickListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "heart")
+                filter = if (chipPopular.isChecked) {
+                    "heart"
+                } else {
+                    ""
+                }
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
             }
             chipReviewAvg.setOnClickListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "score")
+                filter = if (chipPopular.isChecked) {
+                    "score"
+                } else {
+                    ""
+                }
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
             }
             chipReviewCnt.setOnClickListener {
-                homeViewModel.getPhotographerInfoByAddressInfo("서울특별시 강동구", "review")
+                filter = if (chipPopular.isChecked) {
+                    "review"
+                } else {
+                    ""
+                }
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
             }
         }
     }

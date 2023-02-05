@@ -48,7 +48,7 @@ class PortfolioViewModel: BaseViewModel() {
 
     // 작가 좋아요를 수행하는 함수
     fun photographerHeart(photographerId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             heartRepository.photographerHeart(photographerId)
         }
     }

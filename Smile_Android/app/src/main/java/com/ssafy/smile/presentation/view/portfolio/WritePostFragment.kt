@@ -14,13 +14,13 @@ import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.ImageRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.portfolio.WritePostViewModel
+import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioGraphViewModel
 import java.io.File
 import kotlin.math.abs
 
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
 
-    private val viewModel : WritePostViewModel by navGraphViewModels(R.id.portfolioGraph)
+    private val portfolioGraphViewModel: PortfolioGraphViewModel by navGraphViewModels(R.id.portfolioGraph)
 
     private lateinit var imageRvAdapter: ImageRVAdapter
     private val spinnerAdapter: ArrayAdapter<String> by lazy {
@@ -50,7 +50,7 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
             setItemClickListener(object : ImageRVAdapter.ItemClickListener{
                 override fun onClickBtnDelete(view: View, position: Int, dto: File) {
                     deleteItem(position)
-                    viewModel.uploadImageData(getImageData())
+                    portfolioGraphViewModel.uploadImageData(getImageData())
                 }
             })
         }
@@ -63,7 +63,7 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         binding.apply {
             tvCategoryContent.setAdapter(spinnerAdapter)
             tvCategoryContent.setOnItemClickListener { _, _, _, _ ->
-                viewModel.uploadCategoryData(getCategoryData())
+                portfolioGraphViewModel.uploadCategoryData(getCategoryData())
             }
         }
     }
@@ -71,11 +71,11 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         requireActivity().supportFragmentManager.setFragmentResultListener("getAddress",viewLifecycleOwner) { requestKey, result ->
             if (requestKey == "getAddress" && result["addressDomainDto"] != null) {
                 val addressDomainDto = result["addressDomainDto"] as AddressDomainDto
-                viewModel.uploadAddressData(addressDomainDto)
+                portfolioGraphViewModel.uploadAddressData(addressDomainDto)
                 setAddressData(addressDomainDto)
             }
         }
-        viewModel.run {
+        portfolioGraphViewModel.run {
             postDataResponse.observe(viewLifecycleOwner){
                 when (it){
                     true -> setButtonEnable()
@@ -106,7 +106,7 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
                 actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount), "최대 ${abs(3-imageRvAdapter.itemCount)}장까지 선택 가능합니다."){
                     val fileList = it.map { uri -> ImageUtils.getFileFromUri(requireContext(), uri) }
                     imageRvAdapter.setListData(ArrayList(fileList))
-                    viewModel.uploadImageData(getImageData())
+                    portfolioGraphViewModel.uploadImageData(getImageData())
                 }
             }
 
@@ -114,10 +114,10 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
                 moveToAddressGraph()
             }
             tvCategoryContent.setOnItemClickListener { _, _, _, _ ->
-                viewModel.uploadCategoryData(tvCategoryContent.text.toString())
+                portfolioGraphViewModel.uploadCategoryData(tvCategoryContent.text.toString())
             }
             btnUpload.setOnClickListener {
-                viewModel.uploadPost()
+                portfolioGraphViewModel.uploadPost()
             }
         }
     }

@@ -23,14 +23,13 @@ import com.ssafy.smile.databinding.FragmentReservationBinding
 import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.portfolio.ReservationViewModel
+import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioGraphViewModel
 import java.util.*
 import java.util.regex.Pattern
 import kr.co.bootpay.android.*;
 import kr.co.bootpay.android.events.BootpayEventListener
 import kr.co.bootpay.android.models.BootExtra
 import kr.co.bootpay.android.models.BootItem
-import kr.co.bootpay.android.models.BootUser
 import kr.co.bootpay.android.models.Payload
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,7 +38,7 @@ private const val TAG = "ReservationFragment_스마일"
 class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentReservationBinding::bind, R.layout.fragment_reservation) {
 
     private val args: ReservationFragmentArgs by navArgs()
-    private val reservationViewModel: ReservationViewModel by navGraphViewModels(R.id.portfolioGraph)
+    private val portfolioGraphViewModel: PortfolioGraphViewModel by navGraphViewModels(R.id.portfolioGraph)
     private var photographerId: Long = -1L
     private val reservedDate = arrayListOf<Date>()
     private val places = arrayListOf<String>()
@@ -62,7 +61,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     override fun initView() {
         initToolbar()
         setPhotographerId()
-        reservationViewModel.getPhotographerReservationInfo(photographerId)
+        portfolioGraphViewModel.getPhotographerReservationInfo(photographerId)
         setObserver()
     }
 
@@ -84,7 +83,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     }
 
     private fun getPhotographerReservationInfoResponseObserver() {
-        reservationViewModel.photographerReservationResponse.observe(viewLifecycleOwner){
+        portfolioGraphViewModel.photographerReservationResponse.observe(viewLifecycleOwner){
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -117,7 +116,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
     }
 
     private fun postReservationResponseObserver() {
-        reservationViewModel.postReservationResponse.observe(viewLifecycleOwner) {
+        portfolioGraphViewModel.postReservationResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -381,7 +380,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
 
             Log.d(TAG, "getReceiptId: $receiptId")
             selectData.receiptId = receiptId
-            reservationViewModel.postReservation(selectData)
+            portfolioGraphViewModel.postReservation(selectData)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
