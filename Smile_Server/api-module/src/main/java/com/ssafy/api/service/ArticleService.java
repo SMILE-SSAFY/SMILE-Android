@@ -414,14 +414,12 @@ public class ArticleService {
 
     public ArticleClusterListDto getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
         log.info(condition);
-        log.info(String.valueOf(condition.equals("time")));
         Boolean isEndPage = false;
         // 최신순 조회
         if (condition.equals("time")) {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
             log.info(articleRedisPage.toString());
             log.info(String.valueOf((int) ((pageId+1)*9)));
-            log.info(String.valueOf(articleRedisPage.size()-1));
 
             Integer size = (int) ((pageId+1)*9);
             // cache를 paging
@@ -444,7 +442,6 @@ public class ArticleService {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
             log.info(articleRedisPage.toString());
             log.info(String.valueOf((int) ((pageId+1)*9)));
-            log.info(String.valueOf(articleRedisPage.size()-1));
 
             Integer size = (int) ((pageId+1)*9);
             // cache를 paging
@@ -467,7 +464,6 @@ public class ArticleService {
             List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
             log.info(articleRedisPage.toString());
             log.info(String.valueOf((int) ((pageId+1)*9)));
-            log.info(String.valueOf(articleRedisPage.size()-1));
 
             Integer size = (int) ((pageId+1)*9);
             // cache를 paging
