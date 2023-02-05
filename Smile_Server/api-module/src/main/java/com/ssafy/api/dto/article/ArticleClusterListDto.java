@@ -1,6 +1,7 @@
 package com.ssafy.api.dto.article;
 
 import com.ssafy.core.dto.ArticleSearchDto;
+import com.ssafy.core.entity.ArticleRedis;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +13,6 @@ import java.util.List;
 @Builder
 @Data
 public class ArticleClusterListDto {
-    private Long clusterId;
-    private List<ArticleSearchDto> articleSearchDtoList;
+    private Boolean isEndPage;
+    private List<ArticleRedis> articleRedisList;
 }

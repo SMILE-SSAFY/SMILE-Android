@@ -159,8 +159,8 @@ public class ArticleController {
     public ResponseEntity<?> getClusterData(@RequestParam("clusterId") Long clusterId,
                                             @RequestParam("condition") String condition,
                                             @RequestParam("page") Long page){
-        List<ArticleRedis> articleRedisList = articleService.getArticleListByMarkerId(clusterId, condition, page);
-        return new ResponseEntity<>(articleRedisList, HttpStatus.OK);
+        ArticleClusterListDto articleClusterListDto = articleService.getArticleListByMarkerId(clusterId, condition, page);
+        return new ResponseEntity<>(articleClusterListDto, HttpStatus.OK);
     }
 
     /***
