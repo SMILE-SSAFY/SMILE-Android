@@ -346,6 +346,8 @@ public class ArticleService {
         log.info(Arrays.toString(clusters.y));
         log.info(Arrays.toString(clusters.size));
 
+        articleRedisRepository.deleteAll();
+
         int listIdx = 0;
         double y = (y1+y2)/2;
         double x = (x1+x2)/2;
@@ -385,6 +387,7 @@ public class ArticleService {
                         .build();
                 articleRedisList.add(articleRedis);
                 articleRedisRepository.save(articleRedis);
+                log.info(articleRedisList.toString());
             }
             // 해당 유저가 만든 클러스터를 cache로 저장
             ArticleCluster articleCluster = ArticleCluster.builder()
@@ -426,6 +429,12 @@ public class ArticleService {
                 size = articleRedisPage.size();
                 isEndPage = true;
             }
+            if (size<9){
+                return ArticleClusterListDto.builder()
+                        .isEndPage(isEndPage)
+                        .articleRedisList(articleRedisPage)
+                        .build();
+            }
             return ArticleClusterListDto.builder()
                     .isEndPage(isEndPage)
                     .articleRedisList(articleRedisPage.subList(size-9,size))
@@ -443,6 +452,12 @@ public class ArticleService {
                 size = articleRedisPage.size();
                 isEndPage = true;
             }
+            if (size<9){
+                return ArticleClusterListDto.builder()
+                        .isEndPage(isEndPage)
+                        .articleRedisList(articleRedisPage)
+                        .build();
+            }
             return ArticleClusterListDto.builder()
                     .isEndPage(isEndPage)
                     .articleRedisList(articleRedisPage.subList(size-9,size))
@@ -459,6 +474,12 @@ public class ArticleService {
             if ((int)(pageId+1)*9 > articleRedisPage.size()){
                 size = articleRedisPage.size();
                 isEndPage = true;
+            }
+            if (size<9){
+                return ArticleClusterListDto.builder()
+                        .isEndPage(isEndPage)
+                        .articleRedisList(articleRedisPage)
+                        .build();
             }
             return ArticleClusterListDto.builder()
                     .isEndPage(isEndPage)
