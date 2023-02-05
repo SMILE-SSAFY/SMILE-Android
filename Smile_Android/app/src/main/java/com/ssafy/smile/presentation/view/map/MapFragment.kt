@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.gun0912.tedpermission.PermissionListener
@@ -32,6 +33,7 @@ import com.ssafy.smile.data.remote.model.ClusterDto
 import com.ssafy.smile.databinding.FragmentMapBinding
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.map.MapViewModel
 
 
@@ -56,10 +58,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
     private var presentLatLngBounds : Pair<LatLng, LatLng>?= null
     private val clusterList : ArrayList<ClusterDto> = arrayListOf()
     private val markerList : ArrayList<Marker> = arrayListOf()
+    private var isInitialized : Boolean = false
 
     override fun onResume() {
         super.onResume()
-        map?.let { onMapReady(it) }
+        checkIsServiceAvailable()
     }
 
     override fun initView() {
@@ -80,11 +83,12 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        if (it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
+                        if (isInitialized && it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
                         else {
                             updateClusterInfo(it.data)
                             map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }
                         }
+                        isInitialized = true
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "게시글 정보를 가져오는"), Types.ToastType.ERROR)
@@ -98,6 +102,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         binding.apply {
             btnFindArticles.setOnClickListener {
                 presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
+                showToast(requireContext(), "게시글 정보를 재검색합니다.")
             }
             btnFindCurrentLocation.setOnClickListener {
                 map?.let {
@@ -113,7 +118,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         clusterList.addAll(clusterDtoList)
     }
 
-    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){
+    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){            // TODO : 코루틴처리 + 클러스터 커스텀
         for (marker in markerList){ marker.map = null }
         markerList.clear()
         for (cluster in clusterDtoList){
@@ -121,6 +126,11 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                 captionText = cluster.numOfCluster.toString()
                 position = LatLng(cluster.centroidLat, cluster.centroidLng)
                 icon = OverlayImage.fromResource(R.drawable.oval_blue400_radius_4)
+                setOnClickListener {
+                    val action = MainFragmentDirections.actionMainFragmentToMapListFragment(cluster.clusterId)
+                    findNavController().navigate(action)
+                    true
+                }
                 width = 70
                 height = 70
                 map = nMap

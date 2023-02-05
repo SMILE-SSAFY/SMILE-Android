@@ -36,7 +36,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
 
             if (isTokenValid) {
                 findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
-                showToast(requireContext(), "자동 로그인 되었습니다.", Types.ToastType.BASIC)
             } else {
                 findNavController().navigate(R.id.action_splashFragment_to_logInFragment)
             }
