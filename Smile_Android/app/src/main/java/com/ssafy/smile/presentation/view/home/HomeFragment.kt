@@ -21,6 +21,7 @@ import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
+// TODO : 무한 로딩 (When, 주소록 변경 시)
 private const val TAG = "HomeFragment_스마일"
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".presentation.view.portfolio.PostViewPagerFragment">
-
     <include
         android:id="@+id/layout_empty_view"
         layout="@layout/layout_empty_view"
@@ -15,7 +14,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:visibility="gone"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
