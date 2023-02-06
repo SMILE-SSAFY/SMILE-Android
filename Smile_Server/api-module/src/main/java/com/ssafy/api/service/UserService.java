@@ -90,7 +90,7 @@ public class UserService {
                     .fcmToken(registerFormDto.getFcmToken() + ",")
                     .build();
 
-            User savedUser = userRepository.save(user);
+            userRepository.save(user);
             log.info("[registerUser] 회원등록 완료");
         }
 
