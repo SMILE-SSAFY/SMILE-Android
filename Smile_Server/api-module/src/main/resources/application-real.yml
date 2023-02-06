@@ -33,10 +33,10 @@ spring:
     open-in-view: false
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:mysql://i8d102.p.ssafy.io:3306/smile
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ssafy
-    password: S0706
+    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P12D102
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: S08P12D102
+    password: XVOdEsS6x3
     hikari:
       connection-timeout: 58000
       max-lifetime: 580000
