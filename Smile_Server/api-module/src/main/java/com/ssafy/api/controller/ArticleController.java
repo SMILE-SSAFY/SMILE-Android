@@ -26,6 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 
+/***
+ * 게시글 관련 controller
+ *
+ * @author 신민철
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/article")
