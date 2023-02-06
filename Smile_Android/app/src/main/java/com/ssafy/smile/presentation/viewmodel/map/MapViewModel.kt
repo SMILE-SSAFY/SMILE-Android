@@ -1,6 +1,5 @@
 package com.ssafy.smile.presentation.viewmodel.map
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.naver.maps.geometry.LatLng
 import com.ssafy.smile.Application
@@ -18,7 +17,7 @@ class MapViewModel : BaseViewModel() {
     val getArticleClusterInfoResponse: SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>
         get() = articleRepository.getArticleClusterInfoResponseLiveData
 
-    val getPostSearchListResponse: LiveData<NetworkUtils.NetworkResponse<PostSearchRequestDto>>
+    val getPostSearchListResponse: SingleLiveData<NetworkUtils.NetworkResponse<PostSearchRequestDto>>
         get() = postRepository.getPostSearchListByIdLiveData
 
     fun getPhotographerInfo(latLng1: LatLng, latLng2: LatLng) = viewModelScope.launch{

@@ -1,6 +1,7 @@
 package com.ssafy.smile.data.local.datasource
 
 import androidx.lifecycle.LiveData
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.local.database.dao.AddressDao
 import com.ssafy.smile.data.local.database.entity.AddressEntity
 import kotlinx.coroutines.flow.Flow

@@ -1,9 +1,9 @@
 package com.ssafy.smile.presentation.viewmodel.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
 import com.ssafy.smile.data.remote.model.PostHeartDto
 import com.ssafy.smile.data.remote.model.SearchPhotographerResponseDto
@@ -20,19 +20,19 @@ class SearchViewModel: BaseViewModel() {
     var searchCategory: String = ""
 
     // 작가 검색 결과를 관리하는 LiveData
-    val searchPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPhotographerResponseDto>>>
+    val searchPhotographerResponse: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPhotographerResponseDto>>>
         get() = searchRepository.searchPhotographerLiveData
 
     // 게시글 검색 결과를 관리하는 LiveData
-    val searchPostResponse: LiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPostResponseDto>>>
+    val searchPostResponse: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPostResponseDto>>>
         get() = searchRepository.searchPostLiveData
 
     // 작가 좋아요 결과를 관리하는 LiveData
-    val photographerHeartResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
+    val photographerHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
     // 게시물 좋아요 결과를 관리하는 LiveData
-    val postHeartResponse: LiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
+    val postHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
         get() = heartRepository.postHeartResponseLiveData
 
     // 작가 검색을 수행하는 함수

@@ -1,8 +1,8 @@
 package com.ssafy.smile.data.remote.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.PhotographerRemoteDataSource
 
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
@@ -13,24 +13,24 @@ import com.ssafy.smile.presentation.base.BaseRepository
 import okhttp3.MultipartBody
 
 class PhotographerRepositoryImpl(private val photographerRemoteDataSource: PhotographerRemoteDataSource): BaseRepository(), PhotographerRepository {
-    private val _registerPhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
-    val registerPhotographerInfoResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+    private val _registerPhotographerInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Any>>(null)
+    val registerPhotographerInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _registerPhotographerInfoResponseLiveData
 
-    private val _getPhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>()
-    val getPhotographerInfoResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
+    private val _getPhotographerInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>(null)
+    val getPhotographerInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
         get() = _getPhotographerInfoResponseLiveData
 
-    private val _modifyPhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>()
-    val modifyPhotographerInfoResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
+    private val _modifyPhotographerInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>(null)
+    val modifyPhotographerInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
         get() = _modifyPhotographerInfoResponseLiveData
 
-    private val _deletePhotographerInfoResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
-    val deletePhotographerInfoResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
+    private val _deletePhotographerInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<String>>(null)
+    val deletePhotographerInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = _deletePhotographerInfoResponseLiveData
 
-    private val _getPhotographerInfoByAddressResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>()
-    val getPhotographerInfoByAddressResponseLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>
+    private val _getPhotographerInfoByAddressResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>(null)
+    val getPhotographerInfoByAddressResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>
         get() = _getPhotographerInfoByAddressResponseLiveData
 
 
