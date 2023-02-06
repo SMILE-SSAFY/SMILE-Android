@@ -334,7 +334,7 @@ public class ReservationService {
         if(review.getUser().getId() == user.getId()){
             reviewRepository.deleteById(reviewId);
         }
-        throw new CustomException(ErrorCode.USER_MISMATCH);
+        throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
     }
 
     /**

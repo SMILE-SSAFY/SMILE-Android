@@ -7,9 +7,6 @@ import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.ArticleRedis;
-import com.ssafy.core.entity.Photographer;
-import com.ssafy.core.entity.PhotographerNCategories;
-import com.ssafy.core.entity.PhotographerNPlaces;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
@@ -25,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import smile.clustering.XMeans;
@@ -123,7 +118,7 @@ public class ArticleService {
             photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
             articleRepository.deleteById(id);
         } else {
-            throw new CustomException(ErrorCode.USER_MISMATCH);
+            throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
         }
     }
 
@@ -183,7 +178,7 @@ public class ArticleService {
             article.setPhotoUrls(fileName);
             articleRepository.save(article);
 
-        } else throw new CustomException(ErrorCode.USER_MISMATCH);
+        } else throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
 
         return ArticleDetailDto.builder()
                 .id(articleId)
@@ -204,16 +199,17 @@ public class ArticleService {
      */
 
     public ArticleHeartDto heartArticle(Long articleId){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
 
-        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = getLogInUser();
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
+
         log.info(String.valueOf(isHeart));
         log.info(String.valueOf(article));
+        // 좋아요가 눌려있지 않으면 저장
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
+            // 눌려 있으면 취소
         } else {
            articleHeartRepository.deleteByUserAndArticle(user, article);
         }
