@@ -5,12 +5,10 @@ import com.ssafy.api.service.ArticleService;
 import com.ssafy.api.service.PhotographerService;
 import com.ssafy.core.dto.ArticleSearchDto;
 
-import com.ssafy.core.entity.ArticleRedis;
+
 import com.ssafy.core.entity.User;
-import com.ssafy.core.repository.article.ArticleRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
