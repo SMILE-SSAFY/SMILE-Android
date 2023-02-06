@@ -1,8 +1,7 @@
 package com.ssafy.smile.data.remote.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.UserRemoteDataSource
 import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
 import com.ssafy.smile.data.remote.model.MyPageResponseDto
@@ -11,35 +10,34 @@ import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import com.ssafy.smile.domain.repository.UserRepository
 import com.ssafy.smile.presentation.base.BaseRepository
-import retrofit2.Response
 
 class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource): BaseRepository(), UserRepository {
-    private val _checkEmailResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
-    val checkEmailResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
+    private val _checkEmailResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<String>>(null)
+    val checkEmailResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = _checkEmailResponseLiveData
 
-    private val _signUpResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
-    val signUpResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
+    private val _signUpResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>(null)
+    val signUpResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _signUpResponseLiveData
 
-    private val _checkPhoneNumberResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Int>>()
-    val checkPhoneNumberResponseLiveData: LiveData<NetworkUtils.NetworkResponse<Int>>
+    private val _checkPhoneNumberResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Int>>(null)
+    val checkPhoneNumberResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Int>>
         get() = _checkPhoneNumberResponseLiveData
 
-    private val _loginResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
-    val loginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
+    private val _loginResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>(null)
+    val loginResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _loginResponseLiveData
 
-    private val _kakaoLoginResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>()
-    val kakaoLoginResponseLiveData: LiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
+    private val _kakaoLoginResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>(null)
+    val kakaoLoginResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<UserResponseDto>>
         get() = _kakaoLoginResponseLiveData
 
-    private val _withDrawResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<String>>()
-    val withDrawResponseLiveData: LiveData<NetworkUtils.NetworkResponse<String>>
+    private val _withDrawResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<String>>(null)
+    val withDrawResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = _withDrawResponseLiveData
 
-    private val _myPageLiveData = MutableLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>()
-    val myPageLiveData: LiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
+    private val _myPageLiveData = SingleLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>(null)
+    val myPageLiveData: SingleLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
         get() = _myPageLiveData
 
     override suspend fun checkEmail(email: String) {

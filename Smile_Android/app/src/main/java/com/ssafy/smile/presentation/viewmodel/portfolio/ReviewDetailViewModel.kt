@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.ReviewRequestDto
 import com.ssafy.smile.data.remote.model.ReviewResponseDto
 import com.ssafy.smile.domain.model.ReviewDomainDto
@@ -16,20 +17,20 @@ class ReviewDetailViewModel : BaseViewModel()  {
     private val reservationRepository = Application.repositoryInstances.getReservationRepository()
 
     private val reviewData : ReviewDomainDto = ReviewDomainDto()
-    private val _imageDataResponse : MutableLiveData<File?> = MutableLiveData<File?>(null)
-    val imageDataResponse : MutableLiveData<File?>
+    private val _imageDataResponse : SingleLiveData<File?> = SingleLiveData(null)
+    val imageDataResponse : SingleLiveData<File?>
         get() = _imageDataResponse
-    private val _reviewDataResponse : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
-    val reviewDataResponse : MutableLiveData<Boolean>
+    private val _reviewDataResponse : SingleLiveData<Boolean> = SingleLiveData<Boolean>(false)
+    val reviewDataResponse : SingleLiveData<Boolean>
         get() = _reviewDataResponse
 
-    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>
+    val getReviewLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>
         get() = reservationRepository.getReviewLiveData
 
-    val postReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+    val postReviewResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = reservationRepository.postReviewLiveData
 
-    val deleteReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+    val deleteReviewResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = reservationRepository.deleteReviewLiveData
 
     fun uploadData(reviewDto : ReviewDomainDto){

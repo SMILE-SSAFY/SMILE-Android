@@ -1,8 +1,7 @@
 package com.ssafy.smile.data.remote.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.HeartRemoteDataSource
 import com.ssafy.smile.data.remote.model.ArticleHeartResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
@@ -10,23 +9,22 @@ import com.ssafy.smile.data.remote.model.PhotographerHeartResponseDto
 import com.ssafy.smile.data.remote.model.PostHeartDto
 import com.ssafy.smile.domain.repository.HeartRepository
 import com.ssafy.smile.presentation.base.BaseRepository
-import retrofit2.Response
 
 class HeartRepositoryImpl(private val heartRemoteDataSource: HeartRemoteDataSource): BaseRepository(), HeartRepository {
-    private val _photographerHeartResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>()
-    val photographerHeartResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
+    private val _photographerHeartResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>(null)
+    val photographerHeartResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = _photographerHeartResponseLiveData
 
-    private val _postHeartResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<PostHeartDto>>()
-    val postHeartResponseLiveData: LiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
+    private val _postHeartResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PostHeartDto>>(null)
+    val postHeartResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
         get() = _postHeartResponseLiveData
 
-    private val _articleHeartListResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<List<ArticleHeartResponseDto>>>()
-    val articleHeartListResponseLiveData: LiveData<NetworkUtils.NetworkResponse<List<ArticleHeartResponseDto>>>
+    private val _articleHeartListResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<List<ArticleHeartResponseDto>>>(null)
+    val articleHeartListResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<List<ArticleHeartResponseDto>>>
         get() = _articleHeartListResponseLiveData
 
-    private val _photographerHeartListResponseLiveData = MutableLiveData<NetworkUtils.NetworkResponse<List<PhotographerHeartResponseDto>>>()
-    val photographerHeartListResponseLiveData: LiveData<NetworkUtils.NetworkResponse<List<PhotographerHeartResponseDto>>>
+    private val _photographerHeartListResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<List<PhotographerHeartResponseDto>>>(null)
+    val photographerHeartListResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<List<PhotographerHeartResponseDto>>>
         get() = _photographerHeartListResponseLiveData
 
     override suspend fun photographerHeart(photographerId: Long) {
