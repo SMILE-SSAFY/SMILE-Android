@@ -7,6 +7,7 @@ import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.dto.Photographer.PlacesReqDto;
+import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.dto.ReviewQdslDto;
@@ -28,10 +29,10 @@ import com.ssafy.core.repository.photographer.PhotographerRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,6 +61,7 @@ public class PhotographerService {
     private final S3UploaderService s3UploaderService;
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
+    private final ArticleService articleService;
 
     /**
      * 작가 등록
@@ -352,6 +354,48 @@ public class PhotographerService {
         }
 
         return photographerForList;
+    }
+
+    /***
+     * 포트폴리오의 작가정보
+     * @param userId 유저 아이디
+     * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article 게시글 전체조회
+     *
+     * @throws UsernameNotFoundException 유저 없을 때
+     */
+
+    @Transactional
+    public PhotographerInfoDto getPhotographerInformation(Long userId) {
+        User logInUser = articleService.getLogInUser();
+        User user = userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Photographer photographer = photographerRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Boolean isMe = articleService.isMe(logInUser, user);
+        Boolean isHeart = photographerHeartRepository.findByUserAndPhotographer(logInUser, photographer).isPresent();
+        Long hearts = photographerHeartRepository.countByPhotographer(photographer);
+        // 활동지역
+        List<String> places = new ArrayList<>();
+        for(PhotographerNPlaces place : photographer.getPlaces()){
+            places.add(place.getPlaces().getFirst()+" " +place.getPlaces().getSecond());
+        }
+
+        // 카테고리
+        List<String> categories = new ArrayList<>();
+        for(PhotographerNCategories category : photographer.getCategories()){
+            categories.add(category.getCategory().getName());
+        }
+
+        return PhotographerInfoDto.builder()
+                .photographerId(userId)
+                .isMe(isMe)
+                .isHeart(isHeart)
+                .hearts(hearts)
+                .photographerName(user.getName())
+                .profileImg(photographer.getProfileImg())
+                .introduction(photographer.getIntroduction())
+                .categories(categories)
+                .places(places)
+                .minPrice(photographer.getMinPrice())
+                .build();
     }
 
 }
