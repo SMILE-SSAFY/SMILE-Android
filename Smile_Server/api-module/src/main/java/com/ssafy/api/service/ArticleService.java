@@ -66,11 +66,16 @@ public class ArticleService {
     public void postArticle(ArticlePostDto dto) throws IOException{
         List<MultipartFile> images = dto.getImageList();
         String fileName = s3UploaderService.upload(images);
-        Article article = dto.toEntity();
-        article.setPhotoUrls(fileName);
-        article.setCreatedAt(LocalDateTime.now());
         User user = getLogInUser();
-        article.whoPost(user);
+        Article article = Article.builder()
+                .user(user)
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
+                .detailAddress(dto.getDetailAddress())
+                .photoUrls(fileName)
+                .category(dto.getCategory())
+                .createdAt(LocalDateTime.now())
+                .build();
         articleRepository.save(article);
     }
 
