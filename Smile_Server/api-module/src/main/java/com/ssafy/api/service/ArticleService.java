@@ -114,9 +114,7 @@ public class ArticleService {
     public void deletePost(Long id){
 
         Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
-        User user = userRepository.findByEmail(username).orElseThrow(()->new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = getLogInUser();
 
         if (article.getUser().getId() == user.getId()){
             String photoUriList = article.getPhotoUrls();
@@ -127,48 +125,6 @@ public class ArticleService {
         } else {
             throw new CustomException(ErrorCode.USER_MISMATCH);
         }
-    }
-
-    /***
-     * 포트폴리오의 작가정보
-     * @param userId 유저 아이디
-     * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article 게시글 전체조회
-     *
-     * @throws UsernameNotFoundException 유저 없을 때
-     */
-
-    @Transactional
-    public PhotographerInfoDto getPhotographerInformation(Long userId) {
-        User logInUser = getLogInUser();
-        User user = userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        Photographer photographer = photographerRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        Boolean isMe = isMe(logInUser, user);
-        Boolean isHeart = photographerHeartRepository.findByUserAndPhotographer(logInUser, photographer).isPresent();
-        Long hearts = photographerHeartRepository.countByPhotographer(photographer);
-        // 활동지역
-        List<String> places = new ArrayList<>();
-        for(PhotographerNPlaces place : photographer.getPlaces()){
-            places.add(place.getPlaces().getFirst()+" " +place.getPlaces().getSecond());
-        }
-
-        // 카테고리
-        List<String> categories = new ArrayList<>();
-        for(PhotographerNCategories category : photographer.getCategories()){
-            categories.add(category.getCategory().getName());
-        }
-
-        return PhotographerInfoDto.builder()
-                .photographerId(userId)
-                .isMe(isMe)
-                .isHeart(isHeart)
-                .hearts(hearts)
-                .photographerName(user.getName())
-                .profileImg(photographer.getProfileImg())
-                .introduction(photographer.getIntroduction())
-                .categories(categories)
-                .places(places)
-                .minPrice(photographer.getMinPrice())
-                .build();
     }
 
     /***
@@ -544,7 +500,7 @@ public class ArticleService {
      * @param logInUser 로그인한 유저
      * @return 유저 일치 여부
      */
-    private boolean isMe(User user, User logInUser){
+    public boolean isMe(User user, User logInUser){
         return logInUser.getId() == user.getId();
     }
 
@@ -552,7 +508,7 @@ public class ArticleService {
      * 로그인한 유저를 얻어오는 함수
      * @return user
      */
-    private User getLogInUser(){
+    public User getLogInUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
         return user;

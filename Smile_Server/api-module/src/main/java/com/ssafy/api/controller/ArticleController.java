@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
+import com.ssafy.api.service.PhotographerService;
 import com.ssafy.core.dto.ArticleSearchDto;
 
 import com.ssafy.core.entity.ArticleRedis;
@@ -33,8 +34,9 @@ import java.util.List;
 @Slf4j
 public class ArticleController {
 
-    @Autowired
-    private ArticleService articleService;
+    private final ArticleService articleService;
+    private final PhotographerService photographerService;
+
 
     /***
      * 게시글 등록
@@ -55,7 +57,7 @@ public class ArticleController {
      */
     @GetMapping("/photographer/{photographerId}")
     public ResponseEntity<?> getPhotographerInformation(@PathVariable("photographerId") Long photographerId){
-        PhotographerInfoDto photographerInfoDto = articleService.getPhotographerInformation(photographerId);
+        PhotographerInfoDto photographerInfoDto = photographerService.getPhotographerInformation(photographerId);
         return new ResponseEntity<>(photographerInfoDto, HttpStatus.OK);
     }
 
