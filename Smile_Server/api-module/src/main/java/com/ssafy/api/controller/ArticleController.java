@@ -2,14 +2,13 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.article.*;
 import com.ssafy.api.service.ArticleService;
+import com.ssafy.api.service.PhotographerService;
 import com.ssafy.core.dto.ArticleSearchDto;
 
-import com.ssafy.core.entity.ArticleRedis;
+
 import com.ssafy.core.entity.User;
-import com.ssafy.core.repository.article.ArticleRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 
+/***
+ * 게시글 관련 controller
+ *
+ * @author 신민철
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/article")
 @Slf4j
 public class ArticleController {
 
-    @Autowired
-    private ArticleService articleService;
+    private final ArticleService articleService;
+    private final PhotographerService photographerService;
+
 
     /***
      * 게시글 등록
@@ -55,7 +60,7 @@ public class ArticleController {
      */
     @GetMapping("/photographer/{photographerId}")
     public ResponseEntity<?> getPhotographerInformation(@PathVariable("photographerId") Long photographerId){
-        PhotographerInfoDto photographerInfoDto = articleService.getPhotographerInformation(photographerId);
+        PhotographerInfoDto photographerInfoDto = photographerService.getPhotographerInformation(photographerId);
         return new ResponseEntity<>(photographerInfoDto, HttpStatus.OK);
     }
 
