@@ -1,5 +1,4 @@
-from flask import Flask, jsonify
-from flask import request
+from flask import Flask, request
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
