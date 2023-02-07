@@ -1,3 +1,7 @@
 spring:
     profiles:
         active: real
+    cloud:
+        gcp:
+            credentials:
+                location: classpath:gcloud/gcloud_service_key.json
