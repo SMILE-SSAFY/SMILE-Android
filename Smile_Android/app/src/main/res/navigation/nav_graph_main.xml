@@ -100,6 +100,13 @@
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
+        <action
+            android:id="@+id/action_mainFragment_to_recommendResultFragment"
+            app:destination="@id/recommendResultFragment">
+            <argument
+                android:name="address"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/findAddressFragment"
@@ -534,4 +541,21 @@
                 android:defaultValue="-1L"/>
         </action>
     </fragment>
+    <fragment
+        android:id="@+id/recommendResultFragment"
+        android:name="com.ssafy.smile.presentation.view.home.RecommendResultFragment"
+        android:label="fragment_recommend_result"
+        tools:layout="@layout/fragment_recommend_result">
+        <argument
+            android:name="address"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_recommendResultFragment_pop"
+            app:popUpTo="@id/recommendResultFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_recommendResultFragment_to_mainFragment"
+            app:popUpTo="@id/mainFragment" />
+    </fragment>
+
 </navigation>
