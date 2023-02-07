@@ -182,9 +182,9 @@ public class ReservationService {
         // FCM 전송
         if(statusDto.getStatus() == ReservationStatus.예약확정){
             notificationService.sendDataMessageTo(NotificationDTO.builder()
-                            .requestId(statusDto.getUserId())
-                            .registrationToken(reservation.getUser().getFcmToken())
-                            .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                    .requestId(statusDto.getUserId())
+                    .registrationToken(reservation.getUser().getFcmToken())
+                    .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
                     .build());
         }
     }
@@ -337,7 +337,8 @@ public class ReservationService {
     public void deleteReview(Long reviewId){
         User user = UserService.getLogInUser();
 
-        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
         if(review.getUser().getId() == user.getId()){
             reviewRepository.deleteById(reviewId);
@@ -376,7 +377,7 @@ public class ReservationService {
         String token = "", name = "";
         User user = reservation.getUser();  // 예약한 유저
         User photographer = reservation.getPhotographer().getUser();    // 예약된 사진작가
-        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
+        if(user.getId() == userId){    // 예약한 유저가 취소한 경우
             token = photographer.getFcmToken();  // 사진작가에게 전달
             name = user.getName();     // 유저이름으로 취소
         } else {    // 사진작가가 취소한 경우
@@ -391,7 +392,7 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
 
-        // FCM 전송
+            // FCM 전송
         notificationService.sendDataMessageTo(NotificationDTO.builder()
                 .requestId(userId)
                 .registrationToken(token)
