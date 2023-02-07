@@ -32,6 +32,7 @@ import java.util.Map;
 
 /**
  * 유저 관련 Controller
+ *
  * @author 서재건
  */
 @Slf4j
@@ -42,7 +43,7 @@ public class UserController {
 
     private final UserService userService;
     private String fromNumber;
-
+    private final String messageUrl = "https://api.coolsms.co.kr";
     private final DefaultMessageService messageService;
 
     @Autowired
@@ -55,7 +56,7 @@ public class UserController {
         this.fromNumber = fromNumber;
         this.userService = userService;
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
-        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
+        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, messageUrl);
     }
 
     /**
@@ -86,7 +87,7 @@ public class UserController {
      * 이메일 중복 체크
      *
      * @param email
-     * @return HttpStatus.OK    //
+     * @return HttpStatus.OK
      */
     @GetMapping(value = "/check/email/{email}")
     public ResponseEntity<HttpStatus> checkEmail(@PathVariable String email) {
@@ -106,7 +107,7 @@ public class UserController {
         String randomNumber = messageFormDto.getRandomNumber();
 
         // 메세지 전송
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(messageFormDto.getMessage()));
+        this.messageService.sendOne(new SingleMessageSendingRequest(messageFormDto.getMessage()));
         log.info("메세지 전송 완료");
 
         return ResponseEntity.ok().body(randomNumber);
@@ -119,10 +120,9 @@ public class UserController {
      * id, name, role
      */
     @GetMapping
-    public ResponseEntity<UserDto> getUser(HttpServletRequest request) {
-        User user = userService.getUser(request);
-        UserDto userDto = new UserDto();
-        return ResponseEntity.ok().body(userDto.of(user));
+    public ResponseEntity<UserDto> getUser() {
+        User user = userService.getUser();
+        return ResponseEntity.ok().body(new UserDto().of(user));
     }
 
     /**
@@ -144,8 +144,8 @@ public class UserController {
      * @return OK
      */
     @DeleteMapping
-    public ResponseEntity<HttpStatus> removeUser(HttpServletRequest request) {
-        userService.removeUser(request);
+    public ResponseEntity<HttpStatus> removeUser() {
+        userService.removeUser();
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

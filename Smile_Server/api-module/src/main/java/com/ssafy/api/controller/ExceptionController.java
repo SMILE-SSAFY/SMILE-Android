@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * security에서 authentication, authorization 에러 전달받아 throw하는 Controller
  *
- * author @서재건
+ * @author 서재건
  */
 @RestController
 @RequiredArgsConstructor

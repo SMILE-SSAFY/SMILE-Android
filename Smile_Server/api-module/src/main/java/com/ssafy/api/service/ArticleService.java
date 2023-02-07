@@ -53,8 +53,10 @@ public class ArticleService {
      * @throws IOException
      */
     public void postArticle(ArticlePostDto dto) throws IOException{
+        // 이미지 리스트를 S3에 업로드 후 리턴받은 Url
         List<MultipartFile> images = dto.getImageList();
         String fileName = s3UploaderService.upload(images);
+
         User user = UserService.getLogInUser();
 
         Article article = Article.builder()
@@ -80,9 +82,13 @@ public class ArticleService {
     public ArticleDetailDto getArticleDetail(Long id){
         User logInUser = UserService.getLogInUser();
 
-        Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+
         User articleAuthor = article.getUser();
+        // 자신이 작성한 글인지 확인
         boolean isMe = isMe(logInUser, articleAuthor);
+        // 좋아요를 누른 글인지 확인
         boolean isHearted = isHearted(logInUser, article);
         Long hearts = articleHeartRepository.countByArticle(article);
 
@@ -106,7 +112,8 @@ public class ArticleService {
      * @throws ARTICLE_NOT_FOUND 게시글 없을 때
      */
     public void deletePost(Long id){
-        Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(id)
+                .orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User user = UserService.getLogInUser();
 
         if (article.getUser().getId() == user.getId()){
