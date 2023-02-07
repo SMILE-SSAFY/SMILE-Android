@@ -1,12 +1,21 @@
 package com.ssafy.api.service;
 
-import com.google.cloud.language.v1.*;
+import com.google.cloud.language.v1.AnalyzeEntitiesRequest;
+import com.google.cloud.language.v1.AnalyzeEntitiesResponse;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.EncodingType;
+import com.google.cloud.language.v1.Entity;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 /**
  * 리뷰 키워드 추출 관련 Service
  *
  * @author 이민하
  */
+@Service
+@Slf4j
 public class AnalyzeService {
     /***
      * 리뷰 키워드 추출
