@@ -11,6 +11,7 @@ build/
 /**/src/main/resources/application-kakao.yml
 /**/src/main/resources/application-pay.yml
 /**/src/main/resources/firebase/firebase_service_key.json
+/**/src/main/resources/gcloud/gcloud_service_key.json
 
 ### STS ###
 .apt_generated
