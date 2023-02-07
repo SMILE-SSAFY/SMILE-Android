@@ -5,7 +5,7 @@ import lombok.Getter;
 
 /**
  *
- * author 김정은
+ * @author 김정은
  */
 @AllArgsConstructor
 @Getter

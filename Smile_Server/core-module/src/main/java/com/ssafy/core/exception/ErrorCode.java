@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * 에러 코드 ENUM
+ *
+ * @author 김정은
+ */
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * querydsl 작성할 인터페이스
  *
- * author @서재건
+ * @author 서재건
  */
 public interface PhotographerNCategoriesRepositoryCustom {
 

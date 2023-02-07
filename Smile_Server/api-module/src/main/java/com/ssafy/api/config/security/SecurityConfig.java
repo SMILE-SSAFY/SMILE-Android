@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * 보안 설정 클래스
  *
- * author @김정은
- * author @서재건
+ * @author 김정은
+ * @author 서재건
  */
 @Slf4j
 @AllArgsConstructor
@@ -60,6 +60,7 @@ public class SecurityConfig {
         log.info("[filterChain] 접근");
         http
                 .authorizeRequests()
+                // 회원가입, 로그인, 휴대폰 인증, 중복 확인, 예외 처리 허용
                 .antMatchers("/api/user/register", "/api/user/login", "/api/user/sns").permitAll()
                 .antMatchers( "/api/user/check/**").permitAll()
                 .antMatchers("/send-one").permitAll()

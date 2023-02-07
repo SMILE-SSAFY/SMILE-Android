@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 /**
  * QueryDSL 설정 클래스
  *
- * author @서재건
+ * @author 서재건
  */
 @Configuration
 public class QueryDSLConfiguration {

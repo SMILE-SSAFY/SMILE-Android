@@ -17,7 +17,7 @@ import javax.persistence.Table;
 /**
  * 사진작가와 카테고리 연계 테이블
  *
- * author @김정은
+ * @author 김정은
  */
 @Entity
 @Table(name = "photographer_categories")
@@ -38,9 +38,4 @@ public class PhotographerNCategories {
     private int price;
     private String description;
 
-    public void updatePhotographer(Long photographerId){
-        this.photographer = Photographer.builder()
-                .id(photographerId)
-                .build();
-    }
 }

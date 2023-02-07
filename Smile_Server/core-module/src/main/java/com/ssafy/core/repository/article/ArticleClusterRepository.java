@@ -1,6 +1,5 @@
 package com.ssafy.core.repository.article;
 
-import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.User;
 import org.springframework.data.repository.CrudRepository;
