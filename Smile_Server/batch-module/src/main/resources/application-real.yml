@@ -4,47 +4,59 @@
 logging:
   level:
     root: warn
+    com.ssafy: info
     com.ssafy.api: info
     org.hibernate.type.descriptor.sql: trace
+    com.amazonaws.util.EC2MetadataUtils: error
 spring:
   profiles:
     active: real
     include:
-      - core
       - aws
+      - coolsms
+      - kakao
+      - pay
+  batch:
+    job:
+      names: ${job.name:NONE}
+      enabled: false
+    jdbc:
+      initialize-schema: always
   # Random Key
   jwt:
-    secret: secretKey
+    secret: DvqcGn8mnFjqSL4a
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      # create(new table), update(add new column), none(nothing)
+      ddl-auto: update
     properties:
       hibernate:
-        # create(new table), update(add new column), none(nothing)
-        hbm2ddl:
-          auto: none
         format_sql: true
         show_sql: true
         use_sql_comments: true
-    generate-ddl: true
     open-in-view: false
+    defer-datasource-initialization: true
   datasource:
-    url: mysql://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P11D102?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+#    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P11D102
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    username: S08P11D102
+#    password: ILwNR4FeeY
+    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S08P12D102
     driver-class-name: org.mariadb.jdbc.Driver
-    username:
-    password:
-  flyway:
-    enabled: false
-  config:
-    activate:
-      on-profile: real
-  servlet:
-    multipart:
-      file-size-threshold: 15MB
-      # Path for saving upload file
-      location: /home/
-      max-file-size: 100MB
-      max-request-size: 100MB
-
+    username: S08P12D102
+    password: XVOdEsS6x3
+    hikari:
+      connection-timeout: 58000
+      max-lifetime: 580000
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+  redis:
+    host: localhost
+    port: 6379
 server:
   port: 80
   domain: http://127.0.0.1
@@ -52,27 +64,3 @@ server:
     session:
       timeout: 1440m
   max-http-header-size: 3145728
-
-aes256:
-  key: value
-
-# Path json file for push alarm
-app:
-  firebase-config: key
-
-# image request url for client
-image:
-  handler:
-    url: /imae/upload/
-
-# for sms
-nurigo:
-  api:
-    key: value
-    secretKey: secretKey
-    sender: phoneNumber
-
-# for payment
-iamport:
-  key: value
-  secret: secretKey
