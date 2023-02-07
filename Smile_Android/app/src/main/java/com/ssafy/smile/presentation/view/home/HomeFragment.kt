@@ -3,8 +3,10 @@ package com.ssafy.smile.presentation.view.home
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
@@ -18,6 +20,7 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
+import com.ssafy.smile.presentation.view.portfolio.CustomCalendarDialog
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
@@ -29,14 +32,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var isPhotographer = true
-    private var curAddress = ""
+    private var curAddress = "안녕안녕"
     private var userId = -1L
     private var filter = ""
 
     override fun onResume() {
         super.onResume()
-        homeViewModel.getAddressList()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+//        homeViewModel.getAddressList()
+//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -51,9 +54,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         isPhotographer = getRole()
         userId = getUserId()
         initToolbar()
-        homeViewModel.getAddressList()
-        setObserverBeforeSetAddress()
+//        homeViewModel.getAddressList()
+//        setObserverBeforeSetAddress()
         initRecycler()
+        showRecommendDialog()
     }
 
     private fun setObserverBeforeSetAddress() {
@@ -137,6 +141,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
+                showRecommendDialog()
             }
         }
     }
@@ -215,6 +220,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setClickListener(){
         binding.apply {
             layoutSearchAddress.setOnClickListener { moveToAddressGraph() }
+        }
+    }
+
+    private fun showRecommendDialog() {
+        CustomRecommendDialog(requireContext()).apply {
+            setButtonClickListener(object : CustomRecommendDialog.OnButtonClickListener{
+                override fun onOkButtonClick() {
+                    val action = MainFragmentDirections.actionMainFragmentToRecommendResultFragment(curAddress)
+                    findNavController().navigate(action)
+                }
+            })
+            show()
         }
     }
 
