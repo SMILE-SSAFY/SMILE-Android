@@ -70,6 +70,7 @@ public class ReservationService {
      * @param reservation
      */
     public ReservationResDto reserve(ReservationReqDto reservation){
+        reservation.setUserId(UserService.getLogInUser().getId());
         if(!photographerRepository.existsById(reservation.getPhotographerId())){
             throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
         }
@@ -103,7 +104,7 @@ public class ReservationService {
      * @param photographerId
      * @return PhotographerInfoDto
      */
-    public PhotographerInfoDto getPhotographerInfo(Long photographerId){
+    public PhotographerReservationDto getPhotographerInfo(Long photographerId){
         photographerRepository.findById(photographerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
@@ -145,7 +146,7 @@ public class ReservationService {
             places.add(dto);
         }
 
-        return PhotographerInfoDto.builder()
+        return PhotographerReservationDto.builder()
                 .days(findDates)
                 .categories(list)
                 .places(places)
@@ -159,6 +160,8 @@ public class ReservationService {
      */
     @Transactional
     public void changeStatus(ReservationStatusDto statusDto) throws IOException {
+        statusDto.setUserId(UserService.getLogInUser().getId());
+
         Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
@@ -188,11 +191,12 @@ public class ReservationService {
     /**
      * 작가 예약 목록 조회
      *
-     * @param user
      * @return List<ReservationPhotographerDto>
      */
     @Transactional(readOnly = true)
-    public List<ReservationListDto> findPhotographerReservation(User user) {
+    public List<ReservationListDto> findPhotographerReservation() {
+        User user = UserService.getLogInUser();
+
         log.info("작가 예약 목록 조회 시작");
         if (!user.getRole().equals(Role.PHOTOGRAPHER)) {
             throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
@@ -226,11 +230,12 @@ public class ReservationService {
     /**
      * 유저 예약 목록 조회
      *
-     * @param userId
      * @return List<ReservationListDto>
      */
     @Transactional(readOnly = true)
-    public List<ReservationListDto> findUserReservation(Long userId) {
+    public List<ReservationListDto> findUserReservation() {
+        Long userId = UserService.getLogInUser().getId();
+
         log.info("유저 예약 목록 조회");
         List<Reservation> reservationList =
                 reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
@@ -292,10 +297,10 @@ public class ReservationService {
      */
     @Transactional
     public List<ReviewResDto> showReviewList(Long photographerId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
-        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Photographer photographer = photographerRepository.findById(photographerId)
+                .orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
         List<ReviewResDto> reviewResDtoList = new ArrayList<>();
 
@@ -326,8 +331,7 @@ public class ReservationService {
      * @param reviewId 리뷰아이디
      */
     public void deleteReview(Long reviewId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
         Review review = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
@@ -345,7 +349,9 @@ public class ReservationService {
      * @throws IOException
      */
     @Transactional
-    public void changeCancelStatus(Long reservationId, Long userId) throws IOException {
+    public void changeCancelStatus(Long reservationId) throws IOException {
+        Long userId = UserService.getLogInUser().getId();
+
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
         log.info("예약 조회 완료");
@@ -423,7 +429,8 @@ public class ReservationService {
      * @return 리뷰 디테일
      */
     public ReviewDetailDto reviewDetail(Long reviewId){
-        Review result = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        Review result = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
         return ReviewDetailDto.builder()
                 .id(reviewId)
                 .createdAt(result.getCreatedAt())

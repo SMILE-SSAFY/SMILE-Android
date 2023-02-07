@@ -1,6 +1,5 @@
 package com.ssafy.core.repository.photographer;
 
-import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.User;

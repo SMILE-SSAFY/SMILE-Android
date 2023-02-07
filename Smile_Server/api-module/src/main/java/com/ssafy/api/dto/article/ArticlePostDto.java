@@ -1,6 +1,5 @@
 package com.ssafy.api.dto.article;
 
-import com.ssafy.core.entity.Article;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 

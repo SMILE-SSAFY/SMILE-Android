@@ -1,7 +1,5 @@
 package com.ssafy.api.config.security;
 
-import com.ssafy.core.exception.CustomException;
-import com.ssafy.core.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -13,7 +11,7 @@ import java.io.IOException;
 
 /**
  * 401 error 캐치
- * author @서재건
+ *  @author 서재건
  */
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {

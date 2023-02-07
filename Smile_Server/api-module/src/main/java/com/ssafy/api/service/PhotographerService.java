@@ -69,8 +69,10 @@ public class PhotographerService {
      * @param multipartFile 프로필 이미지
      * @param photographer
      * @throws USER_NOT_FOUND 유저를 찾을 수 없을 때 에러
+     * @throws IOException
      */
     public void addPhotographer(MultipartFile multipartFile, PhotographerReqDto photographer) throws IOException{
+        photographer.setPhotographerId(UserService.getLogInUser().getId());
         User user = userRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
@@ -126,12 +128,12 @@ public class PhotographerService {
     /**
      * 작가 프로필 조회
      *
-     * @param idx
      * @return 작가 프로필 객체
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public PhotographerResDto getPhotographer(Long idx){
-        Photographer photographer = photographerRepository.findById(idx)
+    public PhotographerResDto getPhotographer(){
+        Long userIdx = UserService.getLogInUser().getId();
+        Photographer photographer = photographerRepository.findById(userIdx)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         PhotographerResDto dto = new PhotographerResDto();
         return dto.of(photographer);
@@ -147,6 +149,7 @@ public class PhotographerService {
      * @throws IOException
      */
     public PhotographerResDto changePhotographer(MultipartFile file, PhotographerUpdateReqDto photographer) throws IOException {
+        photographer.setPhotographerId(UserService.getLogInUser().getId());
         Photographer findPhotographer = photographerRepository.findById(photographer.getPhotographerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
@@ -210,10 +213,10 @@ public class PhotographerService {
     /**
      * 사진 작가 프로필 삭제
      *
-     * @param userId 사진작가 인덱스 번호
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public void removePhotographer(Long userId){
+    public void removePhotographer(){
+        Long userId = UserService.getLogInUser().getId();
         Photographer findPhotographer = photographerRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
@@ -238,7 +241,8 @@ public class PhotographerService {
      * @throws CATEGORY_NOT_FOUND 해당 카테고리가 없을 때 에러
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
-    public List<PhotographerForListDto> getPhotographerListByCategory(Long userId, String categoryName) {
+    public List<PhotographerForListDto> getPhotographerListByCategory(String categoryName) {
+        Long userId = UserService.getLogInUser().getId();
         List<Long> categoryIdList = categoriesRepository.findAllIdByNameContaining(categoryName);
         if (categoryIdList.isEmpty()) {
             throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
@@ -264,7 +268,8 @@ public class PhotographerService {
      * @param criteria
      * @return List<PhotographerForListDto>
      */
-    public List<PhotographerForListDto> getPhotographerListByAddresss(Long userId, String address, String criteria) {
+    public List<PhotographerForListDto> getPhotographerListByAddresss(String address, String criteria) {
+        Long userId = UserService.getLogInUser().getId();
         String[] addresssList = address.split(" ");
         List<PhotographerQdslDto> photographerList =
                 photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
@@ -366,12 +371,17 @@ public class PhotographerService {
 
     @Transactional
     public PhotographerInfoDto getPhotographerInformation(Long userId) {
-        User logInUser = articleService.getLogInUser();
-        User user = userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        Photographer photographer = photographerRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        User logInUser = UserService.getLogInUser();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Photographer photographer = photographerRepository.findById(userId)
+                .orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+
         Boolean isMe = articleService.isMe(logInUser, user);
         Boolean isHeart = photographerHeartRepository.findByUserAndPhotographer(logInUser, photographer).isPresent();
         Long hearts = photographerHeartRepository.countByPhotographer(photographer);
+
         // 활동지역
         List<String> places = new ArrayList<>();
         for(PhotographerNPlaces place : photographer.getPlaces()){

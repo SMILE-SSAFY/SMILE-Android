@@ -12,16 +12,11 @@ import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.CategoriesRepository;
-import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.article.ArticleHeartRepository;
 import com.ssafy.core.repository.article.ArticleRedisRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
-import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
-import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import smile.clustering.XMeans;
@@ -34,6 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /***
+ * 게시글 관련 Service
+ *
  * @author 신민철
  * @author 서재건
  */
@@ -44,10 +41,7 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final S3UploaderService s3UploaderService;
-    private final UserRepository userRepository;
-    private final PhotographerRepository photographerRepository;
     private final ArticleHeartRepository articleHeartRepository;
-    private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleClusterRepository articleClusterRepository;
     private final ArticleRedisRepository articleRedisRepository;
@@ -56,12 +50,13 @@ public class ArticleService {
      * article 생성
      *
      * @param dto 게시글 작성 dto
-     * @throws PHOTOGRAPHER_NOT_FOUND 사진작가 없을 때
+     * @throws IOException
      */
     public void postArticle(ArticlePostDto dto) throws IOException{
         List<MultipartFile> images = dto.getImageList();
         String fileName = s3UploaderService.upload(images);
-        User user = getLogInUser();
+        User user = UserService.getLogInUser();
+
         Article article = Article.builder()
                 .user(user)
                 .latitude(dto.getLatitude())
@@ -71,17 +66,20 @@ public class ArticleService {
                 .category(dto.getCategory())
                 .createdAt(LocalDateTime.now())
                 .build();
+
         articleRepository.save(article);
     }
 
     /***
      * 게시글 상세조회
+     *
      * @param id 게시글 id
      * @return 게시글상세정보
      * @throws ARTICLE_NOT_FOUND 게시글 없을 때
      */
     public ArticleDetailDto getArticleDetail(Long id){
-        User logInUser = getLogInUser();
+        User logInUser = UserService.getLogInUser();
+
         Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User articleAuthor = article.getUser();
         boolean isMe = isMe(logInUser, articleAuthor);
@@ -103,13 +101,13 @@ public class ArticleService {
 
     /***
      * 게시글 삭제
+     *
      * @param id 게시글 id
      * @throws ARTICLE_NOT_FOUND 게시글 없을 때
      */
     public void deletePost(Long id){
-
         Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
-        User user = getLogInUser();
+        User user = UserService.getLogInUser();
 
         if (article.getUser().getId() == user.getId()){
             String photoUriList = article.getPhotoUrls();
@@ -153,7 +151,7 @@ public class ArticleService {
     public ArticleDetailDto updateArticle(Long articleId, ArticlePostDto articlePostDto) throws IOException {
 
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
-        User logInUser = getLogInUser();
+        User logInUser = UserService.getLogInUser();
         Boolean isMe = isMe(logInUser, article.getUser());
         boolean isHearted = isHearted(logInUser, article);
         Long hearts;
@@ -200,7 +198,7 @@ public class ArticleService {
 
     public ArticleHeartDto heartArticle(Long articleId){
 
-        User user = getLogInUser();
+        User user = UserService.getLogInUser();
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
 
@@ -223,11 +221,12 @@ public class ArticleService {
     /**
      * 카테고리 이름으로 게시글 검색
      *
-     * @param userId 유저id
      * @param categoryName 카테고리 이름
      * @return List<ArticleSearchDto>
      */
-    public List<ArticleSearchDto> getArticleListByCategory(Long userId, String categoryName) {
+    public List<ArticleSearchDto> getArticleListByCategory(String categoryName) {
+        Long userId = UserService.getLogInUser().getId();
+
         List<String> categoryNameList = categoriesRepository.findAllCategoryNameByNameContaining(categoryName);
         if (categoryNameList.isEmpty()) {
             throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
@@ -271,7 +270,7 @@ public class ArticleService {
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
 
         // User를 조회하고 user가 이전에 clustering한 데이터를 cache로 가지고 있을 경우 삭제
-        User logInUser = getLogInUser();
+        User logInUser = UserService.getLogInUser();
         articleClusterRepository.findByUserId(logInUser.getId()).ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
 
         // 지도 범위 내의 모든 게시글을 조회
@@ -448,7 +447,7 @@ public class ArticleService {
      * @return 내가 좋아요 누른 게시글 목록
      */
     public List<ArticleSearchDto> getHeartedArticle(){
-        User user = getLogInUser();
+        User user = UserService.getLogInUser();
         List<ArticleHeart> articleHeartList = articleHeartRepository.findByUser(user);
 
         List<ArticleSearchDto> results = new ArrayList<>();
@@ -498,16 +497,6 @@ public class ArticleService {
      */
     public boolean isMe(User user, User logInUser){
         return logInUser.getId() == user.getId();
-    }
-
-    /***
-     * 로그인한 유저를 얻어오는 함수
-     * @return user
-     */
-    public User getLogInUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        return user;
     }
 
     /***

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 /**
  * 활동지역 요청 DTO
  *
- * author @김정은
+ * @author 김정은
  */
 @Data
 @NoArgsConstructor

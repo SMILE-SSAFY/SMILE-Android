@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Role enum
  *
- * author @서재건
+ * @author 서재건
  */
 @Getter
 @RequiredArgsConstructor

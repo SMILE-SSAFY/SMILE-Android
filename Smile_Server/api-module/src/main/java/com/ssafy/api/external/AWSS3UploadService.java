@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
+/**
+ * AWS S3 이미지 올리는 서비스
+ *
+ * @author 신민철
+ */
 @Component
 @RequiredArgsConstructor
 public class AWSS3UploadService implements UploadService {
-    /***
-     * @author 신민철
-     */
     private final AmazonS3 amazonS3;
     private final S3Component s3Component;
 
@@ -31,15 +33,5 @@ public class AWSS3UploadService implements UploadService {
     public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName) {
         amazonS3.putObject(new PutObjectRequest(s3Component.getBucket(), fileName, inputStream, objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
-    }
-
-    /***
-     *
-     * @param fileName
-     * @return fileUrl
-     */
-    @Override
-    public String getFileUrl(String fileName) {
-        return amazonS3.getUrl(s3Component.getBucket(), fileName).toString();
     }
 }

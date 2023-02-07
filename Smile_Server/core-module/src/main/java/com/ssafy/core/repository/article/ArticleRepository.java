@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * 게시글 repository
  *
- * author @신민철
- * author @서재건
+ * @author 신민철
+ * @author 서재건
  */
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleRepositoryCustom {
     List<Article> findByUserIdOrderByIdDesc(Long user_id);
