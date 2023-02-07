@@ -1,8 +1,10 @@
 package com.ssafy.api.dto.article;
 
+import com.ssafy.core.entity.Article;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 /***
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class ArticleDetailDto {
 
@@ -32,5 +35,19 @@ public class ArticleDetailDto {
     private String photoUrls;
 
     private String photographerName;
+
+    public ArticleDetailDto of(Article article, Boolean isMe, Boolean isHeart, Long hearts){
+        return ArticleDetailDto.builder()
+                .id(article.getId())
+                .isMe(isMe)
+                .isHeart(isHeart)
+                .detailAddress(article.getDetailAddress())
+                .category(article.getCategory())
+                .createdAt(article.getCreatedAt())
+                .photoUrls(article.getPhotoUrls())
+                .hearts(hearts)
+                .photographerName(article.getUser().getName())
+                .build();
+    }
 
 }
