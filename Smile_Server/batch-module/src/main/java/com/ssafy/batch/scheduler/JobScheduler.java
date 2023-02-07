@@ -15,20 +15,25 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Collections;
 
+/**
+ * Job을 특정 주기로 실행시키는 Scheduler 클래스
+ * TODO: cron 설정 맞출 것
+ * @author 서재건
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
 public class JobScheduler {
 
     private final JobLauncher jobLauncher;
-    private final Job taskletJob;
+    private final Job notificationJob;
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0/5 * * * * ?")
     public void jobSchduled() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParameters(
                 Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
         );
 
-        jobLauncher.run(taskletJob, jobParameters);
+        jobLauncher.run(notificationJob, jobParameters);
     }
 }
