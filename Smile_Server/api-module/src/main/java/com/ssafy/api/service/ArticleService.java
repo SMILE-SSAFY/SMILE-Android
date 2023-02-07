@@ -86,17 +86,7 @@ public class ArticleService {
         boolean isHearted = isHearted(logInUser, article);
         Long hearts = articleHeartRepository.countByArticle(article);
 
-        return ArticleDetailDto.builder()
-                .id(id)
-                .isMe(isMe)
-                .isHeart(isHearted)
-                .detailAddress(article.getDetailAddress())
-                .category(article.getCategory())
-                .createdAt(article.getCreatedAt())
-                .photoUrls(article.getPhotoUrls())
-                .hearts(hearts)
-                .photographerName(articleAuthor.getName())
-                .build();
+        return new ArticleDetailDto().of(article, isMe, isHearted, hearts);
     }
 
     /***
@@ -130,13 +120,7 @@ public class ArticleService {
         List<ArticleListDto> articleListDtoList = new ArrayList<>();
 
         for (Article article : articleList) {
-            String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
-            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
-            ArticleListDto articleListDto = ArticleListDto.builder()
-                    .id(article.getId())
-                    .photoUrl(photoUrlList.get(0).trim())
-                    .build();
-            articleListDtoList.add(articleListDto);
+            articleListDtoList.add(new ArticleListDto().of(article));
         }
         return articleListDtoList;
     }
@@ -202,8 +186,6 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
 
-        log.info(String.valueOf(isHeart));
-        log.info(String.valueOf(article));
         // 좋아요가 눌려있지 않으면 저장
         if(!isHeart){
             articleHeartRepository.save(new ArticleHeart(user, article));
