@@ -49,7 +49,6 @@ public class ArticleController {
      */
     @PostMapping
     public ResponseEntity<HttpStatus> uploadImage(ArticlePostDto articlePostDto) throws IOException {
-        log.info(articlePostDto.toString());
         articleService.postArticle(articlePostDto);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -134,7 +133,7 @@ public class ArticleController {
      * @return 게시글리스트
      */
     @GetMapping("list")
-    public ResponseEntity<?> searchArticleNear(@RequestParam("coord1y") Double y1,
+    public ResponseEntity<?> searchNearArticle(@RequestParam("coord1y") Double y1,
                                                @RequestParam("coord1x") Double x1,
                                                @RequestParam("coord2y") Double y2,
                                                @RequestParam("coord2x") Double x2) {
@@ -158,7 +157,7 @@ public class ArticleController {
      * 클러스터링시 마커에 포함된 게시글 확인
      * @param clusterId 마커 id
      * @param condition 정렬 기준
-     * @param page 보고 싶은 페이지
+     * @param page 페이지 번호
      * @return 마커에 포함된 게시글
      */
     @GetMapping("/list/cluster")
@@ -170,12 +169,12 @@ public class ArticleController {
     }
 
     /***
-     * 내가 좋아요 누른 작가 목록
+     * 내가 좋아요 누른 게시글 목록
      *
      * @return 좋아요 누른 게시글
      */
     @GetMapping("/heart/list")
-    public ResponseEntity<?> getHeartedArticle() {
+    public ResponseEntity<?> getHeartedArticleList() {
         List<ArticleSearchDto> articleSearchDtoList = articleService.getHeartedArticle();
         return new ResponseEntity<>(articleSearchDtoList, HttpStatus.OK);
     }
