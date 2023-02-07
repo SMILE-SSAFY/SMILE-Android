@@ -30,6 +30,9 @@ class ServiceInstances(retrofitInstances : RetrofitInstances) {
     @Singleton
     private val articleApiService : ArticleApiService = retrofitInstances.getRetrofit().create(ArticleApiService::class.java)
 
+    @Singleton
+    private val recommendApiService: RecommendApiService = retrofitInstances.getRetrofit().create(RecommendApiService::class.java)
+
     fun getUserApiService() : UserApiService = userApiService
     fun getPortfolioApiService(): PortfolioApiService = portfolioApiService
     fun getHeartApiService(): HeartApiService = heartApiService
@@ -38,5 +41,6 @@ class ServiceInstances(retrofitInstances : RetrofitInstances) {
     fun getSearchApiService(): SearchApiService = searchApiService
     fun getReservationApiService(): ReservationApiService = reservationApiService
     fun getArticleApiService() : ArticleApiService = articleApiService
+    fun getPhotographerRecommendApiService(): RecommendApiService = recommendApiService
 
 }

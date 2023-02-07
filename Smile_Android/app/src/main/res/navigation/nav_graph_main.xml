@@ -556,6 +556,17 @@
         <action
             android:id="@+id/action_recommendResultFragment_to_mainFragment"
             app:popUpTo="@id/mainFragment" />
+        <action
+            android:id="@+id/action_recommendResultFragment_to_portfolioGraph"
+            app:destination="@id/portfolioGraph">
+            <argument
+                android:name="photographerId"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+            <argument
+                android:name="postId"
+                app:argType="long" />
+        </action>
     </fragment>
 
 </navigation>
