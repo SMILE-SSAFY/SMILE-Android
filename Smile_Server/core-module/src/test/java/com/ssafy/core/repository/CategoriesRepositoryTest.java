@@ -1,5 +1,6 @@
 package com.ssafy.core.repository;
 
+import com.google.cloud.language.v1.*;
 import com.ssafy.TestConfig;
 import com.ssafy.core.entity.Categories;
 import org.junit.jupiter.api.Assertions;
@@ -63,6 +64,31 @@ class CategoriesRepositoryTest {
 
         //then
         Assertions.assertTrue(categoryIdList.size() > 1);
+    }
+
+    @Test
+    public void analyzeEntitiesText() {
+        String reviewText = "I am people.\\n나는 사람이다.\\n^^*";
+        reviewText = reviewText.replace("\n", " ");
+        StringBuilder res = new StringBuilder();
+
+        try (LanguageServiceClient language = LanguageServiceClient.create()) {
+            Document doc = Document.newBuilder().setContent(reviewText).setType(Document.Type.PLAIN_TEXT).build();
+            AnalyzeEntitiesRequest request =
+                    AnalyzeEntitiesRequest.newBuilder()
+                            .setDocument(doc)
+                            .setEncodingType(EncodingType.UTF16)
+                            .build();
+
+            AnalyzeEntitiesResponse response = language.analyzeEntities(request);
+
+            for (Entity entity : response.getEntitiesList()) {
+                res.append(entity.getName()).append(" ");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("싸피: "+res.toString());
     }
 
 }

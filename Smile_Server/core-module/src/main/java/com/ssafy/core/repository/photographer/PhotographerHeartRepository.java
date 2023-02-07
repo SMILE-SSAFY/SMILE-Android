@@ -20,4 +20,5 @@ public interface PhotographerHeartRepository extends JpaRepository<PhotographerH
 
     Long countByPhotographer(Photographer photographer);
     List<PhotographerHeart> findByUser(User user);
+
 }
