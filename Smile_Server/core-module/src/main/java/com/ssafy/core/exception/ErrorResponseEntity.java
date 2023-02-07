@@ -5,8 +5,9 @@ import lombok.Data;
 import org.springframework.http.ResponseEntity;
 
 /**
+ * 에러코드 응답
  *
- * author 김정은
+ * @author 김정은
  */
 @Data
 @Builder

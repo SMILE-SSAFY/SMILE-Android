@@ -1,6 +1,5 @@
 package com.ssafy.api.dto.article;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 /***
@@ -10,7 +9,6 @@ import lombok.Data;
  */
 @Data
 @Builder
-@AllArgsConstructor
 public class ArticleListDto {
 
     private Long id;

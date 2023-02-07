@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
+ * 회원 관련 Repository
  *
- * author @김정은
- * author @서재건
+ * @author 김정은
+ * @author 서재건
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

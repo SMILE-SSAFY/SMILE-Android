@@ -11,6 +11,7 @@ import lombok.Data;
  * @author 김정은
  */
 @Data
+@Builder
 public class RegisterFormDto {
     @NotNull
     private String email;
@@ -22,14 +23,4 @@ public class RegisterFormDto {
     private String phoneNumber;
     @NotNull
     private String fcmToken;
-
-    @Builder
-    public RegisterFormDto(String email, String password, String name, String phoneNumber, String fcmToken) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.fcmToken = fcmToken;
-    }
-
 }

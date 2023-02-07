@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 사진작가 좋아요가 되어있는지 확인하는 DTO
+ *
+ * @author 신민철
+ */
 @Data
 @Builder
 @NoArgsConstructor

@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * jwt 토큰 생성 관련 함수
  *
- * author @서재건
+ * @author 서재건
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -33,6 +33,7 @@ public class JwtTokenProvider {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
+    // 유효기간 30일
     private long tokenValidMilisecond = 1000L * 60 * 60 * 24 * 30;
 
     private final UserDetailsService userDetailsService;
@@ -57,6 +58,7 @@ public class JwtTokenProvider {
         claims.put("role", role);
         claims.put("id", id);
         Date now = new Date();
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
