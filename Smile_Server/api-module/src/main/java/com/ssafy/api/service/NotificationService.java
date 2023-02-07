@@ -16,8 +16,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,20 +94,24 @@ public class NotificationService {
      * @throws IOException
      */
     public void sendDataMessageTo(NotificationDTO notificationData) throws IOException {
-        String message = makeDataMessage(notificationData.getRegistrationToken(), notificationData.getContent());
-        log.info("message : {}", message);
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(requestBody)
-                // 전송 토큰 추가
-                .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
-                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
-                .build();
+        String[] tokens = notificationData.getRegistrationToken().split(",");
 
-        Response response = client.newCall(request).execute();
+        for(String token : tokens){
+            String message = makeDataMessage(token, notificationData.getContent());
+            log.info("message : {}", message);
+            OkHttpClient client = new OkHttpClient();
+            RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url(API_URL)
+                    .post(requestBody)
+                    // 전송 토큰 추가
+                    .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
+                    .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
+                    .build();
 
-        log.info(response.body().string());
+            Response response = client.newCall(request).execute();
+
+            log.info(response.body().string());
+        }
     }
 }
