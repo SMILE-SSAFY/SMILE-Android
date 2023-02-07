@@ -5,9 +5,9 @@ import java.sql.Date;
 import java.util.List;
 
 /**
- * 예약 관련 커스텀 레포지토리
+ * 추천 관련 레포지토리
  *
- * @author 김정은
+ * @author 이지윤
  */
 public interface ReservationRepositoryCustom {
 

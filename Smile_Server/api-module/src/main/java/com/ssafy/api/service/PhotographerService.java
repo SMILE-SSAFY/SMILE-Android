@@ -271,8 +271,7 @@ public class PhotographerService {
     public List<PhotographerForListDto> getPhotographerListByAddresss(String address, String criteria) {
         Long userId = UserService.getLogInUser().getId();
         String[] addresssList = address.split(" ");
-        List<PhotographerQdslDto> photographerList =
-                photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
+        List<PhotographerQdslDto> photographerList = photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
         log.info("주변 작가 조회");
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();

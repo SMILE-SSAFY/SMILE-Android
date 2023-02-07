@@ -23,6 +23,8 @@ public class AnalyzeService {
      * @return String
      */
     public String analyzeEntitiesText(String reviewText) {
+        reviewText = reviewText.replace("\\n", " ");
+
         StringBuilder res = new StringBuilder();
 
         try (LanguageServiceClient language = LanguageServiceClient.create()) {

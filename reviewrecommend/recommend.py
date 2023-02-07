@@ -11,6 +11,7 @@ app = Flask(__name__)
 def hello_world():
     # json raw data를 얻어온다
     params = request.get_json()
+    print(params)
     # return 할 result
     results = []
     # 내가 찜한 작가들이 있다면
