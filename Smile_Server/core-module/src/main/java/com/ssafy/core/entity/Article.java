@@ -50,8 +50,4 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ArticleHeart> hearts;
 
-    public void whoPost(User user){
-        this.user = user;
-    }
-
 }
