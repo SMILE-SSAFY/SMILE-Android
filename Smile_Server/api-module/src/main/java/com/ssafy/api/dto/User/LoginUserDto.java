@@ -1,13 +1,17 @@
 package com.ssafy.api.dto.User;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
 /**
  * 로그인 Dto
  *
- * author @서재건
+ * @author 서재건
  */
 @Builder
 @Getter

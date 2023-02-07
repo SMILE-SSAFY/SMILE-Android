@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * jwt 토큰을 받았을 때 유효성 검증을 하고 SecurityContextHolder에 저장
  *
- * author @서재건
+ * @author 서재건
  */
 @Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean {

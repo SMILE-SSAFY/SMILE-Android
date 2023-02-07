@@ -7,14 +7,10 @@ import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
 import com.ssafy.api.service.PhotographerService;
-import com.ssafy.api.service.S3UploaderService;
-import com.ssafy.core.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,9 +27,9 @@ import java.util.List;
 /**
  * 작가 관련 Controller
  *
- * author @김정은
- * author @서재건
- * author @신민철
+ * @author 김정은
+ * @author 서재건
+ * @author 신민철
  */
 @RestController
 @RequestMapping("/api/photographer")
@@ -41,8 +37,6 @@ public class PhotographerController {
 
     @Autowired
     private PhotographerService photographerService;
-    @Autowired
-    private S3UploaderService s3UploaderService;
 
     /**
      * 작가 프로필 등록
@@ -54,10 +48,6 @@ public class PhotographerController {
     @PostMapping
     public ResponseEntity<HttpStatus> registPhotographer(@RequestPart("photographer") PhotographerReqDto photographer,
                                                          @RequestPart("profileImg") MultipartFile multipartFile) throws IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-
-        photographer.setPhotographerId(user.getId());
         photographerService.addPhotographer(multipartFile, photographer);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -69,9 +59,7 @@ public class PhotographerController {
      */
     @GetMapping
     public ResponseEntity<PhotographerResDto> getPhotographer(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        return ResponseEntity.ok(photographerService.getPhotographer(user.getId()));
+        return ResponseEntity.ok(photographerService.getPhotographer());
     }
 
     /**
@@ -84,10 +72,6 @@ public class PhotographerController {
     @PutMapping
     public ResponseEntity<PhotographerResDto> changePhotographer(@RequestPart("Photographer") PhotographerUpdateReqDto photographer,
                                                                  @RequestPart("profileImg") MultipartFile multipartFile) throws IOException{
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-
-        photographer.setPhotographerId(user.getId());
         return ResponseEntity.ok(photographerService.changePhotographer(multipartFile, photographer));
     }
 
@@ -99,9 +83,7 @@ public class PhotographerController {
      */
     @DeleteMapping
     public ResponseEntity<HttpStatus> removePhotographer(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        photographerService.removePhotographer(user.getId());
+        photographerService.removePhotographer();
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -113,10 +95,8 @@ public class PhotographerController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryName") String categoryName) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
         List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByCategory(user.getId(), categoryName);
+                photographerService.getPhotographerListByCategory(categoryName);
         return ResponseEntity.ok().body(photographerList);
     }
 
@@ -131,8 +111,6 @@ public class PhotographerController {
         return new ResponseEntity<>(photographerHeartDto, HttpStatus.OK);
     }
 
-
-
     /**
      * 주변 작가 조회
      *
@@ -142,10 +120,8 @@ public class PhotographerController {
      */
     @GetMapping("/list")
     public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(@Param("address") String address, @Param("criteria") String criteria) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
         List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByAddresss(user.getId(), address, criteria);
+                photographerService.getPhotographerListByAddresss(address, criteria);
         return ResponseEntity.ok().body(photographerList);
     }
 

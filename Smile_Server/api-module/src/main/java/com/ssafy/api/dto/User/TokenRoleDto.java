@@ -3,10 +3,7 @@ package com.ssafy.api.dto.User;
 import com.ssafy.core.code.Role;
 import com.sun.istack.NotNull;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
+import lombok.Data;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
@@ -16,9 +13,7 @@ import javax.persistence.Enumerated;
  * author @서재건
  */
 @Builder
-@Getter
-@Setter
-@ToString
+@Data
 public class TokenRoleDto {
 
     @NotNull

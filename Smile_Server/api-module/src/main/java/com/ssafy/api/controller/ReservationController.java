@@ -7,13 +7,10 @@ import com.ssafy.api.dto.Reservation.ReviewDetailDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
 import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.api.service.ReservationService;
-import com.ssafy.core.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,11 +46,6 @@ public class ReservationController {
      */
     @PostMapping
     public ResponseEntity<?> registerReservation(@RequestBody ReservationReqDto reservation){
-        log.info(reservation.toString());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        reservation.setUserId(user.getId());
-
         return ResponseEntity.ok(reservationService.reserve(reservation));
     }
 
@@ -78,11 +70,7 @@ public class ReservationController {
      */
     @PutMapping("/status/{reservationId}")
     public ResponseEntity<?> changeStatus(@PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status) throws IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-
         status.setReservationId(reservationId);
-        status.setUserId(user.getId());
         reservationService.changeStatus(status);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -94,9 +82,7 @@ public class ReservationController {
      */
     @GetMapping("/photographer")
     public ResponseEntity<List<ReservationListDto>> findPhotographerReservation() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        return ResponseEntity.ok().body(reservationService.findPhotographerReservation(user));
+        return ResponseEntity.ok().body(reservationService.findPhotographerReservation());
     }
 
     /**
@@ -106,9 +92,7 @@ public class ReservationController {
      */
     @GetMapping("/user")
     public ResponseEntity<List<ReservationListDto>> findUserReservation() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        return ResponseEntity.ok().body(reservationService.findUserReservation(user.getId()));
+        return ResponseEntity.ok().body(reservationService.findUserReservation());
     }
 
     /***
@@ -166,10 +150,7 @@ public class ReservationController {
      */
     @PutMapping("/cancel/{reservationId}")
     public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) throws IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-
-        reservationService.changeCancelStatus(reservationId, user.getId());
+        reservationService.changeCancelStatus(reservationId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

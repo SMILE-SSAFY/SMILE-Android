@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 사진작가 수정 요청 DTO
  *
- * author @김정은
+ * @author 김정은
  */
 @Data
 @NoArgsConstructor

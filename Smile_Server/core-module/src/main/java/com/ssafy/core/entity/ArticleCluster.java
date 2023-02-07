@@ -5,11 +5,10 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.util.List;
 
 /***
- * @author 신민철
  * Redis에 저장할 Entity
+ * @author 신민철
  */
 @Data
 @RedisHash(value = "markers", timeToLive = 1800)

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * querydsl 작성 관련 클래스
  *
- * author @서재건
+ * @author 서재건
  */
 @Slf4j
 @RequiredArgsConstructor
