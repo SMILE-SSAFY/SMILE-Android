@@ -69,7 +69,9 @@ public class ReservationController {
      * @return 정상일 때 OK
      */
     @PutMapping("/status/{reservationId}")
-    public ResponseEntity<?> changeStatus(@PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status) throws IOException {
+    public ResponseEntity<?> changeReservationStatus(
+            @PathVariable("reservationId") Long reservationId,
+            @RequestBody ReservationStatusDto status) throws IOException {
         status.setReservationId(reservationId);
         reservationService.changeStatus(status);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -81,7 +83,7 @@ public class ReservationController {
      * @return List<ReservationListDto>
      */
     @GetMapping("/photographer")
-    public ResponseEntity<List<ReservationListDto>> findPhotographerReservation() {
+    public ResponseEntity<List<ReservationListDto>> getPhotographerReservationList() {
         return ResponseEntity.ok().body(reservationService.findPhotographerReservation());
     }
 
@@ -91,7 +93,7 @@ public class ReservationController {
      * @return List<ReservationListDto>
      */
     @GetMapping("/user")
-    public ResponseEntity<List<ReservationListDto>> findUserReservation() {
+    public ResponseEntity<List<ReservationListDto>> getUserReservationList() {
         return ResponseEntity.ok().body(reservationService.findUserReservation());
     }
 
@@ -103,30 +105,34 @@ public class ReservationController {
      * @throws IOException 파일이 없을 때 에러
      */
     @PostMapping("/review/{reservationId}")
-    public ResponseEntity<HttpStatus> addReview(@PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws Exception {
+    public ResponseEntity<HttpStatus> addReview(
+            @PathVariable("reservationId") Long reservationId,
+            ReviewPostDto reviewPostDto) throws Exception {
         reservationService.addReview(reservationId, reviewPostDto);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /***
      * 리뷰 디테일 조회
+     *
      * @param reviewId
      * @return 리뷰 디테일
      */
     @GetMapping("/review/{reviewId}")
-    public ResponseEntity<?> reviewDetail(@PathVariable Long reviewId){
+    public ResponseEntity<?> getReviewDetail(@PathVariable Long reviewId){
         ReviewDetailDto result = reservationService.reviewDetail(reviewId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
     /***
-     * 해당 작가의 리뷰 리스트를 모두 보여줌
-     * @param photographerId 작가id
+     * 해당 작가의 리뷰 리스트 조회
+     *
+     * @param photographerId 사진작가 인덱스
      * @return List<reviewResDto>
      */
     @GetMapping("/review/list/{photographerId}")
-    public ResponseEntity<?> showReviewList(@PathVariable("photographerId") Long photographerId){
+    public ResponseEntity<?> getPhotographerReviewList(@PathVariable("photographerId") Long photographerId){
         List<ReviewResDto> reviewResDtoList = reservationService.showReviewList(photographerId);
         return new ResponseEntity<>(reviewResDtoList, HttpStatus.OK);
     }
@@ -137,7 +143,7 @@ public class ReservationController {
      * @return HttpStatus.OK
      */
     @DeleteMapping("/review/{reviewId}")
-    public ResponseEntity<HttpStatus> deleteReview(@PathVariable("reviewId") Long reviewId){
+    public ResponseEntity<HttpStatus> removeReview(@PathVariable("reviewId") Long reviewId){
         reservationService.deleteReview(reviewId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -149,7 +155,8 @@ public class ReservationController {
      * @return HttpStatus.OK
      */
     @PutMapping("/cancel/{reservationId}")
-    public ResponseEntity<HttpStatus> changeCancelStatus(@PathVariable("reservationId") Long reservationId) throws IOException {
+    public ResponseEntity<HttpStatus> cancelReservation(
+            @PathVariable("reservationId") Long reservationId) throws IOException {
         reservationService.changeCancelStatus(reservationId);
         return ResponseEntity.ok(HttpStatus.OK);
     }

@@ -47,7 +47,8 @@ import static com.ssafy.core.exception.ErrorCode.USER_NOT_FOUND;
 /**
  * 유저 관련 기능 클래스
  *
- * author @서재건
+ * @author 서재건
+ * @author 신민철
  */
 @Slf4j
 @Service
@@ -290,9 +291,8 @@ public class UserService {
      * @param request
      */
     @Transactional
-    public void removeUser(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
+    public void removeUser() {
+        Long userId = getLogInUser().getId();
         log.info("token에 저장된 userId : {}", userId);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
@@ -326,12 +326,10 @@ public class UserService {
     /**
      * jwt 토큰을 통한 user 정보 조회
      *
-     * @param request
      * @return user
      */
-    public User getUser(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
+    public User getUser() {
+        Long userId = getLogInUser().getId();
         return userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
@@ -341,8 +339,7 @@ public class UserService {
      * @param fcmToken
      */
     public void logout(String fcmToken) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = getLogInUser();
 
         log.info("삭제할 fcmToken : {}", fcmToken);
         log.info("user fcmToken : {}", user.getFcmToken());
