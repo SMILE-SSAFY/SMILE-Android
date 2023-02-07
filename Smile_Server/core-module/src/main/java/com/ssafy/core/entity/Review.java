@@ -36,6 +36,8 @@ public class Review {
 
     private LocalDateTime createdAt;
 
+    private String keywords;
+
     @OneToOne
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
