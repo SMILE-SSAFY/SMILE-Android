@@ -120,7 +120,7 @@ public class ReservationController {
      * @throws IOException 파일이 없을 때 에러
      */
     @PostMapping("/review/{reservationId}")
-    public ResponseEntity<HttpStatus> addReview(@PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws IOException {
+    public ResponseEntity<HttpStatus> addReview(@PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws Exception {
         reservationService.addReview(reservationId, reviewPostDto);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

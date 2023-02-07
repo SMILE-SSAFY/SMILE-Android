@@ -57,6 +57,7 @@ public class ReservationService {
     private final S3UploaderService s3UploaderService;
     private final ReviewRepository reviewRepository;
     private final NotificationService notificationService;
+    private final AnalyzeService analyzeService;
 
     @Value("${pay.rest-api}")
     private String restApiKey;
@@ -262,7 +263,7 @@ public class ReservationService {
      * @throws IOException 파일이 없을 때 생기는 에러
      */
 
-    public void addReview(Long reservationId, ReviewPostDto reviewPostDto) throws IOException {
+    public void addReview(Long reservationId, ReviewPostDto reviewPostDto) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User)authentication.getPrincipal();
 
@@ -272,6 +273,8 @@ public class ReservationService {
 
         Photographer photographer = reservation.getPhotographer();
 
+        String keywords = analyzeService.analyzeEntitiesText(reviewPostDto.getContent());
+
         Review review = Review.builder()
                 .content(reviewPostDto.getContent())
                 .score(reviewPostDto.getScore())
@@ -280,6 +283,7 @@ public class ReservationService {
                 .createdAt(LocalDateTime.now())
                 .photographer(photographer)
                 .reservation(reservation)
+                .keywords(keywords)
                 .build();
 
         reviewRepository.save(review);
