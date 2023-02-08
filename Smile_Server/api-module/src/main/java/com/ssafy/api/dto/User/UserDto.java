@@ -20,6 +20,7 @@ public class UserDto {
     private Long id;
     private String name;
     private Role role;
+    private String photoUrl;
 
 
     /**
@@ -28,11 +29,12 @@ public class UserDto {
      * @param user
      * @return 변환된 DTO
      */
-    public UserDto of(User user) {
+    public UserDto of(User user, String photoUrl) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .role(user.getRole())
+                .photoUrl(photoUrl)
                 .build();
     }
 }
