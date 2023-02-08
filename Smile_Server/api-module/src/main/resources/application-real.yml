@@ -45,7 +45,7 @@ spring:
       mode: always
       continue-on-error: true
   redis:
-    host: localhost
+    host: i8d102.p.ssafy.io
     port: 6379
 server:
   port: 80
