@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -16,6 +17,7 @@ import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
+private const val TAG = "ResultPhotographerFragm_스마일"
 class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBinding>(FragmentResultPhotographerBinding::bind, R.layout.fragment_result_photographer) {
 
     private val searchViewModel: SearchViewModel by viewModels()
@@ -113,6 +115,8 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             })
             setItemClickListener(object : ResultPhotographerRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
+                    Log.d(TAG, "onClick: ${recyclerData[position]}")
+                    Log.d(TAG, "onClick: ${recyclerData[position].photographerId}")
                     val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(recyclerData[position].photographerId)
                     findNavController().navigate(action)
                 }
