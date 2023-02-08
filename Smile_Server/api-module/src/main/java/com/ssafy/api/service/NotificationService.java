@@ -34,7 +34,7 @@ public class NotificationService {
     public final ObjectMapper objectMapper;
 
     // fcm url
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/pjt-smile/messages:send";
+    private final String API_URL = "https://fcm.googleapis.com/v1/projects/ssafy-smile/messages:send";
 
     public NotificationService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
