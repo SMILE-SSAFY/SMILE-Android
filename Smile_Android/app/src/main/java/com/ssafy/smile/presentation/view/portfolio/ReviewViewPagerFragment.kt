@@ -22,6 +22,7 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
     private lateinit var photographerReviewRVAdapter: PhotographerReviewRVAdapter
 
     override fun initView() {
+
         setObserver()
         initRVView()
     }
@@ -84,6 +85,7 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
             binding.rvReview.visibility = View.VISIBLE
             photographerReviewRVAdapter.setListData(itemList)
         } else binding.rvReview.visibility = View.GONE
+        Log.d("싸피", "$isSet, $itemList, ${binding.rvReview.visibility}")
     }
 
     private fun showReviewDeleteDialog(reviewId : Long){
