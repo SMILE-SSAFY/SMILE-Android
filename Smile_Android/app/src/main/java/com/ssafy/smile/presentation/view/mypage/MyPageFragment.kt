@@ -38,8 +38,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun initView() {
         initToolbar()
-        viewModel.getMyPageInfo()
-        setObserver()
+//        viewModel.getMyPageInfo()
+//        setObserver()
     }
 
     override fun setEvent() {
