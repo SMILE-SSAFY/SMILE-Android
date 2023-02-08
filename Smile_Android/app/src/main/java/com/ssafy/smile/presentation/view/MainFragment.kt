@@ -5,10 +5,12 @@ import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.databinding.FragmentMainBinding
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.home.HomeFragment
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 
 

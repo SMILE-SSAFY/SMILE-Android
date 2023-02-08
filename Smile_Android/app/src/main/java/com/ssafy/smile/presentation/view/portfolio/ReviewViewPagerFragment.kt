@@ -17,6 +17,7 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
     private lateinit var photographerReviewRVAdapter: PhotographerReviewRVAdapter
 
     override fun initView() {
+
         setObserver()
         initRVView()
     }
