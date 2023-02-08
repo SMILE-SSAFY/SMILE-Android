@@ -37,7 +37,6 @@ import java.util.List;
 @Entity
 @Builder
 @Getter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "member")

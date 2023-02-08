@@ -7,6 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 유저 정보 조회하는 DTO
+ *
+ * @author 서재건
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

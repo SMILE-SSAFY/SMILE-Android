@@ -1,7 +1,5 @@
 package com.ssafy.api.config.security;
 
-import com.ssafy.core.exception.CustomException;
-import com.ssafy.core.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -14,7 +12,7 @@ import java.io.IOException;
 /**
  * Forbidden 에러 캐치
  *
- * author @서재건
+ * @author 서재건
  */
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {

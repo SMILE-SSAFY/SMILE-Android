@@ -1,10 +1,5 @@
 package com.ssafy.api.dto.article;
 
-import com.ssafy.api.dto.Photographer.PlacesResDto;
-import com.ssafy.core.entity.Categories;
-import com.ssafy.core.entity.PhotographerNCategories;
-import com.ssafy.core.entity.PhotographerNPlaces;
-import com.ssafy.core.entity.Places;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +14,7 @@ import java.util.List;
 /***
  * 작가별 게시글 리스트를 반환하는 Dto
  *
- * author @신민철
+ * @author 신민철
  */
 public class PhotographerInfoDto {
     private Long photographerId;

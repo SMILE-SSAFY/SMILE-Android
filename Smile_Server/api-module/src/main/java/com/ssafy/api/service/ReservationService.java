@@ -71,6 +71,7 @@ public class ReservationService {
      * @param reservation
      */
     public ReservationResDto reserve(ReservationReqDto reservation){
+        reservation.setUserId(UserService.getLogInUser().getId());
         if(!photographerRepository.existsById(reservation.getPhotographerId())){
             throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
         }
@@ -104,7 +105,7 @@ public class ReservationService {
      * @param photographerId
      * @return PhotographerInfoDto
      */
-    public PhotographerInfoDto getPhotographerInfo(Long photographerId){
+    public PhotographerReservationDto getPhotographerInfo(Long photographerId){
         photographerRepository.findById(photographerId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
@@ -146,7 +147,7 @@ public class ReservationService {
             places.add(dto);
         }
 
-        return PhotographerInfoDto.builder()
+        return PhotographerReservationDto.builder()
                 .days(findDates)
                 .categories(list)
                 .places(places)
@@ -160,6 +161,8 @@ public class ReservationService {
      */
     @Transactional
     public void changeStatus(ReservationStatusDto statusDto) throws IOException {
+        statusDto.setUserId(UserService.getLogInUser().getId());
+
         Reservation reservation = reservationRepository.findById(statusDto.getReservationId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
 
@@ -179,9 +182,9 @@ public class ReservationService {
         // FCM 전송
         if(statusDto.getStatus() == ReservationStatus.예약확정){
             notificationService.sendDataMessageTo(NotificationDTO.builder()
-                            .requestId(statusDto.getUserId())
-                            .registrationToken(reservation.getUser().getFcmToken())
-                            .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                    .requestId(statusDto.getUserId())
+                    .registrationToken(reservation.getUser().getFcmToken())
+                    .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
                     .build());
         }
     }
@@ -189,11 +192,12 @@ public class ReservationService {
     /**
      * 작가 예약 목록 조회
      *
-     * @param user
      * @return List<ReservationPhotographerDto>
      */
     @Transactional(readOnly = true)
-    public List<ReservationListDto> findPhotographerReservation(User user) {
+    public List<ReservationListDto> findPhotographerReservation() {
+        User user = UserService.getLogInUser();
+
         log.info("작가 예약 목록 조회 시작");
         if (!user.getRole().equals(Role.PHOTOGRAPHER)) {
             throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
@@ -227,11 +231,12 @@ public class ReservationService {
     /**
      * 유저 예약 목록 조회
      *
-     * @param userId
      * @return List<ReservationListDto>
      */
     @Transactional(readOnly = true)
-    public List<ReservationListDto> findUserReservation(Long userId) {
+    public List<ReservationListDto> findUserReservation() {
+        Long userId = UserService.getLogInUser().getId();
+
         log.info("유저 예약 목록 조회");
         List<Reservation> reservationList =
                 reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
@@ -274,6 +279,7 @@ public class ReservationService {
         Photographer photographer = reservation.getPhotographer();
 
         String keywords = analyzeService.analyzeEntitiesText(reviewPostDto.getContent());
+        log.info("-------------------------keywords : {}", keywords);
 
         Review review = Review.builder()
                 .content(reviewPostDto.getContent())
@@ -296,10 +302,10 @@ public class ReservationService {
      */
     @Transactional
     public List<ReviewResDto> showReviewList(Long photographerId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
-        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        Photographer photographer = photographerRepository.findById(photographerId)
+                .orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
         List<ReviewResDto> reviewResDtoList = new ArrayList<>();
 
@@ -330,15 +336,15 @@ public class ReservationService {
      * @param reviewId 리뷰아이디
      */
     public void deleteReview(Long reviewId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
-        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
         if(review.getUser().getId() == user.getId()){
             reviewRepository.deleteById(reviewId);
         }
-        throw new CustomException(ErrorCode.USER_MISMATCH);
+        throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
     }
 
     /**
@@ -349,7 +355,9 @@ public class ReservationService {
      * @throws IOException
      */
     @Transactional
-    public void changeCancelStatus(Long reservationId, Long userId) throws IOException {
+    public void changeCancelStatus(Long reservationId) throws IOException {
+        Long userId = UserService.getLogInUser().getId();
+
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RESERVATION_NOT_FOUND));
         log.info("예약 조회 완료");
@@ -370,7 +378,7 @@ public class ReservationService {
         String token = "", name = "";
         User user = reservation.getUser();  // 예약한 유저
         User photographer = reservation.getPhotographer().getUser();    // 예약된 사진작가
-        if(reservation.getUser().getId() == userId){    // 예약한 유저가 취소한 경우
+        if(user.getId() == userId){    // 예약한 유저가 취소한 경우
             token = photographer.getFcmToken();  // 사진작가에게 전달
             name = user.getName();     // 유저이름으로 취소
         } else {    // 사진작가가 취소한 경우
@@ -385,7 +393,7 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
 
-        // FCM 전송
+            // FCM 전송
         notificationService.sendDataMessageTo(NotificationDTO.builder()
                 .requestId(userId)
                 .registrationToken(token)
@@ -427,7 +435,8 @@ public class ReservationService {
      * @return 리뷰 디테일
      */
     public ReviewDetailDto reviewDetail(Long reviewId){
-        Review result = reviewRepository.findById(reviewId).orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+        Review result = reviewRepository.findById(reviewId)
+                .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
         return ReviewDetailDto.builder()
                 .id(reviewId)
                 .createdAt(result.getCreatedAt())

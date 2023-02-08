@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  *
- * author 김정은
+ * @author 김정은
  */
 @ControllerAdvice
 public class CustomExceptionHandler {
