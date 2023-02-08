@@ -7,11 +7,13 @@ import androidx.activity.addCallback
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentMainBinding
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.home.HomeFragment
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 
 // TODO : 시작 화면을 Home으로 + 네트워크 연결 안된 경우 ERROR 처리.

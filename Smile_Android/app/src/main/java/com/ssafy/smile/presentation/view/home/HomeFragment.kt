@@ -1,17 +1,15 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ssafy.smile.Application
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.AddressUtils
-import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
@@ -20,11 +18,9 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
-import com.ssafy.smile.presentation.view.portfolio.CustomCalendarDialog
-import com.ssafy.smile.presentation.viewmodel.MainViewModel
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
-// TODO : 무한 로딩 (When, 주소록 변경 시)
+
 private const val TAG = "HomeFragment_스마일"
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 
@@ -32,14 +28,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var isPhotographer = true
-    private var curAddress = "안녕안녕"
+    private var curAddress = ""
     private var userId = -1L
     private var filter = ""
 
+
     override fun onResume() {
         super.onResume()
-//        homeViewModel.getAddressList()
-//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+        homeViewModel.getAddressList()
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -54,10 +51,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         isPhotographer = getRole()
         userId = getUserId()
         initToolbar()
-//        homeViewModel.getAddressList()
-//        setObserverBeforeSetAddress()
+        homeViewModel.getAddressList()
+        setObserverBeforeSetAddress()
         initRecycler()
-        showRecommendDialog()
     }
 
     private fun setObserverBeforeSetAddress() {
@@ -80,7 +76,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun getPhotographerInfoByAddressResponseObserver() {
         homeViewModel.getPhotographerInfoByAddressResponse.observe(viewLifecycleOwner) {
             when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
                 is NetworkUtils.NetworkResponse.Success -> {
+                    Log.d(TAG, "getPhotographerInfoByAddressResponseObserver: 나와라나와라나와라나와라")
                     dismissLoadingDialog()
                     if (it.data.size == 0) {
                         recyclerData.clear()
@@ -91,7 +91,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                         it.data.forEach { data ->
                             recyclerData.add(data.toCustomPhotographerDomainDto())
                         }
-                        Log.d(TAG, "getPhotographerInfoByAddressResponseObserver: ${recyclerData}")
                         homeRecyclerAdapter.notifyDataSetChanged()
                         setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
@@ -99,9 +98,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     showToast(requireContext(), "주변 작가 목록 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                }
-                is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
                 }
             }
         }
@@ -143,10 +139,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
-                showRecommendDialog()
+                if (!(Application.isRecommendRefused)) recommendDialogInit(requireContext())
             }
         }
     }
+
 
     override fun setEvent() {
         setRefreshLayoutEvent()
@@ -225,17 +222,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
-    private fun showRecommendDialog() {
-        CustomRecommendDialog(requireContext()).apply {
-            setButtonClickListener(object : CustomRecommendDialog.OnButtonClickListener{
-                override fun onOkButtonClick() {
-                    val action = MainFragmentDirections.actionMainFragmentToRecommendResultFragment(curAddress)
-                    findNavController().navigate(action)
-                }
-            })
-            show()
-        }
-    }
 
     private fun getRole() = SharedPreferencesUtil(requireContext()).getRole() == Types.Role.PHOTOGRAPHER.getValue()
 
@@ -260,6 +246,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         binding.rvHome.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = homeRecyclerAdapter
+        }
+    }
+
+    private fun recommendDialogInit(context: Context){
+        CustomRecommendDialog(context).apply {
+            setButtonClickListener(object : CustomRecommendDialog.OnButtonClickListener{
+                override fun onOkButtonClick() {
+                    val action = MainFragmentDirections.actionMainFragmentToRecommendResultFragment(curAddress)
+                    findNavController().navigate(action)
+                }
+
+                override fun onCancelButtonClick() { Application.isRecommendRefused = true }
+            })
+            show()
         }
     }
 
