@@ -1,7 +1,9 @@
 package com.ssafy.batch.job;
 
+import com.ssafy.batch.dto.NotificationDTO;
 import com.ssafy.batch.service.NotificationService;
 import com.ssafy.core.entity.Reservation;
+import com.ssafy.core.entity.User;
 import com.ssafy.core.repository.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -86,14 +88,13 @@ public class NotificationJobConfig {
                 .repository(reservationRepository)
                 .methodName("findByReservedAt")
                 .pageSize(5)
-                .arguments(Date.valueOf(LocalDate.of(2023, 1, 30)))
+                .arguments(Date.valueOf(LocalDate.now().plusDays(1)))
                 .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
                 .build();
     }
 
     /**
      * 조회된 값을 처리하는 Writer
-     * TODO: fcm 알림 확인해봐야 함
      * @return
      */
     @Bean
@@ -104,13 +105,12 @@ public class NotificationJobConfig {
             public void write(List<? extends Reservation> reservationList) throws Exception {
                 log.info("reservationList is empty : {}", reservationList.isEmpty());
                 for (Reservation reservation : reservationList) {
-                    log.info(reservation.toString());
-//                    User user = reservation.getUser();
-//                    notificationService.sendDataMessageTo(NotificationDTO.builder()
-//                                    .requestId(user.getId())
-//                                    .registrationToken(user.getFcmToken())
-//                                    .content(reservation.getReservedAt() + "에 예약이 있습니다.")
-//                            .build());
+                    User user = reservation.getUser();
+                    notificationService.sendDataMessageTo(NotificationDTO.builder()
+                                    .requestId(user.getId())
+                                    .registrationToken(user.getFcmToken())
+                                    .content(reservation.getReservedAt() + "에 예약이 있습니다.")
+                            .build());
                 }
             }
         };

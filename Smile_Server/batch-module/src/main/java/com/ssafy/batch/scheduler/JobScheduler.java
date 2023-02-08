@@ -17,7 +17,6 @@ import java.util.Collections;
 
 /**
  * Job을 특정 주기로 실행시키는 Scheduler 클래스
- * TODO: cron 설정 맞출 것
  * @author 서재건
  */
 @Slf4j
@@ -28,7 +27,7 @@ public class JobScheduler {
     private final JobLauncher jobLauncher;
     private final Job notificationJob;
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 8 * * ?")
     public void jobSchduled() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParameters(
                 Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
