@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "1077903919352",
-    "project_id": "pjt-smile",
-    "storage_bucket": "pjt-smile.appspot.com"
+    "project_number": "592539196500",
+    "project_id": "ssafy-smile",
+    "storage_bucket": "ssafy-smile.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1077903919352:android:834afc42c108a9d947930d",
+        "mobilesdk_app_id": "1:592539196500:android:9f88dbc28a5aad2330a1c1",
         "android_client_info": {
           "package_name": "com.ssafy.smile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1077903919352-6o3rcvib52rs7rl09d7h2sm1adm3ognh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ssafy.smile",
-            "certificate_hash": "5a764c2e340ab1071234d288658fa34e02e82939"
-          }
-        },
-        {
-          "client_id": "1077903919352-iapav3qisig2a1v6qhpvjiglkpg7t5jt.apps.googleusercontent.com",
+          "client_id": "592539196500-50rhevmnj3auo742f0itunv20kti4vbl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBYAn-e5fym6v1icqltzk2MVTIM3xyOfCo"
+          "current_key": "AIzaSyBQ4Nu7wDr1qcy_caGD8zOOuEeMXMc3PL4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1077903919352-iapav3qisig2a1v6qhpvjiglkpg7t5jt.apps.googleusercontent.com",
+              "client_id": "592539196500-50rhevmnj3auo742f0itunv20kti4vbl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
