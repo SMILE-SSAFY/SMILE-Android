@@ -9,6 +9,7 @@ import com.ssafy.api.dto.User.LoginUserDto;
 import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
 import com.ssafy.api.dto.User.TokenRoleDto;
+import com.ssafy.api.dto.User.UserDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.Photographer;
@@ -326,13 +327,17 @@ public class UserService {
     /**
      * jwt 토큰을 통한 user 정보 조회
      *
-     * @param request
      * @return user
      */
-    public User getUser(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
-        return userRepository.findById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    public UserDto getUser() {
+        User user = getLogInUser();
+        String photoUrl = null;
+        if (user.getRole().equals(Role.PHOTOGRAPHER)) {
+            photoUrl = photographerRepository.findById(user.getId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND))
+                    .getProfileImg();
+        }
+        return new UserDto().of(user, photoUrl);
     }
 
     /**
