@@ -38,6 +38,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
     }
 
     private fun checkNavArgs(){
+        Log.d(TAG, "checkNavArgs: ${args.photographerId} #${args.postId}")
         if (args.photographerId<0 && args.postId<0) {
             showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 불러오는"), Types.ToastType.ERROR)
             moveToPopUpSelf()

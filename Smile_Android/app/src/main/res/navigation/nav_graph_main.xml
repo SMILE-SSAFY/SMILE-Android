@@ -127,14 +127,16 @@
             app:destination="@id/portfolioGraph">
             <argument
                 android:name="photographerId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
         </action>
         <action
             android:id="@+id/action_searchFragment_to_postDetailFragment"
             app:destination="@id/postDetailFragment">
             <argument
                 android:name="postId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
         </action>
         <action
             android:id="@+id/action_searchFragment_pop"
@@ -255,7 +257,8 @@
                 android:defaultValue="-1L"/>
             <argument
                 android:name="postId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
             <action
                 android:id="@+id/action_portfolioFragment_to_reservationFragment"
                 app:destination="@id/reservationFragment">

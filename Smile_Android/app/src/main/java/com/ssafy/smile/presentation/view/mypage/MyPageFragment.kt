@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+private const val TAG = "MyPageFragment_스마일"
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
     private val viewModel : MyPageViewModel by viewModels()
 
@@ -54,12 +55,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         viewModel.apply {
             myPageResponse.observe(viewLifecycleOwner){
                 when(it) {
-                    is NetworkUtils.NetworkResponse.Failure -> {}
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
+                        dismissLoadingDialog()
+                    }
                     is NetworkUtils.NetworkResponse.Loading -> {
+                        Log.d(TAG, "setObserver: loading")
                         showLoadingDialog(requireContext())
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
+                        Log.d(TAG, "setObserver: ${it.data}")
                         binding.apply {
                             layoutMyPageProfile.tvProfileName.text = it.data.name
                         }
