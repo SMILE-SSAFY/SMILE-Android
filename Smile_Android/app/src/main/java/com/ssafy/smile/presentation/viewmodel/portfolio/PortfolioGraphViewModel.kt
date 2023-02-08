@@ -1,12 +1,11 @@
 package com.ssafy.smile.presentation.viewmodel.portfolio
 
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.Constants.REQUEST_KEY_IMAGE_LIST
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.PostDto
@@ -23,10 +22,10 @@ class PortfolioGraphViewModel : BaseViewModel() {
 
     // 게시물 작성
     private val postData : PostDto = PostDto()
-    private val _postDataResponse : MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
-    val postDataResponse : MutableLiveData<Boolean>
+    private val _postDataResponse : SingleLiveData<Boolean> = SingleLiveData(null)
+    val postDataResponse : SingleLiveData<Boolean>
         get() = _postDataResponse
-    val postUploadResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+    val postUploadResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = portfolioRepository.postUploadResponseLiveData
 
     fun uploadImageData(images:List<File>){
@@ -59,7 +58,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
     }
 
     // 게시물 조회
-    val getPostByIdResponse: LiveData<NetworkUtils.NetworkResponse<PostDetailResponseDto>>
+    val getPostByIdResponse: SingleLiveData<NetworkUtils.NetworkResponse<PostDetailResponseDto>>
         get() = postRepository.getPostByIdLiveData
 
     fun getPostById(articleId: Long) {
@@ -69,7 +68,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
     }
 
     // 게시물 삭제
-    val deletePostByIdResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+    val deletePostByIdResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = postRepository.deletePostByIdLiveData
 
     fun deletePostById(articleId: Long) {
@@ -79,7 +78,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
     }
 
     // 게시물 좋아요
-    val postHeartResponse: LiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
+    val postHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PostHeartDto>>
         get() = heartRepository.postHeartResponseLiveData
 
     fun postHeart(articleId: Long) {
@@ -89,7 +88,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
     }
 
     // 예약
-    val photographerReservationResponse: LiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>
+    val photographerReservationResponse: SingleLiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>
         get() = reservationRepository.photographerReservationInfoLiveData
 
     fun getPhotographerReservationInfo(photographerId: Long) {
@@ -98,7 +97,7 @@ class PortfolioGraphViewModel : BaseViewModel() {
         }
     }
 
-    val postReservationResponse: LiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
+    val postReservationResponse: SingleLiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
         get() = reservationRepository.postReservationLiveData
 
     fun postReservation(reservationRequestDto: ReservationRequestDto) {

@@ -1,12 +1,11 @@
 package com.ssafy.smile.presentation.viewmodel.mypage
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
-import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,16 +15,16 @@ class MyPageViewModel() : BaseViewModel() {
     private val userRepository = Application.repositoryInstances.getUserRepository()
     private val addressRepository = Application.repositoryInstances.getAddressRepository()
 
-    val myPageResponse: LiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
+    val myPageResponse: SingleLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
         get() = userRepository.myPageLiveData
 
-    val getPhotographerResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
+    val getPhotographerResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerResponseDto>>
         get() = photographerRepository.getPhotographerInfoResponseLiveData
 
-    val deletePhotographerResponse: LiveData<NetworkUtils.NetworkResponse<String>>
+    val deletePhotographerResponse: SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = photographerRepository.deletePhotographerInfoResponseLiveData
 
-    val withDrawUserResponse : LiveData<NetworkUtils.NetworkResponse<String>>
+    val withDrawUserResponse : SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = userRepository.withDrawResponseLiveData
 
     fun getMyPageInfo() {

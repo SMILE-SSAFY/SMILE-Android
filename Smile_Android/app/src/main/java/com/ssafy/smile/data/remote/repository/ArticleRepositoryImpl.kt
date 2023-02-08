@@ -1,19 +1,15 @@
 package com.ssafy.smile.data.remote.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.ArticleRemoteDataSource
 import com.ssafy.smile.data.remote.model.ClusterDto
-import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.domain.repository.ArticleRepository
 import com.ssafy.smile.presentation.base.BaseRepository
-import retrofit2.Response
 
 class ArticleRepositoryImpl(private val articleRemoteDataSource: ArticleRemoteDataSource): BaseRepository(), ArticleRepository {
 
-    private val _getArticleClusterInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>()
+    private val _getArticleClusterInfoResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>(null)
     val getArticleClusterInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<List<ClusterDto>>>
         get() = _getArticleClusterInfoResponseLiveData
 

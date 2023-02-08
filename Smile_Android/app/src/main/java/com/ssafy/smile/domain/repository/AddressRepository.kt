@@ -1,9 +1,8 @@
 package com.ssafy.smile.domain.repository
 
 import androidx.lifecycle.LiveData
-import com.ssafy.smile.data.local.database.entity.AddressEntity
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.domain.model.AddressDomainDto
-import kotlinx.coroutines.flow.Flow
 
 
 interface AddressRepository {

@@ -1,12 +1,11 @@
 package com.ssafy.smile.presentation.base
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.common.view.sources.Event
 import com.ssafy.smile.common.util.convertToRequestBody
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.domain.model.Types
 import okhttp3.MultipartBody
 import java.io.File
@@ -14,8 +13,8 @@ import java.util.concurrent.TimeUnit
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val _roleLiveData : MutableLiveData<Types.Role> = MutableLiveData<Types.Role>()
-    val getRoleLiveData : LiveData<Types.Role> = _roleLiveData
+    private val _roleLiveData : SingleLiveData<Types.Role> = SingleLiveData<Types.Role>(null)
+    val getRoleLiveData : SingleLiveData<Types.Role> = _roleLiveData
 
     fun getRole(context: Context){
         val role = SharedPreferencesUtil(context).getRole()
@@ -31,12 +30,12 @@ abstract class BaseViewModel : ViewModel() {
         getRole(context)
     }
 
-    private val _onBackPressed = MutableLiveData<Any>()
-    val onBackPressed: LiveData<Any> get() = _onBackPressed
+    private val _onBackPressed = SingleLiveData<Any>(null)
+    val onBackPressed: SingleLiveData<Any> get() = _onBackPressed
     private var mBackPressedAt = 0L
 
-    private val _error = MutableLiveData<Event<String>>()
-    val error: LiveData<Event<String>> = _error
+    private val _error = SingleLiveData<Event<String>>(null)
+    val error: SingleLiveData<Event<String>> = _error
 
 
     fun onBackPressed() {

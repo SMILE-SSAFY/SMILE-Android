@@ -2,6 +2,7 @@ package com.ssafy.smile.data.local.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.local.database.entity.AddressEntity
 import retrofit2.http.PUT
 
