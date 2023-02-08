@@ -280,7 +280,7 @@ public class ReservationService {
 
         // 같은 예약에 리뷰 2개 달려고 하면 오류 만들기
         if (review.isPresent()) {
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.REVIEW_EXISTED);
         }
 
         String keywords = analyzeService.analyzeEntitiesText(reviewPostDto.getContent());
