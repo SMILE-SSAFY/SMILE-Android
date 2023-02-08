@@ -53,8 +53,10 @@ public class ArticleService {
      * @throws IOException
      */
     public void postArticle(ArticlePostDto dto) throws IOException{
+        // 이미지 리스트를 S3에 업로드 후 리턴받은 Url
         List<MultipartFile> images = dto.getImageList();
         String fileName = s3UploaderService.upload(images);
+
         User user = UserService.getLogInUser();
 
         Article article = Article.builder()
@@ -82,7 +84,9 @@ public class ArticleService {
 
         Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User articleAuthor = article.getUser();
+        // 자신이 작성한 글인지 확인
         boolean isMe = isMe(logInUser, articleAuthor);
+        // 좋아요를 누른 글인지 확인
         boolean isHearted = isHearted(logInUser, article);
         Long hearts = articleHeartRepository.countByArticle(article);
 
@@ -237,10 +241,12 @@ public class ArticleService {
 
         // User를 조회하고 user가 이전에 clustering한 데이터를 cache로 가지고 있을 경우 삭제
         User logInUser = UserService.getLogInUser();
-        articleClusterRepository.findByUserId(logInUser.getId()).ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
+        articleClusterRepository.findByUserId(logInUser.getId())
+                .ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
 
         // 지도 범위 내의 모든 게시글을 조회
-        List<Article> articleList = articleRepository.findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
+        List<Article> articleList = articleRepository
+                .findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()){
             return new ArrayList<>();
         }
@@ -288,7 +294,8 @@ public class ArticleService {
                 Long hearts = articleHeartRepository.countByArticle(article);
                 // 위도, 경도 기반 중심좌표와 게시글의 거리 계산
                 double baseLength = 111000;
-                double distance = Math.sqrt(Math.pow((article.getLatitude()-y)*baseLength,2)+Math.pow(Math.cos(article.getLongitude()-x)*baseLength,2));
+                double distance = Math.sqrt(Math.pow((article.getLatitude() - y) * baseLength, 2)
+                        + Math.pow(Math.cos(article.getLongitude() - x) * baseLength, 2));
 
                 String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
                 List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
@@ -308,6 +315,7 @@ public class ArticleService {
                         .photoUrl(photoUrlList.get(0).trim())
                         .build();
                 articleRedisList.add(articleRedis);
+
                 articleRedisRepository.save(articleRedis);
                 log.info(articleRedisList.toString());
             }
@@ -321,7 +329,6 @@ public class ArticleService {
 
         log.info(Arrays.deepToString((clusters.centroids)));
         log.info(clusterResults.toString());
-        log.info(articleClusterRepository.findAll().toString());
 
         return clusterResults;
     }
@@ -389,7 +396,6 @@ public class ArticleService {
                 .build();
     }
 
-
     /***
      * 내가 좋아요 누른 게시글 목록
      * @return 내가 좋아요 누른 게시글 목록
@@ -407,7 +413,6 @@ public class ArticleService {
             Long hearts = articleHeartRepository.countByArticle(article);
             String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
             List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
-
 
             ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
                     .articleId(article.getId())
