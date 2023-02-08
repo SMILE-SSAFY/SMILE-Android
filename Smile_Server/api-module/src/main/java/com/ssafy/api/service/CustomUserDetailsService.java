@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  * JwtTokenProvider 내에서 사용할 loadUserByUsername 오버라이드 위한 클래스
  *
- * author @서재건
+ * @author 서재건
  */
 @RequiredArgsConstructor
 @Service

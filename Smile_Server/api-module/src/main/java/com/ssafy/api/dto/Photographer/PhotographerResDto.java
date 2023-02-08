@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * 사진작가 응답 DTO
  *
- * author @김정은
+ * @author 김정은
  */
 @Data
 @NoArgsConstructor

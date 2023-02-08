@@ -1,6 +1,5 @@
 package com.ssafy.core.repository.photographer;
 
-import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.User;
@@ -21,4 +20,5 @@ public interface PhotographerHeartRepository extends JpaRepository<PhotographerH
 
     Long countByPhotographer(Photographer photographer);
     List<PhotographerHeart> findByUser(User user);
+
 }

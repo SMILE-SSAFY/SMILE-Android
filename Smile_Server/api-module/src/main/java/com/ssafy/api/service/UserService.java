@@ -64,6 +64,17 @@ public class UserService {
     @Value("${kakao.oauth2.secretPassword}")
     String kakaoPassword;
 
+    /***
+     * 로그인한 유저를 얻어오는 함수
+     * @return user
+     */
+    public static User getLogInUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        return user;
+    }
+
+
     /**
      * 회원가입 및 로그인
      * @param registerFormDto
@@ -90,7 +101,7 @@ public class UserService {
                     .fcmToken(registerFormDto.getFcmToken() + ",")
                     .build();
 
-            User savedUser = userRepository.save(user);
+            userRepository.save(user);
             log.info("[registerUser] 회원등록 완료");
         }
 

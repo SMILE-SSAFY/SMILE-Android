@@ -17,15 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/***
+ * @author 신민철
+ * @author 김정은
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 @Service
 public class S3UploaderService {
-    /***
-     * author @신민철
-     * author @김정은
-     */
     private final UploadService s3Service;
     private final AmazonS3Client amazonS3Client;
 
@@ -60,16 +60,11 @@ public class S3UploaderService {
         List<String> fileNameList = new ArrayList<>();
 
         multipartFile.forEach(file -> {
-            String fileName = file.getOriginalFilename();
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentLength(file.getSize());
-            objectMetadata.setContentType(file.getContentType());
-            String newFileName = createFileName(fileName);
-
-            try (InputStream inputStream = file.getInputStream()) {
-                s3Service.uploadFile(inputStream, objectMetadata, newFileName);
+            String newFileName = null;
+            try {
+                newFileName = upload(file);
             } catch (IOException e) {
-                throw new IllegalArgumentException(String.format("파일 변환 중 에러가 발생 했습니다 (%s).", file.getOriginalFilename()));
+                throw new RuntimeException(e);
             }
             fileNameList.add(newFileName);
         });
@@ -78,10 +73,9 @@ public class S3UploaderService {
     }
 
     /***
+     * s3에 업로드 되어 있는 파일 삭제
      *
      * @param fileName
-     *
-     * s3에 업로드 되어 있는 파일 삭제
      */
     public void deleteFile(String fileName){
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));

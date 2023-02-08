@@ -1,6 +1,5 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.config.security.jwt.JwtTokenProvider;
 import com.ssafy.api.dto.User.LoginUserDto;
 import com.ssafy.api.dto.User.MessageFormDto;
 import com.ssafy.api.dto.User.RegisterFormDto;
@@ -33,7 +32,7 @@ import java.util.Map;
 
 /**
  * 유저 관련 Controller
- * author @서재건
+ * @author 서재건
  */
 @Slf4j
 @RestController
@@ -42,26 +41,19 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
-    private String apiKey;
-    private String apiSecret;
     private String fromNumber;
 
-    final DefaultMessageService messageService;
+    private final DefaultMessageService messageService;
 
     @Autowired
     public UserController(
             UserService userService,
-            JwtTokenProvider jwtTokenProvider,
             @Value("${coolsms.smile.apiKey}") String apiKey,
             @Value("${coolsms.smile.apiSecret}") String apiSecret,
             @Value("${coolsms.smile.fromNumber}") String fromNumber
     ) {
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
         this.fromNumber = fromNumber;
         this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
     }

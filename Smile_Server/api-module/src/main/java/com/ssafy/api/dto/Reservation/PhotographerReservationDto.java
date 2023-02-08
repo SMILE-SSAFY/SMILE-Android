@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PhotographerInfoDto {
+public class PhotographerReservationDto {
     private List<Date> days;
     private List<CategoriesInfoResDto> categories;
     private List<PlacesForListDto> places;

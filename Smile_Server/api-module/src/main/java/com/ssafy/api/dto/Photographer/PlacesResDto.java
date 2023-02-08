@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 활동지역 응답 DTO
  *
- * author @김정은
+ * @author 김정은
  */
 @Data
 @Builder
