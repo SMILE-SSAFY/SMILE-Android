@@ -3,13 +3,12 @@ package com.ssafy.api.config.security.jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -18,9 +17,9 @@ import java.io.IOException;
  * @author 서재건
  */
 @Slf4j
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // Jwt Provider 주입
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
@@ -37,12 +36,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
      *                 filter to pass the request and response to for further
      *                 processing
      *
-     * @throws IOException
      * @throws ServletException
+     * @throws IOException
      */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        String token = jwtTokenProvider.resolveToken(request);
         log.info("[doFilter] token: {}", token);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);

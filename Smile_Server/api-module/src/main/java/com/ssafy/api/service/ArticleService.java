@@ -104,8 +104,8 @@ public class ArticleService {
         User user = UserService.getLogInUser();
 
         if (article.getUser().getId() == user.getId()){
-            String photoUriList = article.getPhotoUrls();
-            photoUriList = photoUriList.replace("[","").replace("]","");
+            String photoUriList = article.getPhotoUrls()
+                    .replace("[","").replace("]","");
             List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
             photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
             articleRepository.deleteById(id);
@@ -147,8 +147,8 @@ public class ArticleService {
 
         if (isMe){
             // 이미지 지우기
-            String photoUriList = article.getPhotoUrls();
-            photoUriList = photoUriList.replace("[","").replace("]","");
+            String photoUriList = article.getPhotoUrls()
+                    .replace("[","").replace("]","");
             List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
             photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
 
