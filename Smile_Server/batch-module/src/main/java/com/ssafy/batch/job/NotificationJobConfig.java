@@ -69,7 +69,7 @@ public class NotificationJobConfig {
     public Step notificationStep(ItemReader reservationReader,
                          ItemWriter reservationWriter) {
         return stepBuilderFactory.get("notificationStep")
-                .<Reservation, Reservation>chunk(5)
+                .<Reservation, Reservation>chunk(10)
                 .reader(reservationReader)
                 .writer(reservationWriter)
                 .build();
@@ -87,7 +87,7 @@ public class NotificationJobConfig {
                 .name("reservationReader")
                 .repository(reservationRepository)
                 .methodName("findByReservedAt")
-                .pageSize(5)
+                .pageSize(10)
                 .arguments(Date.valueOf(LocalDate.now().plusDays(1)))
                 .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
                 .build();
