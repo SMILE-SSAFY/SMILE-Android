@@ -8,8 +8,8 @@ import com.ssafy.smile.domain.repository.RecommendRepository
 import com.ssafy.smile.presentation.base.BaseRepository
 
 class RecommendRepositoryImpl(private val recommendRemoteDataSource: RecommendRemoteDataSource): RecommendRepository, BaseRepository() {
-    private val _photographerRecommendInfoLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerRecommendResponseDto>>>(null)
-    val photographerRecommendInfoLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerRecommendResponseDto>>>
+    private val _photographerRecommendInfoLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerRecommendResponseDto>>(null)
+    val photographerRecommendInfoLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerRecommendResponseDto>>
         get() = _photographerRecommendInfoLiveData
 
     override suspend fun getPhotographerRecommendInfo(address: String) {

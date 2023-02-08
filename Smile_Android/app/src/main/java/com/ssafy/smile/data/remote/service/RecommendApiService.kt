@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface RecommendApiService {
     @GET("api/recommend")
-    suspend fun getPhotographerRecommendInfo(@Query("address") address:String): Response<ArrayList<PhotographerRecommendResponseDto>>
+    suspend fun getPhotographerRecommendInfo(@Query("address") address:String): Response<PhotographerRecommendResponseDto>
 }
