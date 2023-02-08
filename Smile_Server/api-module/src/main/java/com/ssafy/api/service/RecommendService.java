@@ -53,7 +53,9 @@ public class RecommendService {
      * @return 위치정보와 좋아요 정보로 유사도 알고리즘을 통해 추천할 작가 정보를 조회해 작가 정보 리스트 리턴
      */
     @Transactional
-    public RecommendResponseDto recommendPhotographerByAddress(User user, String address){
+    public RecommendResponseDto recommendPhotographerByAddress(String address){
+
+        User user = UserService.getLogInUser();
 
         List<PhotographerHeart> heartPhotographerIdList = this.getPhotographerIdListByUser(user);               // 유저가 좋아요 누른 작가 정보 리스트
 

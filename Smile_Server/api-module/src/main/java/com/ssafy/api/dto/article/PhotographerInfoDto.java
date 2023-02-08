@@ -1,5 +1,6 @@
 package com.ssafy.api.dto.article;
 
+import com.ssafy.core.entity.Photographer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,4 +28,19 @@ public class PhotographerInfoDto {
     private List<String> categories;
     private List<String> places;
     private int minPrice;
+
+    public PhotographerInfoDto of(Photographer photographer, Boolean isMe, Boolean isHeart, Long hearts, List<String> places, List<String> categories){
+        return PhotographerInfoDto.builder()
+                .photographerId(photographer.getId())
+                .isMe(isMe)
+                .isHeart(isHeart)
+                .hearts(hearts)
+                .photographerName(photographer.getUser().getName())
+                .profileImg(photographer.getProfileImg())
+                .introduction(photographer.getIntroduction())
+                .categories(categories)
+                .places(places)
+                .minPrice(photographer.getMinPrice())
+                .build();
+    }
 }
