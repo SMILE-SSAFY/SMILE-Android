@@ -276,10 +276,8 @@ public class ReservationService {
 
         Photographer photographer = reservation.getPhotographer();
 
-        Optional<Review> review = reviewRepository.findByReservation(reservation);
-
         // 같은 예약에 리뷰 2개 달려고 하면 오류 만들기
-        if (review.isPresent()) {
+        if (reviewRepository.findByReservation(reservation).isPresent()) {
             throw new CustomException(ErrorCode.REVIEW_EXISTED);
         }
 
