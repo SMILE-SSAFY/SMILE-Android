@@ -6,7 +6,6 @@ import com.ssafy.api.dto.User.RegisterFormDto;
 import com.ssafy.api.dto.User.TokenRoleDto;
 import com.ssafy.api.dto.User.UserDto;
 import com.ssafy.api.service.UserService;
-import com.ssafy.core.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -116,13 +115,11 @@ public class UserController {
      * 토큰에서 유저 정보 조회
      *
      * @return userDto
-     * id, name, role
+     * id, name, role, photoUrl
      */
     @GetMapping
-    public ResponseEntity<UserDto> getUser(HttpServletRequest request) {
-        User user = userService.getUser(request);
-        UserDto userDto = new UserDto();
-        return ResponseEntity.ok().body(userDto.of(user));
+    public ResponseEntity<UserDto> getUser() {
+        return ResponseEntity.ok().body(userService.getUser());
     }
 
     /**
