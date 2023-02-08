@@ -373,7 +373,7 @@ public class ArticleService {
 
         Integer size = (int) ((pageId+1)*9);
         // cache를 paging
-        if ((int)(pageId+1)*9 > articleRedisPage.size()){
+        if (size > articleRedisPage.size()){
             size = articleRedisPage.size();
             isEndPage = true;
         }
