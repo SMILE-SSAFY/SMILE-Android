@@ -153,4 +153,6 @@ public class ReservationController {
         reservationService.changeCancelStatus(reservationId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+
 }

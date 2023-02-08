@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
  *
  * @author 김정은
  */
+
 @Repository
 public interface PhotographerRepository extends JpaRepository<Photographer, Long> {
+
+
 }
