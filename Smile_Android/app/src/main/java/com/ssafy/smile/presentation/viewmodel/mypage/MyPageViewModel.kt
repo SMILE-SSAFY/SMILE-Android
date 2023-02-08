@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData
+import com.ssafy.smile.data.remote.model.LogoutRequestDto
 import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.presentation.base.BaseViewModel
@@ -27,6 +28,9 @@ class MyPageViewModel() : BaseViewModel() {
     val withDrawUserResponse : SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = userRepository.withDrawResponseLiveData
 
+    val logoutResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = userRepository.logoutLiveData
+
     fun getMyPageInfo() {
         viewModelScope.launch {
             userRepository.myPage()
@@ -47,6 +51,10 @@ class MyPageViewModel() : BaseViewModel() {
 
     suspend fun deleteAllAddress() = viewModelScope.launch(Dispatchers.IO) {
         addressRepository.deleteAllAddress()
+    }
+
+    fun logout(logoutRequestDto: LogoutRequestDto) = viewModelScope.launch {
+        userRepository.logout(logoutRequestDto)
     }
 
 }

@@ -18,3 +18,7 @@ data class KakaoLoginRequestDto(
     val token: String = "",
     val fcmToken: String = ""
 )
+
+data class LogoutRequestDto(
+    val fcmToken: String = ""
+)

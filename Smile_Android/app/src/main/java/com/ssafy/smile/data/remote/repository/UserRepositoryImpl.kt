@@ -4,6 +4,7 @@ import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.UserRemoteDataSource
 import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
+import com.ssafy.smile.data.remote.model.LogoutRequestDto
 import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.UserResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
@@ -39,6 +40,10 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     private val _myPageLiveData = SingleLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>(null)
     val myPageLiveData: SingleLiveData<NetworkUtils.NetworkResponse<MyPageResponseDto>>
         get() = _myPageLiveData
+
+    private val _logoutLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Any>>(null)
+    val logoutLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = _logoutLiveData
 
     override suspend fun checkEmail(email: String) {
         safeApiCall(_checkEmailResponseLiveData) {
@@ -78,6 +83,12 @@ class UserRepositoryImpl(private val userRemoteDataSource: UserRemoteDataSource)
     override suspend fun myPage() {
         safeApiCall(_myPageLiveData) {
             userRemoteDataSource.myPage()
+        }
+    }
+
+    override suspend fun logout(logoutRequestDto: LogoutRequestDto) {
+        safeApiCall(_logoutLiveData) {
+            userRemoteDataSource.logout(logoutRequestDto)
         }
     }
 }

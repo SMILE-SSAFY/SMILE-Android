@@ -44,12 +44,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
         searchViewModel.searchPhotographerResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    //TODO : 이메일 체크 다이얼로그 문제와 동일
-//                    dismissLoadingDialog()
-
-                    binding.apply {
-                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-                    }
+                    dismissLoadingDialog()
 
                     if (it.data.size == 0) {
                         recyclerData.clear()
@@ -65,7 +60,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-//                    dismissLoadingDialog()
+                    dismissLoadingDialog()
                     if (it.errorCode == 404) {
                         showToast(requireContext(), "검색한 키워드의 작가가 존재하지 않습니다.", Types.ToastType.INFO)
                     } else {
@@ -73,7 +68,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
-//                    showLoadingDialog(requireContext())
+                    showLoadingDialog(requireContext())
                 }
             }
         }
@@ -89,14 +84,18 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
 
     private fun photographerHeartResponseObserver() {
         searchViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
+            Log.d(TAG, "photographerHeartResponseObserver: observer")
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
+                    Log.d(TAG, "photographerHeartResponseObserver: loading")
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    searchViewModel.searchPhotographer(searchViewModel.searchCategory)
+                    Log.d(TAG, "photographerHeartResponseObserver: success")
                     resultPhotographerRecyclerAdapter.notifyDataSetChanged()
+                    searchViewModel.searchPhotographer(searchViewModel.searchCategory.value.toString())
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
+                    Log.d(TAG, "photographerHeartResponseObserver: failure")
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
@@ -115,8 +114,6 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             })
             setItemClickListener(object : ResultPhotographerRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
-                    Log.d(TAG, "onClick: ${recyclerData[position]}")
-                    Log.d(TAG, "onClick: ${recyclerData[position].photographerId}")
                     val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(recyclerData[position].photographerId)
                     findNavController().navigate(action)
                 }

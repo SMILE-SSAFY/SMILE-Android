@@ -15,6 +15,7 @@ import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.common.view.CommonDialog
+import com.ssafy.smile.data.remote.model.LogoutRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.databinding.FragmentMyPageBinding
 import com.ssafy.smile.domain.model.DialogBody
@@ -109,6 +110,16 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     }
                 }
             }
+            logoutResponse.observe(viewLifecycleOwner){
+                when(it) {
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.")
+                        findNavController().navigate(R.id.action_global_loginFragment)
+                    }
+                    is NetworkUtils.NetworkResponse.Loading -> {}
+                    is NetworkUtils.NetworkResponse.Success -> {}
+                }
+            }
             getRole(requireContext())
         }
     }
@@ -157,6 +168,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
     private fun logout() {
         try {
+            viewModel.logout(LogoutRequestDto(SharedPreferencesUtil(requireContext()).getFCMToken()!!))
             removeUserInfo()
 
             Intent(context, MainActivity::class.java).apply {
