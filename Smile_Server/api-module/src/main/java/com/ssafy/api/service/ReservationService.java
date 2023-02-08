@@ -23,8 +23,6 @@ import kr.co.bootpay.model.request.Cancel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 예약 관련 Service
@@ -269,8 +268,7 @@ public class ReservationService {
      */
 
     public void addReview(Long reservationId, ReviewPostDto reviewPostDto) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
         String fileName = s3UploaderService.upload(reviewPostDto.getImage());
 
@@ -278,10 +276,17 @@ public class ReservationService {
 
         Photographer photographer = reservation.getPhotographer();
 
+        Optional<Review> review = reviewRepository.findByReservation(reservation);
+
+        // 같은 예약에 리뷰 2개 달려고 하면 오류 만들기
+        if (review.isPresent()) {
+            throw new RuntimeException();
+        }
+
         String keywords = analyzeService.analyzeEntitiesText(reviewPostDto.getContent());
         log.info("-------------------------keywords : {}", keywords);
 
-        Review review = Review.builder()
+        Review newReview = Review.builder()
                 .content(reviewPostDto.getContent())
                 .score(reviewPostDto.getScore())
                 .PhotoUrl(fileName)
@@ -292,7 +297,7 @@ public class ReservationService {
                 .keywords(keywords)
                 .build();
 
-        reviewRepository.save(review);
+        reviewRepository.save(newReview);
     }
 
     /***
@@ -311,21 +316,9 @@ public class ReservationService {
 
         List<Review> ReviewList = reviewRepository.findAllByPhotographer(photographer);
 
-        log.info(ReviewList.toString());
-
         for(Review review : ReviewList){
             boolean isMe = review.getUser() == user;
-            ReviewResDto resDto = ReviewResDto.builder()
-                    .reviewId(review.getId())
-                    .userId(user.getId())
-                    .isMe(isMe)
-                    .userName(photographer.getUser().getName())
-                    .score(review.getScore())
-                    .content(review.getContent())
-                    .photoUrl(review.getPhotoUrl())
-                    .createdAt(review.getCreatedAt())
-                    .build();
-            reviewResDtoList.add(resDto);
+            reviewResDtoList.add(new ReviewResDto().of(review,isMe));
         }
         return reviewResDtoList;
     }
@@ -435,14 +428,8 @@ public class ReservationService {
      * @return 리뷰 디테일
      */
     public ReviewDetailDto reviewDetail(Long reviewId){
-        Review result = reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(()->new CustomException(ErrorCode.REVIEW_NOT_FOUND));
-        return ReviewDetailDto.builder()
-                .id(reviewId)
-                .createdAt(result.getCreatedAt())
-                .photoUrl(result.getPhotoUrl())
-                .content(result.getContent())
-                .score(result.getScore())
-                .build();
+        return new ReviewDetailDto().of(review);
     }
 }

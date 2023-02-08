@@ -1,7 +1,10 @@
 package com.ssafy.api.dto.Reservation;
 
+import com.ssafy.core.entity.Review;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +14,8 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewDetailDto {
     private Long id;
 
@@ -21,4 +26,14 @@ public class ReviewDetailDto {
     private String content;
 
     private Double score;
+
+    public ReviewDetailDto of(Review review){
+        return ReviewDetailDto.builder()
+                .id(review.getId())
+                .createdAt(review.getCreatedAt())
+                .photoUrl(review.getPhotoUrl())
+                .content(review.getContent())
+                .score(review.getScore())
+                .build();
+    }
 }
