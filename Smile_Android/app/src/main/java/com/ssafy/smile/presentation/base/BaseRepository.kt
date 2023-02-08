@@ -1,14 +1,14 @@
 package com.ssafy.smile.presentation.base
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils.NetworkResponse
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import retrofit2.Response
 
 
 private const val TAG = "BaseRepository_스마일"
 open class BaseRepository {
-    suspend fun <T : Any> safeApiCall(liveData: MutableLiveData<NetworkResponse<T>>, action: suspend () -> Response<T>){
+    suspend fun <T : Any> safeApiCall(liveData: SingleLiveData<NetworkResponse<T>>, action: suspend () -> Response<T>){
         liveData.postValue(NetworkResponse.Loading())
         val result : NetworkResponse<T> = safeApiResult(action=action)
         liveData.postValue(result)

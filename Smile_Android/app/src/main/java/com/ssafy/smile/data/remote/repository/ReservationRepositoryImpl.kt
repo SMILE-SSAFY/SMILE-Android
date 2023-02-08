@@ -1,8 +1,7 @@
 package com.ssafy.smile.data.remote.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.ReservationRemoteDateSource
 import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.domain.repository.ReservationRepository
@@ -10,44 +9,44 @@ import com.ssafy.smile.presentation.base.BaseRepository
 import okhttp3.MultipartBody
 
 class ReservationRepositoryImpl(private val reservationRemoteDateSource: ReservationRemoteDateSource): ReservationRepository, BaseRepository() {
-    private val _photographerReservationInfoLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>()
-    val photographerReservationInfoLiveData: LiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>
+    private val _photographerReservationInfoLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>(null)
+    val photographerReservationInfoLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ReservationPhotographerDto>>
         get() = _photographerReservationInfoLiveData
 
-    private val _postReservationLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>()
-    val postReservationLiveData: LiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
+    private val _postReservationLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>(null)
+    val postReservationLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ReservationResponseDto>>
         get() = _postReservationLiveData
 
-    private val _photographerReservationListLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>()
-    val photographerReservationListLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
+    private val _photographerReservationListLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>(null)
+    val photographerReservationListLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
         get() = _photographerReservationListLiveData
 
-    private val _customerReservationListLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>()
-    val customerReservationListLiveData: LiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
+    private val _customerReservationListLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>(null)
+    val customerReservationListLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<ReservationListDto>>>
         get() = _customerReservationListLiveData
 
-    private val _changeReservationStatusLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
-    val changeReservationStatusLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+    private val _changeReservationStatusLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Any>>(null)
+    val changeReservationStatusLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _changeReservationStatusLiveData
 
-    private val _cancelReservationLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
-    val cancelReservationLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+    private val _cancelReservationLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Any>>(null)
+    val cancelReservationLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _cancelReservationLiveData
 
-    private val _getPhotographerReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>()
-    val getPhotographerReviewLiveData: LiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>
+    private val _getPhotographerReviewLiveData = SingleLiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>(null)
+    val getPhotographerReviewLiveData: SingleLiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>
         get() = _getPhotographerReviewLiveData
 
-    private val _postReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
-    val postReviewLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+    private val _postReviewLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Any>>(null)
+    val postReviewLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _postReviewLiveData
 
-    private val _getReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>()
-    val getReviewLiveData: LiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>
+    private val _getReviewLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>(null)
+    val getReviewLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ReviewResponseDto>>
         get() = _getReviewLiveData
 
-    private val _deleteReviewLiveData = MutableLiveData<NetworkUtils.NetworkResponse<Any>>()
-    val deleteReviewLiveData: LiveData<NetworkUtils.NetworkResponse<Any>>
+    private val _deleteReviewLiveData = SingleLiveData<NetworkUtils.NetworkResponse<Any>>(null)
+    val deleteReviewLiveData: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = _deleteReviewLiveData
 
 

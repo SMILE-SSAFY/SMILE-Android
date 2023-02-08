@@ -1,9 +1,9 @@
 package com.ssafy.smile.presentation.viewmodel.portfolio
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
 import com.ssafy.smile.data.remote.model.PhotographerReviewDto
 import com.ssafy.smile.data.remote.model.PortfolioResponseDto
@@ -21,7 +21,7 @@ class PortfolioViewModel: BaseViewModel() {
     var photographerId: Long = 0
 
     // 포트폴리오 화면 결과를 관리하는 LiveData
-    val getPortfolioResponse: LiveData<NetworkUtils.NetworkResponse<PortfolioResponseDto>>
+    val getPortfolioResponse: SingleLiveData<NetworkUtils.NetworkResponse<PortfolioResponseDto>>
         get() = portfolioRepository.getPortfolioResponseLiveData
 
     // 포트폴리오 화면 데이터 조회를 수행하는 함수
@@ -32,7 +32,7 @@ class PortfolioViewModel: BaseViewModel() {
     }
 
     // 포트폴리오 게시물 화면 결과를 관리하는 LiveData
-    val getPostsResponse: LiveData<NetworkUtils.NetworkResponse<ArrayList<PostListResponseDto>>>
+    val getPostsResponse: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PostListResponseDto>>>
         get() = portfolioRepository.getPostsResponseLiveData
 
     // 포트폴리오 게시물 화면 데이터 조회를 수행하는 함수
@@ -43,7 +43,7 @@ class PortfolioViewModel: BaseViewModel() {
     }
 
     // 작가 좋아요 결과를 관리하는 LiveData
-    val photographerHeartResponse: LiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
+    val photographerHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
     // 작가 좋아요를 수행하는 함수
@@ -53,7 +53,7 @@ class PortfolioViewModel: BaseViewModel() {
         }
     }
 
-    val photographerReviewListResponse: LiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>
+    val photographerReviewListResponse: SingleLiveData<NetworkUtils.NetworkResponse<List<PhotographerReviewDto>>>
         get() = reviewRepository.getPhotographerReviewLiveData
 
     fun getPhotographerReviewList(photographerId: Long){
@@ -62,7 +62,7 @@ class PortfolioViewModel: BaseViewModel() {
         }
     }
 
-    val deleteReviewResponse: LiveData<NetworkUtils.NetworkResponse<Any>>
+    val deleteReviewResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = reviewRepository.deleteReviewLiveData
 
     fun deleteReview(reviewId:Long){
