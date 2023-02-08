@@ -335,8 +335,7 @@ public class UserService {
      * @param fcmToken
      */
     public void logout(String fcmToken) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+        User user = getLogInUser();
 
         log.info("삭제할 fcmToken : {}", fcmToken);
         log.info("user fcmToken : {}", user.getFcmToken());
