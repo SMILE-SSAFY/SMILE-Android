@@ -40,15 +40,10 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
         searchViewModel.searchPostResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    //TODO : 이메일 체크 다이얼로그 문제와 동일
-//                    showLoadingDialog(requireContext())
+                    showLoadingDialog(requireContext())
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-//                    dismissLoadingDialog()
-
-                    binding.apply {
-                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-                    }
+                    dismissLoadingDialog()
 
                     if (it.data.size == 0) {
                         recyclerData.clear()
@@ -64,7 +59,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-//                    dismissLoadingDialog()
+                    dismissLoadingDialog()
                     if (it.errorCode == 404) {
                         showToast(requireContext(), "검색한 키워드의 게시물이 존재하지 않습니다.", Types.ToastType.INFO)
                     } else {
@@ -89,7 +84,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 is NetworkUtils.NetworkResponse.Loading -> {
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    searchViewModel.searchPost(searchViewModel.searchCategory)
+                    searchViewModel.searchPost(searchViewModel.searchCategory.value.toString())
                     resultPostRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
