@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.smile.databinding.RecyclerPhotographerItemBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 
-class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPhotographerDomainDto>): RecyclerView.Adapter<HomeRecyclerAdapter.HomeRecyclerViewHolder>() {
+class RecommendResultAdapter(val context: Context, val datas: MutableList<CustomPhotographerDomainDto>): RecyclerView.Adapter<RecommendResultAdapter.RecommendResultViewHolder>() {
 
     interface OnPhotographerHeartItemClickListener {
         fun onClick(view: View, position: Int)
@@ -22,7 +22,7 @@ class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPho
     lateinit var onItemClickListener : OnItemClickListener
     fun setItemClickListener(onItemClickListener: OnItemClickListener) { this.onItemClickListener = onItemClickListener }
 
-    inner class HomeRecyclerViewHolder(val binding: RecyclerPhotographerItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class RecommendResultViewHolder(val binding: RecyclerPhotographerItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: CustomPhotographerDomainDto, position: Int) {
             binding.apply {
                 customPhotographer.setAttrs(
@@ -47,13 +47,13 @@ class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPho
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeRecyclerViewHolder {
-        return HomeRecyclerViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendResultViewHolder {
+        return RecommendResultViewHolder(
             RecyclerPhotographerItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: HomeRecyclerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecommendResultViewHolder, position: Int) {
         holder.apply {
             bind(datas[position], position)
 
