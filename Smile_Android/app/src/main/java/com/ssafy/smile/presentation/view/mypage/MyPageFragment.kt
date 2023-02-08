@@ -55,10 +55,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         viewModel.apply {
             myPageResponse.observe(viewLifecycleOwner){
                 when(it) {
-                    is NetworkUtils.NetworkResponse.Failure -> {
-                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
-                        dismissLoadingDialog()
-                    }
                     is NetworkUtils.NetworkResponse.Loading -> {
                         showLoadingDialog(requireContext())
                     }
@@ -67,6 +63,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         binding.apply {
                             layoutMyPageProfile.tvProfileName.text = it.data.name
                         }
+                    }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
+                        dismissLoadingDialog()
                     }
                 }
             }

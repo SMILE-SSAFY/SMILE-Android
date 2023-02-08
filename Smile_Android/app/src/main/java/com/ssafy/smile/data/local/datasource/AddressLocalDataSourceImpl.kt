@@ -27,11 +27,11 @@ class AddressLocalDataSourceImpl(private val addressDao: AddressDao) : AddressLo
         return addressDao.deleteAllAddress()
     }
 
-    override fun getAddressList(): LiveData<List<AddressEntity>> {
+    override suspend fun getAddressList(): List<AddressEntity> {
         return addressDao.getAddressList()
     }
 
-    override fun getAddressListWithSelection(): LiveData<List<AddressEntity>> {
+    override suspend fun getAddressListWithSelection(): List<AddressEntity> {
         return addressDao.getAddressListWithSelected()
     }
 

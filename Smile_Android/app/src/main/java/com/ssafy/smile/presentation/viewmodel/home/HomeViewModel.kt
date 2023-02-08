@@ -24,23 +24,19 @@ class HomeViewModel: BaseViewModel() {
     val photographerHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
-    val getAddressListResponse: LiveData<List<AddressDomainDto>>
-        get() = addressRepository.getAddressList()
+    private val _getAddressListResponse: SingleLiveData<List<AddressDomainDto>> = SingleLiveData(null)
+    val getAddressListResponse = _getAddressListResponse
 
     fun getPhotographerInfoByAddressInfo(address: String, criteria: String) = viewModelScope.launch{
         photographerRepository.getPhotographerInfoByAddress(address, criteria)
     }
 
     // 작가 좋아요를 수행하는 함수
-    fun photographerHeart(photographerId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            heartRepository.photographerHeart(photographerId)
-        }
+    fun photographerHeart(photographerId: Long) = viewModelScope.launch(Dispatchers.IO) {
+        heartRepository.photographerHeart(photographerId)
     }
 
-    fun getAddressList(){
-        viewModelScope.launch {
-            addressRepository.getAddressList()
-        }
+    fun getAddressList() = viewModelScope.launch(Dispatchers.IO) {
+        _getAddressListResponse.postValue(addressRepository.getAddressList())
     }
 }
