@@ -49,10 +49,7 @@ public class RecommendController {
     @GetMapping
     public ResponseEntity<RecommendResponseDto> recommendPhotographerByAddress(@Param("address") String address){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-
-        RecommendResponseDto resultList = recommendService.recommendPhotographerByAddress(user, address);
+        RecommendResponseDto resultList = recommendService.recommendPhotographerByAddress(address);
 
         return ResponseEntity.ok().body(resultList);
     }
