@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * fcm 알림 전송하기 위한 Job
- * Edit Configurations -> Program arguments에 입력 : --spring.batch.job.names=notificationJob
+ *
  * @author 서재건
  */
 @Slf4j
