@@ -131,9 +131,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         homeViewModel.getAddressListResponse.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 curAddress = getString(R.string.tv_address_unselected)
+                curAddress = "강원 양구군"
                 binding.tvToolbarAddress.text = curAddress
             } else{
-                curAddress = it[0].address
+//                curAddress = it[0].address
+                curAddress = "강원 양구군"
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
