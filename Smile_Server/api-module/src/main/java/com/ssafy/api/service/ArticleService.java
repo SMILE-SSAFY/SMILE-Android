@@ -342,15 +342,15 @@ public class ArticleService {
             case "time": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
                 doCluster(articleRedisPage, pageId, isEndPage);
-                // 좋아요순 조회
                 break;
+                // 좋아요순 조회
             }
             case "heart": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
                 doCluster(articleRedisPage, pageId, isEndPage);
-                // 거리순 조회
                 break;
             }
+                // 거리순 조회
             case "distance": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
                 doCluster(articleRedisPage, pageId, isEndPage);

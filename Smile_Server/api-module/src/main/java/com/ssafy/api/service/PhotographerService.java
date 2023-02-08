@@ -369,16 +369,14 @@ public class PhotographerService {
      */
 
     @Transactional
-    public PhotographerInfoDto getPhotographerInformation(Long userId) {
+    public PhotographerInfoDto getPhotographerInformation(Long photographerId) {
         User logInUser = UserService.getLogInUser();
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        Photographer photographer = photographerRepository.findById(userId)
+        Photographer photographer = photographerRepository.findById(photographerId)
                 .orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
-        Boolean isMe = articleService.isMe(logInUser, user);
-        Boolean isHeart = photographerHeartRepository.findByUserAndPhotographer(logInUser, photographer).isPresent();
+        Boolean isMe = articleService.isMe(logInUser, photographer.getUser());
+        Boolean isHeart = this.isHearted(logInUser, photographer);
         Long hearts = photographerHeartRepository.countByPhotographer(photographer);
 
         // 활동지역
@@ -393,18 +391,7 @@ public class PhotographerService {
             categories.add(category.getCategory().getName());
         }
 
-        return PhotographerInfoDto.builder()
-                .photographerId(userId)
-                .isMe(isMe)
-                .isHeart(isHeart)
-                .hearts(hearts)
-                .photographerName(user.getName())
-                .profileImg(photographer.getProfileImg())
-                .introduction(photographer.getIntroduction())
-                .categories(categories)
-                .places(places)
-                .minPrice(photographer.getMinPrice())
-                .build();
+        return new PhotographerInfoDto().of(photographer, isMe, isHeart, hearts, places, categories);
     }
 
 }
