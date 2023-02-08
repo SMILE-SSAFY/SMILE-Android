@@ -284,7 +284,7 @@ public class ReservationService {
         String keywords = analyzeService.analyzeEntitiesText(reviewPostDto.getContent());
         log.info("-------------------------keywords : {}", keywords);
 
-        Review newReview = Review.builder()
+        Review review = Review.builder()
                 .content(reviewPostDto.getContent())
                 .score(reviewPostDto.getScore())
                 .PhotoUrl(fileName)
@@ -295,7 +295,7 @@ public class ReservationService {
                 .keywords(keywords)
                 .build();
 
-        reviewRepository.save(newReview);
+        reviewRepository.save(review);
     }
 
     /***
