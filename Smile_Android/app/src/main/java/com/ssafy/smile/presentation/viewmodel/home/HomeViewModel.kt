@@ -1,6 +1,5 @@
 package com.ssafy.smile.presentation.viewmodel.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
@@ -24,19 +23,18 @@ class HomeViewModel: BaseViewModel() {
     val photographerHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
-    private val _getAddressListResponse: SingleLiveData<List<AddressDomainDto>> = SingleLiveData(null)
-    val getAddressListResponse = _getAddressListResponse
+    private val _getCurrentAddressResponse: SingleLiveData<AddressDomainDto> = SingleLiveData(null)
+    val getCurrentAddressResponse = _getCurrentAddressResponse
 
     fun getPhotographerInfoByAddressInfo(address: String, criteria: String) = viewModelScope.launch{
         photographerRepository.getPhotographerInfoByAddress(address, criteria)
     }
 
-    // 작가 좋아요를 수행하는 함수
     fun photographerHeart(photographerId: Long) = viewModelScope.launch(Dispatchers.IO) {
         heartRepository.photographerHeart(photographerId)
     }
 
     fun getAddressList() = viewModelScope.launch(Dispatchers.IO) {
-        _getAddressListResponse.postValue(addressRepository.getAddressList())
+        _getCurrentAddressResponse.postValue(addressRepository.getSelectedAddress())
     }
 }

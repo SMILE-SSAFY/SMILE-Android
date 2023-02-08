@@ -30,6 +30,10 @@ class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalData
         return addressLocalDataSource.deleteAllAddress()
     }
 
+    override suspend fun getSelectedAddress(): AddressDomainDto? {
+        return addressLocalDataSource.getSelectedAddress()?.makeToAddressDomainDto()
+    }
+
     override suspend fun getAddressList(): List<AddressDomainDto> {
         return addressLocalDataSource.getAddressList().map{ it.makeToAddressDomainDto() }
     }

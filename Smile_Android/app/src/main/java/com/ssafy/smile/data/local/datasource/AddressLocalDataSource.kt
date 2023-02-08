@@ -11,6 +11,7 @@ interface AddressLocalDataSource {
     suspend fun selectAddress(address: AddressEntity) : Long
     suspend fun deleteAddress(address: AddressEntity) : Int
     suspend fun deleteAllAddress(): Int
+    suspend fun getSelectedAddress() : AddressEntity?
     suspend fun getAddressList() : List<AddressEntity>
     suspend fun getAddressListWithSelection() : List<AddressEntity>
 }
