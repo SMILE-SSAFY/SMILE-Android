@@ -279,6 +279,7 @@ public class ReservationService {
         Photographer photographer = reservation.getPhotographer();
 
         String keywords = analyzeService.analyzeEntitiesText(reviewPostDto.getContent());
+        log.info("-------------------------keywords : {}", keywords);
 
         Review review = Review.builder()
                 .content(reviewPostDto.getContent())
