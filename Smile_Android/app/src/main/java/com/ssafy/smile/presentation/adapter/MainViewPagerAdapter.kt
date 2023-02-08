@@ -15,7 +15,6 @@ class MainViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(ac
         return when(position){
             0 -> MapFragment()
             1 -> HomeFragment()
-
             2 -> MyPageFragment()
             else -> error("no such position: $position")
         }

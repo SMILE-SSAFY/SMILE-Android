@@ -2,11 +2,14 @@ package com.ssafy.smile
 
 import android.app.Application
 import android.util.Log
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.data.*
 import com.ssafy.smile.data.local.database.AppDatabase
+import com.ssafy.smile.presentation.view.MainFragmentDirections
+import com.ssafy.smile.presentation.view.home.CustomRecommendDialog
 import kr.co.bootpay.android.*;
 
 private const val TAG = "Application_싸피"

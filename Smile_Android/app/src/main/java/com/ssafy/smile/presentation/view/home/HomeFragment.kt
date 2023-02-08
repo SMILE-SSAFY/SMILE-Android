@@ -32,14 +32,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var isPhotographer = true
-    private var curAddress = "안녕안녕"
+    private var curAddress = ""
     private var userId = -1L
     private var filter = ""
 
     override fun onResume() {
         super.onResume()
-//        homeViewModel.getAddressList()
-//        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+        homeViewModel.getAddressList()
+        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -54,10 +54,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         isPhotographer = getRole()
         userId = getUserId()
         initToolbar()
-//        homeViewModel.getAddressList()
-//        setObserverBeforeSetAddress()
+        homeViewModel.getAddressList()
+        setObserverBeforeSetAddress()
         initRecycler()
-        showRecommendDialog()
     }
 
     private fun setObserverBeforeSetAddress() {
@@ -80,6 +79,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun getPhotographerInfoByAddressResponseObserver() {
         homeViewModel.getPhotographerInfoByAddressResponse.observe(viewLifecycleOwner) {
             when(it) {
+                is NetworkUtils.NetworkResponse.Loading -> {
+//                    showLoadingDialog(requireContext())
+                }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
                     if (it.data.size == 0) {
@@ -91,7 +93,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                         it.data.forEach { data ->
                             recyclerData.add(data.toCustomPhotographerDomainDto())
                         }
-                        Log.d(TAG, "getPhotographerInfoByAddressResponseObserver: ${recyclerData}")
                         homeRecyclerAdapter.notifyDataSetChanged()
                         setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
@@ -99,9 +100,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     showToast(requireContext(), "주변 작가 목록 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                }
-                is NetworkUtils.NetworkResponse.Loading -> {
-                    showLoadingDialog(requireContext())
                 }
             }
         }
@@ -135,15 +133,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         homeViewModel.getAddressListResponse.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 curAddress = getString(R.string.tv_address_unselected)
-                curAddress = "강원 양구군"
                 binding.tvToolbarAddress.text = curAddress
             } else{
-//                curAddress = it[0].address
-                curAddress = "강원 양구군"
+                curAddress = it[0].address
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
-                showRecommendDialog()
             }
         }
     }
@@ -218,22 +213,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
     }
 
-
     private fun setClickListener(){
         binding.apply {
             layoutSearchAddress.setOnClickListener { moveToAddressGraph() }
-        }
-    }
-
-    private fun showRecommendDialog() {
-        CustomRecommendDialog(requireContext()).apply {
-            setButtonClickListener(object : CustomRecommendDialog.OnButtonClickListener{
-                override fun onOkButtonClick() {
-                    val action = MainFragmentDirections.actionMainFragmentToRecommendResultFragment(curAddress)
-                    findNavController().navigate(action)
-                }
-            })
-            show()
         }
     }
 
