@@ -15,7 +15,7 @@ class RecommendViewModel: BaseViewModel() {
     private val recommendRepository = Application.repositoryInstances.getRecommendRepository()
     private val heartRepository = Application.repositoryInstances.getHeartRepository()
 
-    val getPhotographerRecommendResponse: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerRecommendResponseDto>>>
+    val getPhotographerRecommendResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerRecommendResponseDto>>
         get() = recommendRepository.photographerRecommendInfoLiveData
 
     fun getPhotographerRecommendInfo(address: String) = viewModelScope.launch {

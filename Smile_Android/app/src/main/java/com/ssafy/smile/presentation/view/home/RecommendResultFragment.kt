@@ -40,14 +40,18 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    if (it.data.size == 0) {
-                        //TODO : 결과 없을 때 화면 구현
+                    if (it.data.isHeartEmpty) {
+                        setIsEmptyView(View.VISIBLE, View.GONE, "추천 결과가 존재하지 않습니다")
                     } else {
-                        recyclerData.clear()
-                        it.data.forEach { data ->
-                            recyclerData.add(data.toCustomPhotographerDomainDto())
+                        if (it.data.photographerInfoList.size == 0) {
+                            setIsEmptyView(View.VISIBLE, View.GONE, "작가 추천을 위한 데이터가 충분하지 않습니다.\n좋아하는 작가에게 하트를 눌러주세요:)")
+                        } else {
+                            recyclerData.clear()
+                            for (i in 0 until it.data.photographerInfoList.size) {
+                                recyclerData.add(it.data.toCustomPhotographerDomainDto(i))
+                            }
+                            recommendRecyclerAdapter.notifyDataSetChanged()
                         }
-                        recommendRecyclerAdapter.notifyDataSetChanged()
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
@@ -77,6 +81,14 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
         binding.rvRecommend.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = recommendRecyclerAdapter
+        }
+    }
+
+    private fun setIsEmptyView(emptyView: Int, recyclerView: Int, emptyViewText: String?) {
+        binding.apply {
+            layoutEmptyView.layoutEmptyView.visibility = emptyView
+            layoutEmptyView.tvEmptyView.text = emptyViewText
+            rvRecommend.visibility = recyclerView
         }
     }
 
