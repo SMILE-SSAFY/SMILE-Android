@@ -1,10 +1,10 @@
-package com.ssafy.api.service;
+package com.ssafy.batch.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.ssafy.api.dto.Reservation.FcmDataMessage;
-import com.ssafy.api.dto.Reservation.NotificationDTO;
+import com.ssafy.batch.dto.FcmDataMessage;
+import com.ssafy.batch.dto.NotificationDTO;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -16,10 +16,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,7 +65,6 @@ public class NotificationService {
      * 전송될 데이터 타입 만들기
      *
      * @param targetToken
-     * @param title
      * @param body
      * @return
      * @throws JsonProcessingException
