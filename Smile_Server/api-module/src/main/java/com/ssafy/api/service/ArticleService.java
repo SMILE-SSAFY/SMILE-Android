@@ -219,23 +219,7 @@ public class ArticleService {
 
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (ArticleQdslDto articleQuerydsl : articleList) {
-            String photoUrls = articleQuerydsl.getArticle().getPhotoUrls().replace("[", "").replace("]", "");
-            List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
-
-            ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
-                    .articleId(articleQuerydsl.getArticle().getId())
-                    .photographerName(articleQuerydsl.getArticle().getUser().getName())
-                    .latitude(articleQuerydsl.getArticle().getLatitude())
-                    .longitude(articleQuerydsl.getArticle().getLongitude())
-                    .detailAddress(articleQuerydsl.getArticle().getDetailAddress())
-                    .isHeart(articleQuerydsl.isHeart())
-                    .hearts(articleQuerydsl.getHearts())
-                    .createdAt(articleQuerydsl.getArticle().getCreatedAt())
-                    .category(articleQuerydsl.getArticle().getCategory())
-                    .photoUrl(photoUrlList.get(0).trim())
-                    .build();
-
-            articleSearchDtoList.add(articleSearchDto);
+            articleSearchDtoList.add(new ArticleSearchDto().of(articleQuerydsl));
         }
         return articleSearchDtoList;
     }
@@ -354,73 +338,55 @@ public class ArticleService {
         log.info(condition);
         Boolean isEndPage = false;
         // 최신순 조회
-        if (condition.equals("time")) {
-            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
-            log.info(articleRedisPage.toString());
-            log.info(String.valueOf((int) ((pageId+1)*9)));
-
-            Integer size = (int) ((pageId+1)*9);
-            // cache를 paging
-            if ((int)(pageId+1)*9 > articleRedisPage.size()){
-                size = articleRedisPage.size();
-                isEndPage = true;
+        switch (condition) {
+            case "time": {
+                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
+                doCluster(articleRedisPage, pageId, isEndPage);
+                // 좋아요순 조회
+                break;
             }
-            if (size<9){
-                return ArticleClusterListDto.builder()
-                        .isEndPage(isEndPage)
-                        .articleRedisList(articleRedisPage)
-                        .build();
+            case "heart": {
+                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
+                doCluster(articleRedisPage, pageId, isEndPage);
+                // 거리순 조회
+                break;
             }
-            return ArticleClusterListDto.builder()
-                    .isEndPage(isEndPage)
-                    .articleRedisList(articleRedisPage.subList(size-9,size))
-                    .build();
-            // 좋아요순 조회
-        } else if (condition.equals("heart")) {
-            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
-            log.info(articleRedisPage.toString());
-            log.info(String.valueOf((int) ((pageId+1)*9)));
-
-            Integer size = (int) ((pageId+1)*9);
-            // cache를 paging
-            if ((int)(pageId+1)*9 > articleRedisPage.size()){
-                size = articleRedisPage.size();
-                isEndPage = true;
+            case "distance": {
+                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
+                doCluster(articleRedisPage, pageId, isEndPage);
+                break;
             }
-            if (size<9){
-                return ArticleClusterListDto.builder()
-                        .isEndPage(isEndPage)
-                        .articleRedisList(articleRedisPage)
-                        .build();
-            }
-            return ArticleClusterListDto.builder()
-                    .isEndPage(isEndPage)
-                    .articleRedisList(articleRedisPage.subList(size-9,size))
-                    .build();
-            // 거리순 조회
-        } else if (condition.equals("distance")) {
-            List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
-            log.info(articleRedisPage.toString());
-            log.info(String.valueOf((int) ((pageId+1)*9)));
-
-            Integer size = (int) ((pageId+1)*9);
-            // cache를 paging
-            if ((int)(pageId+1)*9 > articleRedisPage.size()){
-                size = articleRedisPage.size();
-                isEndPage = true;
-            }
-            if (size<9){
-                return ArticleClusterListDto.builder()
-                        .isEndPage(isEndPage)
-                        .articleRedisList(articleRedisPage)
-                        .build();
-            }
-            return ArticleClusterListDto.builder()
-                    .isEndPage(isEndPage)
-                    .articleRedisList(articleRedisPage.subList(size-9,size))
-                    .build();
         }
         return ArticleClusterListDto.builder().build();
+    }
+
+    /***
+     * 클러스터를 마커 별로 paging
+     * @param articleRedisPage
+     * @param pageId
+     * @param isEndPage
+     * @return
+     */
+    private ArticleClusterListDto doCluster(List<ArticleRedis> articleRedisPage, Long pageId, Boolean isEndPage){
+        log.info(articleRedisPage.toString());
+        log.info(String.valueOf((int) ((pageId+1)*9)));
+
+        Integer size = (int) ((pageId+1)*9);
+        // cache를 paging
+        if ((int)(pageId+1)*9 > articleRedisPage.size()){
+            size = articleRedisPage.size();
+            isEndPage = true;
+        }
+        if (size<9){
+            return ArticleClusterListDto.builder()
+                    .isEndPage(isEndPage)
+                    .articleRedisList(articleRedisPage)
+                    .build();
+        }
+        return ArticleClusterListDto.builder()
+                .isEndPage(isEndPage)
+                .articleRedisList(articleRedisPage.subList(size-9,size))
+                .build();
     }
 
 
