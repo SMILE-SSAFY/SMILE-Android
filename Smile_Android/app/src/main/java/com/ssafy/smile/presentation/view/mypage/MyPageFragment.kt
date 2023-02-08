@@ -39,8 +39,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun initView() {
         initToolbar()
-//        viewModel.getMyPageInfo()
-//        setObserver()
+        viewModel.getMyPageInfo()
+        setObserver()
     }
 
     override fun setEvent() {
@@ -60,12 +60,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         dismissLoadingDialog()
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {
-                        Log.d(TAG, "setObserver: loading")
                         showLoadingDialog(requireContext())
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
-                        Log.d(TAG, "setObserver: ${it.data}")
                         binding.apply {
                             layoutMyPageProfile.tvProfileName.text = it.data.name
                         }
@@ -140,7 +138,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 }
             }
             layoutMyPageUser.apply {
-                tvUserChangePassword.setOnClickListener {  }
                 tvUserWithDraw.setOnClickListener {
                     showPhotographerWithDrawDialog()
                 }

@@ -307,9 +307,6 @@
                 <argument
                     android:name="postId"
                     app:argType="long" />
-                <action
-                    android:id="@+id/action_postEditBottomSheetDialogFragment_pop"
-                    app:destination="@id/portfolioFragment" />
             </action>
             <action
                 android:id="@+id/action_postDetailFragment_pop"
@@ -324,6 +321,9 @@
             <argument
                 android:name="postId"
                 app:argType="long" />
+            <action
+                android:id="@+id/action_postEditBottomSheetDialogFragment_pop"
+                app:popUpTo="@id/portfolioFragment" />
         </dialog>
         <fragment
             android:id="@+id/reservationFragment"

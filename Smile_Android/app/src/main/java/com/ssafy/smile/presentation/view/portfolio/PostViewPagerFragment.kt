@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
@@ -18,7 +19,7 @@ import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
 private const val TAG = "PostViewPagerFragment_스마일"
 class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(FragmentPostViewPagerBinding::bind, R.layout.fragment_post_view_pager) {
-    private val portfolioViewModel: PortfolioViewModel by viewModels()
+    private val portfolioViewModel: PortfolioViewModel by navGraphViewModels(R.id.portfolioGraph)
 
     private lateinit var portfolioRecyclerAdapter: PortfolioRecyclerAdapter
     private val recyclerData = mutableListOf<PostListResponseDto>()
@@ -43,18 +44,17 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-
                     if (it.data.size == 0) {
                         recyclerData.clear()
                         portfolioRecyclerAdapter.notifyDataSetChanged()
                         setIsEmptyView(View.VISIBLE, View.GONE, "아직 등록한 게시물이 없습니다")
                     } else {
+                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                         recyclerData.clear()
                         it.data.forEach { post ->
                             recyclerData.add(post)
                         }
                         portfolioRecyclerAdapter.notifyDataSetChanged()
-                        setIsEmptyView(View.GONE, View.VISIBLE, null)
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
