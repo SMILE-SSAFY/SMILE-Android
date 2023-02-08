@@ -2,7 +2,6 @@ package com.ssafy.smile.presentation.view.home
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -21,7 +20,6 @@ import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 
 
-private const val TAG = "HomeFragment_스마일"
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind, R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModels()
@@ -125,12 +123,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     }
 
     private fun getAddressObserver() {
-        homeViewModel.getAddressListResponse.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
+        homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
+            if (it==null) {
                 curAddress = getString(R.string.tv_address_unselected)
                 binding.tvToolbarAddress.text = curAddress
             } else{
-                curAddress = it[0].address
+                curAddress = it.address
                 binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
