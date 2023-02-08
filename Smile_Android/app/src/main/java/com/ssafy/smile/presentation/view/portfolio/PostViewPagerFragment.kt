@@ -17,7 +17,6 @@ import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
-private const val TAG = "PostViewPagerFragment_스마일"
 class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(FragmentPostViewPagerBinding::bind, R.layout.fragment_post_view_pager) {
     private val portfolioViewModel: PortfolioViewModel by navGraphViewModels(R.id.portfolioGraph)
 
@@ -59,7 +58,6 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    Log.d(TAG, "portfolioResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
