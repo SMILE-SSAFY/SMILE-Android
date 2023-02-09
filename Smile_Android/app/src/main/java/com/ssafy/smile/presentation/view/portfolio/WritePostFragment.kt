@@ -32,6 +32,7 @@ import java.io.File
 import java.net.URL
 import kotlin.math.abs
 
+// TODO : Delay 해결하기 -> Shimmer
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
 
     private val navArgs : WritePostFragmentArgs by navArgs()

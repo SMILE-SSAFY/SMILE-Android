@@ -67,7 +67,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                             layoutMyPageProfile.tvProfileName.text = it.data.name
                             Glide.with(requireContext())
                                 .load(Constants.IMAGE_BASE_URL+it.data.photoUrl)
-                                .fallback(R.drawable.img_profile_default)
+                                .fallback(R.drawable.img_profile_default)                       // TODO : null 처리 안됨. (default 이미지)
                                 .into(layoutMyPageProfile.ivProfileImage)
                         }
                     }
@@ -119,7 +119,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             logoutResponse.observe(viewLifecycleOwner){
                 when(it) {
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        Log.d(TAG, "setObserver: ${it.errorCode}")
                         showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.")
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {}

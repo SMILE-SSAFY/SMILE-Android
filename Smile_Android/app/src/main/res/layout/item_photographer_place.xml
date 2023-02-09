@@ -20,6 +20,7 @@
             android:id="@+id/tv_photographer_place_first"
             android:hint="도/시"
             android:maxLines="1"
+            android:ellipsize="end"
             android:textColorHint="@color/gray500"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +32,6 @@
         style="@style/CustomSpinnerTheme"
         android:layout_marginEnd="10dp"
         app:hintEnabled="false"
-        android:enabled="false"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="7">
@@ -39,6 +39,7 @@
             android:id="@+id/tv_photographer_place_second"
             android:hint="시/군/구"
             android:maxLines="1"
+            android:ellipsize="end"
             android:textColorHint="@color/gray500"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
