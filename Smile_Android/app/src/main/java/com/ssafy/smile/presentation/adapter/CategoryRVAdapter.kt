@@ -57,7 +57,7 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val dto = itemList[position]
         holder.apply {
-            bindInfo(position, dto)
+            bindInfo(adapterPosition, dto)
             itemView.tag = dto
         }
     }
@@ -72,19 +72,20 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
         fun bindInfo(position: Int, dto: CategoryDomainDto) {
             binding.apply {
                 tvPhotographerCategory.apply {
+                    setText(dto.name)
                     setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, R.array.spinner_category))
                     setOnItemClickListener { _, _, position, _ ->
                         dto.name = this.getString()
                         dto.categoryId = position + 1
                     }
-                    setText(dto.name)
                 }
                 etPhotographerCategoryPrice.apply {
+                    val priceString = if (dto.price==0) null else dto.price.toString()
+                    setText(priceString)
                     doOnTextChanged { charSequence, _, _, _ ->
                         itemList[position].price = if (charSequence.toString()=="") 0 else charSequence.toString().toInt()
                     }
-                    val priceString = if (dto.price==0) null else dto.price.toString()
-                    setText(priceString)
+
                 //addTextChangedListener(OnCurrentTextWatcher(position, this))
                 }
                 etPhotographerCategoryDetail.apply {

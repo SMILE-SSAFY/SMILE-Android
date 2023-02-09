@@ -114,7 +114,6 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
                 }
             })
         }.also { binding.layoutPhotographerPlace.rvPhotographerPlace.adapter = it }
-        placeRVAdapter.setListData(arrayListOf(PlaceDomainDto(true,"서울특별시", "강남구")))
 
         binding.layoutPhotographerAccount.apply {
             tvPhotographerAccount.setAdapter(Spinners.getSelectedArrayAdapter(requireContext(), R.array.spinner_account))
