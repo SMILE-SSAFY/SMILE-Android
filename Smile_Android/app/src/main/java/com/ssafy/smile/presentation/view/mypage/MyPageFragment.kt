@@ -10,8 +10,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.common.view.CommonDialog
@@ -33,6 +35,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun onResume() {
         super.onResume()
+        viewModel.getMyPageInfo()
+        setObserver()
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -40,8 +44,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun initView() {
         initToolbar()
-        viewModel.getMyPageInfo()
-        setObserver()
     }
 
     override fun setEvent() {
@@ -67,6 +69,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         dismissLoadingDialog()
                         binding.apply {
                             layoutMyPageProfile.tvProfileName.text = it.data.name
+                            Glide.with(requireContext())
+                                .load(Constants.IMAGE_BASE_URL+it.data.photoUrl)
+                                .fallback(R.drawable.img_profile_default)
+                                .into(layoutMyPageProfile.ivProfileImage)
                         }
                     }
                 }

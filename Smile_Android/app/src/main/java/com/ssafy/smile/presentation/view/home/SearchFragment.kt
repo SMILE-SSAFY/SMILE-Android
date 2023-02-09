@@ -82,7 +82,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
     private fun searchCategory(category: String) {
-        searchViewModel._searchCategory.value = category
+        searchViewModel.searchCategory = category
+        Log.d(TAG, "searchCategory1111111111111111111: ${searchViewModel.searchCategory}")
         searchViewModel.searchPhotographer(category)
         searchViewModel.searchPost(category)
     }

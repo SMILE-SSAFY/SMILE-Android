@@ -19,9 +19,7 @@ class SearchViewModel: BaseViewModel() {
     private val heartRepository = Application.repositoryInstances.getHeartRepository()
 
     // 입력한 검색어
-    val _searchCategory = MutableLiveData<String>()
-    val searchCategory: LiveData<String>
-        get() = _searchCategory
+    var searchCategory = ""
 
     // 작가 검색 결과를 관리하는 LiveData
     val searchPhotographerResponse: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<SearchPhotographerResponseDto>>>

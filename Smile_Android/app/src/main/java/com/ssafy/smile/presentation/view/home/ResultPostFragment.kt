@@ -84,7 +84,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 is NetworkUtils.NetworkResponse.Loading -> {
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    searchViewModel.searchPost(searchViewModel.searchCategory.value.toString())
+                    searchViewModel.searchPost(searchViewModel.searchCategory)
                     resultPostRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {

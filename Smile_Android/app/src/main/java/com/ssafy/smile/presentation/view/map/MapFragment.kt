@@ -26,7 +26,6 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.PermissionUtils
 import com.ssafy.smile.data.remote.model.ClusterDto
@@ -37,6 +36,7 @@ import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.map.MapViewModel
 
 
+private const val TAG = "MapFragment_스마일"
 class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R.layout.fragment_map),
     OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -83,6 +83,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        Log.d(TAG, "-----------------------------------------------map: ${it.data}")
                         if (isInitialized && it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
                         else {
                             updateClusterInfo(it.data)
