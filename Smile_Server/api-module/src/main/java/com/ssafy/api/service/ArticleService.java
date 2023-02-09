@@ -82,7 +82,9 @@ public class ArticleService {
     public ArticleDetailDto getArticleDetail(Long id){
         User logInUser = UserService.getLogInUser();
 
-        Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+
         User articleAuthor = article.getUser();
         // 자신이 작성한 글인지 확인
         boolean isMe = isMe(logInUser, articleAuthor);
@@ -100,7 +102,8 @@ public class ArticleService {
      * @throws ARTICLE_NOT_FOUND 게시글 없을 때
      */
     public void deletePost(Long id){
-        Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(id)
+                .orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User user = UserService.getLogInUser();
 
         if (article.getUser().getId() == user.getId()){

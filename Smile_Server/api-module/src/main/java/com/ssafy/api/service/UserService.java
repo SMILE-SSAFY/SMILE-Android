@@ -47,6 +47,7 @@ import java.util.Random;
  * 유저 관련 기능 클래스
  *
  * @author 서재건
+ * @author 신민철
  */
 @Slf4j
 @Service
@@ -281,9 +282,8 @@ public class UserService {
      * @param request
      */
     @Transactional
-    public void removeUser(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userId = Long.valueOf(jwtTokenProvider.getUserIdx(token));
+    public void removeUser() {
+        Long userId = getLogInUser().getId();
         log.info("token에 저장된 userId : {}", userId);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
