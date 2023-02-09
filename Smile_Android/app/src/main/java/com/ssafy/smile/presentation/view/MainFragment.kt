@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.ssafy.smile.Application
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.databinding.FragmentMainBinding
@@ -37,7 +38,7 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
 
     private fun initViewPager(){
         binding.apply{
-            mainViewPagerAdapter = MainViewPagerAdapter(requireActivity())
+            mainViewPagerAdapter = MainViewPagerAdapter(this@MainFragment)
 
             vpMain.apply {
                 adapter = mainViewPagerAdapter
@@ -54,9 +55,12 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
                 vpMain.currentItem = 1
             }
 
-            vpMain.post {                   // TODO : 처음 Init 상태인것만 체크하기.
-                vpMain.currentItem = 1
-                mainViewPagerAdapter.notifyDataSetChanged()
+            vpMain.post {
+                if (Application.isFirstViewPagerInit) {
+                    vpMain.currentItem = 1
+                    mainViewPagerAdapter.notifyDataSetChanged()
+                    Application.isFirstViewPagerInit = false
+                }
             }
         }
     }

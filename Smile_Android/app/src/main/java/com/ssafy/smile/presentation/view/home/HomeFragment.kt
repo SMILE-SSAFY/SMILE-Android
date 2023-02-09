@@ -34,6 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun onResume() {
         super.onResume()
         homeViewModel.getAddressList()
+        setObserverBeforeSetAddress()
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -48,8 +49,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         isPhotographer = getRole()
         userId = getUserId()
         initToolbar()
-        setObserverBeforeSetAddress()
         initRecycler()
+
+        binding.chipPopular.apply {
+            isChecked = true
+            isEnabled = false
+        }
     }
 
     private fun setObserverBeforeSetAddress() {
@@ -148,6 +153,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             refreshLayout.setOnRefreshListener {
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 refreshLayout.isRefreshing = false
+
+                when(filter) {
+                    "heart" -> {
+                        binding.chipPopular.apply {
+                            isChecked = true
+                            isEnabled = false
+                        }
+                    }
+                    "score" -> {
+                        binding.chipReviewAvg.apply {
+                            isChecked = true
+                            isEnabled = false
+                        }
+                    }
+                    "review" -> {
+                        binding.chipReviewCnt.apply {
+                            isChecked = true
+                            isEnabled = false
+                        }
+                    }
+                }
             }
         }
         setClickListener()
@@ -156,6 +182,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setChipEvent() {
         binding.apply {
             chipPopular.setOnClickListener {
+                setChipsEnabled(popular = false, avg = true, cnt = true)
                 filter = if (chipPopular.isChecked) {
                     "heart"
                 } else {
@@ -164,6 +191,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
             }
             chipReviewAvg.setOnClickListener {
+                setChipsEnabled(popular = true, avg = false, cnt = true)
                 filter = if (chipPopular.isChecked) {
                     "score"
                 } else {
@@ -172,6 +200,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
             }
             chipReviewCnt.setOnClickListener {
+                setChipsEnabled(popular = true, avg = true, cnt = false)
                 filter = if (chipPopular.isChecked) {
                     "review"
                 } else {
@@ -179,6 +208,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
             }
+        }
+    }
+
+    private fun setChipsEnabled(popular: Boolean, avg: Boolean, cnt: Boolean) {
+        binding.apply {
+            chipPopular.isEnabled = popular
+            chipReviewAvg.isEnabled = avg
+            chipReviewCnt.isEnabled = cnt
         }
     }
 

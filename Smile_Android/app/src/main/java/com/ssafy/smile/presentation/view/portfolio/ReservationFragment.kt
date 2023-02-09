@@ -334,6 +334,8 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             orderName = itemInfo.name
             orderId = "SMILE_ORDER_ID"
             price = itemInfo.price
+            pg = "나이스페이"
+            methods = mutableListOf("카드", "카카오페이")
             setExtra(extra).items = items
         }
 

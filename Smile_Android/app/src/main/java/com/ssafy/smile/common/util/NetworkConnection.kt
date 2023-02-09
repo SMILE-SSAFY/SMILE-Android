@@ -12,19 +12,32 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.ssafy.smile.common.view.sources.SingleLiveData
+import java.io.File
 
 private const val TAG = "스마일"
 class NetworkConnection(private val context: Context): LiveData<Boolean>() {
     private var cManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    private lateinit var nCallback: ConnectivityManager.NetworkCallback
     private val buildSdk = Build.VERSION.SDK_INT
+    private var nCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onLost(network: Network) {
+            super.onLost(network)
+            postValue(false)
+        }
+
+        override fun onAvailable(network: Network) {
+            super.onAvailable(network)
+            postValue(true)
+        }
+    }
 
     override fun onActive() {
         super.onActive()
         postValue(cManager.activeNetworkInfo?.isConnected == true)
 
         when {
-            buildSdk >= Build.VERSION_CODES.N -> cManager.registerDefaultNetworkCallback(cmCallback())
+            buildSdk >= Build.VERSION_CODES.N -> cManager.registerDefaultNetworkCallback(nCallback)
             buildSdk >= Build.VERSION_CODES.LOLLIPOP -> lollipopNetworkRequest()
             else -> context.registerReceiver(networkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
@@ -34,7 +47,7 @@ class NetworkConnection(private val context: Context): LiveData<Boolean>() {
         super.onInactive()
 
         if (buildSdk >= Build.VERSION_CODES.LOLLIPOP) {
-            cManager.unregisterNetworkCallback(cmCallback())
+            cManager.unregisterNetworkCallback(nCallback)
         } else {
             context.unregisterReceiver(networkReceiver)
         }
@@ -48,28 +61,8 @@ class NetworkConnection(private val context: Context): LiveData<Boolean>() {
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
                 .build(),
-            cmCallback()
+            nCallback
         )
-    }
-
-    private fun cmCallback(): ConnectivityManager.NetworkCallback {
-        if (buildSdk >= Build.VERSION_CODES.LOLLIPOP) {
-            nCallback = object : ConnectivityManager.NetworkCallback() {
-                override fun onLost(network: Network) {
-                    super.onLost(network)
-                    Log.d(TAG, "onLost: no")
-                    postValue(false)
-                }
-
-                override fun onAvailable(network: Network) {
-                    super.onAvailable(network)
-                    postValue(true)
-                }
-            }
-            return nCallback
-        } else {
-            throw IllegalAccessError("Error")
-        }
     }
 
     private val networkReceiver = object : BroadcastReceiver() {

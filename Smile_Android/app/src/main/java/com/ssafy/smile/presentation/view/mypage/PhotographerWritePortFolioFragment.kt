@@ -127,7 +127,7 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
         }
         val placeList = placeRVAdapter.getListData().map { it.toPlaceDto() }
         return PhotographerDto(
-            account = "카카오 뱅크 3333-02-1234567",
+            account = "${binding.layoutPhotographerAccount.tvPhotographerAccount.text} ${binding.layoutPhotographerAccount.etPhotographerAccount.text}",
             categories = categoryList,
             places = placeList,
             introduction = binding.etPhotographerInfo.getString()
