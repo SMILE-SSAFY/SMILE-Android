@@ -19,6 +19,7 @@ class Application : Application()  {
     companion object{
         lateinit var sharedPreferences: SharedPreferencesUtil
         var isRecommendRefused : Boolean = false
+        var isFirstViewPagerInit: Boolean = true
         var authToken : String? = null
         var authTime : Long? = null
         var fcmToken : String? = null

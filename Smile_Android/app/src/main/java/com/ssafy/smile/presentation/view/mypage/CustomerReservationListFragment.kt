@@ -30,6 +30,7 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
 
     override fun initView() {
         initToolbar()
+        customerReservationListViewModel.getCustomerReservationList()
         setObserver()
         initRecycler()
     }
@@ -169,5 +170,4 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
             }
         }
     }
-
 }

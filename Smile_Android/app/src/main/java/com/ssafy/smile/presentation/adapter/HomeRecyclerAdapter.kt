@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,6 +65,8 @@ class HomeRecyclerAdapter(val context: Context, val datas: MutableList<CustomPho
     }
 
     override fun getItemCount(): Int {
+        Log.d("-------------------------", "getItemCount: ${datas}")
+        Log.d("-------------------------", "getItemCount: ${datas.size}")
         return datas.size
     }
 }

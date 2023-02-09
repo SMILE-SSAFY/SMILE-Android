@@ -30,4 +30,7 @@ interface UserApiService {
     @GET("/api/user")
     suspend fun myPage(): Response<MyPageResponseDto>
 
+    @POST("/api/user/logout")
+    suspend fun logout(@Body logoutRequestDto: LogoutRequestDto): Response<Any>
+
 }
