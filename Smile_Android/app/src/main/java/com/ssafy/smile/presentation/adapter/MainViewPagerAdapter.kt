@@ -8,7 +8,7 @@ import com.ssafy.smile.presentation.view.map.MapFragment
 import com.ssafy.smile.presentation.view.mypage.MyPageFragment
 
 
-class MainViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity){
+class MainViewPagerAdapter(activity: Fragment) : FragmentStateAdapter(activity){
     override fun getItemCount(): Int = 3
 
     override fun createFragment(position: Int): Fragment {

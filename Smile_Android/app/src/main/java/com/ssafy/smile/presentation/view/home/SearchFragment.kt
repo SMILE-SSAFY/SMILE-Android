@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +20,7 @@ import com.ssafy.smile.presentation.adapter.SearchViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
+private const val TAG = "SearchFragment_스마일"
 class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::bind, R.layout.fragment_search) {
     private val searchViewModel: SearchViewModel by viewModels()
 
@@ -81,6 +83,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun searchCategory(category: String) {
         searchViewModel.searchCategory = category
+        Log.d(TAG, "searchCategory1111111111111111111: ${searchViewModel.searchCategory}")
         searchViewModel.searchPhotographer(category)
         searchViewModel.searchPost(category)
     }
@@ -103,11 +106,5 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         }
 
         sttLauncher.launch(intent)
-    }
-
-    private fun setResultText(selected: String) {
-        binding.apply {
-            etSearch.setText(selected)
-        }
     }
 }
