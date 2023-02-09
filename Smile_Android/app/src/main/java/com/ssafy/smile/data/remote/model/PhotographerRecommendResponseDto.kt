@@ -12,9 +12,11 @@ data class PhotographerRecommendResponseDto(
 
         val categoryNames = arrayListOf<String>()
         val categoryPrices = arrayListOf<Int>()
-        photographerInfo.categories.forEach { category ->
-            categoryNames.add(category.name)
-            categoryPrices.add(category.price.toInt())
+        photographerInfo.categories.forEach { data ->
+            if (data.name !in categoryNames) {
+                categoryNames.add(data.name)
+            }
+            categoryPrices.add(data.price.toInt())
         }
 
         val sPlaces = arrayListOf<String>()

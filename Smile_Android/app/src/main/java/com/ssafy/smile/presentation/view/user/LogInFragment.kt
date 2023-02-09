@@ -88,13 +88,13 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     dismissLoadingDialog()
                     when (it.errorCode) {
                         404 -> {
-                            showToast(requireContext(), "존재하지 않는 회원입니다. 다시 로그인해주세요.", Types.ToastType.WARNING)
+                            showToast(requireContext(), "존재하지 않는 회원입니다. 다시 로그인해주세요.", Types.ToastType.INFO)
                         }
                         400 -> {
-                            showToast(requireContext(), "비밀번호가 일치하지 않습니다. 다시 로그인해주세요.", Types.ToastType.WARNING)
+                            showToast(requireContext(), "비밀번호가 일치하지 않습니다. 다시 로그인해주세요.", Types.ToastType.INFO)
                         }
                         else -> {
-                            showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                            showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                         }
                     }
                 }
@@ -118,11 +118,10 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     SharedPreferencesUtil(requireContext()).putRole(it.data.role)
                     SharedPreferencesUtil(requireContext()).putUserId(it.data.userId)
                     findNavController().navigate(R.id.action_logInFragment_to_mainFragment)
-                    showToast(requireContext(), "로그인 되었습니다.", Types.ToastType.BASIC)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "로그인 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }
@@ -131,10 +130,10 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
     private fun checkValid(): Boolean {
         binding.apply {
             return if (etId.text.toString().isEmpty()) {
-                showToast(requireContext(), "아이디를 입력해주세요", Types.ToastType.ERROR)
+                showToast(requireContext(), "아이디를 입력해주세요", Types.ToastType.INFO)
                 false
             } else if (etPassword.text.toString().isEmpty()) {
-                showToast(requireContext(), "비밀번호를 입력해주세요", Types.ToastType.ERROR)
+                showToast(requireContext(), "비밀번호를 입력해주세요", Types.ToastType.INFO)
                 false
             } else {
                 true

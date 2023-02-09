@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.home
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -63,7 +64,8 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
         viewModel.selectAddressResponseLiveData.observe(viewLifecycleOwner){
             if (it<0) showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "주소설정"), Types.ToastType.ERROR)
             else {
-                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
+                findNavController().getBackStackEntry(R.id.mainFragment).savedStateHandle["curAddress"] = addressDomainDto
+                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.BASIC)
                 moveToPopUpToGraph()
             }
         }

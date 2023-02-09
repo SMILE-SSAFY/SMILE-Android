@@ -34,7 +34,7 @@ class HomeViewModel: BaseViewModel() {
         heartRepository.photographerHeart(photographerId)
     }
 
-    fun getAddressList() = viewModelScope.launch(Dispatchers.IO) {
+    fun getCurrentAddress() = viewModelScope.launch(Dispatchers.IO) {
         _getCurrentAddressResponse.postValue(addressRepository.getSelectedAddress())
     }
 }

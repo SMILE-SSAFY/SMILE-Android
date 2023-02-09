@@ -86,7 +86,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
                     is NetworkUtils.NetworkResponse.Success -> { moveToRegisterPortFolioGraph(it.data) }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 가져오는"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -120,7 +119,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 when(it) {
                     is NetworkUtils.NetworkResponse.Failure -> {
                         Log.d(TAG, "setObserver: ${it.errorCode}")
-                        showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.")
+                        showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {}
                     is NetworkUtils.NetworkResponse.Success -> {

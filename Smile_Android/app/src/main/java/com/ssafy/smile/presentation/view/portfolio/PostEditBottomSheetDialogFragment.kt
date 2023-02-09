@@ -44,11 +44,11 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
         portfolioGraphViewModel.deletePostByIdResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    showToast(requireContext(), "삭제되었습니다.", Types.ToastType.BASIC)
+                    showToast(requireContext(), "게시글이 삭제되었습니다.", Types.ToastType.SUCCESS)
                     findNavController().navigate(R.id.action_postEditBottomSheetDialogFragment_pop)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    showToast(requireContext(), "게시글 삭제 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "게시글 삭제 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                 }
