@@ -33,31 +33,9 @@
             android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="15dp"
             android:text="프로필 사진 수정"
-            android:textSize="15sp"
+            android:textSize="17sp"
             android:textColor="@color/black"
             android:fontFamily="@font/ibm_plex_sans_semi_bold"/>
-        <LinearLayout
-            android:id="@+id/layout_select_image_post"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:paddingVertical="15dp"
-            android:paddingHorizontal="35dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_bookmark_empty"/>
-            <TextView
-                android:id="@+id/tv_select_image_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="게시물에서 선택"
-                android:textSize="12sp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/ibm_plex_sans_medium"/>
-        </LinearLayout>
         <LinearLayout
             android:id="@+id/layout_select_image_gallery"
             android:layout_width="match_parent"
@@ -76,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="갤러리에서 선택"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/ibm_plex_sans_medium"/>
         </LinearLayout>
@@ -98,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="프로필 사진 제거"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/ibm_plex_sans_medium"/>
         </LinearLayout>

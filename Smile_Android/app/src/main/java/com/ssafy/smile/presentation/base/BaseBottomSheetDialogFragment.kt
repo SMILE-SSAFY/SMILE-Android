@@ -59,7 +59,7 @@ abstract class BaseBottomSheetDialogFragment<B : ViewBinding>(private val bindin
         super.onDestroyView()
     }
 
-    fun setupRatio(view : View, ratio:Int=35){
+    fun setupRatio(view : View, ratio:Int=30){
         val layoutParams = view.layoutParams
         layoutParams.height = getBottomSheetDialogDefaultHeight(ratio)
         view.layoutParams = layoutParams

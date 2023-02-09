@@ -19,6 +19,7 @@ class CustomRecommendDialog(context: Context): Dialog(context) {
 
     interface OnButtonClickListener {
         fun onOkButtonClick()
+        fun onCancelButtonClick()
     }
     lateinit var onButtonClickListener : OnButtonClickListener
     fun setButtonClickListener(onButtonClickListener: OnButtonClickListener){ this.onButtonClickListener = onButtonClickListener }
@@ -47,6 +48,7 @@ class CustomRecommendDialog(context: Context): Dialog(context) {
                 dismiss()
             }
             btnCancel.setOnSingleClickListener {
+                onButtonClickListener.onCancelButtonClick()
                 dismiss()
             }
         }

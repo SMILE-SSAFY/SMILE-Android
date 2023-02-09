@@ -24,7 +24,7 @@ class MyInterestFragment : BaseFragment<FragmentMyInterestBinding>(FragmentMyInt
 
     private fun initViewPager() {
         val tabTitle = listOf("작가", "게시물")
-        binding.viewPager.adapter = MyInterestViewPagerAdapter(requireActivity())
+        binding.viewPager.adapter = MyInterestViewPagerAdapter(this)
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitle[position]
         }.attach()
