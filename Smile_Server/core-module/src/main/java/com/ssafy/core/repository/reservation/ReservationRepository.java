@@ -1,5 +1,6 @@
 package com.ssafy.core.repository.reservation;
 
+import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.entity.Reservation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,5 +22,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
 
     List<Reservation> findByUserIdOrderByCreatedAtDesc(Long userId);
 
-    Page<Reservation> findByReservedAt(Date reservedAt, Pageable pageable);
+    Page<Reservation> findByReservedAtAndStatusNot(Date reservedAt, ReservationStatus status, Pageable pageable);
 }

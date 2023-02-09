@@ -1,10 +1,7 @@
 package com.ssafy.batch.job;
 
-import com.ssafy.batch.dto.NotificationDTO;
-import com.ssafy.batch.service.NotificationService;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.entity.Reservation;
-import com.ssafy.core.entity.User;
 import com.ssafy.core.repository.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,51 +25,32 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * fcm 알림 전송하기 위한 Job
- *
- * @author 서재건
- */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class NotificationJobConfig {
+public class ChangeReservingJobConfig {
 
     public final JobBuilderFactory jobBuilderFactory;
     public final StepBuilderFactory stepBuilderFactory;
     public final ReservationRepository reservationRepository;
-    public final NotificationService notificationService;
 
-    /**
-     * Job 설정
-     *
-     * @param notificationStep
-     * @return
-     */
     @Bean
-    public Job NotificationJob(Step notificationStep) {
+    public Job changeReservingJob(Step changeReservingStep) {
 
-        return jobBuilderFactory.get("notificationJob")
+        return jobBuilderFactory.get("changeReservingJob")
                 .incrementer(new RunIdIncrementer())
-                .start(notificationStep)
+                .start(changeReservingStep)
                 .build();
     }
 
-    /**
-     * Step 설정
-     *
-     * @param reservationReader
-     * @param reservationWriter
-     * @return
-     */
     @Bean
     @JobScope
-    public Step notificationStep(ItemReader reservationReader,
-                         ItemWriter reservationWriter) {
-        return stepBuilderFactory.get("notificationStep")
+    public Step changeReservingStep(ItemReader reservationNowReader,
+                                 ItemWriter reservationNowWriter) {
+        return stepBuilderFactory.get("changeReservingStep")
                 .<Reservation, Reservation>chunk(10)
-                .reader(reservationReader)
-                .writer(reservationWriter)
+                .reader(reservationNowReader)
+                .writer(reservationNowWriter)
                 .build();
     }
 
@@ -83,44 +61,33 @@ public class NotificationJobConfig {
      */
     @Bean
     @StepScope
-    public RepositoryItemReader<Reservation> reservationReader() {
+    public RepositoryItemReader<Reservation> reservationNowReader() {
         return new RepositoryItemReaderBuilder<Reservation>()
-                .name("reservationReader")
+                .name("reservationNowReader")
                 .repository(reservationRepository)
                 .methodName("findByReservedAtAndStatusNot")
                 .pageSize(10)
-                .arguments(Date.valueOf(LocalDate.now().plusDays(1)), ReservationStatus.예약취소)
+                .arguments(Date.valueOf(LocalDate.now()), ReservationStatus.예약취소)
                 .sorts(Collections.singletonMap("id", Sort.Direction.ASC))
                 .build();
     }
 
-    /**
-     * 조회된 값을 처리하는 Writer
-     * @return
-     */
     @Bean
     @StepScope
-    public ItemWriter<Reservation> reservationWriter() {
+    public ItemWriter<Reservation> reservationNowWriter() {
         return new ItemWriter<Reservation>() {
             @Override
-            public void write(List<? extends Reservation> reservationList) throws Exception {
+            public void write(List<? extends Reservation> reservationList) {
+                log.info("changeReservingjob-------------");
                 for (Reservation reservation : reservationList) {
-                    String content;
                     if (reservation.getStatus().equals(ReservationStatus.예약확정전)) {
-                        content = "의 예약이 확정되지 않았습니다. 확인해주세용 ><";
+                        reservation.updateStatus(ReservationStatus.예약취소);
                     } else {
-                        content = "에 예약이 있습니다.";
+                        reservation.updateStatus(ReservationStatus.예약진행중);
                     }
-                    User user = reservation.getUser();
-                    notificationService.sendDataMessageTo(NotificationDTO.builder()
-                                    .requestId(user.getId())
-                                    .registrationToken(user.getFcmToken())
-                                    .content(reservation.getReservedAt() + content)
-                            .build());
+                    reservationRepository.save(reservation);
                 }
             }
         };
     }
-
 }
-
