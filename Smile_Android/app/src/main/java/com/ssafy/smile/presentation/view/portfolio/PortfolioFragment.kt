@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.portfolio
 
+import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
+private const val TAG = "PortfolioFragment_스마일"
 class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortfolioBinding::bind, R.layout.fragment_portfolio) {
 
     private val portfolioViewModel: PortfolioViewModel by navGraphViewModels(R.id.portfolioGraph)
@@ -128,9 +130,11 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         binding.apply {
             // TODO : like누른 후 reponse livedata 호출 안됨.
             portfolioViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
+                Log.d(TAG, "photographerHeartResponseObserver: observer 실행")
                 when(it) {
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        Log.d(TAG, "photographerHeartResponseObserver: Success")
                         ctvLike.toggle()
                         portfolioViewModel.getPortfolio(photographerId)
                     }

@@ -33,4 +33,8 @@ class UserRemoteDataSourceImpl(private val userApiService: UserApiService): User
         return userApiService.myPage()
     }
 
+    override suspend fun logout(logoutRequestDto: LogoutRequestDto): Response<Any> {
+        return userApiService.logout(logoutRequestDto)
+    }
+
 }

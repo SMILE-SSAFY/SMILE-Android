@@ -1,8 +1,6 @@
 package com.ssafy.smile.presentation.view.home
 
-import android.util.Log
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,9 +10,7 @@ import com.ssafy.smile.databinding.FragmentResultPhotographerBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.ResultPhotographerRecyclerAdapter
-import com.ssafy.smile.presentation.adapter.ResultPostRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
-import com.ssafy.smile.presentation.viewmodel.home.HomeViewModel
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBinding>(FragmentResultPhotographerBinding::bind, R.layout.fragment_result_photographer) {
@@ -44,10 +40,6 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-
-                    binding.apply {
-                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-                    }
 
                     if (it.data.size == 0) {
                         recyclerData.clear()
@@ -92,7 +84,6 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     searchViewModel.searchPhotographer(searchViewModel.searchCategory)
-                    resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)

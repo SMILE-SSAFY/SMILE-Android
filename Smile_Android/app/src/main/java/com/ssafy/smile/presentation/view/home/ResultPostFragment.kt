@@ -39,13 +39,11 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
     private fun searchPostResponseObserver() {
         searchViewModel.searchPostResponse.observe(viewLifecycleOwner) {
             when(it) {
-                is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
+                is NetworkUtils.NetworkResponse.Loading -> {
+                    showLoadingDialog(requireContext())
+                }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-
-                    binding.apply {
-                        tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
-                    }
 
                     if (it.data.size == 0) {
                         recyclerData.clear()
