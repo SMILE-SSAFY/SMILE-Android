@@ -34,7 +34,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +84,8 @@ public class UserService {
         log.info("[registerUser] RegisterFormDto 객체 : {}", registerFormDto.toString());
 
         // 카카오 전용 휴대폰 번호(11112345678)으로 회원가입 신청이 아니면 휴대폰 번호 중복 체크
-        if (!registerFormDto.getPhoneNumber().equals("11112345678") && userRepository.existsByPhoneNumber(registerFormDto.getPhoneNumber())) {
+        if (!registerFormDto.getPhoneNumber().equals("11112345678")
+                && userRepository.existsByPhoneNumber(registerFormDto.getPhoneNumber())) {
             throw new CustomException(ErrorCode.HAS_PHONENUMBER);
         }
 
@@ -104,13 +104,7 @@ public class UserService {
             log.info("[registerUser] 회원등록 완료");
         }
 
-        LoginUserDto loginUserDto = LoginUserDto.builder()
-                .email(registerFormDto.getEmail())
-                .password(registerFormDto.getPassword())
-                .fcmToken(registerFormDto.getFcmToken())
-                .build();
-
-        return login(loginUserDto);
+        return login(new LoginUserDto().of(registerFormDto));
     }
 
     /**
@@ -139,11 +133,7 @@ public class UserService {
         String token = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole().getName());
         log.info("jwt token 생성");
 
-        return TokenRoleDto.builder()
-                .token(token)
-                .role(user.getRole())
-                .userId(user.getId())
-                .build();
+        return new TokenRoleDto().of(token, user.getRole(), user.getId());
     }
 
     /**
@@ -210,10 +200,10 @@ public class UserService {
      */
     public TokenRoleDto kakaoLogin(String accessToken, String fcmToken) {
         log.info("accessToken : {}", accessToken);
-        ResponseEntity<String> profileResponse = kakaoProfileResponse(accessToken);
+        ResponseEntity<String> profileResponse = getKakaoProfileResponse(accessToken);
         log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
 
-        KakaoProfileDto kakaoProfileDto = kakaoProfile(profileResponse);
+        KakaoProfileDto kakaoProfileDto = setKakaoProfile(profileResponse);
         log.info("카카오 아이디(번호) : {}", kakaoProfileDto.getId());
         log.info("카카오 닉네임 : {}", kakaoProfileDto.getProperties().getNickname());
         log.info("카카오 이메일 : {}", kakaoProfileDto.getKakao_account().getEmail());
@@ -235,7 +225,7 @@ public class UserService {
      * @param accessToken
      * @return 요청한 회원 정보가 담긴 response 반환
      */
-    public ResponseEntity<String> kakaoProfileResponse(String accessToken) {
+    public ResponseEntity<String> getKakaoProfileResponse(String accessToken) {
         // POST방식으로 key=value 데이터를 요청(카카오쪽으로)
         RestTemplate rt = new RestTemplate();
         rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
@@ -263,7 +253,7 @@ public class UserService {
      * @param response // 회원 정보가 담긴 response
      * @return 회원정보가 담긴 dto 반환
      */
-    public KakaoProfileDto kakaoProfile(ResponseEntity<String> response) {
+    public KakaoProfileDto setKakaoProfile(ResponseEntity<String> response) {
         ObjectMapper objectMapper = new ObjectMapper();
         KakaoProfileDto kakaoProfileDto = null;
         try {

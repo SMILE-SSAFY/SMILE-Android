@@ -78,6 +78,7 @@ public class ReservationService {
      *
      * @param reservation
      */
+    @Transactional
     public ReservationResDto reserve(ReservationReqDto reservation){
         Long userId = UserService.getLogInUser().getId();
         reservation.setUserId(userId);
@@ -105,9 +106,8 @@ public class ReservationService {
 
         Reservation entity = reservationRepository.save(savedReservation);
 
-        ReservationResDto res = new ReservationResDto();
         User photographer = userRepository.findById(reservation.getPhotographerId()).get();
-        return res.of(entity, photographer.getName(), photographer.getPhoneNumber());
+        return new ReservationResDto().of(entity, photographer.getName(), photographer.getPhoneNumber());
     }
 
     /**
@@ -122,6 +122,7 @@ public class ReservationService {
 
         // 예약취소된 예약 외 예약 할 수 있는 날
         List<Date> findDates =
+
                 reservationRepository
                         .findReservedAtByPhotographerIdAndReservedAt(photographerId, Date.valueOf(LocalDate.now()));
 
