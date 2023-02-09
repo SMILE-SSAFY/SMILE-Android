@@ -84,18 +84,14 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
 
     private fun photographerHeartResponseObserver() {
         searchViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
-            Log.d(TAG, "photographerHeartResponseObserver: observer")
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    Log.d(TAG, "photographerHeartResponseObserver: loading")
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    Log.d(TAG, "photographerHeartResponseObserver: success")
-                    resultPhotographerRecyclerAdapter.notifyDataSetChanged()
-                    searchViewModel.searchPhotographer(searchViewModel.searchCategory.value.toString())
+                    Log.d(TAG, "photographerHeartResponseObserver11111111111111: ${searchViewModel.searchCategory}")
+                    searchViewModel.searchPhotographer(searchViewModel.searchCategory)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    Log.d(TAG, "photographerHeartResponseObserver: failure")
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }

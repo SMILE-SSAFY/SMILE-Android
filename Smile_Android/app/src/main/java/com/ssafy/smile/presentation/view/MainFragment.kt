@@ -38,7 +38,7 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
 
     private fun initViewPager(){
         binding.apply{
-            mainViewPagerAdapter = MainViewPagerAdapter(requireActivity())
+            mainViewPagerAdapter = MainViewPagerAdapter(this@MainFragment)
 
             vpMain.apply {
                 adapter = mainViewPagerAdapter

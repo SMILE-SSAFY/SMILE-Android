@@ -61,7 +61,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        if (it.data.articleRedisList.isEmpty()){
+                         if (it.data.articleRedisList.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
                         }else{

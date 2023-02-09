@@ -36,7 +36,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun onResume() {
         super.onResume()
         homeViewModel.getAddressList()
-        homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+        setObserverBeforeSetAddress()
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -51,8 +51,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         isPhotographer = getRole()
         userId = getUserId()
         initToolbar()
-        homeViewModel.getAddressList()
-        setObserverBeforeSetAddress()
         initRecycler()
 
         binding.chipPopular.apply {
@@ -82,10 +80,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         homeViewModel.getPhotographerInfoByAddressResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-//                    showLoadingDialog(requireContext())
+                    showLoadingDialog(requireContext())
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    Log.d(TAG, "getPhotographerInfoByAddressResponseObserver: 나와라나와라나와라나와라")
                     dismissLoadingDialog()
                     if (it.data.size == 0) {
                         recyclerData.clear()
