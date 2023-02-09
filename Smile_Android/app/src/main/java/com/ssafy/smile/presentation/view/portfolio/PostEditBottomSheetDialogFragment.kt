@@ -29,12 +29,12 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
 
     override fun setEvent() {
         binding.apply {
-            layoutEdit.setOnClickListener{
-                // TODO : 편집 화면으로 이동
+            layoutModifyPost.setOnClickListener{
+                val action = PostEditBottomSheetDialogFragmentDirections.actionPostEditBottomSheetDialogFragmentToWritePostFragment(args.postId, args.postDomainDto)
+                findNavController().navigate(action)
             }
-            layoutDelete.setOnClickListener {
-                val dialog = CommonDialog(requireContext(), DialogBody("게시글을 삭제 하시겠습니까?\n(게시글 삭제시 복구할 수 없습니다)", "확인", "취소"),
-                    { portfolioGraphViewModel.deletePostById(args.postId) })
+            layoutRemovePost.setOnClickListener {
+                val dialog = CommonDialog(requireContext(), DialogBody("게시글을 삭제 하시겠습니까?\n(게시글 삭제시 복구할 수 없습니다)", "확인", "취소"), { portfolioGraphViewModel.deletePostById(args.postId) })
                 showDialog(dialog, viewLifecycleOwner)
             }
         }
@@ -48,7 +48,6 @@ class PostEditBottomSheetDialogFragment : BaseBottomSheetDialogFragment<Fragment
                     findNavController().navigate(R.id.action_postEditBottomSheetDialogFragment_pop)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    Log.d(TAG, "deletePostByIdResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "게시글 삭제 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {

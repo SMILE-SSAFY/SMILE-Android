@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.smile.R
@@ -61,7 +60,7 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
 
     override fun setEvent() {
         binding.btnBack.setOnClickListener { moveToPopUpSelf() }
-        viewModel.selectedAddressResponseLiveData.observe(viewLifecycleOwner){
+        viewModel.selectAddressResponseLiveData.observe(viewLifecycleOwner){
             if (it<0) showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "주소설정"), Types.ToastType.ERROR)
             else {
                 showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
@@ -90,10 +89,8 @@ class AddressSearchFragment : BaseBottomSheetDialogFragment<FragmentAddressSearc
             }
             lifecycleScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.Main) {
-                    if (isSelectionMode) lifecycleScope.launch(Dispatchers.IO){
-                        viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
-                    }
-                    else lifecycleScope.launch(Dispatchers.IO){ viewModel.insertAddress(addressDomainDto) }
+                    if (isSelectionMode) viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
+                    else viewModel.insertAddress(addressDomainDto)
                 }
             }
         }

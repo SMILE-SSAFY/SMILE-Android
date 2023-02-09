@@ -1,12 +1,11 @@
 package com.ssafy.smile.presentation.adapter
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ssafy.smile.presentation.view.portfolio.PostViewPagerFragment
 import com.ssafy.smile.presentation.view.portfolio.ReviewViewPagerFragment
 
-class PortfolioViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity){
+class PortfolioViewPagerAdapter(fragment : Fragment) : FragmentStateAdapter(fragment){
     private val fragmentList = listOf(PostViewPagerFragment(), ReviewViewPagerFragment())
 
     override fun getItemCount(): Int {

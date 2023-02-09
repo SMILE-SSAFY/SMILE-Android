@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.map
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.children
 import androidx.fragment.app.viewModels
