@@ -113,11 +113,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             logoutResponse.observe(viewLifecycleOwner){
                 when(it) {
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        Log.d(TAG, "setObserver: ${it.errorCode}")
                         showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.")
-                        findNavController().navigate(R.id.action_global_loginFragment)
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {}
-                    is NetworkUtils.NetworkResponse.Success -> {}
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        Intent(context, MainActivity::class.java).apply {
+                            requireActivity().finish()
+                            startActivity(this)
+                        }
+                        requireActivity().finish()
+                    }
                 }
             }
             getRole(requireContext())
@@ -167,16 +173,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         }
     }
     private fun logout() {
+        viewModel.logout(LogoutRequestDto(SharedPreferencesUtil(requireContext()).getFCMToken()!!))
         try {
-            viewModel.logout(LogoutRequestDto(SharedPreferencesUtil(requireContext()).getFCMToken()!!))
             removeUserInfo()
-
-            Intent(context, MainActivity::class.java).apply {
-                requireActivity().finish()
-                startActivity(this)
-            }
-            requireActivity().finish()
-        } catch (e: IOException) { findNavController().navigate(R.id.action_global_loginFragment) }
+        } catch (e: IOException) {
+            findNavController().navigate(R.id.action_global_loginFragment)
+        }
     }
     private fun removeUserInfo(){
         SharedPreferencesUtil(requireContext()).removeAllInfo()
