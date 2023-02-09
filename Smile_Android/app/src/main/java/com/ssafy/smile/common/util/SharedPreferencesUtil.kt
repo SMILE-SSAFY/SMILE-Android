@@ -119,7 +119,6 @@ class SharedPreferencesUtil (context: Context) {
         removeFCMToken()
         removeRole()
         removeUserId()
-        Log.d("싸피", "removeAllInfo: ${getAuthToken()}")
     }
 
 }

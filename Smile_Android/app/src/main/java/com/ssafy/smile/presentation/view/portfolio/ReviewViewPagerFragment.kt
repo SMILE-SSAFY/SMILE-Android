@@ -1,11 +1,7 @@
 package com.ssafy.smile.presentation.view.portfolio
 
-import android.util.Log
 import android.view.View
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
-import androidx.recyclerview.widget.GridLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.CommonDialog
@@ -13,7 +9,6 @@ import com.ssafy.smile.databinding.FragmentReviewViewPagerBinding
 import com.ssafy.smile.domain.model.DialogBody
 import com.ssafy.smile.domain.model.PhotographerReviewDomainDto
 import com.ssafy.smile.presentation.adapter.PhotographerReviewRVAdapter
-import com.ssafy.smile.presentation.adapter.PortfolioRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
 
@@ -22,6 +17,7 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
     private lateinit var photographerReviewRVAdapter: PhotographerReviewRVAdapter
 
     override fun initView() {
+
         setObserver()
         initRVView()
     }
@@ -32,8 +28,11 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
         viewModel.apply {
             photographerReviewListResponse.observe(viewLifecycleOwner){
                 when(it){
-                    is NetworkUtils.NetworkResponse.Loading -> { }
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        dismissLoadingDialog()
+                    }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
                         if (it.data.isEmpty()) {
                             setEmptyView(true)
                             setRVView(false)
@@ -44,7 +43,9 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
                             setRVView(true, dataList as ArrayList<PhotographerReviewDomainDto>)
                         }
                     }
-                    is NetworkUtils.NetworkResponse.Failure -> { }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        showLoadingDialog(requireContext())
+                    }
                 }
             }
             deleteReviewResponse.observe(viewLifecycleOwner){
@@ -70,7 +71,6 @@ class ReviewViewPagerFragment : BaseFragment<FragmentReviewViewPagerBinding>(Fra
         }
         binding.rvReview.adapter = photographerReviewRVAdapter
     }
-
 
     private fun setEmptyView(isSet : Boolean){
         if (isSet){

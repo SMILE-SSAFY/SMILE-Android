@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -42,8 +43,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
         searchViewModel.searchPhotographerResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
-                    //TODO : 이메일 체크 다이얼로그 문제와 동일
-//                    dismissLoadingDialog()
+                    dismissLoadingDialog()
 
                     binding.apply {
                         tvResult.text = "'${searchViewModel.searchCategory}'로 검색한 결과입니다"
@@ -63,7 +63,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-//                    dismissLoadingDialog()
+                    dismissLoadingDialog()
                     if (it.errorCode == 404) {
                         showToast(requireContext(), "검색한 키워드의 작가가 존재하지 않습니다.", Types.ToastType.INFO)
                     } else {
@@ -71,7 +71,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                     }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
-//                    showLoadingDialog(requireContext())
+                    showLoadingDialog(requireContext())
                 }
             }
         }

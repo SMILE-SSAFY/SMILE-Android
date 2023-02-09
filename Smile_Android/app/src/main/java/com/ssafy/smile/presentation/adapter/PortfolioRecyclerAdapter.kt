@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,6 @@ import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.data.remote.model.PostListResponseDto
 import com.ssafy.smile.databinding.RecyclerPortfolioPostItemBinding
 
-private const val TAG = "PortfolioRecyclerAdapte_스마일"
 class PortfolioRecyclerAdapter(val context: Context, val datas: MutableList<PostListResponseDto>): RecyclerView.Adapter<PortfolioRecyclerAdapter.PortfolioRecyclerViewHolder>() {
 
     interface OnItemClickListener {

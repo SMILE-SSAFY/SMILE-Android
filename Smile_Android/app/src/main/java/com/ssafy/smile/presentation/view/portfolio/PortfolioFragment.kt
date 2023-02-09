@@ -1,9 +1,7 @@
 package com.ssafy.smile.presentation.view.portfolio
 
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
@@ -18,9 +16,7 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.PortfolioViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.portfolio.PortfolioViewModel
-import kotlin.math.log
 
-private const val TAG = "PortfolioFragment_스마일"
 class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortfolioBinding::bind, R.layout.fragment_portfolio) {
 
     private val portfolioViewModel: PortfolioViewModel by navGraphViewModels(R.id.portfolioGraph)
@@ -59,7 +55,9 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
         toolbar.initToolbar("프로필", true) { moveToPopUpSelf() }
     }
 
-    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_portfolioFragment_pop)
+    private fun moveToPopUpSelf() {
+        findNavController().navigate(R.id.action_portfolioFragment_pop)
+    }
 
     private fun setObserver() {
         portfolioResponseObserver()
@@ -94,10 +92,13 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
     }
 
     private fun initViewPager() {
-        val viewPagerAdapter = PortfolioViewPagerAdapter(requireActivity())
+        val viewPagerAdapter = PortfolioViewPagerAdapter(this)
         val tabTitle = listOf("게시물", "작가 리뷰")
 
-        binding.viewPager.adapter = viewPagerAdapter
+        binding.viewPager.apply {
+            adapter = viewPagerAdapter
+            offscreenPageLimit = 2
+        }
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitle[position]
         }.attach()
@@ -113,7 +114,6 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     if (args.postId<0){
-                        Log.d(TAG, "portfolioResponseObserver: ${it.errorCode}")
                         showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                     }
                 }
@@ -126,6 +126,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     private fun photographerHeartResponseObserver() {
         binding.apply {
+            // TODO : like누른 후 reponse livedata 호출 안됨.
             portfolioViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
                 when(it) {
                     is NetworkUtils.NetworkResponse.Loading -> { }

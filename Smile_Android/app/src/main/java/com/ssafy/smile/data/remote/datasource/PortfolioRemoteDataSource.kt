@@ -11,5 +11,5 @@ interface PortfolioRemoteDataSource {
     suspend fun getPosts(photographerId: Long): Response<ArrayList<PostListResponseDto>>
     suspend fun uploadPost(latitude: Double, longitude: Double,
                            detailAddress: String, category: String, images : List<MultipartBody.Part>): Response<Any>
-
+    suspend fun modifyPost(articleId : Long, latitude: Double, longitude: Double, detailAddress: String, category: String, images: List<MultipartBody.Part>) : Response<Any>
 }

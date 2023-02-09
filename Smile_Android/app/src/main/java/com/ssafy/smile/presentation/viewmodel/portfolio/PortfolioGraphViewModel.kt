@@ -27,6 +27,15 @@ class PortfolioGraphViewModel : BaseViewModel() {
         get() = _postDataResponse
     val postUploadResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = portfolioRepository.postUploadResponseLiveData
+    val postModifyResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
+        get() = portfolioRepository.postModifyResponseLiveData
+
+    fun uploadData(images: List<File>, addressDomainDto: AddressDomainDto, category: String){
+        postData.images = images
+        postData.addressDomainDto = addressDomainDto
+        postData.category = category
+        _postDataResponse.postValue(checkData())
+    }
 
     fun uploadImageData(images:List<File>){
         postData.images = images
@@ -47,8 +56,19 @@ class PortfolioGraphViewModel : BaseViewModel() {
 
     fun uploadPost() = viewModelScope.launch(Dispatchers.IO){
         val post = postData.toPost()
-        makeMultiPartBodyList(REQUEST_KEY_IMAGE_LIST, post.image)
         portfolioRepository.uploadPost(
+            post.ArticlePostReq.latitude,
+            post.ArticlePostReq.longitude,
+            post.ArticlePostReq.detailAddress,
+            post.ArticlePostReq.category,
+            makeMultiPartBodyList(REQUEST_KEY_IMAGE_LIST, post.image)
+        )
+    }
+
+    fun modifyPost(postId : Long)= viewModelScope.launch(Dispatchers.IO){
+        val post = postData.toPost()
+        portfolioRepository.modifyPost(
+            postId,
             post.ArticlePostReq.latitude,
             post.ArticlePostReq.longitude,
             post.ArticlePostReq.detailAddress,
