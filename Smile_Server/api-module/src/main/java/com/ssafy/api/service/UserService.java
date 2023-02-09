@@ -1,7 +1,6 @@
 package com.ssafy.api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.api.config.security.jwt.JwtTokenProvider;
 import com.ssafy.api.dto.Kakao.KakaoProfileDto;
@@ -264,10 +263,10 @@ public class UserService {
      * @return 회원정보가 담긴 dto 반환
      */
     public KakaoProfileDto kakaoProfile(ResponseEntity<String> response) {
-        ObjectMapper objectMapper2 = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         KakaoProfileDto kakaoProfileDto = null;
         try {
-            kakaoProfileDto = objectMapper2.readValue(response.getBody(), KakaoProfileDto.class);
+            kakaoProfileDto = objectMapper.readValue(response.getBody(), KakaoProfileDto.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
