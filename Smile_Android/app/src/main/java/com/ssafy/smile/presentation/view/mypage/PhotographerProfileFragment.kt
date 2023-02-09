@@ -1,7 +1,12 @@
 package com.ssafy.smile.presentation.view.mypage
 
+import android.app.Dialog
+import android.os.Bundle
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.ImageUtils
 import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
@@ -13,6 +18,7 @@ import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewM
 
 class PhotographerProfileFragment() : BaseBottomSheetDialogFragment<FragmentPhotographerProfileBinding>(FragmentPhotographerProfileBinding::inflate) {
     private val viewModel : PhotographerWriteGraphViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
+
     override fun initView() {
 
     }
@@ -23,9 +29,6 @@ class PhotographerProfileFragment() : BaseBottomSheetDialogFragment<FragmentPhot
 
     private fun setClickListener(){
         binding.apply {
-            layoutSelectImagePost.setOnClickListener {  // TODO : 추가 - 작가의 포트폴리오 페이지랑 연결 (=게시글 사진 선택하기)
-
-            }
             layoutSelectImageGallery.setOnClickListener {
                 actionGalleryPermission(requireContext(), 1, "프로필 사진은 한 장만 선택가능합니다."){
                     viewModel.profileBitmap = ImageUtils.resizeImage(requireContext(), it[0])
