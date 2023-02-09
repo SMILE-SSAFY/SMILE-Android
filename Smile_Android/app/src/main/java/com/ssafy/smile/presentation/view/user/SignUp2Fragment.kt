@@ -49,7 +49,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
         toolbar.initToolbar("회원가입", true) { moveToPopUpSelf() }
     }
 
-    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_signUp1Fragment_pop)
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_signUp2Fragment_pop)
 
     private fun setObserver() {
         signUpResponseObserver()
@@ -81,7 +81,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
 //                        false
 //                    }
 //                } else {
-//                    showToast(requireContext(), "인증 번호를 입력해주세요", Types.ToastType.WARNING)
+//                    showToast(requireContext(), "인증 번호를 입력해주세요", Types.ToastType.INFO)
 //                }
             }
 
@@ -90,7 +90,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                     val signUpInfo = getSignUpInfo()
                     userViewModel.signUp(signUpInfo)
                 } else {
-                    showToast(requireContext(), "모든 값을 확인해주세요", Types.ToastType.WARNING)
+                    showToast(requireContext(), "모든 값을 확인해주세요", Types.ToastType.INFO)
                 }
             }
         }
@@ -122,7 +122,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "휴대전화 인증 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "휴대전화 인증 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     setPhoneNumberCheckVisibility(View.GONE, View.GONE)
                     phoneCertCheck = false
                 }
@@ -158,7 +158,7 @@ class SignUp2Fragment : BaseFragment<FragmentSignUp2Binding>(FragmentSignUp2Bind
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "signUpResponseObserver: ${it.errorCode}")
-                    showToast(requireContext(), "회원 가입 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "회원 가입 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())

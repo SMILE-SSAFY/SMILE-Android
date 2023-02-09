@@ -65,7 +65,7 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "리뷰 조회"), Types.ToastType.WARNING)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "리뷰 조회"), Types.ToastType.ERROR)
                         moveToPopUpSelf()
                     }
                 }
@@ -82,7 +82,7 @@ class ReviewDetailFragment : BaseFragment<FragmentReviewDetailBinding>(FragmentR
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "리뷰 등록"), Types.ToastType.WARNING)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "리뷰 등록"), Types.ToastType.ERROR)
                     }
                 }
             }

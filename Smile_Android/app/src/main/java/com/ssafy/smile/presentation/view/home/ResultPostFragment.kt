@@ -60,10 +60,8 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    if (it.errorCode == 404) {
-                        showToast(requireContext(), "검색한 키워드의 게시물이 존재하지 않습니다.", Types.ToastType.INFO)
-                    } else {
-                        showToast(requireContext(), "게시물 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    if (it.errorCode != 404) {
+                        showToast(requireContext(), "게시물 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
             }
@@ -88,7 +86,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                     resultPostRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }

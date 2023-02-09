@@ -28,7 +28,9 @@ data class PhotographerByAddressResponseDto(
         val categoryNames = arrayListOf<String>()
         val categoryPrices = arrayListOf<Int>()
         categories.forEach { data ->
-            categoryNames.add(data.name)
+            if (data.name !in categoryNames) {
+                categoryNames.add(data.name)
+            }
             categoryPrices.add(data.price.toInt())
         }
 

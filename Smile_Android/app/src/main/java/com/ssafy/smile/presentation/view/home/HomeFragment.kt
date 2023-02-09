@@ -2,7 +2,10 @@ package com.ssafy.smile.presentation.view.home
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +15,7 @@ import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
+import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
@@ -30,13 +34,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private var userId = -1L
     private var filter = ""
 
-
     override fun onResume() {
         super.onResume()
-        homeViewModel.getAddressList()
         setObserverBeforeSetAddress()
+        homeViewModel.getCurrentAddress()
+
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
+        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<AddressDomainDto>("curAddress")?.observe(viewLifecycleOwner){
+            Log.d("******************", "onResume: ${it}")
+            homeViewModel.getCurrentAddress()
         }
     }
 
@@ -97,7 +105,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "주변 작가 목록 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
                 }
             }
         }
@@ -121,7 +128,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                     homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }
