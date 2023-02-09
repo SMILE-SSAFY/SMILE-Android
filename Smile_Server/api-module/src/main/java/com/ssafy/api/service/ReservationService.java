@@ -1,7 +1,17 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.PlacesForListDto;
-import com.ssafy.api.dto.Reservation.*;
+import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
+import com.ssafy.api.dto.Reservation.CategoryDetailDto;
+import com.ssafy.api.dto.Reservation.NotificationDTO;
+import com.ssafy.api.dto.Reservation.PhotographerReservationDto;
+import com.ssafy.api.dto.Reservation.ReservationListDto;
+import com.ssafy.api.dto.Reservation.ReservationReqDto;
+import com.ssafy.api.dto.Reservation.ReservationResDto;
+import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.api.dto.Reservation.ReviewDetailDto;
+import com.ssafy.api.dto.Reservation.ReviewPostDto;
+import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
@@ -35,7 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 예약 관련 Service
@@ -204,7 +213,7 @@ public class ReservationService {
         log.info("Role 작가 확인");
 
         List<Reservation> reservationList =
-                reservationRepository.findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(user.getId());
+                reservationRepository.findByPhotographerIdOrderByCreatedAtDesc(user.getId());
         log.info("작가 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
@@ -238,7 +247,7 @@ public class ReservationService {
 
         log.info("유저 예약 목록 조회");
         List<Reservation> reservationList =
-                reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
+                reservationRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
@@ -342,7 +351,6 @@ public class ReservationService {
      * 예약 취소
      *
      * @param reservationId
-     * @param userId
      * @throws IOException
      */
     @Transactional
