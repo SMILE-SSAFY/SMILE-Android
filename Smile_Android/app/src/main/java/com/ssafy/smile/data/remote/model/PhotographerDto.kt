@@ -9,8 +9,7 @@ data class PhotographerDto(
     val account: String,
     val introduction: String,
     val categories: List<CategoryDto>,
-    val places: List<PlaceDto>,
-    //val heart: Int=0
+    val places: List<PlaceDto>
 ) : Parcelable {
 
 }
