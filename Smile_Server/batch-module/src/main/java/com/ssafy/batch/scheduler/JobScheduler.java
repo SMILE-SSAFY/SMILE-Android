@@ -27,7 +27,7 @@ public class JobScheduler {
     private final JobLauncher jobLauncher;
     private final Job notificationJob;
 
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void jobSchduled() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParameters(
                 Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
