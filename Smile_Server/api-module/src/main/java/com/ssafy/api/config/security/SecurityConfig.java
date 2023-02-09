@@ -49,7 +49,6 @@ public class SecurityConfig {
 
     /**
      * security 설정
-     * (/api/user/token) 접근 시 "USER" 권한 있어야 함
      *
      * @param http
      * @return

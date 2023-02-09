@@ -3,7 +3,6 @@ package com.ssafy.smile.common.util
 // For Constant Strings
 object Constants {
     const val BASE_URL = "https://i8d102.p.ssafy.io"
-
     const val BASE_URL_PHOTOGRAPHER = "/api/photographer"
     const val BASE_URL_ARTICLE = "/api/article"
 

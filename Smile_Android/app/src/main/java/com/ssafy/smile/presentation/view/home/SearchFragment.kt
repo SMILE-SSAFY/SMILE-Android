@@ -86,7 +86,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
     private fun setViewPager() {
-        val viewPagerAdapter = SearchViewPagerAdapter(requireActivity())
+        val viewPagerAdapter = SearchViewPagerAdapter(this)
         val tabTitle = listOf("작가", "게시물")
 
         binding.viewPager.adapter = viewPagerAdapter

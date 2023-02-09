@@ -30,16 +30,16 @@ class AddressRepositoryImpl(private val addressLocalDataSource: AddressLocalData
         return addressLocalDataSource.deleteAllAddress()
     }
 
-    override fun getAddressList(): LiveData<List<AddressDomainDto>> {
-        return addressLocalDataSource.getAddressList().map {  list ->
-            list.map { entity -> entity.makeToAddressDomainDto() }
-        }
+    override suspend fun getSelectedAddress(): AddressDomainDto? {
+        return addressLocalDataSource.getSelectedAddress()?.makeToAddressDomainDto()
     }
 
-    override fun getAddressListWithSelection(): LiveData<List<AddressDomainDto>> {
-        return addressLocalDataSource.getAddressListWithSelection().map { list ->
-            list.map { entity -> entity.makeToAddressDomainDto() }
-        }
+    override suspend fun getAddressList(): List<AddressDomainDto> {
+        return addressLocalDataSource.getAddressList().map{ it.makeToAddressDomainDto() }
+    }
+
+    override suspend fun getAddressListWithSelection(): List<AddressDomainDto> {
+        return addressLocalDataSource.getAddressListWithSelection().map { it.makeToAddressDomainDto() }
     }
 
 }

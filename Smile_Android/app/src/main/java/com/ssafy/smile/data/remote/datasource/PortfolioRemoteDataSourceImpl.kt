@@ -20,5 +20,8 @@ class PortfolioRemoteDataSourceImpl(private val portfolioApiService: PortfolioAp
         return portfolioApiService.uploadPost(latitude, longitude, detailAddress, category, images)
     }
 
+    override suspend fun modifyPost(articleId : Long, latitude: Double, longitude: Double, detailAddress: String, category: String, images: List<MultipartBody.Part>) : Response<Any>{
+        return portfolioApiService.modifyPost(articleId, latitude, longitude, detailAddress, category, images)
+    }
 
 }
