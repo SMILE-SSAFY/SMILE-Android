@@ -12,5 +12,5 @@ data class CategoryDto(
     val description: String,
 ) : Parcelable
 {
-    fun toCategoryDto() = CategoryDomainDto(false, name, price, description)
+    fun toCategoryDto() = CategoryDomainDto(isEmpty = false, name = name, price = price, description = description)
 }

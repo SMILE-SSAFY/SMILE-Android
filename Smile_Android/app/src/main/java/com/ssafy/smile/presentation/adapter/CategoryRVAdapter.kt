@@ -18,7 +18,7 @@ import com.ssafy.smile.domain.model.CategoryDomainDto
 import com.ssafy.smile.domain.model.Spinners
 import java.lang.ref.WeakReference
 
-private const val TAG = "CategoryRVAdapter"
+
 class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) : RecyclerView.Adapter<CategoryRVAdapter.Holder>() {
     private val itemList : ArrayList<CategoryDomainDto> = arrayListOf()
 
@@ -32,14 +32,12 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
     fun addData() {
         if (itemCount<=limit){
             itemList.add(CategoryDomainDto())
-            Log.d(TAG, "addData: $itemList")
-            notifyDataSetChanged()
+            notifyItemInserted(itemCount-1)
         }
     }
 
     fun deleteData(index: Int){
         itemList.removeAt(index)
-        Log.d(TAG, "deleteItem: $itemList")
         notifyDataSetChanged()
     }
 
@@ -57,7 +55,7 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val dto = itemList[position]
         holder.apply {
-            bindInfo(adapterPosition, dto)
+            bindInfo(position, dto)
             itemView.tag = dto
         }
     }
@@ -77,22 +75,21 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
                     setOnItemClickListener { _, _, position, _ ->
                         dto.name = this.getString()
                         dto.categoryId = position + 1
+                        dto.isEmpty = !(dto.price!=null && dto.description!=null)
                     }
                 }
                 etPhotographerCategoryPrice.apply {
-                    val priceString = if (dto.price==0) null else dto.price.toString()
+                    clearPriceTextChangeListener(this)
+                    val priceString = if (dto.price==null) null else dto.price.toString()
                     setText(priceString)
-                    doOnTextChanged { charSequence, _, _, _ ->
-                        itemList[position].price = if (charSequence.toString()=="") 0 else charSequence.toString().toInt()
-                    }
-
-                //addTextChangedListener(OnCurrentTextWatcher(position, this))
+                    dto.priceTextWatcher = OnCurrentPriceTextWatcher(dto, this)
+                    addTextChangedListener(dto.priceTextWatcher)
                 }
                 etPhotographerCategoryDetail.apply {
-                    doOnTextChanged { charSequence, _, _, _ ->
-                        itemList[position].description = charSequence.toString()
-                    }
+                    clearContentTextChangeListener(this)
                     setText(dto.description)
+                    dto.contentTextWatcher = OnCurrentContentTextWatcher(dto)
+                    addTextChangedListener(dto.contentTextWatcher)
                 }
                 if (position==0) btnDelete.visibility = View.INVISIBLE
                 else btnDelete.visibility = View.VISIBLE
@@ -101,26 +98,50 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
                 }
             }
         }
+
+        private fun clearPriceTextChangeListener(priceEditText : EditText){
+            for (position in 0 until itemCount){
+                priceEditText.removeTextChangedListener(itemList[position].priceTextWatcher)
+            }
+        }
+        private fun clearContentTextChangeListener(contentEditText: EditText){
+            for (position in 0 until itemCount){
+                contentEditText.removeTextChangedListener(itemList[position].contentTextWatcher)
+            }
+        }
     }
 
-    inner class OnCurrentTextWatcher(private val position: Int, editText: EditText?) : TextWatcher {
+    inner class OnCurrentPriceTextWatcher(private val dto:CategoryDomainDto, editText: EditText?) : TextWatcher {
         private val editTextWeakReference: WeakReference<EditText>
         init { editTextWeakReference = WeakReference<EditText>(editText) }
 
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
         override fun afterTextChanged(editable: Editable) {
             val editText: EditText = editTextWeakReference.get() ?: return
             val s = editable.toString()
-            if (s.isEmpty()) return
+            if (s.isEmpty()) {
+                dto.price = null
+                return
+            }
             editText.removeTextChangedListener(this)
             val price = s.replace("""[,원]""".toRegex(), "").toInt()
             val formatted: String = price.makeComma()
             editText.setText(formatted)
             editText.setSelection(formatted.length)
             editText.addTextChangedListener(this)
-            itemList[position].price = price
+            dto.price = price
+            dto.isEmpty = dto.name == null
         }
+    }
+
+    inner class OnCurrentContentTextWatcher(private val dto:CategoryDomainDto) : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            dto.description = s.toString()
+            dto.isEmpty = !(dto.name!=null && dto.price!=null)
+        }
+        override fun afterTextChanged(s: Editable) {}
     }
 
 

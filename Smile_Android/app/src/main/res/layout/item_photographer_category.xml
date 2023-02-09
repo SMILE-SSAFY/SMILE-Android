@@ -24,6 +24,7 @@
                 android:id="@+id/tv_photographer_category"
                 android:hint="카테고리"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:textColorHint="@color/gray500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
