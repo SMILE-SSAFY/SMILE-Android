@@ -11,6 +11,7 @@ import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.dto.ReviewQdslDto;
+import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
@@ -22,6 +23,7 @@ import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.ReviewRepository;
+import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
@@ -39,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,6 +65,7 @@ public class PhotographerService {
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     /**
      * 작가 등록
@@ -225,6 +229,15 @@ public class PhotographerService {
             s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
         photographerRepository.delete(findPhotographer);
+
+        List<Article> articleList = articleRepository.findByUserIdOrderByIdDesc(userId);
+        for (Article article : articleList) {
+            String photoUriList = article.getPhotoUrls();
+            photoUriList = photoUriList.replace("[","").replace("]","");
+            List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
+            photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
+            articleRepository.delete(article);
+        }
 
         // 일반 유저로 전환
         User user = userRepository.findById(userId)
