@@ -9,6 +9,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
+import com.ssafy.smile.data.remote.model.Post
 import com.ssafy.smile.databinding.FragmentPostDetailBinding
 import com.ssafy.smile.domain.model.PostDomainDto
 import com.ssafy.smile.domain.model.Types
@@ -24,13 +25,14 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
     private var imageData = mutableListOf<String>()
 
     private val args: PostDetailFragmentArgs by navArgs()
+    private var postDomainDto : PostDomainDto = PostDomainDto()
     var postId = -1L
 
     override fun initView() {
         initToolbar()
         setPostId()
-        portfolioGraphViewModel.getPostById(postId)
         setObserver()
+        portfolioGraphViewModel.getPostById(postId)
     }
 
     private fun setPostId() {
@@ -53,7 +55,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
         binding.apply {
 
             ivPostMore.setOnClickListener {
-                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(postId)
+                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(postId, postDomainDto)
                 findNavController().navigate(action)
             }
             ctvLike.setOnClickListener {
@@ -68,6 +70,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "getPostByIdResponseObserver: ${it.data.toPostDomainDto()}")
+                    postDomainDto = it.data.toPostDomainDto()
                     setPostInfo(it.data.toPostDomainDto())
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
@@ -117,14 +120,13 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
         binding.apply {
             portfolioGraphViewModel.postHeartResponse.observe(viewLifecycleOwner) {
                 when(it) {
+                    is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
                         ctvLike.toggle()
                         portfolioGraphViewModel.getPostById(postId)
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
-                    }
-                    is NetworkUtils.NetworkResponse.Loading -> {
                     }
                 }
             }

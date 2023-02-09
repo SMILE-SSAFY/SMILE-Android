@@ -23,4 +23,14 @@ interface PortfolioApiService {
                            @Part imageList : List<MultipartBody.Part>
     ): Response<Any>
 
+    @Multipart
+    @PUT("$BASE_URL_ARTICLE/{articleId}")
+    suspend fun modifyPost( @Path("articleId") articleId : Long,
+                            @Part("latitude") latitude : Double,
+                            @Part("longitude") longitude : Double,
+                            @Part("detailAddress") detailAddress : String,
+                            @Part("category") category: String,
+                            @Part imageList : List<MultipartBody.Part>
+    ): Response<Any>
+
 }

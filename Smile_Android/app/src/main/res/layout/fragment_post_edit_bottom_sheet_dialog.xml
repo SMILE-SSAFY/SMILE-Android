@@ -1,81 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.portfolio.ArticleEditBottomSheetDialogFragment">
-
+    android:orientation="vertical">
     <ImageView
-        android:id="@+id/iv_bar"
+        android:id="@+id/iv_view"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:src="@drawable/ic_bottomsheet_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ll_content"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_title"
-        style="@style/TvH4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="70dp"
-        android:text="게시물 편집"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:background="@drawable/ic_bottomsheet_bar"/>
     <LinearLayout
-        android:id="@+id/layout_edit"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginHorizontal="35dp"
-        android:gravity="center_vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_gallery"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            style="@style/TvT2"
-            android:text="게시물 수정"
-            android:textColor="@color/black"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_delete"
-        android:layout_width="0dp"
-        android:layout_height="30dp"
-        android:layout_marginHorizontal="35dp"
-        android:layout_marginTop="24dp"
-        android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_edit">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_empty" />
-
+        app:layout_constraintTop_toBottomOf="@id/iv_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
         <TextView
-            style="@style/TvT2"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="게시물 삭제"
-            android:textColor="@color/black" />
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="15dp"
+            android:text="게시물 편집"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/ibm_plex_sans_semi_bold"/>
+        <LinearLayout
+            android:id="@+id/layout_modify_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="35dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_gallery"/>
+            <TextView
+                android:id="@+id/tv_select_image_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="게시물 수정"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/ibm_plex_sans_medium"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_remove_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingVertical="15dp"
+            android:paddingHorizontal="35dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_delete_empty"/>
+            <TextView
+                android:id="@+id/tv_remove_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="게시물 삭제"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/ibm_plex_sans_medium"/>
+        </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
