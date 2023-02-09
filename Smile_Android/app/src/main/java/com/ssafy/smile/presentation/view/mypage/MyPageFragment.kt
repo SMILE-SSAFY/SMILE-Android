@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+private const val TAG = "MyPageFragment_스마일"
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
     private val viewModel : MyPageViewModel by viewModels()
 
@@ -38,8 +39,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun initView() {
         initToolbar()
-//        viewModel.getMyPageInfo()
-//        setObserver()
+        viewModel.getMyPageInfo()
+        setObserver()
     }
 
     override fun setEvent() {
@@ -54,7 +55,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         viewModel.apply {
             myPageResponse.observe(viewLifecycleOwner){
                 when(it) {
-                    is NetworkUtils.NetworkResponse.Failure -> {}
                     is NetworkUtils.NetworkResponse.Loading -> {
                         showLoadingDialog(requireContext())
                     }
@@ -63,6 +63,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         binding.apply {
                             layoutMyPageProfile.tvProfileName.text = it.data.name
                         }
+                    }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
+                        dismissLoadingDialog()
                     }
                 }
             }
@@ -134,7 +138,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 }
             }
             layoutMyPageUser.apply {
-                tvUserChangePassword.setOnClickListener {  }
                 tvUserWithDraw.setOnClickListener {
                     showPhotographerWithDrawDialog()
                 }

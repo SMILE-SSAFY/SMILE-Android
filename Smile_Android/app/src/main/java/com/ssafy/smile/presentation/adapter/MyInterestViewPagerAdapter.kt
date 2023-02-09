@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.ssafy.smile.presentation.view.mypage.myInterest.MyInterestArticleFragment
 import com.ssafy.smile.presentation.view.mypage.myInterest.MyInterestPhotographerFragment
 
-class MyInterestViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity){
+class MyInterestViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment){
     private val fragmentList = listOf(MyInterestPhotographerFragment(), MyInterestArticleFragment())
 
     override fun getItemCount(): Int {
