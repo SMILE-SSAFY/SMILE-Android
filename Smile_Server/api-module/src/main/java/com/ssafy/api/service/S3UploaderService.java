@@ -68,8 +68,7 @@ public class S3UploaderService {
             }
             fileNameList.add(newFileName);
         });
-        String fileNameString = fileNameList.toString();
-        return fileNameString;
+        return fileNameList.toString();
     }
 
     /***
