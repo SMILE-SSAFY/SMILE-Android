@@ -79,12 +79,15 @@ public class ReservationService {
      * @param reservation
      */
     public ReservationResDto reserve(ReservationReqDto reservation){
-        reservation.setUserId(UserService.getLogInUser().getId());
+        Long userId = UserService.getLogInUser().getId();
+        reservation.setUserId(userId);
         if(!photographerRepository.existsById(reservation.getPhotographerId())){
             throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
         }
 
-        //FIX: 같은 날짜에 같은 사진작가에게 저장하려할 때 에러 발생
+        if (reservationRepository.existsByPhotographerIdAndReservedAt(userId, reservation.getDate())) {
+            throw new CustomException(ErrorCode.RESERVATION_CANNOT);
+        }
 
         Reservation savedReservation = Reservation.builder()
                 .photographer(Photographer.builder().id(reservation.getPhotographerId()).build())
