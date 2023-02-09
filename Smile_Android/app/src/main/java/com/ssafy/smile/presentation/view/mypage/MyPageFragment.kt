@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.Constants
@@ -68,6 +69,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                             Glide.with(requireContext())
                                 .load(Constants.IMAGE_BASE_URL+it.data.photoUrl)
                                 .fallback(R.drawable.img_profile_default)                       // TODO : null 처리 안됨. (default 이미지)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(layoutMyPageProfile.ivProfileImage)
                         }
                     }

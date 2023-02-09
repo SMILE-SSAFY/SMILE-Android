@@ -1,58 +1,55 @@
 package com.ssafy.smile.presentation.view.mypage
 
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.bumptech.glide.Glide
 import com.ssafy.smile.R
 import com.ssafy.smile.RegisterPortFolioGraphArgs
-import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.common.util.SharedPreferencesUtil
-import com.ssafy.smile.common.util.getString
+import com.ssafy.smile.common.util.*
+import com.ssafy.smile.common.util.ImageUtils.convertBitmapToFile
 import com.ssafy.smile.data.remote.model.PhotographerDto
 import com.ssafy.smile.data.remote.model.PhotographerRequestDto
+import com.ssafy.smile.data.remote.model.PhotographerResponseDto
+import com.ssafy.smile.data.remote.model.PortfolioResponseDto
 import com.ssafy.smile.databinding.FragmentWritePhotographerPortfolioBinding
-import com.ssafy.smile.domain.model.CategoryDomainDto
-import com.ssafy.smile.domain.model.PlaceDomainDto
-import com.ssafy.smile.domain.model.Spinners
-import com.ssafy.smile.domain.model.Types
+import com.ssafy.smile.domain.model.*
 import com.ssafy.smile.presentation.adapter.CategoryRVAdapter
 import com.ssafy.smile.presentation.adapter.PlaceRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+import java.net.URL
 
-private const val TAG = "PhotographerWritePortFo"
-// TODO : 빈칸 체크 & 동적 리사이클러뷰 View 다듬기
+
+// TODO : API 수정 후, 연결 + 처리
 class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographerPortfolioBinding>
     (FragmentWritePhotographerPortfolioBinding::bind, R.layout.fragment_write_photographer_portfolio) {
     private val navArgs : RegisterPortFolioGraphArgs by navArgs()
     private val viewModel : PhotographerWriteGraphViewModel by navGraphViewModels(R.id.registerPortFolioGraph)
     private lateinit var categoryRVAdapter: CategoryRVAdapter
     private lateinit var placeRVAdapter : PlaceRVAdapter
-
-    //private val photographerResponseDto = PhotographerResponseDto()
+    private val accountDto = AccountDomainDto()
 
     override fun initView() {
-        if (navArgs.photographerResponseDto!=null) {
-            // TODO : 가져와서 Setting (수정하기 시나리오의 경우)
-        }
         initToolbar()
         initAdapter()
         setObserver()
+        if (navArgs.photographerResponseDto!=null) setModifyPortFolioView(navArgs.photographerResponseDto!!)
+        else setWritePortFolioView()
     }
     override fun setEvent() {
         setClickListener()
     }
 
-    private fun initToolbar(){
-        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar("작가 포트폴리오 정보", true) {
-            findNavController().navigate(R.id.action_writePortfolioFragment_pop)
-        }
-    }
 
     private fun setObserver(){
         viewModel.apply {
@@ -60,6 +57,13 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
                 Glide.with(binding.imagePhotographerProfile)
                     .load(it)
                     .into(binding.imagePhotographerProfile)
+            }
+            photographerDataResponse.observe(viewLifecycleOwner){
+                setData(it)
+            }
+            checkDataResponse.observe(viewLifecycleOwner){
+                if (it) setButtonEnable()
+                else setButtonDisable()
             }
             registerPhotographerResponse.observe(viewLifecycleOwner){
                 when(it){
@@ -78,6 +82,22 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
                     }
                 }
             }
+            modifyPhotographerResponse.observe(viewLifecycleOwner){
+                when(it){
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
+                        showToast(requireContext(), getString(R.string.msg_photographer_modify_success), Types.ToastType.SUCCESS)
+                        moveToPop()
+                    }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "포트폴리오 수정"), Types.ToastType.ERROR)
+                        dismissLoadingDialog()
+                    }
+                }
+            }
         }
     }
     private fun setClickListener(){
@@ -91,10 +111,9 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
             layoutPhotographerPlace.btnAdd.setOnClickListener {
                 placeRVAdapter.addData()
             }
-            // TODO : 빈 값 체크!!! - 분기 처리 (값은 다 viewModel에 있어야 함.)
             btnUpload.setOnClickListener {
-                val dto = getPhotographerDto()
-                viewModel.registerPhotographerInfo(photographerRequestDto = PhotographerRequestDto(viewModel.profileImage!!, dto))
+                if (navArgs.photographerResponseDto!=null) viewModel.modifyPhotographerInfo()
+                else viewModel.registerPhotographerInfo()
             }
         }
     }
@@ -115,23 +134,77 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
             })
         }.also { binding.layoutPhotographerPlace.rvPhotographerPlace.adapter = it }
 
+        setAccountAdapter()
+    }
+
+    private fun setWritePortFolioView(){
+        initToolbar()
+        setButtonDisable()
+    }
+
+    private fun setModifyPortFolioView(photographerResponseDto: PhotographerResponseDto){
+        initToolbar()
+        binding.apply {
+            btnUpload.text = "수정하기"
+            val account = photographerResponseDto.account.split(" ")
+            viewModel.uploadData(photographerResponseDto.introduction, photographerResponseDto.categories.map { it.toCategoryDto() }, photographerResponseDto.places.map { it.toPlaceDto() }, AccountDomainDto(false, account[0], account[1]))
+            lifecycleScope.launch(Dispatchers.IO) {
+                val profileImg = BitmapFactory.decodeStream(URL(Constants.IMAGE_BASE_URL +photographerResponseDto.profileImg).openConnection().getInputStream()).convertBitmapToFile(context = requireContext())!!
+                viewModel.uploadProfileImage(profileImg)
+            }
+        }
+    }
+
+    private fun initToolbar(){
+        val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
+        toolbar.initToolbar("작가 포트폴리오 정보", true) {
+            findNavController().navigate(R.id.action_writePortfolioFragment_pop)
+        }
+    }
+
+    private fun setAccountAdapter(accountBank:String?=null, accountNum:String?=null) {
         binding.layoutPhotographerAccount.apply {
+            tvPhotographerAccount.setOnItemClickListener { _, _, _, _ ->
+                accountDto.accountBank = tvPhotographerAccount.getString()
+                if (accountDto.accountNum!=null) accountDto.isEmpty = false
+                viewModel.uploadAccountData(accountDto)
+            }
+            etPhotographerAccount.doOnTextChanged { _, _, _, _ ->
+                accountDto.accountNum = etPhotographerAccount.getString()
+                if (accountDto.accountBank!=null) accountDto.isEmpty = false
+                viewModel.uploadAccountData(accountDto)
+            }
+            tvPhotographerAccount.setText(accountBank)
             tvPhotographerAccount.setAdapter(Spinners.getSelectedArrayAdapter(requireContext(), R.array.spinner_account))
+            etPhotographerAccount.setText(accountNum)
         }
     }
-    
-    private fun getPhotographerDto(): PhotographerDto {
-        val categoryList = categoryRVAdapter.getListData().map {
-            it.toCategoryDto() 
+
+    private fun setData(dto: PhotographerRequestDomainDto) {
+        binding.apply {
+            etPhotographerInfo.setText(dto.introduction)
+            categoryRVAdapter.setListData(dto.categories as ArrayList<CategoryDomainDto>)
+            placeRVAdapter.setListData(dto.places as ArrayList<PlaceDomainDto>)
+            setAccountAdapter(dto.account?.accountBank, dto.account?.accountNum)
         }
-        val placeList = placeRVAdapter.getListData().map { it.toPlaceDto() }
-        return PhotographerDto(
-            account = "${binding.layoutPhotographerAccount.tvPhotographerAccount.text} ${binding.layoutPhotographerAccount.etPhotographerAccount.text}",
-            categories = categoryList,
-            places = placeList,
-            introduction = binding.etPhotographerInfo.getString()
-        )
     }
+
+    private fun setButtonEnable() {
+        binding.btnUpload.apply {
+            isEnabled = true
+            setBackgroundResource(R.drawable.rectangle_blue400_radius_8)
+        }
+    }
+    private fun setButtonDisable() {
+        binding.btnUpload.apply {
+            isEnabled = false
+            setBackgroundResource(R.drawable.rectangle_gray400_radius_8)
+        }
+    }
+
+
+    private fun getAccountBank() = binding.layoutPhotographerAccount.tvPhotographerAccount.text
+    private fun getAccountNum() = binding.layoutPhotographerAccount.etPhotographerAccount.text
 
     private fun moveToPop() = findNavController().navigate(R.id.action_writePortfolioFragment_pop)
 
