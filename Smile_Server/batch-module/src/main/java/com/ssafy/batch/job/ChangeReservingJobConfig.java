@@ -1,5 +1,6 @@
 package com.ssafy.batch.job;
 
+import com.ssafy.batch.service.NotificationService;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.entity.Reservation;
 import com.ssafy.core.repository.reservation.ReservationRepository;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -33,6 +35,7 @@ public class ChangeReservingJobConfig {
     public final JobBuilderFactory jobBuilderFactory;
     public final StepBuilderFactory stepBuilderFactory;
     public final ReservationRepository reservationRepository;
+    public final NotificationService notificationService;
 
     @Bean
     public Job changeReservingJob(Step changeReservingStep) {
@@ -46,7 +49,7 @@ public class ChangeReservingJobConfig {
     @Bean
     @JobScope
     public Step changeReservingStep(ItemReader reservationNowReader,
-                                 ItemWriter reservationNowWriter) {
+                                    ItemWriter reservationNowWriter) {
         return stepBuilderFactory.get("changeReservingStep")
                 .<Reservation, Reservation>chunk(10)
                 .reader(reservationNowReader)
@@ -77,15 +80,15 @@ public class ChangeReservingJobConfig {
     public ItemWriter<Reservation> reservationNowWriter() {
         return new ItemWriter<Reservation>() {
             @Override
-            public void write(List<? extends Reservation> reservationList) {
+            public void write(List<? extends Reservation> reservationList) throws Exception {
                 log.info("changeReservingjob-------------");
                 for (Reservation reservation : reservationList) {
                     if (reservation.getStatus().equals(ReservationStatus.예약확정전)) {
-                        reservation.updateStatus(ReservationStatus.예약취소);
+                        notificationService.cancelReservation(reservation);
                     } else {
                         reservation.updateStatus(ReservationStatus.예약진행중);
+                        reservationRepository.save(reservation);
                     }
-                    reservationRepository.save(reservation);
                 }
             }
         };
