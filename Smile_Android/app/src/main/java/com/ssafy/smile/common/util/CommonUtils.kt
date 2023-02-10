@@ -22,7 +22,7 @@ object CommonUtils {
         var addr = "주소 오류"
 
         try {
-            val loc = geoCoder.getFromLocation(position.latitude, position.longitude, 1).first()
+            val loc = geoCoder.getFromLocation(position.latitude, position.longitude, 1)!!.first()
             addr = "${loc.adminArea} ${loc.locality}"
         } catch (e: Exception) {
             e.printStackTrace()
