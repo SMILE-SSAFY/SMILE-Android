@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
 import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
+import com.ssafy.api.dto.Photographer.PhotographerNearDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -23,17 +24,14 @@ import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.ReviewRepository;
+import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
-import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 작가 프로필 관련 클래스
@@ -279,7 +278,7 @@ public class PhotographerService {
      * @param criteria
      * @return List<PhotographerForListDto>
      */
-    public List<PhotographerForListDto> getPhotographerListByAddresss(String address, String criteria) {
+    public PhotographerNearDto getPhotographerListByAddresss(String address, String criteria) {
         Long userId = UserService.getLogInUser().getId();
         String[] addresssList = address.split(" ");
         List<PhotographerQdslDto> photographerList = photographerNPlacesRepository
@@ -291,7 +290,13 @@ public class PhotographerService {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
 
-        return photographerForList;
+        String photoUrl = null;
+        Optional<Photographer> photographer = photographerRepository.findById(userId);
+        if (photographer.isPresent()) {     // 조회자가 사진작가면 프로필 이미지 반환
+            photoUrl = photographer.get().getProfileImg();
+        }
+
+        return new PhotographerNearDto().of(photoUrl, photographerForList);
     }
 
     /***
