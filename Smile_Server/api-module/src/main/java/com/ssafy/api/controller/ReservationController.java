@@ -3,9 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.dto.Reservation.ReservationListDto;
 import com.ssafy.api.dto.Reservation.ReservationReqDto;
 import com.ssafy.api.dto.Reservation.ReservationStatusDto;
-import com.ssafy.api.dto.Reservation.ReviewDetailDto;
 import com.ssafy.api.dto.Reservation.ReviewPostDto;
-import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.api.service.ReservationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +68,7 @@ public class ReservationController {
      */
     @PutMapping("/status/{reservationId}")
     public ResponseEntity<?> changeReservationStatus(
-            @PathVariable("reservationId") Long reservationId,
-            @RequestBody ReservationStatusDto status) throws IOException {
+            @PathVariable("reservationId") Long reservationId, @RequestBody ReservationStatusDto status) throws IOException {
         status.setReservationId(reservationId);
         reservationService.changeStatus(status);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -106,8 +103,7 @@ public class ReservationController {
      */
     @PostMapping("/review/{reservationId}")
     public ResponseEntity<HttpStatus> addReview(
-            @PathVariable("reservationId") Long reservationId,
-            ReviewPostDto reviewPostDto) throws Exception {
+            @PathVariable("reservationId") Long reservationId, ReviewPostDto reviewPostDto) throws Exception {
         reservationService.addReview(reservationId, reviewPostDto);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
@@ -120,8 +116,7 @@ public class ReservationController {
      */
     @GetMapping("/review/{reviewId}")
     public ResponseEntity<?> getReviewDetail(@PathVariable Long reviewId){
-        ReviewDetailDto result = reservationService.reviewDetail(reviewId);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(reservationService.reviewDetail(reviewId), HttpStatus.OK);
     }
 
 
@@ -133,8 +128,7 @@ public class ReservationController {
      */
     @GetMapping("/review/list/{photographerId}")
     public ResponseEntity<?> getPhotographerReviewList(@PathVariable("photographerId") Long photographerId){
-        List<ReviewResDto> reviewResDtoList = reservationService.showReviewList(photographerId);
-        return new ResponseEntity<>(reviewResDtoList, HttpStatus.OK);
+        return new ResponseEntity<>(reservationService.showReviewList(photographerId), HttpStatus.OK);
     }
 
     /***

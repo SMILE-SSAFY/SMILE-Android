@@ -18,8 +18,6 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class ReservationReqDto {
-    private Long id;
-
     private Long photographerId;
 
     private Long userId;

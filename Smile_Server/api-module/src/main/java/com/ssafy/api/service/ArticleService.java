@@ -175,7 +175,9 @@ public class ArticleService {
             article.setPhotoUrls(fileName);
             articleRepository.save(article);
 
-        } else throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
+        } else {
+            throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
+        }
 
         return new ArticleDetailDto().of(article, isMe, isHearted, hearts);
     }
@@ -189,7 +191,8 @@ public class ArticleService {
     public ArticleHeartDto heartArticle(Long articleId) {
 
         User user = UserService.getLogInUser();
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
 
         // 좋아요가 눌려있지 않으면 저장
