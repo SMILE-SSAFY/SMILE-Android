@@ -110,7 +110,7 @@ public class NotificationJobConfig {
                                     .requestId(user.getId())
                                     .registrationToken(user.getFcmToken())
                                     .content(reservation.getReservedAt() + "에 예약이 있습니다.")
-                            .build());
+                                    .build());
                 }
             }
         };

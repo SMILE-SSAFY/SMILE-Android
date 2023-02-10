@@ -98,9 +98,7 @@ public class PhotographerController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByCategory(@Param("categoryName") String categoryName) {
-        List<PhotographerForListDto> photographerList =
-                photographerService.getPhotographerListByCategory(categoryName);
-        return ResponseEntity.ok().body(photographerList);
+        return ResponseEntity.ok().body(photographerService.getPhotographerListByCategory(categoryName));
     }
 
     /***
@@ -110,8 +108,7 @@ public class PhotographerController {
      */
     @PutMapping("/heart/{photographerId}")
     public ResponseEntity<?> addHeartPhotographer(@PathVariable("photographerId") Long photographerId){
-        PhotographerHeartDto photographerHeartDto = photographerService.addHeartPhotographer(photographerId);
-        return new ResponseEntity<>(photographerHeartDto, HttpStatus.OK);
+        return new ResponseEntity<>(photographerService.addHeartPhotographer(photographerId), HttpStatus.OK);
     }
 
     /**
@@ -124,9 +121,7 @@ public class PhotographerController {
     @GetMapping("/list")
     public ResponseEntity<PhotographerNearDto> searchPhotographerByAddress(
             @Param("address") String address, @Param("criteria") String criteria) {
-        PhotographerNearDto photographerList =
-                photographerService.getPhotographerListByAddresss(address, criteria);
-        return ResponseEntity.ok().body(photographerList);
+        return ResponseEntity.ok().body(photographerService.getPhotographerListByAddresss(address, criteria));
     }
 
     /***
@@ -135,7 +130,6 @@ public class PhotographerController {
      */
     @GetMapping("/heart/list")
     public ResponseEntity<?> getHeartedPhotographerList(){
-        List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByUser();
-        return new ResponseEntity<>(photographerList, HttpStatus.OK);
+        return new ResponseEntity<>(photographerService.getPhotographerListByUser(), HttpStatus.OK);
     }
 }
