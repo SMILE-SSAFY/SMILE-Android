@@ -27,6 +27,7 @@
     <string name="withDraw_user">탈퇴시, 모든 정보가 사라집니다.\n정말로 탈퇴하시겠습니까?</string>
     <!-- MyPage - photographer write portfolio -->
     <string name="msg_photographer_success">작가 프로필이 성공적으로 등록되었습니다.</string>
+    <string name="msg_photographer_modify_success">작가 프로필이 성공적으로 수정되었습니다.</string>
     <string name="hint_photographer_introduce">작가님을 소개할 내용을 작성해주세요 :) </string>
     <!-- MyPage - myReservation - review -->
     <string name="delete_review">해당 리뷰를 삭제하시겠습니까?</string>
