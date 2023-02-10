@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData
+import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
 import com.ssafy.smile.domain.model.AddressDomainDto
@@ -16,7 +17,7 @@ class HomeViewModel: BaseViewModel() {
     private val heartRepository = Application.repositoryInstances.getHeartRepository()
     private val addressRepository = Application.repositoryInstances.getAddressRepository()
 
-    val getPhotographerInfoByAddressResponse: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>
+    val getPhotographerInfoByAddressResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerByAddressResponseDto>>
         get() = photographerRepository.getPhotographerInfoByAddressResponseLiveData
 
     // 작가 좋아요 결과를 관리하는 LiveData

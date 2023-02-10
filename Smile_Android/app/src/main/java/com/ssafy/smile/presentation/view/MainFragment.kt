@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.ssafy.smile.Application
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentMainBinding
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
@@ -56,10 +57,10 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
             }
 
             vpMain.post {
-                if (Application.isFirstViewPagerInit) {
+                if (SharedPreferencesUtil(requireContext()).getViewPagerInit()) {
                     vpMain.currentItem = 1
                     mainViewPagerAdapter.notifyDataSetChanged()
-                    Application.isFirstViewPagerInit = false
+                    SharedPreferencesUtil(requireContext()).changeViewPagerInit(false)
                 }
             }
         }

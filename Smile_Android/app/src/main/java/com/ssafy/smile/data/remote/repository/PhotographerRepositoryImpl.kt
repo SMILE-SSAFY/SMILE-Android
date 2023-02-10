@@ -29,8 +29,8 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
     val deletePhotographerInfoResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<String>>
         get() = _deletePhotographerInfoResponseLiveData
 
-    private val _getPhotographerInfoByAddressResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>(null)
-    val getPhotographerInfoByAddressResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<ArrayList<PhotographerByAddressResponseDto>>>
+    private val _getPhotographerInfoByAddressResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerByAddressResponseDto>>(null)
+    val getPhotographerInfoByAddressResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerByAddressResponseDto>>
         get() = _getPhotographerInfoByAddressResponseLiveData
 
 
