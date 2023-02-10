@@ -19,12 +19,12 @@ class Application : Application()  {
     companion object{
         lateinit var sharedPreferences: SharedPreferencesUtil
         var isRecommendRefused : Boolean = false
-        var isFirstViewPagerInit: Boolean = true
         var authToken : String? = null
         var authTime : Long? = null
         var fcmToken : String? = null
         var role : String? = null
         var userId : Long = -1L
+        var isFirstInit: Boolean = true
 
         private val okHttpInstances = OkhttpClientInstances
         private val retrofitInstances = RetrofitInstances(okHttpInstances)
@@ -32,7 +32,6 @@ class Application : Application()  {
         lateinit var appDatabaseInstance : AppDatabase
         lateinit var dataSourceInstances : DataSourceInstances
         lateinit var repositoryInstances : RepositoryInstances
-
     }
 
     override fun onCreate() {
@@ -48,6 +47,7 @@ class Application : Application()  {
         fcmToken = sharedPreferences.getFCMToken()
         role = sharedPreferences.getRole()
         userId = sharedPreferences.getUserId()
+        isFirstInit = sharedPreferences.changeViewPagerInit(true)
 
         appDatabaseInstance = AppDatabase.getDatabase(this)
         dataSourceInstances = DataSourceInstances(appDatabaseInstance, serviceInstances)
@@ -61,6 +61,4 @@ class Application : Application()  {
     private fun bootPayInit() {
         BootpayAnalytics.init(this, getString(R.string.bootpay_key))
     }
-
-
 }

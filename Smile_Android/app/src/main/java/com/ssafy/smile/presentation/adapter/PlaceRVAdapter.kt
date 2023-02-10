@@ -11,9 +11,10 @@ import com.ssafy.smile.databinding.ItemPhotographerPlaceBinding
 import com.ssafy.smile.domain.model.PlaceDomainDto
 import com.ssafy.smile.domain.model.Spinners
 import com.ssafy.smile.domain.model.Types
+import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
 
-class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : RecyclerView.Adapter<PlaceRVAdapter.Holder>() {
+class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, private val addBtnView:Button, private val limit:Int=5) : RecyclerView.Adapter<PlaceRVAdapter.Holder>() {
     private val itemList : ArrayList<PlaceDomainDto> = arrayListOf()
 
     fun getListData() : ArrayList<PlaceDomainDto> = itemList
@@ -32,8 +33,7 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
 
     fun deleteItem(index: Int){
         itemList.removeAt(index)
-        notifyItemRemoved(index)
-        notifyItemRangeChanged(index, itemCount-index)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -65,7 +65,6 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
     inner class Holder(private val binding: ItemPhotographerPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindInfo(position: Int, dto: PlaceDomainDto) {
             binding.apply {
-
                 tvPhotographerPlaceFirst.run {
                     setOnItemClickListener { _, _, position, _ ->
                         val resource = Spinners.getSelectedPlaceArrayResource(this.getString())
@@ -80,10 +79,12 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
                     setAdapter(Spinners.getSelectedArrayAdapter(itemView.context, R.array.spinner_region))
                 }
                 tvPhotographerPlaceSecond.apply {
+                    isEnabled = false
                     setOnItemClickListener { _, _, position, _ ->
                         dto.isEmpty = false
-                        dto.second = if (dto.first==Types.Region.SAEJONG.getValue()) this.getString() else ""
+                        dto.second = this.getString()
                         dto.secondId = position
+                        viewModel.uploadPlacesData(getListData())           // TODO : 딜레이 체크
                     }
                     setText(dto.second)
                     dto.first?.let {

@@ -1,6 +1,7 @@
 package com.ssafy.api.dto.article;
 
 import com.ssafy.core.entity.Article;
+import com.ssafy.core.entity.Photographer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,8 @@ public class ArticleDetailDto {
 
     private Boolean isHeart;
 
+    private String profileImg;
+
     private Long hearts;
 
     private String detailAddress;
@@ -36,11 +39,12 @@ public class ArticleDetailDto {
 
     private String photographerName;
 
-    public ArticleDetailDto of(Article article, Boolean isMe, Boolean isHeart, Long hearts){
+    public ArticleDetailDto of(Article article, Boolean isMe, Boolean isHeart, Long hearts, Photographer photographer){
         return ArticleDetailDto.builder()
                 .id(article.getId())
                 .isMe(isMe)
                 .isHeart(isHeart)
+                .profileImg(photographer.getProfileImg())
                 .detailAddress(article.getDetailAddress())
                 .category(article.getCategory())
                 .createdAt(article.getCreatedAt())

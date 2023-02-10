@@ -7,6 +7,7 @@ import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkConnection
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentSplashBinding
+import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import kotlinx.coroutines.*
 import kotlin.math.abs
@@ -44,7 +45,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
                         }
                     }
                 } else {
-                    showToast(requireContext(), "네트워크 상태를 확인해주세요")
+                    showToast(requireContext(), "네트워크 상태를 확인해주세요", Types.ToastType.WARNING)
                 }
             }
         }

@@ -48,7 +48,7 @@ object AddressUtils {
         return try {
             val geocoder = Geocoder(context, Locale.getDefault())
             val location = geocoder.getFromLocationName(address, 1)
-            if (address.isNotEmpty()) LatLng(location[0].latitude, location[0].longitude)
+            if (address.isNotEmpty()) LatLng(location!![0].latitude, location[0].longitude)
             else null
         }catch (e : Exception){ null }
     }

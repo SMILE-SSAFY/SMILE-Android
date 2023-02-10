@@ -27,6 +27,6 @@ interface PhotographerApiService {
     suspend fun deletePhotographerInfo() : Response<String>
 
     @GET("$BASE_URL_PHOTOGRAPHER/list")
-    suspend fun getPhotographerInfoByAddress(@Query("address") address:String, @Query("criteria") criteria: String): Response<ArrayList<PhotographerByAddressResponseDto>>
+    suspend fun getPhotographerInfoByAddress(@Query("address") address:String, @Query("criteria") criteria: String): Response<PhotographerByAddressResponseDto>
 
 }

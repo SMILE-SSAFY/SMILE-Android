@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.portfolio
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.View
@@ -19,6 +20,7 @@ import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
 import com.ssafy.smile.databinding.FragmentWritePostBinding
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.PostDomainDto
+import com.ssafy.smile.domain.model.PostDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.ImageRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
@@ -30,22 +32,18 @@ import java.io.File
 import java.net.URL
 import kotlin.math.abs
 
+// TODO : Delay 해결하기 -> Shimmer
 class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePostBinding::bind, R.layout.fragment_write_post) {
 
     private val navArgs : WritePostFragmentArgs by navArgs()
     private val portfolioGraphViewModel: PortfolioGraphViewModel by navGraphViewModels(R.id.portfolioGraph)
 
     private lateinit var imageRvAdapter: ImageRVAdapter
-    private val spinnerAdapter: ArrayAdapter<String> by lazy {
-        val items = resources.getStringArray(R.array.spinner_category)
-        ArrayAdapter(requireContext(), R.layout.item_spinner, items)
-    }
 
     override fun initView() {
         setRvAdapter()
         setSpinnerAdapter()
         setObserver()
-        Log.d("싸피", "initView: ${navArgs.postDomainDto}")
         if (navArgs.postDomainDto!=null) setModifyPostView(navArgs.postDomainDto!!)
         else setWritePostView()
     }
@@ -69,9 +67,10 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
         }
     }
 
-    private fun setSpinnerAdapter() {
+    private fun setSpinnerAdapter(text:String?=null) {
         binding.apply {
-            tvCategoryContent.setAdapter(spinnerAdapter)
+            tvCategoryContent.setText(text)
+            tvCategoryContent.setAdapter(getSpinnerAdapter(requireContext()))
             tvCategoryContent.setOnItemClickListener { _, _, _, _ ->
                 portfolioGraphViewModel.uploadCategoryData(getCategoryData())
             }
@@ -86,11 +85,12 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
             }
         }
         portfolioGraphViewModel.run {
+            checkDataResponse.observe(viewLifecycleOwner){
+                if (it) setButtonEnable()
+                else setButtonDisable()
+            }
             postDataResponse.observe(viewLifecycleOwner){
-                when (it){
-                    true -> setButtonEnable()
-                    false -> setButtonDisable()
-                }
+                setData(it)
             }
             postUploadResponse.observe(viewLifecycleOwner){
                 when(it){
@@ -126,12 +126,15 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
             }
         }
     }
+
+
+
     private fun setClickListener(){
         binding.apply {
             btnPictureContent.setOnClickListener {
                 actionGalleryPermission(requireContext(), abs(3-imageRvAdapter.itemCount), "최대 ${abs(3-imageRvAdapter.itemCount)}장까지 선택 가능합니다."){
                     val fileList = it.map { uri -> ImageUtils.getFileFromUri(requireContext(), uri) }
-                    imageRvAdapter.setListData(ArrayList(fileList))
+                    imageRvAdapter.setListData(fileList as ArrayList<File>)
                     portfolioGraphViewModel.uploadImageData(getImageData())
                 }
             }
@@ -159,47 +162,56 @@ class WritePostFragment : BaseFragment<FragmentWritePostBinding>(FragmentWritePo
     private fun setModifyPostView(postDomainDto: PostDomainDto){
         initToolbar("게시글 수정")
         binding.apply {
-            setButtonEnable()
             btnUpload.text = "수정하기"
-            tvCategoryContent.setText(postDomainDto.category)
             val addressDomainDto = AddressDomainDto().apply { address = postDomainDto.detailAddress }.also {
                 AddressUtils.getPointsFromGeo(requireContext(), postDomainDto.detailAddress)?.let {latLng ->
                     it.latitude = latLng.latitude
                     it.longitude = latLng.longitude
                 }
             }
-            setAddressData(addressDomainDto)
             lifecycleScope.launch(Dispatchers.IO) {
                 val imageList = postDomainDto.photoUrl.map {
                     BitmapFactory.decodeStream(URL(IMAGE_BASE_URL+it).openConnection().getInputStream()).convertBitmapToFile(context = requireContext())!!
                 }
-                Log.d("싸피", "setModifyPostView: $imageList")
-                portfolioGraphViewModel.uploadData(imageList, addressDomainDto, postDomainDto.category)
+                portfolioGraphViewModel.uploadData(imageList, addressDomainDto, postDomainDto.category.replace("#",""))
             }
         }
     }
 
     private fun initToolbar(msg:String){
         val toolbar : Toolbar = binding.layoutToolbar.tbToolbar
-        toolbar.initToolbar(msg, true)
+        toolbar.initToolbar(msg, true){
+            moveToPopUpSelf()
+        }
+    }
+
+    private fun setData(postDto: PostDto) {
+        binding.apply {
+            imageRvAdapter.setListData(postDto.images as ArrayList<File>)
+            postDto.addressDomainDto?.let { setAddressData(it) }
+            setSpinnerAdapter(postDto.category)
+        }
     }
 
     private fun setButtonEnable() {
         binding.btnUpload.apply {
-            isClickable = true
+            isEnabled = true
             setBackgroundResource(R.drawable.rectangle_blue400_radius_8)
         }
     }
     private fun setButtonDisable() {
         binding.btnUpload.apply {
-            isClickable = false
+            isEnabled = false
             setBackgroundResource(R.drawable.rectangle_gray400_radius_8)
         }
     }
 
     private fun getImageData() = imageRvAdapter.getListData()
     private fun getCategoryData() = binding.tvCategoryContent.text.toString()
+    private fun getSpinnerAdapter(context: Context) =  ArrayAdapter(context, R.layout.item_spinner, resources.getStringArray(R.array.spinner_category))
     private fun setAddressData(addressDomainDto: AddressDomainDto) { binding.etPlaceContent.setText(addressDomainDto.address) }
 
     private fun moveToAddressGraph() = findNavController().navigate(R.id.action_writePostFragment_to_addressGraph)
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_writePostFragment_pop)
+
 }

@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.home
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +28,7 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
     private val viewModel : AddressGraphViewModel by viewModels()
     private lateinit var rvAdapter : AddressRVAdapter
     private var isSelectionMode : Boolean = false
+    private lateinit var curAddress: AddressDomainDto
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -75,7 +77,8 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
                 }
             }
             selectAddressResponseLiveData.observe(viewLifecycleOwner){
-                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
+                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.BASIC)
+                findNavController().previousBackStackEntry?.savedStateHandle?.set("curAddress", curAddress)
                 moveToPopUpSelf()
             }
             deleteAddressResponseLiveData.observe(viewLifecycleOwner){
@@ -93,8 +96,11 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
             setItemClickListener(object : AddressRVAdapter.ItemClickListener{
                 override fun onClickItem(view: View, position: Int, addressDomainDto: AddressDomainDto) {
                     if (isSelectionMode){
-                        if (addressDomainDto.isSelected) showToast(requireContext(), getString(R.string.msg_address_failure), Types.ToastType.WARNING)
-                        else viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
+                        if (addressDomainDto.isSelected) showToast(requireContext(), getString(R.string.msg_address_failure), Types.ToastType.INFO)
+                        else {
+                            viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
+                            curAddress = addressDomainDto
+                        }
                     }else{
                         val bundle = Bundle().apply { putParcelable("addressDomainDto", addressDomainDto) }
                         requireActivity().supportFragmentManager.setFragmentResult("getAddress",bundle)

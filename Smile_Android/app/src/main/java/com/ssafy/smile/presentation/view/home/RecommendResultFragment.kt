@@ -56,7 +56,7 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "작가 추천 목록 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "작가 추천 목록 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }
