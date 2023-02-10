@@ -71,9 +71,7 @@ public class NotificationService {
                 .createScoped(Arrays.asList("https://www.googleapis.com/auth/cloud-platform"));
         googleCredentials.refreshIfExpired();
 
-        String token = googleCredentials.getAccessToken().getTokenValue();
-
-        return token;
+        return googleCredentials.getAccessToken().getTokenValue();
     }
 
     /**
@@ -109,8 +107,7 @@ public class NotificationService {
         String[] tokens = notificationData.getRegistrationToken().split(",");
 
         for (String token : tokens) {
-            String message = null;
-            message = makeDataMessage(token, notificationData.getContent());
+            String message = makeDataMessage(token, notificationData.getContent());
 
             log.info("message : {}", message);
             OkHttpClient client = new OkHttpClient();
@@ -136,13 +133,10 @@ public class NotificationService {
      * @throws Exception
      */
     public void cancelReservation(Reservation reservation) throws Exception {
-        String token, name;
         User user = reservation.getUser();  // 예약한 유저
         User photographer = reservation.getPhotographer().getUser();    // 예약된 사진작가
-        token = photographer.getFcmToken();  // 사진작가에게 전달
-        name = user.getName();     // 유저이름으로 취소
 
-        cancelPay(reservation.getReceiptId(), name);
+        cancelPay(reservation.getReceiptId(), user.getName());
 
         reservation.updateStatus(ReservationStatus.예약취소);
         log.info("예약 상태 : {}", reservation.getStatus());
@@ -152,7 +146,7 @@ public class NotificationService {
         // FCM 전송
         sendDataMessageTo(NotificationDTO.builder()
                 .requestId(user.getId())
-                .registrationToken(token)
+                .registrationToken(photographer.getFcmToken())
                 .content(reservation.getReservedAt() + "의 예약이 취소되었습니다.")
                 .build());
     }
