@@ -27,6 +27,11 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 당일 예약 상태 변경 JobConfig
+ *
+ * @author 서재건
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -37,6 +42,12 @@ public class ChangeReservingJobConfig {
     public final ReservationRepository reservationRepository;
     public final NotificationService notificationService;
 
+    /**
+     * 예약 상태 변경 Job
+     *
+     * @param changeReservingStep
+     * @return
+     */
     @Bean
     public Job changeReservingJob(Step changeReservingStep) {
 
@@ -46,6 +57,13 @@ public class ChangeReservingJobConfig {
                 .build();
     }
 
+    /**
+     * 예약 상태 변경 Step
+     *
+     * @param reservationNowReader
+     * @param reservationNowWriter
+     * @return
+     */
     @Bean
     @JobScope
     public Step changeReservingStep(ItemReader reservationNowReader,
@@ -75,6 +93,12 @@ public class ChangeReservingJobConfig {
                 .build();
     }
 
+    /**
+     * 확정 전이면 예약 취소
+     * 확정이면 예약 진행중
+     *
+     * @return
+     */
     @Bean
     @StepScope
     public ItemWriter<Reservation> reservationNowWriter() {
