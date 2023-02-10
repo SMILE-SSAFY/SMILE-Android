@@ -27,8 +27,17 @@ public class JobScheduler {
     private final JobLauncher jobLauncher;
     private final Job notificationJob;
 
+    /**
+     * 예약 전날 8시에 FCM 전송
+     *
+     * @throws JobInstanceAlreadyCompleteException
+     * @throws JobExecutionAlreadyRunningException
+     * @throws JobParametersInvalidException
+     * @throws JobRestartException
+     */
     @Scheduled(cron = "0 0 8 * * ?")
-    public void jobSchduled() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    public void jobSchduled()
+            throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         JobParameters jobParameters = new JobParameters(
                 Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
         );

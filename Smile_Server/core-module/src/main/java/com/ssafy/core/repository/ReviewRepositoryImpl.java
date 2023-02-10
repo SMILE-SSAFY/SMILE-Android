@@ -28,7 +28,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         review.id.count()
                 ))
                 .from(review)
-                .where(review.photographer.id.eq(photographerId)).fetchOne()
-                ;
+                .where(review.photographer.id.eq(photographerId))
+                .fetchOne();
     }
 }

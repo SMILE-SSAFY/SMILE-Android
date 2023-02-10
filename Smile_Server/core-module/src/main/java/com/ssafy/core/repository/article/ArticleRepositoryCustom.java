@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * querydsl 작성 관련 인터페이스
  *
- * author @서재건
+ * @author 서재건
  */
 public interface ArticleRepositoryCustom {
 
