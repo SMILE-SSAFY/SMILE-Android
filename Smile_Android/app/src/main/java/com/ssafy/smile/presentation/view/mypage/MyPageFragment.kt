@@ -68,11 +68,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                             Glide.with(requireContext())
                                 .load(Constants.IMAGE_BASE_URL+it.data.photoUrl)
                                 .fallback(R.drawable.img_profile_default)
+                                .error(R.drawable.img_profile_default)
                                 .into(layoutMyPageProfile.ivProfileImage)
                         }
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
                         dismissLoadingDialog()
                     }
                 }

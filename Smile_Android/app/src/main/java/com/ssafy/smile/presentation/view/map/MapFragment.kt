@@ -83,7 +83,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        if (isInitialized && it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
+                        if (isInitialized && it.data.isEmpty())
                         else {
                             updateClusterInfo(it.data)
                             map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }

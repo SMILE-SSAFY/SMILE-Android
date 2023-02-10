@@ -1,17 +1,21 @@
 package com.ssafy.smile.presentation.view.home
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.ssafy.smile.Application
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.AddressUtils
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
@@ -43,7 +47,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<AddressDomainDto>("curAddress")?.observe(viewLifecycleOwner){
-            Log.d("******************", "onResume: ${it}")
             homeViewModel.getCurrentAddress()
         }
     }
@@ -56,8 +59,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     override fun initView() {
         isPhotographer = getRole()
         userId = getUserId()
-        initToolbar()
         initRecycler()
+        initToolbar()
 
         binding.chipPopular.apply {
             isChecked = true
@@ -90,14 +93,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    if (it.data.size == 0) {
+                    setProfile(it.data.photoUrl)
+                    if (it.data.photographerList.size == 0) {
                         recyclerData.clear()
                         homeRecyclerAdapter.notifyDataSetChanged()
                         setIsEmptyView(View.VISIBLE, View.GONE, "해당 주소에 작가님이 존재하지 않습니다")
                     } else {
                         recyclerData.clear()
-                        it.data.forEach { data ->
-                            recyclerData.add(data.toCustomPhotographerDomainDto())
+                        for (i in 0 until it.data.photographerList.size) {
+                            recyclerData.add(it.data.toCustomPhotographerDomainDto(i))
                         }
                         homeRecyclerAdapter.notifyDataSetChanged()
                         setIsEmptyView(View.GONE, View.VISIBLE, null)
@@ -199,7 +203,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             }
             chipReviewAvg.setOnClickListener {
                 setChipsEnabled(popular = true, avg = false, cnt = true)
-                filter = if (chipPopular.isChecked) {
+                filter = if (chipReviewAvg.isChecked) {
                     "score"
                 } else {
                     ""
@@ -208,7 +212,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             }
             chipReviewCnt.setOnClickListener {
                 setChipsEnabled(popular = true, avg = true, cnt = false)
-                filter = if (chipPopular.isChecked) {
+                filter = if (chipReviewCnt.isChecked) {
                     "review"
                 } else {
                     ""
@@ -249,6 +253,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 menu.findItem(R.id.action_portfolio).isVisible = isPhotographer
             }
             tvToolbarAddress.text = curAddress
+        }
+    }
+
+    private fun setProfile(photoUrl: String) {
+        binding.tbHome.apply {
+            Glide.with(this)
+                .asBitmap()
+                .load(Constants.IMAGE_BASE_URL + photoUrl)
+                .circleCrop()
+                .into(object: CustomTarget<Bitmap>(){
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        menu.findItem(R.id.action_portfolio).icon = BitmapDrawable(resources, resource)
+                    }
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
         }
     }
 
