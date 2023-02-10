@@ -78,13 +78,17 @@ public class ReservationService {
      *
      * @param reservation
      */
+    @Transactional
     public ReservationResDto reserve(ReservationReqDto reservation){
-        reservation.setUserId(UserService.getLogInUser().getId());
+        Long userId = UserService.getLogInUser().getId();
+        reservation.setUserId(userId);
         if(!photographerRepository.existsById(reservation.getPhotographerId())){
             throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
         }
 
-        //FIX: 같은 날짜에 같은 사진작가에게 저장하려할 때 에러 발생
+        if (reservationRepository.existsByPhotographerIdAndReservedAt(userId, reservation.getDate())) {
+            throw new CustomException(ErrorCode.RESERVATION_CANNOT);
+        }
 
         Reservation savedReservation = Reservation.builder()
                 .photographer(Photographer.builder().id(reservation.getPhotographerId()).build())
@@ -102,9 +106,8 @@ public class ReservationService {
 
         Reservation entity = reservationRepository.save(savedReservation);
 
-        ReservationResDto res = new ReservationResDto();
         User photographer = userRepository.findById(reservation.getPhotographerId()).get();
-        return res.of(entity, photographer.getName(), photographer.getPhoneNumber());
+        return new ReservationResDto().of(entity, photographer.getName(), photographer.getPhoneNumber());
     }
 
     /**
@@ -119,6 +122,7 @@ public class ReservationService {
 
         // 예약취소된 예약 외 예약 할 수 있는 날
         List<Date> findDates =
+
                 reservationRepository
                         .findReservedAtByPhotographerIdAndReservedAt(photographerId, Date.valueOf(LocalDate.now()));
 
