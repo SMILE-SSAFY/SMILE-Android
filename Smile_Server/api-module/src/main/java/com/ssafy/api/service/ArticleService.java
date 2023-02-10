@@ -344,27 +344,28 @@ public class ArticleService {
     public ArticleClusterListDto getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
         log.info(condition);
         Boolean isEndPage = false;
+        ArticleClusterListDto articleClusterListDto = new ArticleClusterListDto();
         // 최신순 조회
         switch (condition) {
             case "time": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId);
-                doCluster(articleRedisPage, pageId, isEndPage);
+                articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
                 // 좋아요순 조회
             }
             case "heart": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId);
-                doCluster(articleRedisPage, pageId, isEndPage);
+                articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
             }
                 // 거리순 조회
             case "distance": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
-                doCluster(articleRedisPage, pageId, isEndPage);
+                articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
             }
         }
-        return ArticleClusterListDto.builder().build();
+        return articleClusterListDto;
     }
 
     /***
