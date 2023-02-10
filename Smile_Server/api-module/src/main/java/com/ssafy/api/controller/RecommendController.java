@@ -48,10 +48,7 @@ public class RecommendController {
      */
     @GetMapping
     public ResponseEntity<RecommendResponseDto> recommendPhotographerByAddress(@Param("address") String address){
-
-        RecommendResponseDto resultList = recommendService.recommendPhotographerByAddress(address);
-
-        return ResponseEntity.ok().body(resultList);
+        return ResponseEntity.ok().body(recommendService.recommendPhotographerByAddress(address));
     }
 
 }
