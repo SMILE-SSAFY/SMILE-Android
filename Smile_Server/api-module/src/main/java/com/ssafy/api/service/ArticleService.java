@@ -101,7 +101,7 @@ public class ArticleService {
         boolean isHearted = isHearted(logInUser, article);
         Long hearts = articleHeartRepository.countByArticle(article);
 
-        return new ArticleDetailDto().of(article, isMe, isHearted, hearts);
+        return new ArticleDetailDto().of(article, isMe, isHearted, hearts, articlePhotographer);
     }
 
     /***
@@ -155,6 +155,7 @@ public class ArticleService {
         Boolean isMe = isMe(logInUser, article.getUser());
         boolean isHearted = isHearted(logInUser, article);
         Long hearts = articleHeartRepository.countByArticle(article);
+        Photographer photographer = photographerRepository.findById(logInUser.getId()).orElseThrow(()->new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
         if (isMe) {
             // 이미지 지우기
@@ -179,7 +180,7 @@ public class ArticleService {
             throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
         }
 
-        return new ArticleDetailDto().of(article, isMe, isHearted, hearts);
+        return new ArticleDetailDto().of(article, isMe, isHearted, hearts, photographer);
     }
 
     /***
