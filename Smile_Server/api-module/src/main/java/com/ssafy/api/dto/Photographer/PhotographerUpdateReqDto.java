@@ -20,6 +20,7 @@ public class PhotographerUpdateReqDto {
     private Long photographerId;
     private String profileImg;
     private String introduction;
+    private String bank;
     private String account;
     private List<PlacesReqDto> places;
     private List<CategoriesReqDto> categories;

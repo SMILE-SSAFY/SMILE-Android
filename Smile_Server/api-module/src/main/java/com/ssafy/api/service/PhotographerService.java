@@ -114,6 +114,7 @@ public class PhotographerService {
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
+                .bank(photographer.getBank())
                 .account(photographer.getAccount())
                 .places(places)
                 .categories(categories)
@@ -202,6 +203,7 @@ public class PhotographerService {
         }
 
         findPhotographer.updateProfileImg(photographer.getProfileImg());
+        findPhotographer.updateBank(photographer.getBank());
         findPhotographer.updateAccount(photographer.getAccount());
         findPhotographer.updateIntroduction(photographer.getIntroduction());
         findPhotographer.updatePlaces(places);
