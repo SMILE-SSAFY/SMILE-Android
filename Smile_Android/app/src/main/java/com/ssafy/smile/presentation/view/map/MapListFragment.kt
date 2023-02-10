@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.map
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.children
 import androidx.fragment.app.viewModels
@@ -61,7 +62,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        if (it.data.articleRedisList.isEmpty()){
+                         if (it.data.articleRedisList.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
                         }else{

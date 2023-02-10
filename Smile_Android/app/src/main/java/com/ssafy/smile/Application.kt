@@ -1,12 +1,16 @@
 package com.ssafy.smile
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.KakaoSdk
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.data.*
 import com.ssafy.smile.data.local.database.AppDatabase
+import com.ssafy.smile.presentation.view.MainFragmentDirections
+import com.ssafy.smile.presentation.view.home.CustomRecommendDialog
 import kr.co.bootpay.android.*;
 
 private const val TAG = "Application_싸피"
@@ -14,6 +18,8 @@ class Application : Application()  {
 
     companion object{
         lateinit var sharedPreferences: SharedPreferencesUtil
+        var isRecommendRefused : Boolean = false
+        var isFirstViewPagerInit: Boolean = true
         var authToken : String? = null
         var authTime : Long? = null
         var fcmToken : String? = null
@@ -26,6 +32,7 @@ class Application : Application()  {
         lateinit var appDatabaseInstance : AppDatabase
         lateinit var dataSourceInstances : DataSourceInstances
         lateinit var repositoryInstances : RepositoryInstances
+
     }
 
     override fun onCreate() {
@@ -54,4 +61,6 @@ class Application : Application()  {
     private fun bootPayInit() {
         BootpayAnalytics.init(this, getString(R.string.bootpay_key))
     }
+
+
 }

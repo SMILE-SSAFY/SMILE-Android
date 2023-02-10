@@ -18,5 +18,6 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        tools:listitem="@layout/recycler_portfolio_post_item"
         android:layout_weight="1"/>
 </LinearLayout>

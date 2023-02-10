@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -21,7 +20,6 @@ import com.ssafy.smile.presentation.base.BaseBottomSheetDialogFragment
 import com.ssafy.smile.presentation.viewmodel.home.AddressGraphViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.properties.Delegates
 
 class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(FragmentAddressBinding::inflate) {
 
@@ -59,7 +57,7 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
     override fun setEvent() {
         viewModel.apply {
             getAddressListWithSelectionResponseLiveData.observe(viewLifecycleOwner){
-                if (it.isNullOrEmpty()){
+                if (isSelectionMode && it.isNullOrEmpty()){
                     setEmptyView(true)
                     setRVView(false)
                 }else{
@@ -68,7 +66,7 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
                 }
             }
             getAddressListResponseLiveData.observe(viewLifecycleOwner){
-                if (it.isNullOrEmpty()){
+                if (!(isSelectionMode) && it.isNullOrEmpty()){
                     setEmptyView(true)
                     setRVView(false)
                 }else{
@@ -76,12 +74,17 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
                     setRVView(true, it as ArrayList<AddressDomainDto>)
                 }
             }
-            selectedAddressResponseLiveData.observe(viewLifecycleOwner){
+            selectAddressResponseLiveData.observe(viewLifecycleOwner){
                 showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
                 moveToPopUpSelf()
             }
+            deleteAddressResponseLiveData.observe(viewLifecycleOwner){
+                if (isSelectionMode) lifecycleScope.launch(Dispatchers.IO){getAddressListWithSelection()}
+            }
+
             if (isSelectionMode) getAddressListWithSelection()
             else getAddressList()
+
         }
     }
 
@@ -91,7 +94,7 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
                 override fun onClickItem(view: View, position: Int, addressDomainDto: AddressDomainDto) {
                     if (isSelectionMode){
                         if (addressDomainDto.isSelected) showToast(requireContext(), getString(R.string.msg_address_failure), Types.ToastType.WARNING)
-                        else lifecycleScope.launch(Dispatchers.IO){ viewModel.selectAddress(addressDomainDto.apply { isSelected = true }) }
+                        else viewModel.selectAddress(addressDomainDto.apply { isSelected = true })
                     }else{
                         val bundle = Bundle().apply { putParcelable("addressDomainDto", addressDomainDto) }
                         requireActivity().supportFragmentManager.setFragmentResult("getAddress",bundle)
@@ -99,7 +102,7 @@ class AddressFragment : BaseBottomSheetDialogFragment<FragmentAddressBinding>(Fr
                     }
                 }
                 override fun onClickRemove(view: View, position: Int, addressDomainDto: AddressDomainDto) {
-                    lifecycleScope.launch(Dispatchers.IO){ viewModel.deleteAddress(addressDomainDto) }
+                    viewModel.deleteAddress(addressDomainDto)
                 }
             })
         }

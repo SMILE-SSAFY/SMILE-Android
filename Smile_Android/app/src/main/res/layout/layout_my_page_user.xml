@@ -8,19 +8,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <TextView
-        android:id="@+id/tv_user_change_password"
-        style="@style/TvT2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:paddingTop="15dp"
-        android:paddingBottom="8dp"
-        android:paddingHorizontal="20dp"
-        android:text="비밀번호 변경"
-        android:textSize="14sp"
-        android:textColor="@color/dark400"
-        android:fontFamily="@font/ibm_plex_sans_medium"/>
-    <TextView
         android:id="@+id/tv_user_withDraw"
         style="@style/TvT2"
         android:layout_width="match_parent"

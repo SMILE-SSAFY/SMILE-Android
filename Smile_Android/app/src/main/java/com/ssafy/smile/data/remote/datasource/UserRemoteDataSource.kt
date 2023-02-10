@@ -12,4 +12,5 @@ interface UserRemoteDataSource {
     suspend fun kakaoLogin(token: KakaoLoginRequestDto): Response<UserResponseDto>
     suspend fun withDraw(): Response<String>
     suspend fun myPage(): Response<MyPageResponseDto>
+    suspend fun logout(logoutRequestDto: LogoutRequestDto): Response<Any>
 }

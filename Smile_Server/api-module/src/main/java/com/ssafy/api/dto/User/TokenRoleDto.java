@@ -2,8 +2,11 @@ package com.ssafy.api.dto.User;
 
 import com.ssafy.core.code.Role;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
@@ -13,6 +16,8 @@ import javax.persistence.Enumerated;
  * author @서재건
  */
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class TokenRoleDto {
 
@@ -25,4 +30,12 @@ public class TokenRoleDto {
 
     @NotNull
     private Long userId;
+
+    public TokenRoleDto of(String token, Role role, Long userId){
+        return TokenRoleDto.builder()
+                .token(token)
+                .role(role)
+                .userId(userId)
+                .build();
+    }
 }

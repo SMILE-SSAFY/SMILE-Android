@@ -1,7 +1,17 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.Photographer.PlacesForListDto;
-import com.ssafy.api.dto.Reservation.*;
+import com.ssafy.api.dto.Reservation.CategoriesInfoResDto;
+import com.ssafy.api.dto.Reservation.CategoryDetailDto;
+import com.ssafy.api.dto.Reservation.NotificationDTO;
+import com.ssafy.api.dto.Reservation.PhotographerReservationDto;
+import com.ssafy.api.dto.Reservation.ReservationListDto;
+import com.ssafy.api.dto.Reservation.ReservationReqDto;
+import com.ssafy.api.dto.Reservation.ReservationResDto;
+import com.ssafy.api.dto.Reservation.ReservationStatusDto;
+import com.ssafy.api.dto.Reservation.ReviewDetailDto;
+import com.ssafy.api.dto.Reservation.ReviewPostDto;
+import com.ssafy.api.dto.Reservation.ReviewResDto;
 import com.ssafy.core.code.ReservationStatus;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.CategoriesQdslDto;
@@ -35,7 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 예약 관련 Service
@@ -69,13 +78,17 @@ public class ReservationService {
      *
      * @param reservation
      */
+    @Transactional
     public ReservationResDto reserve(ReservationReqDto reservation){
-        reservation.setUserId(UserService.getLogInUser().getId());
+        Long userId = UserService.getLogInUser().getId();
+        reservation.setUserId(userId);
         if(!photographerRepository.existsById(reservation.getPhotographerId())){
             throw new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND);
         }
 
-        //FIX: 같은 날짜에 같은 사진작가에게 저장하려할 때 에러 발생
+        if (reservationRepository.existsByPhotographerIdAndReservedAt(userId, reservation.getDate())) {
+            throw new CustomException(ErrorCode.RESERVATION_CANNOT);
+        }
 
         Reservation savedReservation = Reservation.builder()
                 .photographer(Photographer.builder().id(reservation.getPhotographerId()).build())
@@ -93,9 +106,8 @@ public class ReservationService {
 
         Reservation entity = reservationRepository.save(savedReservation);
 
-        ReservationResDto res = new ReservationResDto();
         User photographer = userRepository.findById(reservation.getPhotographerId()).get();
-        return res.of(entity, photographer.getName(), photographer.getPhoneNumber());
+        return new ReservationResDto().of(entity, photographer.getName(), photographer.getPhoneNumber());
     }
 
     /**
@@ -110,6 +122,7 @@ public class ReservationService {
 
         // 예약취소된 예약 외 예약 할 수 있는 날
         List<Date> findDates =
+
                 reservationRepository
                         .findReservedAtByPhotographerIdAndReservedAt(photographerId, Date.valueOf(LocalDate.now()));
 
@@ -204,7 +217,7 @@ public class ReservationService {
         log.info("Role 작가 확인");
 
         List<Reservation> reservationList =
-                reservationRepository.findByPhotographerIdOrderByReservedAtDescReservedTimeDesc(user.getId());
+                reservationRepository.findByPhotographerIdOrderByCreatedAtDesc(user.getId());
         log.info("작가 예약 목록 조회");
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
@@ -238,7 +251,7 @@ public class ReservationService {
 
         log.info("유저 예약 목록 조회");
         List<Reservation> reservationList =
-                reservationRepository.findByUserIdOrderByReservedAtDescReservedTimeDesc(userId);
+                reservationRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         List<ReservationListDto> reservationPhotographerList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
@@ -342,7 +355,6 @@ public class ReservationService {
      * 예약 취소
      *
      * @param reservationId
-     * @param userId
      * @throws IOException
      */
     @Transactional

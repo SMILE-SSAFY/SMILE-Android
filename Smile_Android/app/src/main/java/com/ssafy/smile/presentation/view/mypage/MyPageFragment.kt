@@ -10,11 +10,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.common.view.CommonDialog
+import com.ssafy.smile.data.remote.model.LogoutRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.databinding.FragmentMyPageBinding
 import com.ssafy.smile.domain.model.DialogBody
@@ -26,11 +29,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+private const val TAG = "MyPageFragment_스마일"
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding::bind, R.layout.fragment_my_page) {
     private val viewModel : MyPageViewModel by viewModels()
 
     override fun onResume() {
         super.onResume()
+        viewModel.getMyPageInfo()
+        setObserver()
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             viewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }
@@ -38,8 +44,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
 
     override fun initView() {
         initToolbar()
-//        viewModel.getMyPageInfo()
-//        setObserver()
     }
 
     override fun setEvent() {
@@ -54,7 +58,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         viewModel.apply {
             myPageResponse.observe(viewLifecycleOwner){
                 when(it) {
-                    is NetworkUtils.NetworkResponse.Failure -> {}
                     is NetworkUtils.NetworkResponse.Loading -> {
                         showLoadingDialog(requireContext())
                     }
@@ -62,7 +65,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                         dismissLoadingDialog()
                         binding.apply {
                             layoutMyPageProfile.tvProfileName.text = it.data.name
+                            Glide.with(requireContext())
+                                .load(Constants.IMAGE_BASE_URL+it.data.photoUrl)
+                                .fallback(R.drawable.img_profile_default)
+                                .into(layoutMyPageProfile.ivProfileImage)
                         }
+                    }
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
+                        dismissLoadingDialog()
                     }
                 }
             }
@@ -105,6 +116,22 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     }
                 }
             }
+            logoutResponse.observe(viewLifecycleOwner){
+                when(it) {
+                    is NetworkUtils.NetworkResponse.Failure -> {
+                        Log.d(TAG, "setObserver: ${it.errorCode}")
+                        showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.")
+                    }
+                    is NetworkUtils.NetworkResponse.Loading -> {}
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        Intent(context, MainActivity::class.java).apply {
+                            requireActivity().finish()
+                            startActivity(this)
+                        }
+                        requireActivity().finish()
+                    }
+                }
+            }
             getRole(requireContext())
         }
     }
@@ -134,7 +161,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                 }
             }
             layoutMyPageUser.apply {
-                tvUserChangePassword.setOnClickListener {  }
                 tvUserWithDraw.setOnClickListener {
                     showPhotographerWithDrawDialog()
                 }
@@ -153,15 +179,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
         }
     }
     private fun logout() {
+        viewModel.logout(LogoutRequestDto(SharedPreferencesUtil(requireContext()).getFCMToken()!!))
         try {
             removeUserInfo()
-
-            Intent(context, MainActivity::class.java).apply {
-                requireActivity().finish()
-                startActivity(this)
-            }
-            requireActivity().finish()
-        } catch (e: IOException) { findNavController().navigate(R.id.action_global_loginFragment) }
+        } catch (e: IOException) {
+            findNavController().navigate(R.id.action_global_loginFragment)
+        }
     }
     private fun removeUserInfo(){
         SharedPreferencesUtil(requireContext()).removeAllInfo()

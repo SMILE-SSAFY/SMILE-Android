@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.mypage.myInterest
 
+import android.util.Log
 import android.view.View
 import android.widget.CheckedTextView
 import androidx.fragment.app.viewModels
@@ -13,7 +14,7 @@ import com.ssafy.smile.presentation.adapter.MyInterestPhotographerRVAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.mypage.MyInterestViewModel
 
-
+private const val TAG = "MyInterestPhotographerF_스마일"
 class MyInterestPhotographerFragment : BaseFragment<FragmentMyInterestPhotographerBinding>(FragmentMyInterestPhotographerBinding::bind, R.layout.fragment_my_interest_photographer) {
     private val viewModel : MyInterestViewModel by viewModels()
     private lateinit var rvMyInterestPhotographerAdapter : MyInterestPhotographerRVAdapter

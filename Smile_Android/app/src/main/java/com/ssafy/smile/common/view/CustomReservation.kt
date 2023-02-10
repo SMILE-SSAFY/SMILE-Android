@@ -132,6 +132,7 @@ class CustomReservation: ConstraintLayout {
                     setButtons(arrayListOf(btnReviewCheck))
                 }
             }
+            "예약취소" -> setButtons(arrayListOf())
         }
     }
 
