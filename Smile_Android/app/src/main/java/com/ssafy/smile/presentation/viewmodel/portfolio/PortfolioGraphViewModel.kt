@@ -22,9 +22,12 @@ class PortfolioGraphViewModel : BaseViewModel() {
 
     // 게시물 작성
     private val postData : PostDto = PostDto()
-    private val _postDataResponse : SingleLiveData<Boolean> = SingleLiveData(null)
-    val postDataResponse : SingleLiveData<Boolean>
+    private val _postDataResponse : SingleLiveData<PostDto> = SingleLiveData(postData)
+    val postDataResponse : SingleLiveData<PostDto>
         get() = _postDataResponse
+    private val _checkDataResponse : SingleLiveData<Boolean> = SingleLiveData(null)
+    val checkDataResponse : SingleLiveData<Boolean>
+        get() = _checkDataResponse
     val postUploadResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
         get() = portfolioRepository.postUploadResponseLiveData
     val postModifyResponse: SingleLiveData<NetworkUtils.NetworkResponse<Any>>
@@ -34,20 +37,21 @@ class PortfolioGraphViewModel : BaseViewModel() {
         postData.images = images
         postData.addressDomainDto = addressDomainDto
         postData.category = category
-        _postDataResponse.postValue(checkData())
+        _postDataResponse.postValue(postData)
+        _checkDataResponse.postValue(checkData())
     }
 
     fun uploadImageData(images:List<File>){
         postData.images = images
-        _postDataResponse.postValue(checkData())
+        _checkDataResponse.postValue(checkData())
     }
     fun uploadAddressData(addressDomainDto: AddressDomainDto){
         postData.addressDomainDto = addressDomainDto
-        _postDataResponse.postValue(checkData())
+        _checkDataResponse.postValue(checkData())
     }
     fun uploadCategoryData(category : String){
         postData.category = category
-        _postDataResponse.postValue(checkData())
+        _checkDataResponse.postValue(checkData())
     }
     private fun checkData() : Boolean {
         if (postData.images.isNullOrEmpty() || postData.addressDomainDto==null || postData.category==null) return false
