@@ -41,7 +41,7 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "changeReservationObserver: ${it.errorCode}")
-                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -58,7 +58,7 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "changeReservationObserver: ${it.errorCode}")
-                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "예약 상태 변경 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -96,7 +96,7 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "photographerReservationListObserver: ${it.errorCode}")
-                    showToast(requireContext(), "작가 예약 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "작가 예약 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }

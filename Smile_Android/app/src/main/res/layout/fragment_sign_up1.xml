@@ -25,21 +25,34 @@
         android:text="아이디"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_toolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/layout_toolbar" />
 
-    <EditText
-        android:id="@+id/et_id"
-        style="@style/Et1DirOutlined"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:hint="이메일 형식"
-        android:singleLine="true"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:errorTextColor="@color/smile_red"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toStartOf="@+id/btn_double_check"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_id" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_id">
+
+        <EditText
+            android:id="@+id/et_id"
+            style="@style/Et1DirOutlined"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="4dp"
+            android:hint="이메일 형식"
+            android:inputType="textEmailAddress"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_double_check"
@@ -49,11 +62,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="20dp"
         android:text="중복 확인"
-        app:layout_constraintBottom_toBottomOf="@+id/et_id"
+        app:layout_constraintBottom_toBottomOf="@+id/til_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/et_id"
-        app:layout_constraintTop_toTopOf="@+id/et_id" />
+        app:layout_constraintStart_toEndOf="@+id/til_email"
+        app:layout_constraintTop_toTopOf="@+id/til_email" />
 
     <ImageView
         android:id="@+id/iv_id_check_ok"
@@ -63,7 +76,7 @@
         android:layout_marginTop="4dp"
         android:src="@drawable/ic_check"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+        app:layout_constraintTop_toBottomOf="@+id/til_email" />
 
     <TextView
         android:id="@+id/tv_id_check_ok"
@@ -85,7 +98,7 @@
         android:layout_marginTop="4dp"
         android:src="@drawable/ic_cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_id" />
+        app:layout_constraintTop_toBottomOf="@id/til_email" />
 
     <TextView
         android:id="@+id/tv_id_check_no"
@@ -123,23 +136,36 @@
         android:text="비밀번호"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+        app:layout_constraintTop_toBottomOf="@+id/til_email" />
 
-    <EditText
-        android:id="@+id/et_password"
-        style="@style/Et1DirOutlined"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:hint="8~20자리"
-        android:singleLine="true"
-        android:inputType="textPassword"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:errorTextColor="@color/smile_red"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_password"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/Et1DirOutlined"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="4dp"
+            android:hint="8~20자리"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tv_password_check"
@@ -151,22 +177,34 @@
         android:text="비밀번호 확인"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+        app:layout_constraintTop_toBottomOf="@+id/til_password" />
 
-    <EditText
-        android:id="@+id/et_password_check"
-        style="@style/Et1DirOutlined"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password_check"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="비밀번호 확인을 위해 재입력 해주세요"
-        android:singleLine="true"
-        android:inputType="textPassword"
+        android:layout_marginStart="20dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toStartOf="@+id/btn_password_check"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_password_check" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_password_check"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/et_password_check"
+            style="@style/Et1DirOutlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="4dp"
+            android:hint="비밀번호를 재입력 해주세요"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_password_check"
@@ -176,11 +214,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="20dp"
         android:text="비밀번호 확인"
-        app:layout_constraintBottom_toBottomOf="@+id/et_password_check"
+        app:layout_constraintBottom_toBottomOf="@+id/til_password_check"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/et_password_check"
-        app:layout_constraintTop_toTopOf="@+id/et_password_check" />
+        app:layout_constraintStart_toEndOf="@+id/til_password_check"
+        app:layout_constraintTop_toTopOf="@+id/til_password_check" />
 
     <ImageView
         android:id="@+id/iv_password_check_ok"
@@ -190,7 +228,7 @@
         android:layout_marginTop="4dp"
         android:src="@drawable/ic_check"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password_check" />
+        app:layout_constraintTop_toBottomOf="@+id/til_password_check" />
 
     <TextView
         android:id="@+id/tv_password_check_ok"
@@ -219,7 +257,7 @@
         android:layout_marginTop="4dp"
         android:src="@drawable/ic_cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password_check" />
+        app:layout_constraintTop_toBottomOf="@+id/til_password_check" />
 
     <TextView
         android:id="@+id/tv_password_check_no"

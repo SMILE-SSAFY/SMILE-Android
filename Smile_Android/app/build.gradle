@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'com.ssafy.smile'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.ssafy.smile"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -58,7 +58,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Room 의존성 추가
-    def room_version = "2.4.3"
+    def room_version = "2.5.0"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor("androidx.room:room-compiler-processing:$room_version")
     kapt "androidx.room:room-compiler:$room_version"

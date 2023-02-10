@@ -6,11 +6,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PhotographerDto(
+    val bank : String,
     val account: String,
     val introduction: String,
     val categories: List<CategoryDto>,
-    val places: List<PlaceDto>,
-    //val heart: Int=0
+    val places: List<PlaceDto>
 ) : Parcelable {
 
 }

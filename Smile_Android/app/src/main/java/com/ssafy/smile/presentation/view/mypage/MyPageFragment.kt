@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.Constants
@@ -68,11 +69,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                             Glide.with(requireContext())
                                 .load(Constants.IMAGE_BASE_URL+it.data.photoUrl)
                                 .fallback(R.drawable.img_profile_default)
+                                .error(R.drawable.img_profile_default)
                                 .into(layoutMyPageProfile.ivProfileImage)
                         }
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        Log.d(TAG, "setObserver: failure ${it.errorCode}")
                         dismissLoadingDialog()
                     }
                 }
@@ -86,7 +87,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
                     is NetworkUtils.NetworkResponse.Success -> { moveToRegisterPortFolioGraph(it.data) }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 가져오는"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -119,8 +119,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             logoutResponse.observe(viewLifecycleOwner){
                 when(it) {
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        Log.d(TAG, "setObserver: ${it.errorCode}")
-                        showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.")
+                        showToast(requireContext(), "로그아웃에 실패하였습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {}
                     is NetworkUtils.NetworkResponse.Success -> {

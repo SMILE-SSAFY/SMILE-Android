@@ -84,7 +84,8 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
         viewModel.selectAddressResponseLiveData.observe(viewLifecycleOwner){
             if (it<0) showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "주소 설정"), Types.ToastType.ERROR)
             else {
-                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.SUCCESS)
+                findNavController().getBackStackEntry(R.id.mainFragment).savedStateHandle["curAddress"] = addressDomainDto
+                showToast(requireContext(), getString(R.string.msg_address_success), Types.ToastType.BASIC)
                 moveToPopUpToGraph()
             }
         }
@@ -213,7 +214,7 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
     private val activityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode != Activity.RESULT_OK) showToast(requireContext(), getString(R.string.permission_error_service_off), Types.ToastType.ERROR)
+        if (result.resultCode != Activity.RESULT_OK) showToast(requireContext(), getString(R.string.permission_error_service_off), Types.ToastType.WARNING)
     }
 
 

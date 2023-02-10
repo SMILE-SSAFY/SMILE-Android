@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.Post
@@ -76,7 +77,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "postByIdResponseObserver: ${it.errorCode}")
-                    showToast(requireContext(), "게시글 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "게시글 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
                     showLoadingDialog(requireContext())
@@ -90,6 +91,10 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             if (post.isMe) {
                 ivPostMore.visibility = View.VISIBLE
             }
+            //TODO: 게시물 상세에 작가 프로필 이미지 들어가게
+//            Glide.with(requireContext())
+//                .load(post.)
+//                .into(ivPhotographerProfile)
             tvPhotographerName.text = post.photographerName
             tvPlace.text = post.detailAddress
             imageData = post.photoUrl
@@ -126,7 +131,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
                         portfolioGraphViewModel.getPostById(postId)
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                        showToast(requireContext(), "게시물 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
             }

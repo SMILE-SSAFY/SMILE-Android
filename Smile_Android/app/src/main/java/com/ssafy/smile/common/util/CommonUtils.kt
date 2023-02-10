@@ -22,7 +22,7 @@ object CommonUtils {
         var addr = "주소 오류"
 
         try {
-            val loc = geoCoder.getFromLocation(position.latitude, position.longitude, 1).first()
+            val loc = geoCoder.getFromLocation(position.latitude, position.longitude, 1)!!.first()
             addr = "${loc.adminArea} ${loc.locality}"
         } catch (e: Exception) {
             e.printStackTrace()
@@ -64,15 +64,22 @@ object CommonUtils {
     }
 
     fun getCategoryName(category: ArrayList<String>): String {
-        return when (category.size) {
+        val categoryNames = arrayListOf<String>()
+        category.forEach { data ->
+            if (data !in categoryNames) {
+                categoryNames.add(data)
+            }
+        }
+
+        return when (categoryNames.size) {
             1 -> {
-                "#${category[0]}"
+                "#${categoryNames[0]}"
             }
             2 -> {
-                "#${category[0]}  #${category[1]}"
+                "#${categoryNames[0]}  #${categoryNames[1]}"
             }
             else -> {
-                "#${category[0]}  #${category[1]}..."
+                "#${categoryNames[0]}  #${categoryNames[1]}..."
             }
         }
     }

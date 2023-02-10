@@ -16,6 +16,7 @@ class SharedPreferencesUtil (context: Context) {
         private const val FCM_TOKEN = "FCMToken"
         private const val ROLE = "Role"
         private const val USER_ID = "UserId"
+        private const val VIEWPAGER_INIT = "ViewPagerInit"
     }
 
     var preferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -108,12 +109,22 @@ class SharedPreferencesUtil (context: Context) {
         }
     }
 
+    fun getViewPagerInit(): Boolean = preferences.getBoolean(VIEWPAGER_INIT, true)
+
+    fun changeViewPagerInit(isFirstInit: Boolean): Boolean {
+        preferences.edit {
+            putBoolean(VIEWPAGER_INIT, isFirstInit)
+            apply()
+        }
+        return Application.sharedPreferences.getViewPagerInit()
+    }
+
     fun removeAllInfo(){
         removeAuthToken()
         removeAuthTime()
         removeFCMToken()
         removeRole()
         removeUserId()
+        changeViewPagerInit(true)
     }
-
 }

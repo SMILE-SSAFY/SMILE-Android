@@ -83,8 +83,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        Log.d(TAG, "-----------------------------------------------map: ${it.data}")
-                        if (isInitialized && it.data.isEmpty()) showToast(requireContext(), "존재하는 게시글이 없습니다.", Types.ToastType.INFO)
+                        if (isInitialized && it.data.isEmpty())
                         else {
                             updateClusterInfo(it.data)
                             map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }
@@ -92,7 +91,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                         isInitialized = true
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(),  requireContext().getString(R.string.msg_common_error, "게시글 정보를 가져오는"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -103,7 +101,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         binding.apply {
             btnFindArticles.setOnClickListener {
                 presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
-                showToast(requireContext(), "게시글 정보를 재검색합니다.")
+                showToast(requireContext(), "게시글 정보를 재검색합니다.", Types.ToastType.BASIC)
             }
             btnFindCurrentLocation.setOnClickListener {
                 map?.let {
