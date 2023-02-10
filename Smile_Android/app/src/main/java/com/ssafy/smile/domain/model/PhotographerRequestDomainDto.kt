@@ -11,5 +11,5 @@ data class PhotographerRequestDomainDto(
     var places: List<PlaceDomainDto> = listOf(),
     var account: AccountDomainDto?=null
 ){
-    fun makeToPhotographerRequestDto() = PhotographerRequestDto(profileImg!!, PhotographerDto(account!!.makeAccountString(), introduction!!, categories.map { it.toCategoryDto() }, places.map { it.toPlaceDto() }))
+    fun makeToPhotographerRequestDto() = PhotographerRequestDto(profileImg!!, PhotographerDto(account!!.accountBank!!, account!!.accountNum!!, introduction!!, categories.map { it.toCategoryDto() }, places.map { it.toPlaceDto() }))
 }

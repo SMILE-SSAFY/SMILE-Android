@@ -28,6 +28,10 @@ class PhotographerWriteGraphViewModel : BaseViewModel() {
     val profileImageResponse : SingleLiveData<File?>
         get() = _profileImageResponse
 
+    fun reloadStoredData(){
+        photographerDataResponse.postValue(photographerRequestDomainDto)
+        _checkDataResponse.postValue(checkData())
+    }
 
     fun uploadProfileImage(image:File?){
         photographerRequestDomainDto.profileImg = image
@@ -44,7 +48,7 @@ class PhotographerWriteGraphViewModel : BaseViewModel() {
         _checkDataResponse.postValue(checkData())
     }
 
-    fun uploadIntroductionData(introduction: String){
+    fun uploadIntroductionData(introduction: String?){
         photographerRequestDomainDto.introduction = introduction
         _checkDataResponse.postValue(checkData())
     }

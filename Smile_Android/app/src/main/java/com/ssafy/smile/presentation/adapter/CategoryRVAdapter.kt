@@ -16,10 +16,11 @@ import com.ssafy.smile.common.util.makeComma
 import com.ssafy.smile.databinding.ItemPhotographerCategoryBinding
 import com.ssafy.smile.domain.model.CategoryDomainDto
 import com.ssafy.smile.domain.model.Spinners
+import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 import java.lang.ref.WeakReference
 
 
-class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) : RecyclerView.Adapter<CategoryRVAdapter.Holder>() {
+class CategoryRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, private val addBtnView:Button, private val limit:Int=5) : RecyclerView.Adapter<CategoryRVAdapter.Holder>() {
     private val itemList : ArrayList<CategoryDomainDto> = arrayListOf()
 
     fun getListData() : ArrayList<CategoryDomainDto> = itemList
@@ -76,11 +77,12 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
                         dto.name = this.getString()
                         dto.categoryId = position + 1
                         dto.isEmpty = !(dto.price!=null && dto.description!=null)
+                        viewModel.uploadCategoriesData(getListData())
                     }
                 }
                 etPhotographerCategoryPrice.apply {
                     clearPriceTextChangeListener(this)
-                    val priceString = if (dto.price==null) null else dto.price.toString()
+                    val priceString = if (dto.price==null) null else dto.price!!.makeComma()
                     setText(priceString)
                     dto.priceTextWatcher = OnCurrentPriceTextWatcher(dto, this)
                     addTextChangedListener(dto.priceTextWatcher)
@@ -132,6 +134,7 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
             editText.addTextChangedListener(this)
             dto.price = price
             dto.isEmpty = dto.name == null
+            viewModel.uploadCategoriesData(getListData())
         }
     }
 
@@ -140,6 +143,7 @@ class CategoryRVAdapter(private val addBtnView:Button,private val limit:Int=5) :
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             dto.description = s.toString()
             dto.isEmpty = !(dto.name!=null && dto.price!=null)
+            viewModel.uploadCategoriesData(getListData())
         }
         override fun afterTextChanged(s: Editable) {}
     }
