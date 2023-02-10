@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
 import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
+import com.ssafy.api.dto.Photographer.PhotographerNearDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -118,7 +119,7 @@ public class PhotographerController {
      * @return List<PhotographerForListDto>
      */
     @GetMapping("/list")
-    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(
+    public ResponseEntity<PhotographerNearDto> searchPhotographerByAddress(
             @Param("address") String address, @Param("criteria") String criteria) {
         return ResponseEntity.ok().body(photographerService.getPhotographerListByAddresss(address, criteria));
     }
