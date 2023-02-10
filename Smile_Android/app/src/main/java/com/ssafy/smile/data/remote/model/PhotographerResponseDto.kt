@@ -25,6 +25,40 @@ data class PhotographerResponseDto(
 }
 
 data class PhotographerByAddressResponseDto(
+    val photoUrl: String = "",
+    val photographerList: ArrayList<PhotographerListByAddress> = arrayListOf()
+){
+    fun toCustomPhotographerDomainDto(idx: Int): CustomPhotographerDomainDto {
+        val photographerInfo = photographerList[idx]
+
+        val categoryNames = arrayListOf<String>()
+        val categoryPrices = arrayListOf<Int>()
+        photographerInfo.categories.forEach { data ->
+            if (data.name !in categoryNames) {
+                categoryNames.add(data.name)
+            }
+            categoryPrices.add(data.price.toInt())
+        }
+
+        val sPlaces = arrayListOf<String>()
+        photographerInfo.places.forEach { place ->
+            sPlaces.add(place.place)
+        }
+
+        return CustomPhotographerDomainDto(
+            photographerInfo.photographerId,
+            photographerInfo.profileImg,
+            CommonUtils.getCategoryName(categoryNames),
+            photographerInfo.name,
+            CommonUtils.getPlace(sPlaces),
+            CommonUtils.getCategoryPrice(categoryPrices),
+            photographerInfo.hasHeart,
+            photographerInfo.heart
+        )
+    }
+}
+
+data class PhotographerListByAddress(
     val photographerId: Long = 0,
     val name: String = "",
     val profileImg: String? = "",
@@ -34,32 +68,7 @@ data class PhotographerByAddressResponseDto(
     val heart: Int = 0,
     val score: Double = 0.0,
     val reviews: Int = 0
-){
-    fun toCustomPhotographerDomainDto(): CustomPhotographerDomainDto {
-        val categoryNames = arrayListOf<String>()
-        val categoryPrices = arrayListOf<Int>()
-        categories.forEach { data ->
-            categoryNames.add(data.name)
-            categoryPrices.add(data.price.toInt())
-        }
-
-        val sPlaces = arrayListOf<String>()
-        places.forEach { place ->
-            sPlaces.add(place.place)
-        }
-
-        return CustomPhotographerDomainDto(
-            photographerId,
-            profileImg,
-            CommonUtils.getCategoryName(categoryNames),
-            name,
-            CommonUtils.getPlace(sPlaces),
-            CommonUtils.getCategoryPrice(categoryPrices),
-            hasHeart,
-            heart
-        )
-    }
-}
+)
 
 data class CategoryNoDes(
     val name: String = "",

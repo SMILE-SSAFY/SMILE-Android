@@ -109,7 +109,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     Log.d(TAG, "photographerReservationResponseObserver: ${it.errorCode}")
-                    showToast(requireContext(), "작가 예약 정보 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "작가 예약 정보 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }
@@ -128,7 +128,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "예약 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "예약 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }
@@ -274,7 +274,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 requireContext(),
                 DialogBody("잠깐!\n사진을 전송 받을 이메일이 맞나요?\n\n${etEmail.text}", "맞아요", "틀려요"),
                 { goBootPayRequest(getItemInfo()) },
-                { showToast(requireContext(), "이메일을 다시 입력해주세요") }
+                { showToast(requireContext(), "이메일을 다시 입력해주세요", Types.ToastType.INFO) }
             )
             showDialog(dialog, viewLifecycleOwner)
         }

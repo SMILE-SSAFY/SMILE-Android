@@ -48,7 +48,7 @@ class MyInterestArticleFragment : BaseFragment<FragmentMyInterestArticleBinding>
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "관심 게시글을 불러오는"), Types.ToastType.WARNING)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "관심 게시글을 불러오는"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -57,7 +57,7 @@ class MyInterestArticleFragment : BaseFragment<FragmentMyInterestArticleBinding>
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> { getInterestInfo() }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "찜 설정"), Types.ToastType.WARNING)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "찜 설정"), Types.ToastType.ERROR)
                     }
                 }
             }
