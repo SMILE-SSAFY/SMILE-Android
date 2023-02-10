@@ -99,7 +99,8 @@ public class RecommendService {
      * @param dataPhotographerList 유저의 위치 근처 내 존재하는 작가 정보 리스트
      * @return List<RecommendRequestDto> 작가 추천 API 요청을 위한 requestDto
      */
-    private List<RecommendRequestDto> getReviewByPhotographerId(List<PhotographerHeart> heartPhotographerList, List<PhotographerIdQdslDto> dataPhotographerList){
+    private List<RecommendRequestDto> getReviewByPhotographerId(
+            List<PhotographerHeart> heartPhotographerList, List<PhotographerIdQdslDto> dataPhotographerList){
         List<RecommendRequestDto> result = new ArrayList<>();
 
         for (PhotographerHeart photographerDto : heartPhotographerList){

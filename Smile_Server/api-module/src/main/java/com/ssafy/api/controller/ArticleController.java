@@ -48,8 +48,8 @@ public class ArticleController {
      * @throws IOException
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> uploadImage(ArticlePostDto articlePostDto) throws IOException {
-        articleService.postArticle(articlePostDto);
+    public ResponseEntity<HttpStatus> postArticle(ArticlePostDto article) throws IOException {
+        articleService.postArticle(article);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -106,11 +106,11 @@ public class ArticleController {
      * @throws IOException
      */
     @PutMapping("/{articleId}")
-    public ResponseEntity<?> updateArticle(
+    public ResponseEntity<?> changeArticle(
             @PathVariable("articleId") Long articleId,
-            ArticlePostDto articlePostDto) throws IOException {
+            ArticlePostDto article) throws IOException {
 
-        return ResponseEntity.ok(articleService.updateArticle(articleId, articlePostDto));
+        return ResponseEntity.ok(articleService.updateArticle(articleId, article));
     }
 
     /***
