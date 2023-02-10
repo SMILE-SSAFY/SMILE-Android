@@ -1,10 +1,12 @@
 package com.ssafy.smile.domain.repository
 
 import com.ssafy.smile.data.remote.model.KakaoLoginRequestDto
+import com.ssafy.smile.data.remote.model.LogoutRequestDto
 import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.domain.model.LoginDomainDto
 import com.ssafy.smile.domain.model.SignUpDomainDto
 import retrofit2.Response
+import retrofit2.http.Body
 
 interface UserRepository {
     suspend fun checkEmail(email: String)
@@ -14,4 +16,5 @@ interface UserRepository {
     suspend fun kakaoLogin(token: KakaoLoginRequestDto)
     suspend fun withDrawUser()
     suspend fun myPage()
+    suspend fun logout(logoutRequestDto: LogoutRequestDto)
 }

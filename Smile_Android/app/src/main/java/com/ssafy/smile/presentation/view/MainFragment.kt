@@ -1,20 +1,20 @@
 package com.ssafy.smile.presentation.view
 
 
-import android.util.Log
 import android.view.MenuItem
 import androidx.activity.addCallback
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.ssafy.smile.Application
+import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentMainBinding
 import com.ssafy.smile.presentation.adapter.MainViewPagerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
+import com.ssafy.smile.presentation.view.home.HomeFragment
 import com.ssafy.smile.presentation.viewmodel.MainViewModel
 
-// TODO : 시작 화면을 Home으로 + 네트워크 연결 안된 경우 ERROR 처리.
+
 private const val TAG = "MainFragment_싸피"
 class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind, R.layout.fragment_main) {
 
@@ -22,10 +22,7 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
     private lateinit var mainViewPagerAdapter : MainViewPagerAdapter
 
     override fun initView() {
-        binding.apply {
-            initViewPager()
-        }
-        Log.d(TAG, "initView: ${SharedPreferencesUtil(requireContext()).getAuthToken()}")
+        initViewPager()
     }
 
     override fun setEvent() {
@@ -36,13 +33,12 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.onBackPressed()
         }
-
     }
 
 
     private fun initViewPager(){
         binding.apply{
-            mainViewPagerAdapter = MainViewPagerAdapter(requireActivity())
+            mainViewPagerAdapter = MainViewPagerAdapter(this@MainFragment)
 
             vpMain.apply {
                 adapter = mainViewPagerAdapter
@@ -57,6 +53,14 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
 
             fabMain.setOnClickListener {
                 vpMain.currentItem = 1
+            }
+
+            vpMain.post {
+                if (Application.isFirstViewPagerInit) {
+                    vpMain.currentItem = 1
+                    mainViewPagerAdapter.notifyDataSetChanged()
+                    Application.isFirstViewPagerInit = false
+                }
             }
         }
     }
@@ -84,6 +88,10 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
                     vpMain.currentItem = 0
                     return true
                 }
+                R.id.menu_home -> {
+                    vpMain.currentItem = 1
+                    return true
+                }
                 R.id.menu_mypage -> {
                     vpMain.currentItem = 2
                     return true
@@ -92,5 +100,6 @@ class MainFragment: BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,
             return false
         }
     }
+
 
 }

@@ -34,7 +34,6 @@ class SharedPreferencesUtil (context: Context) {
             remove(AUTH_TOKEN)
             apply()
         }
-        Application.authToken = Application.sharedPreferences.getAuthToken()
     }
 
     fun putAuthTime(authTime: Long) {
@@ -51,7 +50,6 @@ class SharedPreferencesUtil (context: Context) {
             remove(AUTH_TIME)
             apply()
         }
-        Application.authTime = Application.sharedPreferences.getAuthTime()
     }
 
     fun putFCMToken(fcmToken: String) {
@@ -69,7 +67,6 @@ class SharedPreferencesUtil (context: Context) {
             remove(FCM_TOKEN)
             apply()
         }
-        Application.fcmToken = Application.sharedPreferences.getFCMToken()
     }
 
     fun putRole(role: Types.Role) {
@@ -87,7 +84,6 @@ class SharedPreferencesUtil (context: Context) {
             remove(ROLE)
             apply()
         }
-        Application.role = Application.sharedPreferences.getRole()
     }
 
     fun changeRole(role: Types.Role){
@@ -110,7 +106,6 @@ class SharedPreferencesUtil (context: Context) {
             remove(USER_ID)
             apply()
         }
-        Application.userId = Application.sharedPreferences.getUserId()
     }
 
     fun removeAllInfo(){
@@ -119,7 +114,6 @@ class SharedPreferencesUtil (context: Context) {
         removeFCMToken()
         removeRole()
         removeUserId()
-        Log.d("싸피", "removeAllInfo: ${getAuthToken()}")
     }
 
 }

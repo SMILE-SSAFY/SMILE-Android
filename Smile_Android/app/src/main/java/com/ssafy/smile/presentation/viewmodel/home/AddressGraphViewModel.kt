@@ -1,6 +1,5 @@
 package com.ssafy.smile.presentation.viewmodel.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.view.sources.SingleLiveData
@@ -15,33 +14,36 @@ class AddressGraphViewModel : BaseViewModel() {
     private val _insertAddressResponseLiveData : SingleLiveData<Long> = SingleLiveData<Long>(null)
     val insertAddressResponseLiveData = _insertAddressResponseLiveData
 
-    private val _selectedAddressResponseLiveData : SingleLiveData<Long> = SingleLiveData<Long>(null)
-    val selectedAddressResponseLiveData = _selectedAddressResponseLiveData
+    private val _selectAddressResponseLiveData : SingleLiveData<Long> = SingleLiveData<Long>(null)
+    val selectAddressResponseLiveData = _selectAddressResponseLiveData
 
-    val getAddressListResponseLiveData: LiveData<List<AddressDomainDto>>
-        get() = addressRepository.getAddressList()
+    private val _deleteAddressResponseLiveData : SingleLiveData<Int> = SingleLiveData<Int>(null)
+    val deleteAddressResponseLiveData = _deleteAddressResponseLiveData
 
-    val getAddressListWithSelectionResponseLiveData: LiveData<List<AddressDomainDto>>
-        get() = addressRepository.getAddressListWithSelection()
+    private val _getAddressListResponseLiveData: SingleLiveData<List<AddressDomainDto>> = SingleLiveData<List<AddressDomainDto>>(null)
+    val getAddressListResponseLiveData = _getAddressListResponseLiveData
 
-    suspend fun insertAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
+    private val _getAddressListWithSelectionResponseLiveData : SingleLiveData<List<AddressDomainDto>> = SingleLiveData<List<AddressDomainDto>>(null)
+    val getAddressListWithSelectionResponseLiveData = _getAddressListWithSelectionResponseLiveData
+
+    fun insertAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
         _insertAddressResponseLiveData.postValue(addressRepository.insertAddress(address))
     }
 
-    suspend fun selectAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
-        _selectedAddressResponseLiveData.postValue(addressRepository.selectAddress(address))
+    fun selectAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
+        _selectAddressResponseLiveData.postValue(addressRepository.selectAddress(address))
     }
 
-    suspend fun deleteAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
-        addressRepository.deleteAddress(address)
+    fun deleteAddress(address: AddressDomainDto) = viewModelScope.launch(Dispatchers.IO) {
+        _deleteAddressResponseLiveData.postValue(addressRepository.deleteAddress(address))
     }
 
-    fun getAddressList() : LiveData<List<AddressDomainDto>> {
-        return addressRepository.getAddressList()
+    fun getAddressList() = viewModelScope.launch(Dispatchers.IO) {
+        _getAddressListResponseLiveData.postValue(addressRepository.getAddressList())
     }
 
-    fun getAddressListWithSelection() : LiveData<List<AddressDomainDto>>{
-        return addressRepository.getAddressListWithSelection()
+    fun getAddressListWithSelection() = viewModelScope.launch(Dispatchers.IO){
+        _getAddressListWithSelectionResponseLiveData.postValue(addressRepository.getAddressListWithSelection())
     }
 
 }

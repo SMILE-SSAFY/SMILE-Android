@@ -47,20 +47,21 @@ public class RecommendService {
     /**
      * 유저의 위치정보와 좋아요 정보를 기반으로 작가를 추천한다.
      *
-     *
-     * @param user
      * @param address
      * @return 위치정보와 좋아요 정보로 유사도 알고리즘을 통해 추천할 작가 정보를 조회해 작가 정보 리스트 리턴
      */
     @Transactional
     public RecommendResponseDto recommendPhotographerByAddress(String address){
-
         User user = UserService.getLogInUser();
 
-        List<PhotographerHeart> heartPhotographerIdList = this.getPhotographerIdListByUser(user);               // 유저가 좋아요 누른 작가 정보 리스트
+        List<PhotographerHeart> heartPhotographerIdList = photographerHeartRepository.findByUser(user);           // 유저가 좋아요 누른 작가 정보 리스트
 
-        if (heartPhotographerIdList.isEmpty())
-            return RecommendResponseDto.builder().isHeartEmpty(false).photographerInfoList(new ArrayList<>()).build();                          // If, 유저가 좋아요 누른 작가가 없는 경우, 프론트에 리턴.
+        if (heartPhotographerIdList.isEmpty()) {    // 유저가 좋아요 누른 작가가 없는 경우, 프론트에 리턴.
+            return RecommendResponseDto.builder()
+                    .isHeartEmpty(false)
+                    .photographerInfoList(new ArrayList<>())
+                    .build();
+        }
 
         List<PhotographerIdQdslDto> dataPhotographerIdList = this.getPhotographerIdListByAddress(address);                                      // 유저의 위치 근처에 존재하는 작가 정보 리스트
 
@@ -70,17 +71,6 @@ public class RecommendService {
 
         return this.getPhotographerListByPhotographerId(recommendResponseDto);                                                                  // 추천 작가 정보 리스트
     }
-
-    /**
-     * 유저가 좋아요를 누른 작가들을 조회한다.
-     *
-     * @param user 유저 정보
-     * @return 좋아요 정보로 조회한 작가 정보 리스트
-     */
-    private List<PhotographerHeart> getPhotographerIdListByUser(User user) {
-        return photographerHeartRepository.findByUser(user);
-    }
-
 
     /**
      * 유저의 위치 근처에 존재하는 작가들을 조회한다.

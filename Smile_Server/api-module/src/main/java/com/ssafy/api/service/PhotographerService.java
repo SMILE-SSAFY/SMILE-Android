@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.dto.Photographer.CategoriesReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
 import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
+import com.ssafy.api.dto.Photographer.PhotographerNearDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -11,6 +12,7 @@ import com.ssafy.api.dto.article.PhotographerInfoDto;
 import com.ssafy.core.code.Role;
 import com.ssafy.core.dto.PhotographerQdslDto;
 import com.ssafy.core.dto.ReviewQdslDto;
+import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.Categories;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
@@ -22,16 +24,14 @@ import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.ReviewRepository;
+import com.ssafy.core.repository.UserRepository;
+import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
-import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +39,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 작가 프로필 관련 클래스
@@ -62,6 +64,7 @@ public class PhotographerService {
     private final PhotographerHeartRepository photographerHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     /**
      * 작가 등록
@@ -85,13 +88,11 @@ public class PhotographerService {
         // 활동지역 변환
         List<PhotographerNPlaces> places = new ArrayList<>();
         for(PlacesReqDto place : photographer.getPlaces()){
-            log.info(place.getPlaceId().getClass().getName());
             places.add(PhotographerNPlaces.builder()
                     .photographer(Photographer.builder().id(user.getId()).build())
                     .places(Places.builder().id(place.getPlaceId()).build())
                     .build()
             );
-            log.info(places.get(0).getPlaces().getId());
         }
 
         int minPrice = Integer.MAX_VALUE;
@@ -112,6 +113,7 @@ public class PhotographerService {
                 .user(user)
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
+                .bank(photographer.getBank())
                 .account(photographer.getAccount())
                 .places(places)
                 .categories(categories)
@@ -135,8 +137,7 @@ public class PhotographerService {
         Long userIdx = UserService.getLogInUser().getId();
         Photographer photographer = photographerRepository.findById(userIdx)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        PhotographerResDto dto = new PhotographerResDto();
-        return dto.of(photographer);
+        return new PhotographerResDto().of(photographer);
     }
 
     /**
@@ -201,13 +202,13 @@ public class PhotographerService {
         }
 
         findPhotographer.updateProfileImg(photographer.getProfileImg());
+        findPhotographer.updateBank(photographer.getBank());
         findPhotographer.updateAccount(photographer.getAccount());
         findPhotographer.updateIntroduction(photographer.getIntroduction());
         findPhotographer.updatePlaces(places);
         findPhotographer.updateCategories(categories);
 
-        PhotographerResDto savedPhotographer = new PhotographerResDto();
-        return savedPhotographer.of(photographerRepository.save(findPhotographer));
+        return new PhotographerResDto().of(photographerRepository.save(findPhotographer));
     }
 
     /**
@@ -225,6 +226,15 @@ public class PhotographerService {
             s3UploaderService.deleteFile(findPhotographer.getProfileImg().trim());
         }
         photographerRepository.delete(findPhotographer);
+
+        List<Article> articleList = articleRepository.findByUserIdOrderByIdDesc(userId);
+        for (Article article : articleList) {
+            String photoUriList = article.getPhotoUrls();
+            photoUriList = photoUriList.replace("[","").replace("]","");
+            List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
+            photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
+            articleRepository.delete(article);
+        }
 
         // 일반 유저로 전환
         User user = userRepository.findById(userId)
@@ -268,10 +278,11 @@ public class PhotographerService {
      * @param criteria
      * @return List<PhotographerForListDto>
      */
-    public List<PhotographerForListDto> getPhotographerListByAddresss(String address, String criteria) {
+    public PhotographerNearDto getPhotographerListByAddresss(String address, String criteria) {
         Long userId = UserService.getLogInUser().getId();
         String[] addresssList = address.split(" ");
-        List<PhotographerQdslDto> photographerList = photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
+        List<PhotographerQdslDto> photographerList = photographerNPlacesRepository
+                .findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
         log.info("주변 작가 조회");
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
@@ -279,22 +290,29 @@ public class PhotographerService {
             photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
         }
 
-        return photographerForList;
+        String photoUrl = null;
+        Optional<Photographer> photographer = photographerRepository.findById(userId);
+        if (photographer.isPresent()) {     // 조회자가 사진작가면 프로필 이미지 반환
+            photoUrl = photographer.get().getProfileImg();
+        }
+
+        return new PhotographerNearDto().of(photoUrl, photographerForList);
     }
 
     /***
+     * 사진작가 좋아요 / 좋아요 취소
      *
      * @param photographerId
      * @return 포토그래퍼 id, isHeart boolean
-     * @throws CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)
-     * @throws CustomException(ErrorCode.USER_NOT_FOUND)
+     * @throws PHOTOGRAPHER_NOT_FOUND
+     * @throws USER_NOT_FOUND
      */
     public PhotographerHeartDto addHeartPhotographer(Long photographerId){
-        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
+        Photographer photographer = photographerRepository.findById(photographerId)
+                .orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
-        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(photographerId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         boolean isHeart = isHearted(user, photographer);
 
         // 좋아요가 없을 때 -> 좋아요 등록
@@ -326,8 +344,7 @@ public class PhotographerService {
      * @return List<PhotographerForListDto> 내가 좋아요 누른 작가리스트
      */
     public List<PhotographerForListDto> getPhotographerListByUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
         List<PhotographerHeart> photographerList = photographerHeartRepository.findByUser(user);
 
@@ -338,23 +355,17 @@ public class PhotographerService {
         }
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        List<PhotographerQdslDto> photographerQdslDtoList = new ArrayList<>();
-
         for (PhotographerHeart photographerHeart : photographerList){
             Photographer photographer = photographerHeart.getPhotographer();
             ReviewQdslDto review = reviewRepository.findByPhotographerId(photographer.getId());
 
-            photographerQdslDtoList.add(
-            PhotographerQdslDto.builder()
+            photographerForList.add(new PhotographerForListDto().of(PhotographerQdslDto.builder()
                     .photographer(photographer)
                     .heart(photographerHeartRepository.countByPhotographer(photographer))
                     .hasHeart(true)
                     .avgScore(review.getAvgScore())
                     .reviewCount(review.getReviewCount())
-                    .build());
-        }
-        for (PhotographerQdslDto photographerQuerydsl : photographerQdslDtoList) {
-            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+                    .build()));
         }
 
         return photographerForList;
@@ -362,9 +373,9 @@ public class PhotographerService {
 
     /***
      * 포트폴리오의 작가정보
-     * @param userId 유저 아이디
+     * @param photographerId 유저 아이디
      * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article 게시글 전체조회
-     *
+     * @throws PHOTOGRAPHER_NOT_FOUND
      * @throws UsernameNotFoundException 유저 없을 때
      */
 

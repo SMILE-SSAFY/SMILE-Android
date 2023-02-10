@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.dto.Photographer.PhotographerForListDto;
 import com.ssafy.api.dto.Photographer.PhotographerHeartDto;
+import com.ssafy.api.dto.Photographer.PhotographerNearDto;
 import com.ssafy.api.dto.Photographer.PhotographerReqDto;
 import com.ssafy.api.dto.Photographer.PhotographerResDto;
 import com.ssafy.api.dto.Photographer.PhotographerUpdateReqDto;
@@ -46,8 +47,9 @@ public class PhotographerController {
      * @return 정상일 때 OK
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> registPhotographer(@RequestPart("photographer") PhotographerReqDto photographer,
-                                                         @RequestPart("profileImg") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<HttpStatus> registerPhotographer(
+            @RequestPart("photographer") PhotographerReqDto photographer,
+            @RequestPart("profileImg") MultipartFile multipartFile) throws IOException {
         photographerService.addPhotographer(multipartFile, photographer);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -70,8 +72,9 @@ public class PhotographerController {
      * @return 수정된 작가 프로필 객체
      */
     @PutMapping
-    public ResponseEntity<PhotographerResDto> changePhotographer(@RequestPart("Photographer") PhotographerUpdateReqDto photographer,
-                                                                 @RequestPart("profileImg") MultipartFile multipartFile) throws IOException{
+    public ResponseEntity<PhotographerResDto> changePhotographerInfo(
+            @RequestPart("Photographer") PhotographerUpdateReqDto photographer,
+            @RequestPart("profileImg") MultipartFile multipartFile) throws IOException{
         return ResponseEntity.ok(photographerService.changePhotographer(multipartFile, photographer));
     }
 
@@ -114,13 +117,14 @@ public class PhotographerController {
     /**
      * 주변 작가 조회
      *
-     * @param address
-     * @param criteria
+     * @param address 검색할 주소
+     * @param criteria 정렬 기준
      * @return List<PhotographerForListDto>
      */
     @GetMapping("/list")
-    public ResponseEntity<List<PhotographerForListDto>> searchPhotographerByAddress(@Param("address") String address, @Param("criteria") String criteria) {
-        List<PhotographerForListDto> photographerList =
+    public ResponseEntity<PhotographerNearDto> searchPhotographerByAddress(
+            @Param("address") String address, @Param("criteria") String criteria) {
+        PhotographerNearDto photographerList =
                 photographerService.getPhotographerListByAddresss(address, criteria);
         return ResponseEntity.ok().body(photographerList);
     }
@@ -130,7 +134,7 @@ public class PhotographerController {
      * @return photographerList 내가 좋아요 누른 작가 조회
      */
     @GetMapping("/heart/list")
-    public ResponseEntity<?> heartedPhotographer(){
+    public ResponseEntity<?> getHeartedPhotographerList(){
         List<PhotographerForListDto> photographerList = photographerService.getPhotographerListByUser();
         return new ResponseEntity<>(photographerList, HttpStatus.OK);
     }

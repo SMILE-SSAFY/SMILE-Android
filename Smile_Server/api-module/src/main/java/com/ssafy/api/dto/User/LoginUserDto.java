@@ -28,4 +28,12 @@ public class LoginUserDto {
 
     @NotBlank
     private String fcmToken;
+
+    public LoginUserDto of(RegisterFormDto user){
+        return LoginUserDto.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .fcmToken(user.getFcmToken())
+                .build();
+    }
 }

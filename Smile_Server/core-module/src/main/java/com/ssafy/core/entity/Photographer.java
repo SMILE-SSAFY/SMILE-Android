@@ -47,6 +47,9 @@ public class Photographer implements Serializable {
     @Column(length = 100, nullable = false)
     private String introduction;
 
+    @Column(length = 20, nullable = false)
+    private String bank;
+
     @Column(length = 35, nullable = false)
     private String account;
 
@@ -72,7 +75,7 @@ public class Photographer implements Serializable {
      *
      * @param profileImg
      */
-    public void updateProfileImg(String profileImg){
+    public void updateProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }
 
@@ -83,6 +86,15 @@ public class Photographer implements Serializable {
      */
     public void updateIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    /**
+     * 은행 변경
+     *
+     * @param bank
+     */
+    public void updateBank(String bank){
+        this.bank = bank;
     }
 
     /**
@@ -108,7 +120,7 @@ public class Photographer implements Serializable {
      *
      * @param categories
      */
-    public void updateCategories(List<PhotographerNCategories> categories){
+    public void updateCategories(List<PhotographerNCategories> categories) {
         this.categories = categories;
     }
 }

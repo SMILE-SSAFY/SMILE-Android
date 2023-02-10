@@ -104,6 +104,8 @@
                         <TextView
                             android:id="@+id/tv_name"
                             style="@style/TvT4"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black" />
@@ -111,6 +113,8 @@
                         <TextView
                             android:id="@+id/tv_place"
                             style="@style/TvT4"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -189,7 +193,6 @@
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.tabs.TabLayout>
-
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="0dp"

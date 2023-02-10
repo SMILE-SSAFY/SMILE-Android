@@ -1,6 +1,11 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.article.*;
+import com.ssafy.api.dto.article.ArticleClusterDto;
+import com.ssafy.api.dto.article.ArticleClusterListDto;
+import com.ssafy.api.dto.article.ArticleDetailDto;
+import com.ssafy.api.dto.article.ArticleHeartDto;
+import com.ssafy.api.dto.article.ArticleListDto;
+import com.ssafy.api.dto.article.ArticlePostDto;
 import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.core.entity.Article;
@@ -10,8 +15,8 @@ import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
-import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.CategoriesRepository;
+import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.article.ArticleHeartRepository;
 import com.ssafy.core.repository.article.ArticleRedisRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
@@ -52,7 +57,7 @@ public class ArticleService {
      * @param dto 게시글 작성 dto
      * @throws IOException
      */
-    public void postArticle(ArticlePostDto dto) throws IOException{
+    public void postArticle(ArticlePostDto dto) throws IOException {
         // 이미지 리스트를 S3에 업로드 후 리턴받은 Url
         List<MultipartFile> images = dto.getImageList();
         String fileName = s3UploaderService.upload(images);
@@ -79,10 +84,12 @@ public class ArticleService {
      * @return 게시글상세정보
      * @throws ARTICLE_NOT_FOUND 게시글 없을 때
      */
-    public ArticleDetailDto getArticleDetail(Long id){
+    public ArticleDetailDto getArticleDetail(Long id) {
         User logInUser = UserService.getLogInUser();
 
-        Article article = articleRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+
         User articleAuthor = article.getUser();
         // 자신이 작성한 글인지 확인
         boolean isMe = isMe(logInUser, articleAuthor);
@@ -99,13 +106,14 @@ public class ArticleService {
      * @param id 게시글 id
      * @throws ARTICLE_NOT_FOUND 게시글 없을 때
      */
-    public void deletePost(Long id){
-        Article article = articleRepository.findById(id).orElseThrow(()-> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+    public void deletePost(Long id) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User user = UserService.getLogInUser();
 
-        if (article.getUser().getId() == user.getId()){
-            String photoUriList = article.getPhotoUrls();
-            photoUriList = photoUriList.replace("[","").replace("]","");
+        if (article.getUser().getId() == user.getId()) {
+            String photoUriList = article.getPhotoUrls()
+                    .replace("[", "").replace("]", "");
             List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
             photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
             articleRepository.deleteById(id);
@@ -119,7 +127,7 @@ public class ArticleService {
      * @param photographerId 작가id
      * @return 작가별 게시글 리스트, 게시글 아이디, 게시글 첫 사진을 리스트로 리턴
      */
-    public List<ArticleListDto> getArticleList(Long photographerId){
+    public List<ArticleListDto> getArticleList(Long photographerId) {
         List<Article> articleList = articleRepository.findByUserIdOrderByIdDesc(photographerId);
         List<ArticleListDto> articleListDtoList = new ArrayList<>();
 
@@ -138,17 +146,16 @@ public class ArticleService {
      */
     public ArticleDetailDto updateArticle(Long articleId, ArticlePostDto articlePostDto) throws IOException {
 
-        Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         User logInUser = UserService.getLogInUser();
         Boolean isMe = isMe(logInUser, article.getUser());
         boolean isHearted = isHearted(logInUser, article);
-        Long hearts;
-        hearts = articleHeartRepository.countByArticle(article);
+        Long hearts = articleHeartRepository.countByArticle(article);
 
-        if (isMe){
+        if (isMe) {
             // 이미지 지우기
-            String photoUriList = article.getPhotoUrls();
-            photoUriList = photoUriList.replace("[","").replace("]","");
+            String photoUriList = article.getPhotoUrls()
+                    .replace("[", "").replace("]", "");
             List<String> photoUrls = new ArrayList<>(Arrays.asList(photoUriList.split(",")));
             photoUrls.forEach(str -> s3UploaderService.deleteFile(str.trim()));
 
@@ -166,16 +173,7 @@ public class ArticleService {
 
         } else throw new CustomException(ErrorCode.FAIL_AUTHORIZATION);
 
-        return ArticleDetailDto.builder()
-                .id(articleId)
-                .isMe(isMe)
-                .isHeart(isHearted)
-                .detailAddress(article.getDetailAddress())
-                .category(article.getCategory())
-                .createdAt(article.getCreatedAt())
-                .photoUrls(article.getPhotoUrls())
-                .hearts(hearts)
-                .build();
+        return new ArticleDetailDto().of(article, isMe, isHearted, hearts);
     }
 
     /***
@@ -184,24 +182,21 @@ public class ArticleService {
      * @return 게시글 id, 게시글 좋아요 여부
      */
 
-    public ArticleHeartDto heartArticle(Long articleId){
+    public ArticleHeartDto heartArticle(Long articleId) {
 
         User user = UserService.getLogInUser();
-        Article article = articleRepository.findById(articleId).orElseThrow(()->new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
 
         // 좋아요가 눌려있지 않으면 저장
-        if(!isHeart){
+        if (!isHeart) {
             articleHeartRepository.save(new ArticleHeart(user, article));
             // 눌려 있으면 취소
         } else {
-           articleHeartRepository.deleteByUserAndArticle(user, article);
+            articleHeartRepository.deleteByUserAndArticle(user, article);
         }
 
-        return ArticleHeartDto.builder()
-                .articleId(articleId)
-                .isHeart(!isHeart)
-                .build();
+        return new ArticleHeartDto().of(articleId, isHeart);
     }
 
     /**
@@ -237,7 +232,7 @@ public class ArticleService {
      * @return 마커, 마커의 위치, 마커에 포함된 게시글의 개수
      */
 
-    public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2){
+    public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2) {
 
         // User를 조회하고 user가 이전에 clustering한 데이터를 cache로 가지고 있을 경우 삭제
         User logInUser = UserService.getLogInUser();
@@ -247,20 +242,20 @@ public class ArticleService {
         // 지도 범위 내의 모든 게시글을 조회
         List<Article> articleList = articleRepository
                 .findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
-        if (articleList.isEmpty()){
+        if (articleList.isEmpty()) {
             return new ArrayList<>();
         }
         // k값 최적화 필요, 클러스터링 라이브러리 이용
-        XMeans clusters = XMeans.fit(getGeoPointArray(articleList),20);
+        XMeans clusters = XMeans.fit(getGeoPointArray(articleList), 20);
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
         // 클러스터링한 데이터 내에서 마커찍기 + 마커마다 게시글 개수 return
-        for (int i = 0; i < clusters.size.length-1; i++) {
+        for (int i = 0; i < clusters.size.length - 1; i++) {
             double[] centroids = clusters.centroids[i];
             double centroidX = centroids[0];
             double centroidY = centroids[1];
-            if (!Double.isNaN(centroidX) &&!Double.isNaN(centroidY)) {
+            if (!Double.isNaN(centroidX) && !Double.isNaN(centroidY)) {
                 ArticleClusterDto clusterDto = ArticleClusterDto.builder()
                         .clusterId((long) i)
                         .numOfCluster(clusters.size[i])
@@ -277,13 +272,13 @@ public class ArticleService {
         articleRedisRepository.deleteAll();
 
         int listIdx = 0;
-        double y = (y1+y2)/2;
-        double x = (x1+x2)/2;
+        double y = (y1 + y2) / 2;
+        double x = (x1 + x2) / 2;
         // 마커별 게시글을 cache로 저장
-        for (int i = 0; i < clusters.size.length-1; i ++){
+        for (int i = 0; i < clusters.size.length - 1; i++) {
             Long clusterId = (long) i;
             List<ArticleRedis> articleRedisList = new ArrayList<>();
-            for (int j = 0; j < clusters.size[i]; j ++ ){
+            for (int j = 0; j < clusters.size[i]; j++) {
 
                 Article article = articleList.get(listIdx);
 
@@ -341,8 +336,7 @@ public class ArticleService {
      * @return 마커별 게시글 리스트
      */
 
-    public ArticleClusterListDto getArticleListByMarkerId(Long clusterId, String condition, Long pageId){
-        log.info(condition);
+    public ArticleClusterListDto getArticleListByMarkerId(Long clusterId, String condition, Long pageId) {
         Boolean isEndPage = false;
         ArticleClusterListDto articleClusterListDto = new ArticleClusterListDto();
         // 최신순 조회
@@ -358,7 +352,7 @@ public class ArticleService {
                 articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
             }
-                // 거리순 조회
+            // 거리순 조회
             case "distance": {
                 List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId);
                 articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
@@ -375,17 +369,16 @@ public class ArticleService {
      * @param isEndPage
      * @return
      */
-    private ArticleClusterListDto doCluster(List<ArticleRedis> articleRedisPage, Long pageId, Boolean isEndPage){
-        log.info(articleRedisPage.toString());
-        log.info(String.valueOf((int) ((pageId+1)*9)));
+    private ArticleClusterListDto doCluster(List<ArticleRedis> articleRedisPage, Long pageId, Boolean isEndPage) {
+        Integer size = (int) ((pageId + 1) * 9);
+        log.info(String.valueOf(size));
 
-        Integer size = (int) ((pageId+1)*9);
         // cache를 paging
-        if (size > articleRedisPage.size()){
+        if (size > articleRedisPage.size()) {
             size = articleRedisPage.size();
             isEndPage = true;
         }
-        if (size<9){
+        if (size < 9) {
             return ArticleClusterListDto.builder()
                     .isEndPage(isEndPage)
                     .articleRedisList(articleRedisPage)
@@ -393,7 +386,7 @@ public class ArticleService {
         }
         return ArticleClusterListDto.builder()
                 .isEndPage(isEndPage)
-                .articleRedisList(articleRedisPage.subList(size-9,size))
+                .articleRedisList(articleRedisPage.subList(size - 9, size))
                 .build();
     }
 
@@ -401,13 +394,13 @@ public class ArticleService {
      * 내가 좋아요 누른 게시글 목록
      * @return 내가 좋아요 누른 게시글 목록
      */
-    public List<ArticleSearchDto> getHeartedArticle(){
+    public List<ArticleSearchDto> getHeartedArticle() {
         User user = UserService.getLogInUser();
         List<ArticleHeart> articleHeartList = articleHeartRepository.findByUser(user);
 
         List<ArticleSearchDto> results = new ArrayList<>();
 
-        for(ArticleHeart articleHeart : articleHeartList){
+        for (ArticleHeart articleHeart : articleHeartList) {
 
             Article article = articleHeart.getArticle();
             User articleAuthor = article.getUser();
@@ -439,7 +432,7 @@ public class ArticleService {
      * @param article 게시글
      * @return 해당 게시글의 좋아요 여부
      */
-    private boolean isHearted(User user, Article article){
+    private boolean isHearted(User user, Article article) {
         return articleHeartRepository.findByUserAndArticle(user, article).isPresent();
     }
 
@@ -449,7 +442,7 @@ public class ArticleService {
      * @param logInUser 로그인한 유저
      * @return 유저 일치 여부
      */
-    public boolean isMe(User user, User logInUser){
+    public boolean isMe(User user, User logInUser) {
         return logInUser.getId() == user.getId();
     }
 
@@ -458,15 +451,15 @@ public class ArticleService {
      * @param articleList 범위내의 모든 게시글
      * @return 범위내 게시글을 double[][]로 위도경도로 리턴
      */
-     private double[][] getGeoPointArray(List<Article> articleList){
-         if (articleList.isEmpty()){
-             return new double[0][];
-         }
-         double[][] geoPointArray = new double[articleList.size()][];
-         int index = 0;
-         for (Article article : articleList){
-             geoPointArray[index++] = new double[]{article.getLatitude(), article.getLongitude()};
-         }
-         return geoPointArray;
-     }
+    private double[][] getGeoPointArray(List<Article> articleList) {
+        if (articleList.isEmpty()) {
+            return new double[0][];
+        }
+        double[][] geoPointArray = new double[articleList.size()][];
+        int index = 0;
+        for (Article article : articleList) {
+            geoPointArray[index++] = new double[]{article.getLatitude(), article.getLongitude()};
+        }
+        return geoPointArray;
+    }
 }
