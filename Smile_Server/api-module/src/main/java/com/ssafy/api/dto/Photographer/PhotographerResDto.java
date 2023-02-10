@@ -25,6 +25,7 @@ public class PhotographerResDto {
     private String name;
     private String profileImg;
     private String introduction;
+    private String bank;
     private String account;
     private List<PlacesResDto> places;
     private List<CategoriesResDto> categories;
@@ -59,6 +60,7 @@ public class PhotographerResDto {
                 .name(photographer.getUser().getName())
                 .profileImg(photographer.getProfileImg())
                 .introduction(photographer.getIntroduction())
+                .bank(photographer.getBank())
                 .account(photographer.getAccount())
                 .places(places)
                 .categories(categories)
