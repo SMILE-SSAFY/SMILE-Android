@@ -89,13 +89,11 @@ public class PhotographerService {
         // 활동지역 변환
         List<PhotographerNPlaces> places = new ArrayList<>();
         for(PlacesReqDto place : photographer.getPlaces()){
-            log.info(place.getPlaceId().getClass().getName());
             places.add(PhotographerNPlaces.builder()
                     .photographer(Photographer.builder().id(user.getId()).build())
                     .places(Places.builder().id(place.getPlaceId()).build())
                     .build()
             );
-            log.info(places.get(0).getPlaces().getId());
         }
 
         int minPrice = Integer.MAX_VALUE;
@@ -139,8 +137,7 @@ public class PhotographerService {
         Long userIdx = UserService.getLogInUser().getId();
         Photographer photographer = photographerRepository.findById(userIdx)
                 .orElseThrow(() -> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        PhotographerResDto dto = new PhotographerResDto();
-        return dto.of(photographer);
+        return new PhotographerResDto().of(photographer);
     }
 
     /**
@@ -210,8 +207,7 @@ public class PhotographerService {
         findPhotographer.updatePlaces(places);
         findPhotographer.updateCategories(categories);
 
-        PhotographerResDto savedPhotographer = new PhotographerResDto();
-        return savedPhotographer.of(photographerRepository.save(findPhotographer));
+        return new PhotographerResDto().of(photographerRepository.save(findPhotographer));
     }
 
     /**
@@ -284,7 +280,8 @@ public class PhotographerService {
     public List<PhotographerForListDto> getPhotographerListByAddresss(String address, String criteria) {
         Long userId = UserService.getLogInUser().getId();
         String[] addresssList = address.split(" ");
-        List<PhotographerQdslDto> photographerList = photographerNPlacesRepository.findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
+        List<PhotographerQdslDto> photographerList = photographerNPlacesRepository
+                .findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
         log.info("주변 작가 조회");
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
@@ -296,18 +293,19 @@ public class PhotographerService {
     }
 
     /***
+     * 사진작가 좋아요 / 좋아요 취소
      *
      * @param photographerId
      * @return 포토그래퍼 id, isHeart boolean
-     * @throws CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)
-     * @throws CustomException(ErrorCode.USER_NOT_FOUND)
+     * @throws PHOTOGRAPHER_NOT_FOUND
+     * @throws USER_NOT_FOUND
      */
     public PhotographerHeartDto addHeartPhotographer(Long photographerId){
-        Photographer photographer = photographerRepository.findById(photographerId).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((UserDetails) principal).getUsername();
+        Photographer photographer = photographerRepository.findById(photographerId)
+                .orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
-        User user = userRepository.findByEmail(username).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findById(photographerId)
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
         boolean isHeart = isHearted(user, photographer);
 
         // 좋아요가 없을 때 -> 좋아요 등록
@@ -339,8 +337,7 @@ public class PhotographerService {
      * @return List<PhotographerForListDto> 내가 좋아요 누른 작가리스트
      */
     public List<PhotographerForListDto> getPhotographerListByUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = UserService.getLogInUser();
 
         List<PhotographerHeart> photographerList = photographerHeartRepository.findByUser(user);
 
@@ -351,23 +348,17 @@ public class PhotographerService {
         }
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        List<PhotographerQdslDto> photographerQdslDtoList = new ArrayList<>();
-
         for (PhotographerHeart photographerHeart : photographerList){
             Photographer photographer = photographerHeart.getPhotographer();
             ReviewQdslDto review = reviewRepository.findByPhotographerId(photographer.getId());
 
-            photographerQdslDtoList.add(
-            PhotographerQdslDto.builder()
+            photographerForList.add(new PhotographerForListDto().of(PhotographerQdslDto.builder()
                     .photographer(photographer)
                     .heart(photographerHeartRepository.countByPhotographer(photographer))
                     .hasHeart(true)
                     .avgScore(review.getAvgScore())
                     .reviewCount(review.getReviewCount())
-                    .build());
-        }
-        for (PhotographerQdslDto photographerQuerydsl : photographerQdslDtoList) {
-            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+                    .build()));
         }
 
         return photographerForList;
@@ -375,9 +366,9 @@ public class PhotographerService {
 
     /***
      * 포트폴리오의 작가정보
-     * @param userId 유저 아이디
+     * @param photographerId 유저 아이디
      * @return 포토그래퍼정보 + 해당 포토그래퍼가 가진 article 게시글 전체조회
-     *
+     * @throws PHOTOGRAPHER_NOT_FOUND
      * @throws UsernameNotFoundException 유저 없을 때
      */
 
