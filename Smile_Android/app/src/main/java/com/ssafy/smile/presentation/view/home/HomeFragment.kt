@@ -12,6 +12,7 @@ import com.ssafy.smile.common.util.AddressUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.util.SharedPreferencesUtil
 import com.ssafy.smile.databinding.FragmentHomeBinding
+import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
 import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.adapter.HomeRecyclerAdapter
@@ -33,8 +34,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
 
     override fun onResume() {
         super.onResume()
-        homeViewModel.getAddressList()
         setObserverBeforeSetAddress()
+        homeViewModel.getCurretAddress()
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
         }

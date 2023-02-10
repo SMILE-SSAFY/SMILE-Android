@@ -568,7 +568,7 @@
             app:popUpTo="@id/reviewDetailFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/mapListFragment"
         android:name="com.ssafy.smile.presentation.view.map.MapListFragment"
         android:label="fragment_map_list"
@@ -585,7 +585,7 @@
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
-    </fragment>
+    </dialog>
     <fragment
         android:id="@+id/recommendResultFragment"
         android:name="com.ssafy.smile.presentation.view.home.RecommendResultFragment"

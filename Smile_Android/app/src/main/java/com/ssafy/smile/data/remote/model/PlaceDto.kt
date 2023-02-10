@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PlaceDto (
-    val placeId : String,
+    val placeId : String="",
     val first : String,
     val second: String
 ):Parcelable{
