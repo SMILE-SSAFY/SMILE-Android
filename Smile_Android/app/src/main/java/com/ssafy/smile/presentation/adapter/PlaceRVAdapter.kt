@@ -11,9 +11,10 @@ import com.ssafy.smile.databinding.ItemPhotographerPlaceBinding
 import com.ssafy.smile.domain.model.PlaceDomainDto
 import com.ssafy.smile.domain.model.Spinners
 import com.ssafy.smile.domain.model.Types
+import com.ssafy.smile.presentation.viewmodel.mypage.PhotographerWriteGraphViewModel
 
 
-class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : RecyclerView.Adapter<PlaceRVAdapter.Holder>() {
+class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, private val addBtnView:Button, private val limit:Int=5) : RecyclerView.Adapter<PlaceRVAdapter.Holder>() {
     private val itemList : ArrayList<PlaceDomainDto> = arrayListOf()
 
     fun getListData() : ArrayList<PlaceDomainDto> = itemList
@@ -83,6 +84,7 @@ class PlaceRVAdapter(private val addBtnView:Button, private val limit:Int=5) : R
                         dto.isEmpty = false
                         dto.second = this.getString()
                         dto.secondId = position
+                        viewModel.uploadPlacesData(getListData())           // TODO : 딜레이 체크
                     }
                     setText(dto.second)
                     dto.first?.let {

@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PhotographerDto(
+    val bank : String,
     val account: String,
     val introduction: String,
     val categories: List<CategoryDto>,

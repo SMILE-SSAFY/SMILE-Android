@@ -14,10 +14,7 @@ import com.ssafy.smile.R
 import com.ssafy.smile.RegisterPortFolioGraphArgs
 import com.ssafy.smile.common.util.*
 import com.ssafy.smile.common.util.ImageUtils.convertBitmapToFile
-import com.ssafy.smile.data.remote.model.PhotographerDto
-import com.ssafy.smile.data.remote.model.PhotographerRequestDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
-import com.ssafy.smile.data.remote.model.PortfolioResponseDto
 import com.ssafy.smile.databinding.FragmentWritePhotographerPortfolioBinding
 import com.ssafy.smile.domain.model.*
 import com.ssafy.smile.presentation.adapter.CategoryRVAdapter
@@ -39,6 +36,7 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
     private lateinit var placeRVAdapter : PlaceRVAdapter
     private val accountDto = AccountDomainDto()
 
+
     override fun initView() {
         initToolbar()
         initAdapter()
@@ -57,6 +55,7 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
                 Glide.with(binding.imagePhotographerProfile)
                     .load(it)
                     .into(binding.imagePhotographerProfile)
+                //viewModel.reloadStoredData()
             }
             photographerDataResponse.observe(viewLifecycleOwner){
                 setData(it)
@@ -119,14 +118,14 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
     }
 
     private fun initAdapter(){
-        categoryRVAdapter = CategoryRVAdapter(binding.layoutPhotographerCategory.btnAdd).apply {
+        categoryRVAdapter = CategoryRVAdapter(viewModel, binding.layoutPhotographerCategory.btnAdd).apply {
             setItemClickListener(object :CategoryRVAdapter.ItemClickListener{
                 override fun onClickBtnDelete(view: View, position: Int, dto: CategoryDomainDto) {
                     categoryRVAdapter.deleteData(position)
                 }
             })
         }.also { binding.layoutPhotographerCategory.rvPhotographerCategory.adapter = it }
-        placeRVAdapter = PlaceRVAdapter(binding.layoutPhotographerPlace.btnAdd).apply {
+        placeRVAdapter = PlaceRVAdapter(viewModel, binding.layoutPhotographerPlace.btnAdd).apply {
             setItemClickListener(object :PlaceRVAdapter.ItemClickListener{
                 override fun onClickBtnDelete(view: View, position: Int, dto: PlaceDomainDto) {
                     placeRVAdapter.deleteItem(position)
@@ -134,6 +133,10 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
             })
         }.also { binding.layoutPhotographerPlace.rvPhotographerPlace.adapter = it }
 
+        binding.etPhotographerInfo.doOnTextChanged { text, _, _, _ ->
+            val introduce = if (text.isNullOrBlank()) null else binding.etPhotographerInfo.getString()
+            viewModel.uploadIntroductionData(introduce)
+        }
         setAccountAdapter()
     }
 
@@ -166,12 +169,13 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
         binding.layoutPhotographerAccount.apply {
             tvPhotographerAccount.setOnItemClickListener { _, _, _, _ ->
                 accountDto.accountBank = tvPhotographerAccount.getString()
-                if (accountDto.accountNum!=null) accountDto.isEmpty = false
+                accountDto.isEmpty = accountDto.accountNum == null
                 viewModel.uploadAccountData(accountDto)
             }
-            etPhotographerAccount.doOnTextChanged { _, _, _, _ ->
-                accountDto.accountNum = etPhotographerAccount.getString()
-                if (accountDto.accountBank!=null) accountDto.isEmpty = false
+
+            etPhotographerAccount.doOnTextChanged { text, _, _, _ ->
+                accountDto.accountNum = if (text.isNullOrBlank()) null else etPhotographerAccount.getString()
+                accountDto.isEmpty = accountDto.accountBank == null
                 viewModel.uploadAccountData(accountDto)
             }
             tvPhotographerAccount.setText(accountBank)

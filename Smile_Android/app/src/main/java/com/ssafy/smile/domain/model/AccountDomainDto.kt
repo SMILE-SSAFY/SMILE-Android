@@ -6,6 +6,4 @@ class AccountDomainDto (
         var isEmpty : Boolean = true,
         var accountBank:String?=null,
         var accountNum:String?=null
-){
-        fun makeAccountString() : String = accountBank.toString() + accountNum.toString()
-}
+)
