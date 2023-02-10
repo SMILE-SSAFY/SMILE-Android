@@ -49,7 +49,7 @@ class MyInterestPhotographerFragment : BaseFragment<FragmentMyInterestPhotograph
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "관심 작가를 불러오는"), Types.ToastType.WARNING)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "관심 작가를 불러오는"), Types.ToastType.ERROR)
                     }
                 }
             }
@@ -58,7 +58,7 @@ class MyInterestPhotographerFragment : BaseFragment<FragmentMyInterestPhotograph
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> { getInterestInfo() }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "찜 설정"), Types.ToastType.WARNING)
+                        showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "찜 설정"), Types.ToastType.ERROR)
                     }
                 }
             }

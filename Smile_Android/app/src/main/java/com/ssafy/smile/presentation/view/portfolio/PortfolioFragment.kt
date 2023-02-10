@@ -116,7 +116,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
                     if (args.postId<0){
-                        showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                        showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
@@ -139,7 +139,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
                         portfolioViewModel.getPortfolio(photographerId)
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
-                        showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                        showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
             }

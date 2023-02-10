@@ -58,7 +58,7 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                    showToast(requireContext(), "작가 포트폴리오 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }

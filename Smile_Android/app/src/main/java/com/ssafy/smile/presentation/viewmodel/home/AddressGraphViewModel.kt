@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.viewmodel.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
 import com.ssafy.smile.common.view.sources.SingleLiveData

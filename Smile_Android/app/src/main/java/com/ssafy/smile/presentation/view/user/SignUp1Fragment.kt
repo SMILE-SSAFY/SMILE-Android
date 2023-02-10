@@ -76,7 +76,7 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                     val action = SignUp1FragmentDirections.actionSignUp1FragmentToSignUp2Fragment(etId.text.toString(), etPassword.text.toString())
                     findNavController().navigate(action)
                 } else {
-                    showToast(requireContext(), "모든 값을 확인해주세요", Types.ToastType.WARNING)
+                    showToast(requireContext(), "모든 값을 확인해주세요", Types.ToastType.INFO)
                 }
             }
         }
@@ -93,13 +93,11 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
         signUpGraphViewModel.emailCheckResponse.observe(viewLifecycleOwner) {
             when(it) {
                 is NetworkUtils.NetworkResponse.Loading -> {
-                    //TODO : 로딩 다이얼로그 고치기
                     showLoadingDialog(requireContext())
                     setIdCheckVisibility(View.GONE, View.GONE)
                     idDoubleCheck = false
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
-                    //TODO : 로딩 다이얼로그 고치기
                     dismissLoadingDialog()
                     idDoubleCheck = if (it.data == "OK") {
                         setIdCheckVisibility(View.VISIBLE, View.GONE)
@@ -109,14 +107,13 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                     }
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
-                    //TODO : 로딩 다이얼로그 고치기
                     dismissLoadingDialog()
                     idDoubleCheck = false
                     if (it.errorCode == 400) {
                         setIdCheckVisibility(View.GONE, View.VISIBLE)
                     } else {
                         setIdCheckVisibility(View.GONE, View.GONE)
-                        showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.WARNING)
+                        showToast(requireContext(), "이메일 중복 체크 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
             }
@@ -137,12 +134,20 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                 if (type == "id") {
                     val email = binding.etId.text.toString()
                     if (!checkEmailRule(email)) {
-                        binding.etId.error = "올바른 이메일 주소를 입력해주세요"
+                        binding.tilEmail.isErrorEnabled = true
+                        binding.tilEmail.error = "올바른 이메일 주소를 입력해주세요"
+                    } else {
+                        binding.tilEmail.isErrorEnabled = false
+                        binding.tilEmail.error = null
                     }
                 } else if (type == "pwd") {
                     val password = binding.etPassword.text.toString()
                     if (!checkPasswordRule(password)) {
-                        binding.etPassword.error = "비밀번호 규칙에 맞게 입력해주세요"
+                        binding.tilEmail.isErrorEnabled = true
+                        binding.tilPassword.error = "비밀번호 규칙에 맞게 입력해주세요"
+                    } else {
+                        binding.tilEmail.isErrorEnabled = false
+                        binding.tilPassword.error = null
                     }
                 }
             }
