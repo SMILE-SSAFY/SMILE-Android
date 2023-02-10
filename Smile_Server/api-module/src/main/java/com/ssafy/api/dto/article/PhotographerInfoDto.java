@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class PhotographerInfoDto {
     private Long photographerId;
+    private String photoUrl;
     private Boolean isMe;
     private Boolean isHeart;
     private Long hearts;
@@ -32,6 +33,7 @@ public class PhotographerInfoDto {
     public PhotographerInfoDto of(Photographer photographer, Boolean isMe, Boolean isHeart, Long hearts, List<String> places, List<String> categories){
         return PhotographerInfoDto.builder()
                 .photographerId(photographer.getId())
+                .photoUrl(photographer.getProfileImg())
                 .isMe(isMe)
                 .isHeart(isHeart)
                 .hearts(hearts)

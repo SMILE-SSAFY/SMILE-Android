@@ -12,6 +12,7 @@ import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.ArticleHeart;
 import com.ssafy.core.entity.ArticleRedis;
+import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
@@ -20,6 +21,7 @@ import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.article.ArticleHeartRepository;
 import com.ssafy.core.repository.article.ArticleRedisRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
+import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,7 @@ public class ArticleService {
     private final CategoriesRepository categoriesRepository;
     private final ArticleClusterRepository articleClusterRepository;
     private final ArticleRedisRepository articleRedisRepository;
+    private final PhotographerRepository photographerRepository;
 
     /***
      * article 생성
@@ -91,6 +94,7 @@ public class ArticleService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
 
         User articleAuthor = article.getUser();
+        Photographer articlePhotographer = photographerRepository.findById(article.getUser().getId()).orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
         // 자신이 작성한 글인지 확인
         boolean isMe = isMe(logInUser, articleAuthor);
         // 좋아요를 누른 글인지 확인
