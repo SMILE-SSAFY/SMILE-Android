@@ -36,6 +36,7 @@ public class AnalyzeService {
                             .build();
 
             AnalyzeEntitiesResponse response = language.analyzeEntities(request);
+            log.info(String.valueOf(response.getEntitiesList().size()));
 
             for (Entity entity : response.getEntitiesList()) {
                 res.append(entity.getName()).append(" ");
