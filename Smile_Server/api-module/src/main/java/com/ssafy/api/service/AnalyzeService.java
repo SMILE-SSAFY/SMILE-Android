@@ -42,7 +42,7 @@ public class AnalyzeService {
                 res.append(entity.getName()).append(" ");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return "";
         }
         return res.toString();
