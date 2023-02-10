@@ -207,8 +207,7 @@ public class PhotographerService {
         findPhotographer.updatePlaces(places);
         findPhotographer.updateCategories(categories);
 
-        PhotographerResDto savedPhotographer = new PhotographerResDto();
-        return savedPhotographer.of(photographerRepository.save(findPhotographer));
+        return new PhotographerResDto().of(photographerRepository.save(findPhotographer));
     }
 
     /**
