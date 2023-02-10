@@ -24,6 +24,8 @@ public class ArticleDetailDto {
 
     private Boolean isHeart;
 
+    private String profileImg;
+
     private Long hearts;
 
     private String detailAddress;
