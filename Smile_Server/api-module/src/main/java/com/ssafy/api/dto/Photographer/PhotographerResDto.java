@@ -40,6 +40,7 @@ public class PhotographerResDto {
         List<PlacesResDto> places = new ArrayList<>();
         for(PhotographerNPlaces place : photographer.getPlaces()){
             places.add(PlacesResDto.builder()
+                    .placeId(place.getPlaces().getId())
                     .first(place.getPlaces().getFirst())
                     .second(place.getPlaces().getSecond()).build());
         }

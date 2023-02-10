@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class PlacesResDto {
+    private String placeId;
     private String first;
     private String second;
 }
