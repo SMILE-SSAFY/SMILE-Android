@@ -15,11 +15,10 @@ data class PhotographerResponseDto(
     val name: String,
     val profileImg: String,
     val introduction: String,
+    val bank : String,
     val account: String,
     val categories: List<CategoryDto>,
-    val places: List<PlaceDto>,
-    val price : Int,
-    val description : String
+    val places: List<PlaceDto>
 ) : Parcelable {
 
 }

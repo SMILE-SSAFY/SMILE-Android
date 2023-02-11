@@ -2,13 +2,11 @@ package com.ssafy.smile.presentation.adapter
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.getString
@@ -26,6 +24,7 @@ class CategoryRVAdapter(private val viewModel : PhotographerWriteGraphViewModel,
     fun getListData() : ArrayList<CategoryDomainDto> = itemList
 
     fun setListData(dataList: ArrayList<CategoryDomainDto>){
+        itemList.clear()
         itemList.addAll(dataList)
         notifyDataSetChanged()
     }
@@ -34,12 +33,14 @@ class CategoryRVAdapter(private val viewModel : PhotographerWriteGraphViewModel,
         if (itemCount<=limit){
             itemList.add(CategoryDomainDto())
             notifyItemInserted(itemCount-1)
+            viewModel.uploadCategoriesData(getListData())
         }
     }
 
     fun deleteData(index: Int){
         itemList.removeAt(index)
         notifyDataSetChanged()
+        viewModel.uploadCategoriesData(getListData())
     }
 
     override fun getItemCount(): Int {
@@ -84,7 +85,7 @@ class CategoryRVAdapter(private val viewModel : PhotographerWriteGraphViewModel,
                     clearPriceTextChangeListener(this)
                     val priceString = if (dto.price==null) null else dto.price!!.makeComma()
                     setText(priceString)
-                    dto.priceTextWatcher = OnCurrentPriceTextWatcher(dto, this)
+                    dto.priceTextWatcher = OnCurrentPriceTextWatcher(binding, dto, this)
                     addTextChangedListener(dto.priceTextWatcher)
                 }
                 etPhotographerCategoryDetail.apply {
@@ -113,25 +114,28 @@ class CategoryRVAdapter(private val viewModel : PhotographerWriteGraphViewModel,
         }
     }
 
-    inner class OnCurrentPriceTextWatcher(private val dto:CategoryDomainDto, editText: EditText?) : TextWatcher {
-        private val editTextWeakReference: WeakReference<EditText>
-        init { editTextWeakReference = WeakReference<EditText>(editText) }
+    inner class OnCurrentPriceTextWatcher(private val binding : ItemPhotographerCategoryBinding, private val dto:CategoryDomainDto, private val editText: EditText?) : TextWatcher {
+        private val editTextWeakReference: WeakReference<EditText> = WeakReference<EditText>(editText)
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
         override fun afterTextChanged(editable: Editable) {
             val editText: EditText = editTextWeakReference.get() ?: return
-            val s = editable.toString()
+            val s = editable.replace("""[,.원]""".toRegex(), "")
             if (s.isEmpty()) {
+                binding.tvPrice.visibility = View.INVISIBLE
                 dto.price = null
+                dto.isEmpty = true
+                viewModel.uploadCategoriesData(getListData())
                 return
             }
             editText.removeTextChangedListener(this)
-            val price = s.replace("""[,원]""".toRegex(), "").toInt()
+            val price = s.toInt()
             val formatted: String = price.makeComma()
             editText.setText(formatted)
             editText.setSelection(formatted.length)
             editText.addTextChangedListener(this)
+            binding.tvPrice.visibility = View.VISIBLE
             dto.price = price
             dto.isEmpty = dto.name == null
             viewModel.uploadCategoriesData(getListData())
@@ -140,12 +144,12 @@ class CategoryRVAdapter(private val viewModel : PhotographerWriteGraphViewModel,
 
     inner class OnCurrentContentTextWatcher(private val dto:CategoryDomainDto) : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            dto.description = s.toString()
-            dto.isEmpty = !(dto.name!=null && dto.price!=null)
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
+        override fun afterTextChanged(s: Editable) {
+            dto.description = if (s.isEmpty()) null else s.toString()
+            dto.isEmpty = s.isEmpty()
             viewModel.uploadCategoriesData(getListData())
         }
-        override fun afterTextChanged(s: Editable) {}
     }
 
 

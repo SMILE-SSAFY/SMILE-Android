@@ -85,8 +85,6 @@
                         android:gravity="center|right">
                         <CheckedTextView
                             android:id="@+id/ctv_like"
-                            android:checked="true"
-                            android:enabled="false"
                             android:layout_marginRight="4dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

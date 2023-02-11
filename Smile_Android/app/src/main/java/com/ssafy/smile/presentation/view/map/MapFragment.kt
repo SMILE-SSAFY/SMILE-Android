@@ -11,10 +11,12 @@ import android.location.Location
 import android.location.LocationManager
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -34,6 +36,8 @@ import com.ssafy.smile.domain.model.Types
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.view.MainFragmentDirections
 import com.ssafy.smile.presentation.viewmodel.map.MapViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "MapFragment_스마일"
@@ -83,10 +87,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
-                        if (isInitialized && it.data.isEmpty())
+                        if (isInitialized && it.data.isEmpty()) binding.tvFindNoMarker.visibility = View.VISIBLE
                         else {
+                            binding.tvFindNoMarker.visibility = View.GONE
                             updateClusterInfo(it.data)
-                            map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }
+                            lifecycleScope.launch(Dispatchers.Main){
+                                map?.let { nMap -> updateMarkerInfo(nMap, clusterList) }
+                            }
                         }
                         isInitialized = true
                     }
@@ -117,21 +124,21 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
         clusterList.addAll(clusterDtoList)
     }
 
-    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){            // TODO : 코루틴처리 + 클러스터 커스텀
+    private fun updateMarkerInfo(nMap: NaverMap, clusterDtoList : List<ClusterDto>){
         for (marker in markerList){ marker.map = null }
         markerList.clear()
         for (cluster in clusterDtoList){
             val marker = Marker().apply {
-                captionText = cluster.numOfCluster.toString()
+                captionText = cluster.numOfCluster.toString()+"개"
                 position = LatLng(cluster.centroidLat, cluster.centroidLng)
-                icon = OverlayImage.fromResource(R.drawable.oval_blue400_radius_4)
+                icon = OverlayImage.fromResource(R.drawable.ic_marker)
                 setOnClickListener {
                     val action = MainFragmentDirections.actionMainFragmentToMapListFragment(cluster.clusterId)
                     findNavController().navigate(action)
                     true
                 }
-                width = 70
-                height = 70
+                width = 90
+                height = 120
                 map = nMap
             }
             markerList.add(marker)
@@ -143,11 +150,18 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
             uiSettings.isLocationButtonEnabled = false
             uiSettings.isZoomGesturesEnabled = true
             uiSettings.isZoomControlEnabled = false
+            uiSettings.isRotateGesturesEnabled = false
+            minZoom = 6.0
+            maxZoom = 15.0
             locationTrackingMode = LocationTrackingMode.Follow
+            addOnCameraIdleListener {
+                presentLatLngBounds = getBoundsLatLng(nMap)
+                presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
+            }
         }
         this.map = nMap
         nMap.locationSource = locationSource
-        if (checkIsServiceAvailable()) startLocationUpdates(nMap)
+        if (checkIsServiceAvailable() && !isInitialized) startLocationUpdates(nMap)
     }
 
     private fun checkIsServiceAvailable() : Boolean{
@@ -172,11 +186,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
 
 
     private fun startLocationUpdates(nMap: NaverMap) {
-        nMap.addOnCameraIdleListener {
-            presentLatLngBounds = getBoundsLatLng(nMap)
-            presentLatLngBounds?.let { viewModel.getPhotographerInfo(it.first, it.second) }
-        }
-
         mFusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let { currentPosition = LatLng(it.latitude, it.longitude) }
             nMap.locationOverlay.run {
@@ -185,7 +194,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
             }
             moveToLatLng(currentPosition)
         }
-
     }
 
     private fun moveToLatLng(latLng: LatLng){

@@ -76,7 +76,7 @@ class PostViewPagerFragment : BaseFragment<FragmentPostViewPagerBinding>(Fragmen
         portfolioRecyclerAdapter = PortfolioRecyclerAdapter(requireContext(), recyclerData).apply {
             setItemClickListener(object : PortfolioRecyclerAdapter.OnItemClickListener {
                 override fun onClick(view: View, position: Int) {
-                    val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(recyclerData[position].id)
+                    val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragment(false, recyclerData[position].id)
                     findNavController().navigate(action)
                 }
             })
