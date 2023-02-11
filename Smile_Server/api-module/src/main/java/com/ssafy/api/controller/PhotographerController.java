@@ -73,7 +73,7 @@ public class PhotographerController {
      */
     @PutMapping
     public ResponseEntity<PhotographerResDto> changePhotographerInfo(
-            @RequestPart("Photographer") PhotographerUpdateReqDto photographer,
+            @RequestPart("photographer") PhotographerUpdateReqDto photographer,
             @RequestPart("profileImg") MultipartFile multipartFile) throws IOException{
         return ResponseEntity.ok(photographerService.changePhotographer(multipartFile, photographer));
     }

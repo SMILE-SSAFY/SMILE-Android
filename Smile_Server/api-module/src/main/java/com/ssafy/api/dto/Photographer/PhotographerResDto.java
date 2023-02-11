@@ -49,6 +49,7 @@ public class PhotographerResDto {
         List<CategoriesResDto> categories = new ArrayList<>();
         for(PhotographerNCategories category : photographer.getCategories()){
             categories.add(CategoriesResDto.builder()
+                    .categoryId(category.getCategory().getId())
                     .name(category.getCategory().getName())
                     .price(category.getPrice())
                     .description(category.getDescription())
