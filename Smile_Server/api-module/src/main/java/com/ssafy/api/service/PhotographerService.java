@@ -311,8 +311,7 @@ public class PhotographerService {
         Photographer photographer = photographerRepository.findById(photographerId)
                 .orElseThrow(()-> new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND));
 
-        User user = userRepository.findById(photographerId)
-                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = UserService.getLogInUser();
         boolean isHeart = isHearted(user, photographer);
 
         // 좋아요가 없을 때 -> 좋아요 등록
