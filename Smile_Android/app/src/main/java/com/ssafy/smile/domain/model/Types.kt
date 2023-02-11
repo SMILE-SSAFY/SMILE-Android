@@ -1,5 +1,8 @@
 package com.ssafy.smile.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 object Types {
     enum class ToastType { ERROR, SUCCESS, INFO, WARNING, BASIC, CUSTOM}
     enum class ErrorType { NETWORK, TIMEOUT, UNKNOWN }
@@ -17,7 +20,8 @@ object Types {
             }
         }
     }
-    enum class PostSearchType(private val typeStr : String){
+    @Parcelize
+    enum class PostSearchType(private val typeStr : String) : Parcelable {
         HEART("heart"), TIME("time"), DISTANCE("distance");
         fun getValue() : String = typeStr
     }

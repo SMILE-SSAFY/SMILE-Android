@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.view.mypage
 
 import android.app.Dialog
+import android.media.ExifInterface
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -9,6 +10,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.ImageUtils
+import com.ssafy.smile.common.util.ImageUtils.getPathFromURI
+import com.ssafy.smile.common.util.ImageUtils.getRotateInfo
 import com.ssafy.smile.common.util.PermissionUtils.actionGalleryPermission
 import com.ssafy.smile.common.view.LoadingDialog
 import com.ssafy.smile.databinding.FragmentPhotographerProfileBinding
@@ -31,7 +34,8 @@ class PhotographerProfileFragment() : BaseBottomSheetDialogFragment<FragmentPhot
         binding.apply {
             layoutSelectImageGallery.setOnClickListener {
                 actionGalleryPermission(requireContext(), 1, "프로필 사진은 한 장만 선택가능합니다."){
-                    viewModel.profileBitmap = ImageUtils.resizeImage(requireContext(), it[0])
+                    viewModel.profileBitmap = (ImageUtils.resizeImage(requireContext(), it[0]))
+                        .getRotateInfo(ExifInterface(requireContext().contentResolver.getPathFromURI(it[0])))
                     findNavController().navigate(R.id.photographerProfileCropFragment)
                 }
             }

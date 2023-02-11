@@ -41,7 +41,7 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
             moveToPopUpSelf()
         }
         else if (args.postId>0) {
-            val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragmentWithPop(args.postId)
+            val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragmentWithPop(args.isFromMap, args.postId)
             findNavController().navigate(action)
         }
         else setPhotographerId()

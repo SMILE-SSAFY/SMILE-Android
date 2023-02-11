@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.portfolio
 
 import android.util.Log
 import android.view.View
+import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -47,6 +48,7 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
 
     private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_postDetailFragment_pop)
 
+
     private fun setObserver() {
         getPostByIdResponseObserver()
         postLikeResponseObserver()
@@ -70,13 +72,11 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             when(it) {
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
-                    Log.d(TAG, "getPostByIdResponseObserver: ${it.data.toPostDomainDto()}")
                     postDomainDto = it.data.toPostDomainDto()
                     setPostInfo(it.data.toPostDomainDto())
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    Log.d(TAG, "postByIdResponseObserver: ${it.errorCode}")
                     showToast(requireContext(), "게시글 조회 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
                 is NetworkUtils.NetworkResponse.Loading -> {
