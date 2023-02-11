@@ -20,4 +20,5 @@ public class ArticlePostDto {
     private String category;
 
     private List<MultipartFile> imageList;
+
 }
