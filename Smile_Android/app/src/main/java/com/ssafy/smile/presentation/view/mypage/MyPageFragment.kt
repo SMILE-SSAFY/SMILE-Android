@@ -84,9 +84,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
             }
             getPhotographerResponse.observe(viewLifecycleOwner){
                 when(it){
-                    is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
-                    is NetworkUtils.NetworkResponse.Success -> { moveToRegisterPortFolioGraph(it.data) }
+                    is NetworkUtils.NetworkResponse.Loading -> {
+                        showLoadingDialog(requireContext())
+                    }
+                    is NetworkUtils.NetworkResponse.Success -> {
+                        dismissLoadingDialog()
+                        moveToRegisterPortFolioGraph(it.data) 
+                    }
                     is NetworkUtils.NetworkResponse.Failure -> {
+                        dismissLoadingDialog()
                     }
                 }
             }

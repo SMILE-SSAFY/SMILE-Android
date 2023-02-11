@@ -3,6 +3,7 @@ package com.ssafy.smile.data.remote.datasource
 
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerDto
+import com.ssafy.smile.data.remote.model.PhotographerModifyDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.data.remote.service.PhotographerApiService
 import okhttp3.MultipartBody
@@ -18,7 +19,7 @@ class PhotographerRemoteDataSourceImpl(private val photographerApiService: Photo
         return photographerApiService.getPhotographerInfo()
     }
 
-    override suspend fun modifyPhotographerInfo(photographerDto: PhotographerDto, image: MultipartBody.Part): Response<PhotographerResponseDto> {
+    override suspend fun modifyPhotographerInfo(photographerDto: PhotographerModifyDto, image: MultipartBody.Part): Response<PhotographerResponseDto> {
         return photographerApiService.modifyPhotographerInfo(photographerDto, image)
     }
 

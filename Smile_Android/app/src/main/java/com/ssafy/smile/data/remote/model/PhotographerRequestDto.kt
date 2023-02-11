@@ -7,11 +7,10 @@ import java.io.File
 data class PhotographerRequestDto(
     val profileImg: File,
     val photographerDto : PhotographerDto
-){
-    fun makeToPhotographerRequestDomainDto() {
-        val accountInfoArr = photographerDto.account.split(" ")
-        PhotographerRequestDomainDto(profileImg, photographerDto.introduction, photographerDto.categories.map { it.toCategoryDto() }, photographerDto.places.map { it.toPlaceDto() },
-            AccountDomainDto(false, accountInfoArr[0], accountInfoArr[1]))
-    }
-}
+)
+
+data class PhotographerModifyRequestDto(
+    val profileImg: File,
+    val photographerDto : PhotographerModifyDto
+)
 
