@@ -194,7 +194,12 @@
         android:id="@+id/photographerReservationList"
         android:name="com.ssafy.smile.presentation.view.mypage.PhotographerReservationListFragment"
         android:label="fragment_photographer_reservation_list"
-        tools:layout="@layout/fragment_photographer_reservation_list" />
+        tools:layout="@layout/fragment_photographer_reservation_list" >
+        <action
+            android:id="@+id/action_photographerReservationList_pop"
+            app:popUpTo="@id/photographerReservationList"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/setAddressFragment"
         android:name="com.ssafy.smile.presentation.view.home.AddressFragment"

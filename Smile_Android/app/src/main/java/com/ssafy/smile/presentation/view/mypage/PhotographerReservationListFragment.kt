@@ -135,7 +135,7 @@ class PhotographerReservationListFragment : BaseFragment<FragmentPhotographerRes
         toolbar.initToolbar("예약 일정 현황", true) { moveToPopUpSelf() }
     }
 
-    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_customerReservationListFragment_pop)
+    private fun moveToPopUpSelf() = findNavController().navigate(R.id.action_photographerReservationList_pop)
 
     override fun setEvent() {
         setRefreshLayoutEvent()

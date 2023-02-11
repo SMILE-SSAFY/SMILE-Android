@@ -14,3 +14,12 @@ data class PhotographerDto(
 ) : Parcelable {
 
 }
+
+data class PhotographerModifyDto(
+    val bank : String,
+    val account: String,
+    val introduction: String,
+    val categories: List<CategoryDto>,
+    val places: List<PlaceDto>,
+    val deleted : Boolean
+)
