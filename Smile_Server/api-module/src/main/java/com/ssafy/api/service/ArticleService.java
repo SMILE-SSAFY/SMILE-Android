@@ -71,13 +71,17 @@ public class ArticleService {
                 .user(user)
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
-                .detailAddress(dto.getDetailAddress())
+                .detailAddress(deleteQuote(dto.getDetailAddress()))
                 .photoUrls(fileName)
-                .category(dto.getCategory())
+                .category(deleteQuote(dto.getCategory()))
                 .createdAt(LocalDateTime.now())
                 .build();
 
         articleRepository.save(article);
+    }
+
+    private String deleteQuote (String string) {
+        return string.replace("\"", "");
     }
 
     /***
