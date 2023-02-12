@@ -7,6 +7,7 @@ import com.ssafy.smile.data.remote.datasource.PhotographerRemoteDataSource
 
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerDto
+import com.ssafy.smile.data.remote.model.PhotographerModifyDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.domain.repository.PhotographerRepository
 import com.ssafy.smile.presentation.base.BaseRepository
@@ -46,7 +47,7 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
         }
     }
 
-    override suspend fun modifyPhotographerInfo(photographerDto: PhotographerDto, image: MultipartBody.Part) {
+    override suspend fun modifyPhotographerInfo(photographerDto: PhotographerModifyDto, image: MultipartBody.Part) {
         safeApiCall(_modifyPhotographerInfoResponseLiveData){
             photographerRemoteDataSource.modifyPhotographerInfo(photographerDto, image)
         }

@@ -125,6 +125,8 @@
         <!--TODO : animation 추가 : 맵 마커 클릭했을 때 뜨는 화면-->
         <action
             android:id="@+id/action_mainFragment_to_mapListFragment"
+            app:enterAnim="@anim/up_enter"
+            app:popExitAnim="@anim/up_pop_exit"
             app:destination="@id/mapListFragment">
             <argument
                 android:name="clusterId"
@@ -259,7 +261,12 @@
         android:id="@+id/photographerReservationList"
         android:name="com.ssafy.smile.presentation.view.mypage.PhotographerReservationListFragment"
         android:label="fragment_photographer_reservation_list"
-        tools:layout="@layout/fragment_photographer_reservation_list" />
+        tools:layout="@layout/fragment_photographer_reservation_list" >
+        <action
+            android:id="@+id/action_photographerReservationList_pop"
+            app:popUpTo="@id/photographerReservationList"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/setAddressFragment"
         android:name="com.ssafy.smile.presentation.view.home.AddressFragment"
@@ -333,6 +340,10 @@
             android:label="fragment_portfolio"
             tools:layout="@layout/fragment_portfolio" >
             <argument
+                android:name="isFromMap"
+                app:argType="boolean"
+                android:defaultValue="false" />
+            <argument
                 android:name="photographerId"
                 app:argType="long"
                 android:defaultValue="-1L"/>
@@ -368,6 +379,10 @@
                 app:popEnterAnim="@anim/slide_left_enter"
                 app:popExitAnim="@anim/slide_left_exit">
                 <argument
+                    android:name="isFromMap"
+                    app:argType="boolean"
+                    android:defaultValue="false" />
+                <argument
                     android:name="postId"
                     app:argType="long"
                     android:defaultValue="-1L"/>
@@ -389,6 +404,10 @@
                 app:exitAnim="@anim/slide_right_exit"
                 app:popEnterAnim="@anim/slide_left_enter"
                 app:popExitAnim="@anim/slide_left_exit">
+                <argument
+                    android:name="isFromMap"
+                    app:argType="boolean"
+                    android:defaultValue="false" />
                 <argument
                     android:name="postId"
                     app:argType="long"
@@ -749,6 +768,10 @@
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
+        <action
+            android:id="@+id/action_mapListFragment_pop"
+            app:popUpTo="@id/mapListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/recommendResultFragment"

@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckedTextView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
@@ -39,7 +41,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
         }else{
             itemList.addAll(dataList)
             if (!isEnd) itemList.add(PostSearchRVDomainDto(Types.PagingRVType.PROGRESS, null))
-            notifyItemRangeInserted((page)*PAGING_NUM, dataList.size)
+            notifyDataSetChanged()
         }
     }
 
@@ -62,6 +64,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
                 tvCategory.text = postSearchDto.category
                 tvCreatedAt.text = CommonUtils.stringToDate(postSearchDto.createdAt)?.let { CommonUtils.getDiffTime(it) }
                 tvDistance.text = CommonUtils.getDiffDistance(postSearchDto.distance)
+                ctvLike.isChecked = postSearchDto.isHeart
                 tvLike.text = postSearchDto.hearts.toString()
                 tvName.text = postSearchDto.photographerName
                 tvLocation.text = postSearchDto.detailAddress
@@ -81,6 +84,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
                     }
                 }
             }
+            binding.ctvLike.setOnClickListener { itemClickListener.onClickHeart(binding.tvLike, it as CheckedTextView, position, postSearchDto) }
             itemView.setOnClickListener { itemClickListener.onClickItem(it, position, postSearchDto) }
         }
         private fun showCreatedAtVisibility(isVisible : Boolean){
@@ -123,6 +127,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
 
     interface ItemClickListener{
         fun onClickItem(view: View, position: Int, postSearchDto: PostSearchDomainDto)
+        fun onClickHeart(tvView : TextView, checkedView: CheckedTextView, position: Int, postSearchDto: PostSearchDomainDto)
     }
 
     private lateinit var itemClickListener: ItemClickListener

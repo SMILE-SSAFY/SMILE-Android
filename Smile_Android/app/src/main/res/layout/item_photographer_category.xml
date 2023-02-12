@@ -25,6 +25,7 @@
                 android:hint="카테고리"
                 android:maxLines="1"
                 android:ellipsize="end"
+                android:textAlignment="inherit"
                 android:textColorHint="@color/gray500"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,7 +37,6 @@
             style="@style/Et1DirOutlined"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
             android:layout_weight="7"
             android:gravity="center_vertical|end"
             android:paddingEnd="5dp"
@@ -44,11 +44,20 @@
             android:maxLength="10"
             android:imeOptions="actionNext"
             android:hint="가격을 입력해주세요"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"/>
+        <TextView
+            android:id="@+id/tv_price"
+            style="@style/TvT3"
+            android:visibility="invisible"
+            android:text="원"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray500" />
         <ImageButton
             android:id="@+id/btn_delete"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginStart="10dp"
             android:layout_gravity="center_vertical"
             android:background="@color/transparent"
             android:src="@drawable/ic_delete_fill"/>
