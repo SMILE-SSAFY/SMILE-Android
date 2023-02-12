@@ -2,6 +2,7 @@ package com.ssafy.smile.presentation.view.mypage
 
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels

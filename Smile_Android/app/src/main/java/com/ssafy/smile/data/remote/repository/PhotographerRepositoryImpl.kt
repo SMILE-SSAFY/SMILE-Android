@@ -4,11 +4,8 @@ package com.ssafy.smile.data.remote.repository
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.PhotographerRemoteDataSource
+import com.ssafy.smile.data.remote.model.*
 
-import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
-import com.ssafy.smile.data.remote.model.PhotographerDto
-import com.ssafy.smile.data.remote.model.PhotographerModifyDto
-import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import com.ssafy.smile.domain.repository.PhotographerRepository
 import com.ssafy.smile.presentation.base.BaseRepository
 import okhttp3.MultipartBody
@@ -33,6 +30,10 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
     private val _getPhotographerInfoByAddressResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerByAddressResponseDto>>(null)
     val getPhotographerInfoByAddressResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerByAddressResponseDto>>
         get() = _getPhotographerInfoByAddressResponseLiveData
+
+    private val _getPhotographerProfileResponseLiveData = SingleLiveData<NetworkUtils.NetworkResponse<PhotographerProfile>>(null)
+    val getPhotographerProfileResponseLiveData: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerProfile>>
+        get() = _getPhotographerProfileResponseLiveData
 
 
     override suspend fun registerPhotographerInfo(photographerDto: PhotographerDto, image: MultipartBody.Part) {
@@ -62,6 +63,12 @@ class PhotographerRepositoryImpl(private val photographerRemoteDataSource: Photo
     override suspend fun getPhotographerInfoByAddress(address:String, criteria: String){
         safeApiCall(_getPhotographerInfoByAddressResponseLiveData){
             photographerRemoteDataSource.getPhotographerInfoByAddress(address, criteria)
+        }
+    }
+
+    override suspend fun getPhotographerProfileImg(){
+        safeApiCall(_getPhotographerProfileResponseLiveData){
+            photographerRemoteDataSource.getPhotographerProfileImg()
         }
     }
 }
