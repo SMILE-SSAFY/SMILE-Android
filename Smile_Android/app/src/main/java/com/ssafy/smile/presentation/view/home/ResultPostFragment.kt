@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.view.home
 
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -112,10 +113,9 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
             setItemClickListener(object: ResultPostRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
                     recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvPostResult)
-                    val action = SearchFragmentDirections.actionSearchFragmentToPostDetailFragment(recyclerData[position].articleId)
+                    val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(photographerId = -1L, postId = recyclerData[position].articleId)
                     findNavController().navigate(action)
                 }
-
             })
         }
 

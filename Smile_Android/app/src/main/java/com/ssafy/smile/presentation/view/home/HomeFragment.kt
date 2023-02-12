@@ -65,10 +65,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         userId = getUserId()
         initRecycler()
         initToolbar()
+        homeViewModel.getPhotographerProfile()
+        getPhotographerProfileObserver()
 
         binding.chipPopular.apply {
             isChecked = true
             isEnabled = false
+        }
+    }
+
+    private fun getPhotographerProfileObserver() {
+        homeViewModel.getPhotographerProfileResponse.observe(viewLifecycleOwner) {
+            when(it) {
+                is NetworkUtils.NetworkResponse.Failure -> {}
+                is NetworkUtils.NetworkResponse.Loading -> {}
+                is NetworkUtils.NetworkResponse.Success -> {
+                    setProfile(it.data.profileImg)
+                }
+            }
         }
     }
 

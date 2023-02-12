@@ -1,10 +1,7 @@
 package com.ssafy.smile.data.remote.service
 
 import com.ssafy.smile.common.util.Constants.BASE_URL_PHOTOGRAPHER
-import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
-import com.ssafy.smile.data.remote.model.PhotographerDto
-import com.ssafy.smile.data.remote.model.PhotographerModifyDto
-import com.ssafy.smile.data.remote.model.PhotographerResponseDto
+import com.ssafy.smile.data.remote.model.*
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -30,4 +27,6 @@ interface PhotographerApiService {
     @GET("$BASE_URL_PHOTOGRAPHER/list")
     suspend fun getPhotographerInfoByAddress(@Query("address") address:String, @Query("criteria") criteria: String): Response<PhotographerByAddressResponseDto>
 
+    @GET("/api/user/img")
+    suspend fun getPhotographerProfileImg(): Response<PhotographerProfile>
 }
