@@ -1,11 +1,10 @@
 package com.ssafy.core.repository.photographer;
 
 import com.ssafy.core.dto.PhotographerIdQdslDto;
-import com.ssafy.core.dto.PhotographerQdslDto;
+import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Places;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 사진 작가와 활동 지역 Repository Querydsl custom
@@ -25,15 +24,12 @@ public interface PhotographerNPlacesRepositoryCustom {
     List<PhotographerIdQdslDto> findPhotographerIdByAddress(String[] addressList);
 
     /**
-     * 활동지역에 해당하는 사진작가 조회
+     * placeId에 해당하는 사진작가 조회
      *
-     * @param userId
-     * @param first
-     * @param second
-     * @param criteria
-     * @return List<PhotographerQuerydslDto>
+     * @param placeId
+     * @return List<Photographer>
      */
-    List<PhotographerQdslDto> findPhotographerByAddress(Long userId, String first, String second, String criteria);
+    List<Photographer> findPhotographerByPlaceId(String placeId);
 
     /**
      * 사진작가 별 활동지역 검색
