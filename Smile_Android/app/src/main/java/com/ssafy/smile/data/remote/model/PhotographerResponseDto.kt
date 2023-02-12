@@ -77,3 +77,7 @@ data class CategoryNoDes(
 data class Place (
     val place: String = ""
 )
+
+data class PhotographerProfile(
+    val profileImg: String = ""
+)
