@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
@@ -7,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentRecommendResultBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
@@ -24,6 +26,15 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
     private lateinit var recommendRecyclerAdapter: RecommendResultAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private val args: RecommendResultFragmentArgs by navArgs()
+    private var recyclerViewState: Parcelable? = null
+
+    override fun onResume() {
+        super.onResume()
+
+        if (recyclerViewState != null) {
+            CommonUtils.setSavedRecyclerViewState(recyclerViewState, binding.rvRecommend)
+        }
+    }
 
     override fun initView() {
         initToolbar()
@@ -71,6 +82,7 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
             })
             setItemClickListener(object : RecommendResultAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
+                    recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvRecommend)
                     val action = RecommendResultFragmentDirections.actionRecommendResultFragmentToPortfolioGraph(photographerId = recyclerData[position].photographerId, postId = -1L)
                     findNavController().navigate(action)
                 }

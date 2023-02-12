@@ -19,6 +19,7 @@
         android:layout_height="0dp"
         android:visibility="gone"
         android:layout_weight="1"
+        android:paddingHorizontal="20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/recycler_post_item"/>
 </androidx.appcompat.widget.LinearLayoutCompat>

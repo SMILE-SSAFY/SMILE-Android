@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class PostDomainDto (
     val isMe: Boolean = false,
     val isHeart: Boolean = false,
+    val profileImg: String = "",
     val hearts: Int = 0,
     val detailAddress: String = "",
     val createdAt: String = "",

@@ -3,6 +3,7 @@ package com.ssafy.smile.presentation.viewmodel.portfolio
 
 import androidx.lifecycle.viewModelScope
 import com.ssafy.smile.Application
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.Constants.REQUEST_KEY_IMAGE_LIST
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData

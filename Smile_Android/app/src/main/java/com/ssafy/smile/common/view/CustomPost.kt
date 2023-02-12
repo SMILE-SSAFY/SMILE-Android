@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.domain.model.CustomPostDomainDto
 
 class CustomPost: ConstraintLayout {
@@ -66,7 +67,7 @@ class CustomPost: ConstraintLayout {
 
     fun setAttrs(data: CustomPostDomainDto) {
         Glide.with(context)
-            .load(data.img)
+            .load(Constants.IMAGE_BASE_URL+data.img)
             .into(ivImage)
         tvCategory.text = data.category
         tvName.text = data.name

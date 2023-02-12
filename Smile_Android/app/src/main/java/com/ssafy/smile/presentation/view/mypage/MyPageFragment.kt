@@ -108,7 +108,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     is NetworkUtils.NetworkResponse.Loading -> { showLoadingDialog(requireContext()) }
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
-                        logout()
+                        removeLocalInfo()
+                        Intent(context, MainActivity::class.java).apply {
+                            requireActivity().finish()
+                            startActivity(this)
+                        }
+                        requireActivity().finish()
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
@@ -179,6 +184,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
     private fun logout() {
         viewModel.logout(LogoutRequestDto(SharedPreferencesUtil(requireContext()).getFCMToken()!!))
+        removeLocalInfo()
+    }
+    private fun removeLocalInfo(){
         try {
             removeUserInfo()
         } catch (e: IOException) {

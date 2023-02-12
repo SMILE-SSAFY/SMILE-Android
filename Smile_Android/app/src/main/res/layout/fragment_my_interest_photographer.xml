@@ -20,6 +20,7 @@
         android:layout_height="0dp"
         android:visibility="gone"
         android:layout_weight="1"
+        android:paddingHorizontal="20dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/recycler_photographer_item"/>
 </LinearLayout>

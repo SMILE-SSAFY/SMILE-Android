@@ -26,10 +26,10 @@ data class PhotographerResponseDto(
 
 data class PhotographerByAddressResponseDto(
     val photoUrl: String = "",
-    val photographerList: ArrayList<PhotographerListByAddress> = arrayListOf()
+    val photographer: ArrayList<PhotographerListByAddress> = arrayListOf()
 ){
     fun toCustomPhotographerDomainDto(idx: Int): CustomPhotographerDomainDto {
-        val photographerInfo = photographerList[idx]
+        val photographerInfo = photographer[idx]
 
         val categoryNames = arrayListOf<String>()
         val categoryPrices = arrayListOf<Int>()
