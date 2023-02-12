@@ -37,7 +37,10 @@ import org.springframework.web.client.RestTemplate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -69,6 +72,25 @@ public class UserService {
     public static User getLogInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
+    }
+
+    /**
+     * 유저 이미지 프로필 리턴
+     * 작가일 경우 이미지 리턴
+     * 고객일 경우 null 리턴
+     *
+     * @return
+     */
+    public Map<String, Object> getProfileImg() {
+        User user = getLogInUser();
+        String profileImg = null;
+        Optional<Photographer> photographer = photographerRepository.findById(user.getId());
+        if (photographer.isPresent()) {
+            profileImg = photographer.get().getProfileImg();
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("profileImg", profileImg);
+        return map;
     }
 
 
@@ -201,7 +223,6 @@ public class UserService {
     public TokenRoleDto kakaoLogin(String accessToken, String fcmToken) {
         log.info("accessToken : {}", accessToken);
         ResponseEntity<String> profileResponse = getKakaoProfileResponse(accessToken);
-        log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
 
         KakaoProfileDto kakaoProfileDto = setKakaoProfile(profileResponse);
         log.info("카카오 아이디(번호) : {}", kakaoProfileDto.getId());
@@ -268,7 +289,6 @@ public class UserService {
     /**
      * token에서 유저 정보 조회 후 회원 탈퇴
      *
-     * @param request
      */
     @Transactional
     public void removeUser() {
