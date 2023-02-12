@@ -7,6 +7,7 @@ import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.model.MyPageResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerHeartDto
+import com.ssafy.smile.data.remote.model.PhotographerProfile
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,10 @@ class HomeViewModel: BaseViewModel() {
     val photographerHeartResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerHeartDto>>
         get() = heartRepository.photographerHeartResponseLiveData
 
+    // 작가 프로필 사진 관리하는 LiveData
+    val getPhotographerProfileResponse: SingleLiveData<NetworkUtils.NetworkResponse<PhotographerProfile>>
+        get() = photographerRepository.getPhotographerProfileResponseLiveData
+
     private val _getCurrentAddressResponse: SingleLiveData<AddressDomainDto> = SingleLiveData(null)
     val getCurrentAddressResponse = _getCurrentAddressResponse
 
@@ -37,5 +42,9 @@ class HomeViewModel: BaseViewModel() {
 
     fun getCurrentAddress() = viewModelScope.launch(Dispatchers.IO) {
         _getCurrentAddressResponse.postValue(addressRepository.getSelectedAddress())
+    }
+
+    fun getPhotographerProfile() = viewModelScope.launch {
+        photographerRepository.getPhotographerProfileImg()
     }
 }
