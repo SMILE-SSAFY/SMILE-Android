@@ -102,6 +102,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     is NetworkUtils.NetworkResponse.Success -> {
                         dismissLoadingDialog()
                         changeRole(requireContext(), Types.Role.USER)
+                        findNavController().currentBackStackEntry?.savedStateHandle?.set("Role", Types.Role.USER.getValue())
                     }
                     is NetworkUtils.NetworkResponse.Failure -> {
                         dismissLoadingDialog()
