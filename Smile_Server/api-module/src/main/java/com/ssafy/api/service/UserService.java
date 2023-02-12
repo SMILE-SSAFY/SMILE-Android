@@ -38,6 +38,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -69,6 +70,16 @@ public class UserService {
     public static User getLogInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
+    }
+
+    public String getProfileImg() {
+        User user = getLogInUser();
+        String profileImg = null;
+        Optional<Photographer> photographer = photographerRepository.findById(user.getId());
+        if (photographer.isPresent()) {
+            profileImg = photographer.get().getProfileImg();
+        }
+        return profileImg;
     }
 
 
@@ -268,7 +279,6 @@ public class UserService {
     /**
      * token에서 유저 정보 조회 후 회원 탈퇴
      *
-     * @param request
      */
     @Transactional
     public void removeUser() {
