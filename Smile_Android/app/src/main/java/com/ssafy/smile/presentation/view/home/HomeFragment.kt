@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -14,10 +16,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ssafy.smile.Application
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.AddressUtils
-import com.ssafy.smile.common.util.Constants
-import com.ssafy.smile.common.util.NetworkUtils
-import com.ssafy.smile.common.util.SharedPreferencesUtil
+import com.ssafy.smile.common.util.*
 import com.ssafy.smile.databinding.FragmentHomeBinding
 import com.ssafy.smile.domain.model.AddressDomainDto
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
@@ -33,10 +32,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var homeRecyclerAdapter: HomeRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
+    private var recyclerViewState: Parcelable? = null
     private var isPhotographer = true
     private var curAddress = ""
     private var userId = -1L
-    private var filter = ""
+    private var filter = "heart"
 
     override fun onResume() {
         super.onResume()
@@ -48,6 +48,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<AddressDomainDto>("curAddress")?.observe(viewLifecycleOwner){
             homeViewModel.getCurrentAddress()
+        }
+
+        if (recyclerViewState != null) {
+            CommonUtils.setSavedRecyclerViewState(recyclerViewState, binding.rvHome)
         }
     }
 
@@ -94,13 +98,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
                     setProfile(it.data.photoUrl)
-                    if (it.data.photographerList.size == 0) {
+                    if (it.data.photographer.size == 0) {
                         recyclerData.clear()
                         homeRecyclerAdapter.notifyDataSetChanged()
                         setIsEmptyView(View.VISIBLE, View.GONE, "해당 주소에 작가님이 존재하지 않습니다")
                     } else {
                         recyclerData.clear()
-                        for (i in 0 until it.data.photographerList.size) {
+                        for (i in 0 until it.data.photographer.size) {
                             recyclerData.add(it.data.toCustomPhotographerDomainDto(i))
                         }
                         homeRecyclerAdapter.notifyDataSetChanged()
@@ -290,6 +294,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
             })
             setItemClickListener(object: HomeRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
+                    recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvHome)
                     val action = MainFragmentDirections.actionMainFragmentToPortfolioGraph(recyclerData[position].photographerId, -1L)
                     findNavController().navigate(action)
                 }

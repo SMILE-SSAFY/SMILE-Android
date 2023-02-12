@@ -25,20 +25,28 @@
         <action
             android:id="@+id/action_global_loginFragment"
             app:destination="@id/logInFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_mainFragment"
             app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"
             app:popUpTo="@id/logInFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_signUpGraph"
-            app:destination="@id/signUpGraph" />
+            app:destination="@id/signUpGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -50,24 +58,50 @@
             app:argType="com.ssafy.smile.data.remote.model.PhotographerResponseDto"
             app:nullable="true"
             android:defaultValue="@null" />
+        <!-- TODO : animation 추가 : 주소 검색 클릭했을 때 뜨는 화면 -->
         <action
-            android:id="@+id/action_mainFragment_to_findAddressFragment"
-            app:destination="@id/findAddressFragment" />
+            android:id="@+id/action_mainFragment_to_addressGraph"
+            app:destination="@id/addressGraph" >
+            <argument
+                android:name="isSelectionMode"
+                app:argType="boolean"
+                android:defaultValue="true" />
+        </action>
         <action
             android:id="@+id/action_mainFragment_to_searchResultFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_mainFragment_to_customerReservationListFragment"
-            app:destination="@id/customerReservationListFragment" />
+            app:destination="@id/customerReservationListFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_mainFragment_to_myInterestFragment"
-            app:destination="@id/myInterestFragment" />
+            app:destination="@id/myInterestFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_mainFragment_to_photographerReservationList"
-            app:destination="@id/photographerReservationList" />
+            app:destination="@id/photographerReservationList"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_mainFragment_to_portfolioGraph"
-            app:destination="@id/portfolioGraph">
+            app:destination="@id/portfolioGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerId"
                 app:argType="long" />
@@ -77,21 +111,18 @@
         </action>
         <action
             android:id="@+id/action_mainFragment_to_registerPortFolioGraph"
-            app:destination="@id/registerPortFolioGraph" >
+            app:destination="@id/registerPortFolioGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerResponseDto"
                 app:argType="com.ssafy.smile.data.remote.model.PhotographerResponseDto"
                 app:nullable="true"
                 android:defaultValue="@null" />
         </action>
-        <action
-            android:id="@+id/action_mainFragment_to_addressGraph"
-            app:destination="@id/addressGraph" >
-            <argument
-                android:name="isSelectionMode"
-                app:argType="boolean"
-                android:defaultValue="true" />      <!-- TODO : Animation 추가 -->
-        </action>
+        <!--TODO : animation 추가 : 맵 마커 클릭했을 때 뜨는 화면-->
         <action
             android:id="@+id/action_mainFragment_to_mapListFragment"
             app:destination="@id/mapListFragment">
@@ -100,6 +131,7 @@
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
+        <!--TODO : animation 추가 : 추천 결과로 넘어가는 화면-->
         <action
             android:id="@+id/action_mainFragment_to_recommendResultFragment"
             app:destination="@id/recommendResultFragment">
@@ -108,6 +140,7 @@
                 app:argType="string" />
         </action>
     </fragment>
+    <!-- TODO : 얘 필요한건가? 지워보기 -->
     <fragment
         android:id="@+id/findAddressFragment"
         android:name="com.ssafy.smile.presentation.view.home.AddressSearchFragment"
@@ -115,7 +148,11 @@
         tools:layout="@layout/fragment_address_search" >
         <action
             android:id="@+id/action_findAddressFragment_to_setAddressFragment"
-            app:destination="@id/setAddressFragment" />
+            app:destination="@id/setAddressFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -124,7 +161,11 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_portfolioGraph"
-            app:destination="@id/portfolioGraph">
+            app:destination="@id/portfolioGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerId"
                 app:argType="long"
@@ -132,7 +173,11 @@
         </action>
         <action
             android:id="@+id/action_searchFragment_to_postDetailFragment"
-            app:destination="@id/postDetailFragment">
+            app:destination="@id/postDetailFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="postId"
                 app:argType="long"
@@ -141,7 +186,11 @@
         <action
             android:id="@+id/action_searchFragment_pop"
             app:popUpTo="@id/searchFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
     </fragment>
     <fragment
         android:id="@+id/customerReservationListFragment"
@@ -151,10 +200,18 @@
         <action
             android:id="@+id/action_customerReservationListFragment_pop"
             app:popUpTo="@id/customerReservationListFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_customerReservationListFragment_to_reviewDetailFragment"
-            app:destination="@id/reviewDetailFragment">
+            app:destination="@id/reviewDetailFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerName"
                 app:argType="string"
@@ -178,10 +235,18 @@
         <action
             android:id="@+id/action_myInterestFragment_pop"
             app:popUpTo="@id/myInterestFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_myInterestFragment_to_portfolioGraph"
-            app:destination="@id/portfolioGraph" >
+            app:destination="@id/portfolioGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerId"
                 app:argType="long" />
@@ -210,7 +275,11 @@
             tools:layout="@layout/fragment_sign_up1" >
             <action
                 android:id="@+id/action_signUp1Fragment_to_signUp2Fragment"
-                app:destination="@id/signUp2Fragment">
+                app:destination="@id/signUp2Fragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
                 <argument
                     android:name="id"
                     app:argType="string" />
@@ -221,7 +290,11 @@
             <action
                 android:id="@+id/action_signUp1Fragment_pop"
                 app:popUpTo="@id/signUp1Fragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
         <fragment
             android:id="@+id/signUp2Fragment"
@@ -236,11 +309,19 @@
                 app:argType="string" />
             <action
                 android:id="@+id/action_signUp2Fragment_to_mainFragment"
-                app:destination="@id/mainFragment"/>
+                app:destination="@id/mainFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
             <action
                 android:id="@+id/action_signUp2Fragment_pop"
                 app:popUpTo="@id/signUp2Fragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
     </navigation>
     <navigation
@@ -261,7 +342,11 @@
                 android:defaultValue="-1L"/>
             <action
                 android:id="@+id/action_portfolioFragment_to_reservationFragment"
-                app:destination="@id/reservationFragment">
+                app:destination="@id/reservationFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
                 <argument
                     android:name="photographerId"
                     app:argType="long"
@@ -269,10 +354,19 @@
             </action>
             <action
                 android:id="@+id/action_portfolioFragment_to_writePostFragment"
-                app:destination="@id/writePostFragment" />
+                app:destination="@id/writePostFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
+            <!-- TODO : 포트폴리오에서 게시물 상세 갈 때 인스타그램처럼 갈 수 있나 찾아보기 -->
             <action
                 android:id="@+id/action_portfolioFragment_to_postDetailFragment"
-                app:destination="@id/postDetailFragment">
+                app:destination="@id/postDetailFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
                 <argument
                     android:name="postId"
                     app:argType="long"
@@ -281,12 +375,20 @@
             <action
                 android:id="@+id/action_portfolioFragment_pop"
                 app:popUpTo="@id/portfolioFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
             <action
                 android:id="@+id/action_portfolioFragment_to_postDetailFragment_withPop"
                 app:destination="@id/postDetailFragment"
                 app:popUpTo="@id/portfolioFragment"
-                app:popUpToInclusive="true" >
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
                 <argument
                     android:name="postId"
                     app:argType="long"
@@ -304,7 +406,12 @@
                 android:defaultValue="-1L"/>
             <action
                 android:id="@+id/action_postDetailFragment_to_portfolioGraph"
-                app:destination="@id/portfolioGraph" />
+                app:destination="@id/portfolioGraph"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
+            <!-- TODO : 게시물 상세에서 편집 바텀 시트 애니메이션 적용하기 -->
             <action
                 android:id="@+id/action_postDetailFragment_to_postEditBottomSheetDialogFragment"
                 app:destination="@id/postEditBottomSheetDialogFragment">
@@ -321,7 +428,11 @@
             <action
                 android:id="@+id/action_postDetailFragment_pop"
                 app:popUpTo="@id/postDetailFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
         <dialog
             android:id="@+id/postEditBottomSheetDialogFragment"
@@ -337,12 +448,17 @@
                 app:argType="com.ssafy.smile.domain.model.PostDomainDto"
                 app:nullable="true"
                 android:defaultValue="@null"/>
+            <!-- TODO : 게시물 상세 바텀 시트 pop 애니메이션 -->
             <action
                 android:id="@+id/action_postEditBottomSheetDialogFragment_pop"
                 app:popUpTo="@id/portfolioFragment" />
             <action
                 android:id="@+id/action_postEditBottomSheetDialogFragment_to_writePostFragment"
-                app:destination="@id/writePostFragment" >
+                app:destination="@id/writePostFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
                 <argument
                     android:name="postId"
                     app:argType="long"
@@ -364,7 +480,11 @@
                 app:argType="long"/>
             <action
                 android:id="@+id/action_reservationFragment_to_reservationResultFragment"
-                app:destination="@id/reservationResultFragment">
+                app:destination="@id/reservationResultFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
                 <argument
                     android:name="reservationResult"
                     app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
@@ -372,11 +492,11 @@
             <action
                 android:id="@+id/action_reservationFragment_pop"
                 app:popUpTo="@id/reservationFragment"
-                app:enterAnim="@anim/slide_left_enter"
-                app:exitAnim="@anim/slide_left_exit"
-                app:popEnterAnim="@anim/slide_right_enter"
-                app:popExitAnim="@anim/slide_right_exit"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
         <fragment
             android:id="@+id/reservationResultFragment"
@@ -388,11 +508,19 @@
                 app:argType="com.ssafy.smile.domain.model.CustomReservationDomainDto" />
             <action
                 android:id="@+id/action_reservationResultFragment_to_mainFragment"
-                app:destination="@id/mainFragment" />
+                app:destination="@id/mainFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
             <action
                 android:id="@+id/action_reservationResultFragment_pop"
                 app:popUpTo="@id/reservationResultFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
         <fragment
             android:id="@+id/writePostFragment"
@@ -408,13 +536,19 @@
                 app:argType="com.ssafy.smile.domain.model.PostDomainDto"
                 app:nullable="true"
                 android:defaultValue="@null"/>
+            <!-- TODO : 게시물 상세에서 주소 찾는거 애니메이션 -->
             <action
                 android:id="@+id/action_writePostFragment_to_findAddressFragment"
                 app:destination="@id/findAddressFragment" />
             <action
                 android:id="@+id/action_writePostFragment_pop"
                 app:popUpTo="@id/writePostFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
+            <!-- TODO : 게시물 상세에서 주소 찾는거 애니메이션 -->
             <action
                 android:id="@+id/action_writePostFragment_to_addressGraph"
                 app:destination="@id/addressGraph">
@@ -440,12 +574,21 @@
             tools:layout="@layout/fragment_write_photographer_portfolio" >
             <action
                 android:id="@+id/action_writePortfolioFragment_to_photographerProfileFragment"
-                app:destination="@id/photographerProfileFragment" />
+                app:destination="@id/photographerProfileFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
             <action
                 android:id="@+id/action_writePortfolioFragment_pop"
                 app:popUpTo="@id/writePortfolioFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
+        <!-- TODO : 작가 프로필 사진 다이얼로그 애니메이션 -->
         <dialog
             android:id="@+id/photographerProfileFragment"
             android:name="com.ssafy.smile.presentation.view.mypage.PhotographerProfileFragment"
@@ -454,10 +597,14 @@
             <action
                 android:id="@+id/action_photographerProfileFragment_pop"
                 app:popUpTo="@id/photographerProfileFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"/>
             <action
                 android:id="@+id/action_photographerProfileFragment_to_photographerProfileCropFragment"
-                app:destination="@id/photographerProfileCropFragment" />
+                app:destination="@id/photographerProfileCropFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </dialog>
         <fragment
             android:id="@+id/photographerProfileCropFragment"
@@ -466,16 +613,25 @@
             tools:layout="@layout/fragment_image_crop">
             <action
                 android:id="@+id/action_photographerProfileCropFragment_to_writePortfolioFragment"
-                app:popUpTo="@id/writePortfolioFragment" />
+                app:popUpTo="@id/writePortfolioFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
             <action
                 android:id="@+id/action_photographerProfileCropFragment_pop"
                 app:popUpTo="@id/photographerProfileCropFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
     </navigation>
     <navigation
         android:id="@+id/addressGraph"
         app:startDestination="@id/addressFragment">
+        <!-- TODO : 주소 관련 dialog 애니메이션 -->
         <dialog
             android:id="@+id/addressFragment"
             android:name="com.ssafy.smile.presentation.view.home.AddressFragment"
@@ -566,9 +722,13 @@
         <action
             android:id="@+id/action_reviewDetailFragment_pop"
             app:popUpTo="@id/reviewDetailFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
     </fragment>
-    <dialog
+    <fragment
         android:id="@+id/mapListFragment"
         android:name="com.ssafy.smile.presentation.view.map.MapListFragment"
         android:label="fragment_map_list"
@@ -579,13 +739,17 @@
             android:defaultValue="-1L" />
         <action
             android:id="@+id/action_mapListFragment_to_portfolioGraph"
-            app:destination="@id/portfolioGraph">
+            app:destination="@id/portfolioGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="postId"
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
-    </dialog>
+    </fragment>
     <fragment
         android:id="@+id/recommendResultFragment"
         android:name="com.ssafy.smile.presentation.view.home.RecommendResultFragment"
@@ -597,13 +761,25 @@
         <action
             android:id="@+id/action_recommendResultFragment_pop"
             app:popUpTo="@id/recommendResultFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_recommendResultFragment_to_mainFragment"
-            app:popUpTo="@id/mainFragment" />
+            app:popUpTo="@id/mainFragment"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit"/>
         <action
             android:id="@+id/action_recommendResultFragment_to_portfolioGraph"
-            app:destination="@id/portfolioGraph">
+            app:destination="@id/portfolioGraph"
+            app:enterAnim="@anim/slide_right_enter"
+            app:exitAnim="@anim/slide_right_exit"
+            app:popEnterAnim="@anim/slide_left_enter"
+            app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerId"
                 app:argType="long"

@@ -2,7 +2,9 @@ package com.ssafy.smile.common.util
 
 import android.content.Context
 import android.location.Geocoder
+import android.os.Parcelable
 import android.util.Log
+import androidx.recyclerview.widget.RecyclerView
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
 import java.text.ParseException
@@ -111,4 +113,11 @@ object CommonUtils {
         return "$category $option"
     }
 
+    fun saveRecyclerViewState(recyclerView: RecyclerView): Parcelable? {
+        return recyclerView.layoutManager!!.onSaveInstanceState()
+    }
+
+    fun setSavedRecyclerViewState(recyclerViewState: Parcelable?, recyclerView: RecyclerView) {
+        recyclerView.layoutManager!!.onRestoreInstanceState(recyclerViewState)
+    }
 }

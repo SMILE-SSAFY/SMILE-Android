@@ -1,5 +1,6 @@
 package com.ssafy.smile.data.remote.repository
 
+import android.util.Log
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.common.view.sources.SingleLiveData
 import com.ssafy.smile.data.remote.datasource.PortfolioRemoteDataSource

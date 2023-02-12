@@ -1,10 +1,14 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentResultPhotographerBinding
 import com.ssafy.smile.domain.model.CustomPhotographerDomainDto
@@ -18,11 +22,16 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
     private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var resultPhotographerRecyclerAdapter: ResultPhotographerRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
+    private var recyclerViewState: Parcelable? = null
 
     override fun onResume() {
         super.onResume()
         setObserver()
         initRecycler()
+
+        if (recyclerViewState != null) {
+            CommonUtils.setSavedRecyclerViewState(recyclerViewState, binding.rvPhotographerResult)
+        }
     }
 
     override fun initView() {
@@ -82,6 +91,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     searchViewModel.searchPhotographer(searchViewModel.searchCategory)
+                    resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
@@ -102,6 +112,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             })
             setItemClickListener(object : ResultPhotographerRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
+                    recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvPhotographerResult)
                     val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(recyclerData[position].photographerId)
                     findNavController().navigate(action)
                 }

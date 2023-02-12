@@ -9,6 +9,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.Post
 import com.ssafy.smile.databinding.FragmentPostDetailBinding
@@ -91,10 +92,9 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
             if (post.isMe) {
                 ivPostMore.visibility = View.VISIBLE
             }
-            //TODO: 게시물 상세에 작가 프로필 이미지 들어가게
-//            Glide.with(requireContext())
-//                .load(post.)
-//                .into(ivPhotographerProfile)
+            Glide.with(requireContext())
+                .load(Constants.IMAGE_BASE_URL + post.profileImg)
+                .into(ivPhotographerProfile)
             tvPhotographerName.text = post.photographerName
             tvPlace.text = post.detailAddress
             imageData = post.photoUrl

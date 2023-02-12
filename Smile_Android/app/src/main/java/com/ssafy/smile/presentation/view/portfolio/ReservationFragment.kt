@@ -190,6 +190,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                 tvOption.isEnabled = true
 
                 optionData.clear()
+                tvOption.text = null
                 priceData.clear()
                 categories[pos].details.forEach { categoryDetail ->
                     optionData.add(categoryDetail.options)
@@ -314,6 +315,18 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
                         }
                         else -> {}
                     }
+                } else {
+                    when(type) {
+                        "detailPlace" -> {
+                            selectData.detailAddress = editText.text.toString()
+                            isPlaceChecked = false
+                        }
+                        "email" -> {
+                            selectData.email = editText.text.toString()
+                            isEmailChecked = false
+                        }
+                        else -> {}
+                    }
                 }
             }
         })
@@ -335,7 +348,7 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
             orderId = "SMILE_ORDER_ID"
             price = itemInfo.price
             pg = "나이스페이"
-            methods = mutableListOf("카드", "카카오페이")
+            methods = mutableListOf("카드", "네이버페이")
             setExtra(extra).items = items
         }
 
@@ -346,30 +359,21 @@ class ReservationFragment : BaseFragment<FragmentReservationBinding>(FragmentRes
         Bootpay.init(requireFragmentManager(), requireContext())
             .setPayload(payload)
             .setEventListener(object : BootpayEventListener {
-                override fun onCancel(data: String) {
-                    Log.d(TAG, "bootpay cancel: $data")
-                }
+                override fun onCancel(data: String) {}
 
-                override fun onError(data: String) {
-                    Log.d(TAG, "bootpay error: $data")
-                }
+                override fun onError(data: String) {}
 
                 override fun onClose() {
-                    Log.d(TAG, "bootpay close")
                     Bootpay.removePaymentWindow()
                 }
 
-                override fun onIssued(data: String) {
-                    Log.d(TAG, "bootpay issued: $data")
-                }
+                override fun onIssued(data: String) {}
 
                 override fun onConfirm(data: String): Boolean {
-                    Log.d(TAG, "bootpay confirm: $data")
                     return true
                 }
 
                 override fun onDone(data: String) {
-                    Log.d("bootpay done", data)
                     getReceiptId(data)
                 }
             }).requestPayment()
