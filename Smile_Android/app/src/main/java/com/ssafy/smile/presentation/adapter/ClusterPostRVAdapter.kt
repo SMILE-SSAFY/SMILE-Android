@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.Glide
 import com.ssafy.smile.common.util.CommonUtils
+import com.ssafy.smile.common.util.Constants
 import com.ssafy.smile.databinding.ItemRvClusterPostBinding
 import com.ssafy.smile.databinding.ItemRvClusterProgressBinding
 import com.ssafy.smile.domain.model.PostSearchDomainDto
@@ -52,8 +54,11 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
 
 
     inner class Holder(private val binding: ItemRvClusterPostBinding) : ViewHolder(binding.root){
-        fun bindInfo(position: Int, postSearchDto: PostSearchDomainDto){
+        fun bindInfo(view: View, position: Int, postSearchDto: PostSearchDomainDto){
             binding.apply {
+                Glide.with(view.context)
+                    .load(Constants.IMAGE_BASE_URL + postSearchDto.photoUrl)
+                    .into(ivImage)
                 tvCategory.text = postSearchDto.category
                 tvCreatedAt.text = CommonUtils.stringToDate(postSearchDto.createdAt)?.let { CommonUtils.getDiffTime(it) }
                 tvDistance.text = CommonUtils.getDiffDistance(postSearchDto.distance)
@@ -108,7 +113,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dto = itemList[position]
         if(holder is Holder){
-            dto.postSearchDto?.let { holder.bindInfo(position, it) }
+            dto.postSearchDto?.let { holder.bindInfo(holder.itemView, position, it) }
             holder.itemView.tag = dto
         }
     }

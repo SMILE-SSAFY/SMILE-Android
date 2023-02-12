@@ -10,6 +10,7 @@ data class PostDetailResponseDto (
     val photographerName: String = "",
     val isMe: Boolean = false,
     val isHeart: Boolean = false,
+    val profileImg: String = "",
     val hearts: Int = 0,
     val detailAddress: String = "",
     val createdAt: String = "",
@@ -20,6 +21,7 @@ data class PostDetailResponseDto (
         return PostDomainDto(
             isMe,
             isHeart,
+            profileImg,
             hearts,
             CommonUtils.deleteQuote(detailAddress),
             createdAt,

@@ -134,20 +134,12 @@ class SignUp1Fragment : BaseFragment<FragmentSignUp1Binding>(FragmentSignUp1Bind
                 if (type == "id") {
                     val email = binding.etId.text.toString()
                     if (!checkEmailRule(email)) {
-                        binding.tilEmail.isErrorEnabled = true
-                        binding.tilEmail.error = "올바른 이메일 주소를 입력해주세요"
-                    } else {
-                        binding.tilEmail.isErrorEnabled = false
-                        binding.tilEmail.error = null
+                        binding.etId.error = "올바른 이메일 주소를 입력해주세요"
                     }
                 } else if (type == "pwd") {
                     val password = binding.etPassword.text.toString()
                     if (!checkPasswordRule(password)) {
-                        binding.tilEmail.isErrorEnabled = true
-                        binding.tilPassword.error = "비밀번호 규칙에 맞게 입력해주세요"
-                    } else {
-                        binding.tilEmail.isErrorEnabled = false
-                        binding.tilPassword.error = null
+                        binding.etPassword.error = "비밀번호 규칙에 맞게 입력해주세요"
                     }
                 }
             }
