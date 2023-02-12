@@ -63,7 +63,7 @@ public class UserController {
      * @return 프로필 이미지
      */
     @GetMapping("/img")
-    public ResponseEntity<Map<String, String>> getProfileImg() {
+    public ResponseEntity<Map<String, Object>> getProfileImg() {
         return ResponseEntity.ok().body(userService.getProfileImg());
     }
 

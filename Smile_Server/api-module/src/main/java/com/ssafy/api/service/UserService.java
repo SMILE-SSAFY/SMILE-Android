@@ -76,17 +76,19 @@ public class UserService {
 
     /**
      * 유저 이미지 프로필 리턴
-     * 
+     * 작가일 경우 이미지 리턴
+     * 고객일 경우 null 리턴
+     *
      * @return
      */
-    public Map<String, String> getProfileImg() {
+    public Map<String, Object> getProfileImg() {
         User user = getLogInUser();
         String profileImg = null;
         Optional<Photographer> photographer = photographerRepository.findById(user.getId());
         if (photographer.isPresent()) {
             profileImg = photographer.get().getProfileImg();
         }
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("profileImg", profileImg);
         return map;
     }
