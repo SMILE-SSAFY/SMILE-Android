@@ -88,8 +88,10 @@ class SharedPreferencesUtil (context: Context) {
     }
 
     fun changeRole(role: Types.Role){
-        removeRole()
-        putRole(role)
+        preferences.edit {
+            putString(ROLE, role.getValue())
+            apply()
+        }
     }
 
     fun putUserId(userId: Long) {
