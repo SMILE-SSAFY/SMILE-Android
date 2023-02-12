@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -56,6 +54,17 @@ public class UserController {
         this.userService = userService;
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, messageUrl);
+    }
+
+    /**
+     * 유저의 프로필 이미지 리턴
+     * 없으면 null
+     *
+     * @return 프로필 이미지
+     */
+    @GetMapping("/img")
+    public ResponseEntity<Map<String, Object>> getProfileImg() {
+        return ResponseEntity.ok().body(userService.getProfileImg());
     }
 
     /**
@@ -138,7 +147,6 @@ public class UserController {
     /**
      * 회원 탈퇴
      * 
-     * @param request
      * @return OK
      */
     @DeleteMapping
