@@ -37,7 +37,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -72,14 +74,21 @@ public class UserService {
         return (User) authentication.getPrincipal();
     }
 
-    public String getProfileImg() {
+    /**
+     * 유저 이미지 프로필 리턴
+     * 
+     * @return
+     */
+    public Map<String, String> getProfileImg() {
         User user = getLogInUser();
         String profileImg = null;
         Optional<Photographer> photographer = photographerRepository.findById(user.getId());
         if (photographer.isPresent()) {
             profileImg = photographer.get().getProfileImg();
         }
-        return profileImg;
+        Map<String, String> map = new HashMap<>();
+        map.put("profileImg", profileImg);
+        return map;
     }
 
 
@@ -212,7 +221,6 @@ public class UserService {
     public TokenRoleDto kakaoLogin(String accessToken, String fcmToken) {
         log.info("accessToken : {}", accessToken);
         ResponseEntity<String> profileResponse = getKakaoProfileResponse(accessToken);
-        log.info("카카오 정보 profileResponse : {}", profileResponse.getBody().toString());
 
         KakaoProfileDto kakaoProfileDto = setKakaoProfile(profileResponse);
         log.info("카카오 아이디(번호) : {}", kakaoProfileDto.getId());
