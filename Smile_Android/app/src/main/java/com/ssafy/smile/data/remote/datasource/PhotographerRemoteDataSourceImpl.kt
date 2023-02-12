@@ -1,10 +1,7 @@
 package com.ssafy.smile.data.remote.datasource
 
 
-import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
-import com.ssafy.smile.data.remote.model.PhotographerDto
-import com.ssafy.smile.data.remote.model.PhotographerModifyDto
-import com.ssafy.smile.data.remote.model.PhotographerResponseDto
+import com.ssafy.smile.data.remote.model.*
 import com.ssafy.smile.data.remote.service.PhotographerApiService
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -29,5 +26,9 @@ class PhotographerRemoteDataSourceImpl(private val photographerApiService: Photo
 
     override suspend fun getPhotographerInfoByAddress(address:String, criteria: String): Response<PhotographerByAddressResponseDto> {
         return photographerApiService.getPhotographerInfoByAddress(address, criteria)
+    }
+
+    override suspend fun getPhotographerProfileImg(): Response<PhotographerProfile> {
+        return photographerApiService.getPhotographerProfileImg()
     }
 }
