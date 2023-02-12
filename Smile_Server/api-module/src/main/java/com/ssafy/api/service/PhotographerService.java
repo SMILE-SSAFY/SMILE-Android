@@ -30,6 +30,7 @@ import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerNCategoriesRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
+import com.ssafy.core.repository.places.PlacesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -65,6 +66,7 @@ public class PhotographerService {
     private final CategoriesRepository categoriesRepository;
     private final ArticleService articleService;
     private final ArticleRepository articleRepository;
+    private final PlacesRepository placesRepository;
 
     /**
      * 작가 등록
@@ -279,19 +281,44 @@ public class PhotographerService {
      * @return List<PhotographerForListDto>
      */
     public PhotographerNearDto getPhotographerListByAddresss(String address, String criteria) {
-        Long userId = UserService.getLogInUser().getId();
+        User user = UserService.getLogInUser();
         String[] addresssList = address.split(" ");
-        List<PhotographerQdslDto> photographerList = photographerNPlacesRepository
-                .findPhotographerByAddress(userId, addresssList[0], addresssList[1], criteria);
-        log.info("주변 작가 조회");
 
+        String placeId = placesRepository.findByAddress(addresssList[0], addresssList[1]);
+        log.info("입력 받은 주소의 placeId : {}", placeId);
+        List<Photographer> photographerList = photographerNPlacesRepository.findPhotographerByPlaceId(placeId);
+        log.info("해당 지역의 작가 조회 : {}", photographerList.size());
+
+        // 사진작가의 정보를 담은 dto 생성하여 list 대입
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (PhotographerQdslDto photographerQuerydsl : photographerList) {
-            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+        for (Photographer photographer : photographerList) {
+            PhotographerQdslDto dto = new PhotographerQdslDto();
+            dto.setPhotographer(photographer);      // 사진작가
+            dto.setHeart(photographerHeartRepository.countByPhotographer(photographer));    // 작가의 좋아요 수
+            ReviewQdslDto review = reviewRepository.findByPhotographerId(photographer.getId());
+            dto.setAvgScore(review.getAvgScore());      // 작가의 평점
+            dto.setReviewCount(review.getReviewCount());    // 작가의 리뷰 수
+            dto.setHasHeart(photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent()); // 유저의 좋아요 여부
+            photographerForList.add(new PhotographerForListDto().of(dto));
         }
 
+        switch (criteria) {
+            case "heart":
+                photographerForList.sort((a, b) -> Integer.compare(b.getHeart(), a.getHeart()));
+                break;
+            case "score":
+                photographerForList.sort((a, b) -> Double.compare(b.getAvgScore(), a.getAvgScore()));
+                break;
+            case "review":
+                photographerForList.sort((a, b) -> Integer.compare(b.getReviewCount(), a.getReviewCount()));
+                break;
+            default:
+                break;
+        }
+
+
         String photoUrl = null;
-        Optional<Photographer> photographer = photographerRepository.findById(userId);
+        Optional<Photographer> photographer = photographerRepository.findById(user.getId());
         if (photographer.isPresent()) {     // 조회자가 사진작가면 프로필 이미지 반환
             photoUrl = photographer.get().getProfileImg();
         }
