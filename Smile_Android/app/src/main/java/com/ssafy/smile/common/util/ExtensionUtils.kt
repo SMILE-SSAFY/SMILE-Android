@@ -32,5 +32,5 @@ fun Context.getString(drawableId : Int, msg:String) = String.format(this.getStri
 
 fun Int.makeComma():String{
     val comma = DecimalFormat("#,###")
-    return "${comma.format(this)}원"
+    return comma.format(this)
 }

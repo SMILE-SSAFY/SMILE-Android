@@ -101,9 +101,12 @@ class AddressMapFragment : BaseBottomSheetDialogFragment<FragmentAddressMapBindi
 
     override fun onMapReady(nMap: NaverMap) {
         with(nMap) {
+            minZoom = 6.0
+            maxZoom = 15.0
             uiSettings.isLocationButtonEnabled = false
             uiSettings.isZoomGesturesEnabled = true
             uiSettings.isZoomControlEnabled = false
+            uiSettings.isRotateGesturesEnabled = false
             locationTrackingMode = LocationTrackingMode.Follow
         }
         this.map = nMap

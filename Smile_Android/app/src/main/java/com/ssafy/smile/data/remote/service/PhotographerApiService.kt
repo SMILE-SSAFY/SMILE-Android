@@ -3,6 +3,7 @@ package com.ssafy.smile.data.remote.service
 import com.ssafy.smile.common.util.Constants.BASE_URL_PHOTOGRAPHER
 import com.ssafy.smile.data.remote.model.PhotographerByAddressResponseDto
 import com.ssafy.smile.data.remote.model.PhotographerDto
+import com.ssafy.smile.data.remote.model.PhotographerModifyDto
 import com.ssafy.smile.data.remote.model.PhotographerResponseDto
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -20,7 +21,7 @@ interface PhotographerApiService {
 
     @Multipart
     @PUT(BASE_URL_PHOTOGRAPHER)
-    suspend fun modifyPhotographerInfo(@Part("photographer") photographerDto: PhotographerDto,
+    suspend fun modifyPhotographerInfo(@Part("photographer") photographer: PhotographerModifyDto,
                                        @Part image : MultipartBody.Part) : Response<PhotographerResponseDto>
 
     @DELETE(BASE_URL_PHOTOGRAPHER)

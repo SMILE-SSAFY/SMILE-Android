@@ -20,6 +20,7 @@ class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, pr
     fun getListData() : ArrayList<PlaceDomainDto> = itemList
 
     fun setListData(dataList: ArrayList<PlaceDomainDto>){
+        itemList.clear()
         itemList.addAll(dataList)
         notifyDataSetChanged()
     }
@@ -28,12 +29,14 @@ class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, pr
         if (itemCount<=limit){
             itemList.add(PlaceDomainDto())
             notifyDataSetChanged()
+            viewModel.uploadPlacesData(getListData())
         }
     }
 
     fun deleteItem(index: Int){
         itemList.removeAt(index)
         notifyDataSetChanged()
+        viewModel.uploadPlacesData(getListData())
     }
 
     override fun getItemCount(): Int {
@@ -84,7 +87,7 @@ class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, pr
                         dto.isEmpty = false
                         dto.second = this.getString()
                         dto.secondId = position
-                        viewModel.uploadPlacesData(getListData())           // TODO : 딜레이 체크
+                        viewModel.uploadPlacesData(getListData())
                     }
                     setText(dto.second)
                     dto.first?.let {
