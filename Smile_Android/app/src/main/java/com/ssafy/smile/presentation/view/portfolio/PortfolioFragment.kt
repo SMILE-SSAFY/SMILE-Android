@@ -128,7 +128,6 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
 
     private fun photographerHeartResponseObserver() {
         binding.apply {
-            // TODO : like누른 후 reponse livedata 호출 안됨.
             portfolioViewModel.photographerHeartResponse.observe(viewLifecycleOwner) {
                 Log.d(TAG, "photographerHeartResponseObserver: observer 실행")
                 when(it) {

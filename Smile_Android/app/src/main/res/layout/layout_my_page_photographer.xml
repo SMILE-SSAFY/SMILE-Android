@@ -6,14 +6,13 @@
     android:id="@+id/ll_photographer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="5dp">
+    android:orientation="vertical">
     <TextView
         android:text="작가용"
         style="@style/TvT2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="5dp"
+        android:paddingVertical="12dp"
         android:paddingHorizontal="20dp"
         android:fontFamily="@font/ibm_plex_sans_medium"/>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:paddingVertical="8dp"
+            android:paddingVertical="10dp"
             android:paddingHorizontal="20dp"
             android:text="작가등록"
             android:textSize="14sp"

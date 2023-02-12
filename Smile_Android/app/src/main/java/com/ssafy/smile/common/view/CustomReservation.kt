@@ -140,6 +140,7 @@ class CustomReservation: ConstraintLayout {
         when(status) {
             "예약확정전" -> setButtons(arrayListOf(btnCancel, btnResFix))
             "예약확정" -> setButtons(arrayListOf(btnCancel))
+            "예약취소" -> setButtons(arrayListOf())
         }
     }
 

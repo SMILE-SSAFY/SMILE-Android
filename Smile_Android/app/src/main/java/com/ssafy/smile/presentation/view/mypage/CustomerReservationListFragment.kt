@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.mypage
 
+import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
@@ -7,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.data.remote.model.ReservationChangeRequestDto
 import com.ssafy.smile.databinding.FragmentCustomerReservationListBinding
@@ -22,10 +24,15 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
 
     private lateinit var customerReservationListRecyclerAdapter: CustomerReservationListRecyclerAdapter
     private val recyclerData = mutableListOf<CustomReservationDomainDto>()
+    private var recyclerViewState: Parcelable? = null
 
     override fun onResume() {
         super.onResume()
         customerReservationListViewModel.getCustomerReservationList()
+
+        if (recyclerViewState != null) {
+            CommonUtils.setSavedRecyclerViewState(recyclerViewState, binding.recycler)
+        }
     }
 
     override fun initView() {
@@ -129,6 +136,7 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
             })
             setReviewClickListener(object : CustomerReservationListRecyclerAdapter.OnReviewClickListener{
                 override fun onClick(view: View, position: Int) {
+                    recyclerViewState = CommonUtils.saveRecyclerViewState(binding.recycler)
                     val reservationId = recyclerData[position].reservationId
                     val photographerName = recyclerData[position].name
                     val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reservationId)
@@ -137,6 +145,7 @@ class CustomerReservationListFragment() : BaseFragment<FragmentCustomerReservati
             })
             setReviewCheckClickListener(object : CustomerReservationListRecyclerAdapter.OnReviewCheckClickListener{
                 override fun onClick(view: View, position: Int) {
+                    recyclerViewState = CommonUtils.saveRecyclerViewState(binding.recycler)
                     val photographerName = recyclerData[position].name
                     val reviewId = recyclerData[position].reviewId
                     val action = CustomerReservationListFragmentDirections.actionCustomerReservationListFragmentToReviewDetailFragment(photographerName, reviewId = reviewId)

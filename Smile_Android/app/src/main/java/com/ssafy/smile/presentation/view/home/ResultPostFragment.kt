@@ -1,11 +1,13 @@
 package com.ssafy.smile.presentation.view.home
 
+import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentResultPostBinding
 import com.ssafy.smile.domain.model.CustomPostDomainDto
@@ -19,11 +21,16 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
     private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var resultPostRecyclerAdapter: ResultPostRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPostDomainDto>()
+    private var recyclerViewState: Parcelable? = null
 
     override fun onResume() {
         super.onResume()
         setObserver()
         initRecycler()
+
+        if (recyclerViewState != null) {
+            CommonUtils.setSavedRecyclerViewState(recyclerViewState, binding.rvPostResult)
+        }
     }
 
     override fun initView() {
@@ -104,6 +111,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
             })
             setItemClickListener(object: ResultPostRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
+                    recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvPostResult)
                     val action = SearchFragmentDirections.actionSearchFragmentToPostDetailFragment(recyclerData[position].articleId)
                     findNavController().navigate(action)
                 }
