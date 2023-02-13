@@ -210,7 +210,7 @@ public class ArticleService {
             articleHeartRepository.deleteByUserAndArticle(user, article);
         }
 
-        return new ArticleHeartDto().of(articleId, isHeart, hearts);
+        return new ArticleHeartDto().of(articleId, !isHeart, hearts);
     }
 
     /**
