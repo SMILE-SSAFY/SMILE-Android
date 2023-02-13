@@ -312,6 +312,7 @@ public class ArticleService {
                 ArticleRedis articleRedis = ArticleRedis.builder()
                         .id(article.getId())
                         .clusterId(clusterId)
+                        .photographerId(article.getUser().getId())
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
                         .longitude(article.getLongitude())
