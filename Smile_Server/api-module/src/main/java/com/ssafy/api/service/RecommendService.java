@@ -153,6 +153,7 @@ public class RecommendService {
      */
     private RecommendResponseDto getPhotographerListByPhotographerId(Integer[] photographerIdList) {
 
+        log.info(Arrays.toString(photographerIdList));
         List<PhotographerForListDto> result = new ArrayList<>();
 
         for (Integer photographerId : photographerIdList){
