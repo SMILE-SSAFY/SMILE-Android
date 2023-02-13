@@ -21,6 +21,8 @@ public class ArticleRedis {
     @Indexed
     private Long clusterId;
 
+    private Long photographerId;
+
     private String photographerName;
 
     private Double latitude;
