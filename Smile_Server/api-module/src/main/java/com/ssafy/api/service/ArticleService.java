@@ -200,8 +200,6 @@ public class ArticleService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ARTICLE_NOT_FOUND));
         boolean isHeart = isHearted(user, article);
 
-        Long hearts = articleHeartRepository.countByArticle(article);
-
         // 좋아요가 눌려있지 않으면 저장
         if (!isHeart) {
             articleHeartRepository.save(new ArticleHeart(user, article));
@@ -209,6 +207,8 @@ public class ArticleService {
         } else {
             articleHeartRepository.deleteByUserAndArticle(user, article);
         }
+
+        Long hearts = articleHeartRepository.countByArticle(article);
 
         return new ArticleHeartDto().of(articleId, !isHeart, hearts);
     }
