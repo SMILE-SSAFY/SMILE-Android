@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.Constants
+import com.ssafy.smile.data.remote.model.PostHeartDto
 import com.ssafy.smile.databinding.ItemRvClusterPostBinding
 import com.ssafy.smile.databinding.ItemRvClusterProgressBinding
 import com.ssafy.smile.domain.model.PostSearchDomainDto
@@ -29,6 +30,15 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
     var isEnd : Boolean = false
     var page : Int = 0
 
+    fun changeDataHearts(heartDto : PostHeartDto){
+        val item = itemList.find{ it.postSearchDto?.id == heartDto.articleId }
+        val itemIndex = itemList.indexOf(item)
+        item?.postSearchDto?.let {
+            it.hearts = heartDto.hearts
+            it.isHeart = heartDto.isHeart
+        }
+        notifyItemChanged(itemIndex)
+    }
 
     fun setListData(type : Types.PostSearchType, isEnd : Boolean, dataList: ArrayList<PostSearchRVDomainDto>){
         this.isEnd = isEnd

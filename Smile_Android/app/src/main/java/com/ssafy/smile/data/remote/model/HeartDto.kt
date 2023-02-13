@@ -6,6 +6,7 @@ data class PhotographerHeartDto(
 )
 
 data class PostHeartDto(
-    val articleId: Long = 0,
-    val isHeart: Boolean = false
+    val articleId: Long = 0L,
+    val isHeart: Boolean = false,
+    val hearts : Int = 0
 )
