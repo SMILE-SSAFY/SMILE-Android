@@ -173,10 +173,10 @@ public class ArticleService {
             String fileName = s3UploaderService.upload(images);
 
             // 나머지 수정
-            article.setCategory(articlePostDto.getCategory());
+            article.setCategory(deleteQuote(articlePostDto.getCategory()));
             article.setLatitude(articlePostDto.getLatitude());
             article.setLongitude(articlePostDto.getLongitude());
-            article.setDetailAddress(articlePostDto.getDetailAddress());
+            article.setDetailAddress(deleteQuote(articlePostDto.getDetailAddress()));
             article.setPhotoUrls(fileName);
             articleRepository.save(article);
 
@@ -312,6 +312,7 @@ public class ArticleService {
                 ArticleRedis articleRedis = ArticleRedis.builder()
                         .id(article.getId())
                         .clusterId(clusterId)
+                        .photographerId(article.getUser().getId())
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
                         .longitude(article.getLongitude())
