@@ -16,10 +16,12 @@ import lombok.NoArgsConstructor;
 public class ArticleHeartDto {
     private Long articleId;
     private Boolean isHeart;
+    private Long hearts;
 
-    public ArticleHeartDto of(Long articleId, boolean isHearted){
+    public ArticleHeartDto of(Long articleId, boolean isHearted, Long hearts){
         return ArticleHeartDto.builder()
                 .articleId(articleId)
+                .hearts(hearts)
                 .isHeart(isHearted)
                 .build();
     }
