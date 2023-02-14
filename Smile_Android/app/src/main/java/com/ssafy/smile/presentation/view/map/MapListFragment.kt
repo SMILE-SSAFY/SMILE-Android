@@ -150,10 +150,10 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         clusterPostRvAdapter = ClusterPostRVAdapter().apply {
             setItemClickListener(object : ClusterPostRVAdapter.ItemClickListener{
                 override fun onClickHeart(tvView: TextView, checkedView: CheckedTextView, position: Int, postSearchDto: PostSearchDomainDto) {
-                    viewModel.updatePostHeart(postSearchDto.id)
+                    viewModel.updatePostHeart(postSearchDto.articleId)
                 }
                 override fun onClickItem(view: View, position: Int, postSearchDto: PostSearchDomainDto) {
-                    val action = MapListFragmentDirections.actionMapListFragmentToPortfolioGraph(postId = postSearchDto.id, photographerId = postSearchDto.photographerId, goToDetail = true)
+                    val action = MapListFragmentDirections.actionMapListFragmentToPortfolioGraph(postId = postSearchDto.articleId, photographerId = postSearchDto.photographerId, goToDetail = true)
                     findNavController().navigate(action)
                 }
             })
