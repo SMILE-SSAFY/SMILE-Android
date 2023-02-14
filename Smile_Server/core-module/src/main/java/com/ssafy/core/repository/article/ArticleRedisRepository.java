@@ -12,8 +12,7 @@ import java.util.Optional;
  * @author 신민철
  */
 public interface ArticleRedisRepository extends CrudRepository<ArticleRedis, Long> {
-    List<ArticleRedis> findAllByClusterIdAndUserIdOrderByIdDesc(Long clusterId, Long userId);
-    List<ArticleRedis> findAllByClusterIdAndUserIdOrderByHeartsDesc(Long clusterId, Long userId);
-    List<ArticleRedis> findAllByClusterIdAndUserIdOrderByDistanceAsc(Long clusterId, Long userId);
-    Optional<ArticleRedis> findByIdAndUserId(Long id, Long userId);
+    List<ArticleRedis> findAllByClusterIdOrderByIdDesc(Long clusterId, Long userId);
+    List<ArticleRedis> findAllByClusterIdOrderByHeartsDesc(Long clusterId, Long userId);
+    List<ArticleRedis> findAllByClusterIdOrderByDistanceAsc(Long clusterId, Long userId);
 }
