@@ -11,5 +11,12 @@ data class PlaceDto (
     val first : String,
     val second: String
 ):Parcelable{
-    fun toPlaceDto() : PlaceDomainDto = PlaceDomainDto(false, first, second)
+    fun toPlaceDomainDto() : PlaceDomainDto {
+        val (firstId, secondId) = makePlaceId()
+        return PlaceDomainDto(false, first, second, firstId, secondId)
+    }
+    private fun makePlaceId() : Pair<Int,Int>{
+        return if (placeId.length==4) Pair(placeId.substring(0 until 2).toInt(), placeId.substring(2).toInt())
+        else Pair(placeId.substring(0 until 1).toInt(), placeId.substring(1).toInt())
+    }
 }

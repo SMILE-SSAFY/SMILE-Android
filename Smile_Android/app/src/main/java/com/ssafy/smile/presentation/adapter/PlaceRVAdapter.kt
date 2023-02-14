@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,6 +68,7 @@ class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, pr
 
     inner class Holder(private val binding: ItemPhotographerPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bindInfo(position: Int, dto: PlaceDomainDto) {
+            Log.d("!!스마일", "modifyPhotographerInfo: $dto")
             binding.apply {
                 tvPhotographerPlaceFirst.run {
                     setOnItemClickListener { _, _, position, _ ->
@@ -99,6 +101,8 @@ class PlaceRVAdapter(private val viewModel : PhotographerWriteGraphViewModel, pr
                 if (position==0) btnDelete.visibility = View.INVISIBLE
                 else btnDelete.visibility = View.VISIBLE
                 btnDelete.setOnClickListener { itemClickListener.onClickBtnDelete(it, position, dto) }
+
+                Log.d("!!스마일", "modifyPhotographerInfo: $dto")
             }
         }
     }
