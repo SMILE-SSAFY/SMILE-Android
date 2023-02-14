@@ -1,10 +1,9 @@
-package com.ssafy.core.repository;
+package com.ssafy.core.repository.review;
 
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.Reservation;
 import com.ssafy.core.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;

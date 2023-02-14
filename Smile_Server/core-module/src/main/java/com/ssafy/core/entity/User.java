@@ -179,5 +179,14 @@ public class User implements UserDetails {
         this.fcmToken = fcmToken;
     }
 
+    /**
+     * 유저 휴대폰 번호 변경
+     * 
+     * @param phoneNumber
+     */
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
 }
 

@@ -141,7 +141,9 @@ public class UserService {
         user = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         log.info("user 객체 반환");
 
-        if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
+        // 카카오 유저는 통과, 일반 유저는 비밀번호 체크
+        if (!user.getPhoneNumber().equals("11112345678")
+                && !passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         log.info("유저 존재 및 비밀번호 일치");
