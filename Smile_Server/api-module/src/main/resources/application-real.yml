@@ -14,11 +14,8 @@ spring:
     include:
       - aws
       - coolsms
-      - kakao
+      - login
       - pay
-  # Random Key
-  jwt:
-    secret: DvqcGn8mnFjqSL4a
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true
