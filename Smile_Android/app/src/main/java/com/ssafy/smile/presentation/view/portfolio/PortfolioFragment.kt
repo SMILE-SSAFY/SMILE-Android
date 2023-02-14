@@ -36,15 +36,17 @@ class PortfolioFragment() : BaseFragment<FragmentPortfolioBinding>(FragmentPortf
     }
 
     private fun checkNavArgs(){
-        if (args.photographerId<0 && args.postId<0) {
-            showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 불러오는"), Types.ToastType.ERROR)
-            moveToPopUpSelf()
-        }
-        else if (args.postId>0) {
-            val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragmentWithPop(args.isFromMap, args.postId)
+        if (args.goToDetail) {
+            val action = PortfolioFragmentDirections.actionPortfolioFragmentToPostDetailFragmentWithPop(isFromMap = args.isFromMap, postId = args.postId, photographerId = args.photographerId)
             findNavController().navigate(action)
+        } else {
+            // 작가와 게시물 id 모두 -1인 경우 -> 오류 발생
+            if (args.photographerId<0 && args.postId<0) {
+                showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "정보를 불러오는"), Types.ToastType.ERROR)
+                moveToPopUpSelf()
+            }
+            else setPhotographerId()
         }
-        else setPhotographerId()
     }
 
     private fun setPhotographerId() {

@@ -8,6 +8,7 @@ data class ArticleHeartResponseDto(
     val category: String = "",
     val photoUrl: String = "",
     val photographerName: String = "",
+    val photographerId: Long = 0,
     val createdAt: String,
     val detailAddress: String = "",
     val hearts: Int = 0,
@@ -18,6 +19,7 @@ data class ArticleHeartResponseDto(
     fun toCustomPostDomainDto(): CustomPostDomainDto {
         return CustomPostDomainDto(
             articleId,
+            photographerId,
             photoUrl,
             category,
             photographerName,

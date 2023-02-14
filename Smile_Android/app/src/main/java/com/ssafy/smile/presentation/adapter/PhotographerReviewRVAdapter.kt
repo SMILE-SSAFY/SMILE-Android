@@ -27,7 +27,7 @@ class PhotographerReviewRVAdapter() : RecyclerView.Adapter<PhotographerReviewRVA
                 ratingBar.rating = reviewDto.score
                 tvCreatedAt.text = CommonUtils.stringToDate(reviewDto.createdAt)?.let { CommonUtils.getDiffTime(it) }
                 Glide.with(itemView.context).load(Constants.IMAGE_BASE_URL + reviewDto.photoUrl).into(ivImage)
-                tvContent.text = reviewDto.content
+                tvContent.text = System.getProperty("line.separator")?.let { reviewDto.content.replace("\\n", it) }?.replace("\"", "")
                 if (reviewDto.isMe) btnDelete.visibility = View.VISIBLE
                 else btnDelete.visibility = View.GONE
                 btnDelete.setOnClickListener { itemClickListener.onClickDelete(it, position, itemList[position]) }

@@ -9,22 +9,11 @@ import com.ssafy.smile.domain.model.Types.GeoAddress
 import java.io.IOException
 import java.util.*
 
-
-// TODO : 스파게티 코드 리팩토링
 object AddressUtils {
-
-    fun getSelectedAddress(address:String) : String{
-        return if ("(" in address) address.split(" (")[0]
-        else address
-    }
 
     fun getRepresentAddress(address:String) : String {
         return address.split(" ")[1]
     }
-
-    fun getLatLngFromPoints(lat:Double, lng:Double) = LatLng(lat, lng)
-
-    fun getPointsFromLatLng(latLng: LatLng) : Pair<Double, Double> =  latLng.latitude to latLng.longitude
 
     fun getGeoFromPoints(context:Context, lat:Double, lng:Double) : AddressGeoDomainDto {
         val addressList: List<Address>?

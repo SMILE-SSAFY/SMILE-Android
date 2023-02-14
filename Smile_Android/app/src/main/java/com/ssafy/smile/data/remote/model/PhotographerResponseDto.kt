@@ -18,7 +18,7 @@ data class PhotographerResponseDto(
     val bank : String,
     val account: String,
     val categories: List<CategoryDto>,
-    val places: List<PlaceDto>
+    val places: ArrayList<PlaceDto>
 ) : Parcelable {
 
 }

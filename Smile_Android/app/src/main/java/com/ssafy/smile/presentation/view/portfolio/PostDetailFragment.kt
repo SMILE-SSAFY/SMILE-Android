@@ -57,7 +57,10 @@ class PostDetailFragment : BaseFragment<FragmentPostDetailBinding>(FragmentPostD
 
     override fun setEvent() {
         binding.apply {
-
+            cardView.setOnClickListener {
+                val action = PostDetailFragmentDirections.actionPostDetailFragmentToPortfolioGraph(photographerId = args.photographerId)
+                findNavController().navigate(action)
+            }
             ivPostMore.setOnClickListener {
                 val action = PostDetailFragmentDirections.actionPostDetailFragmentToPostEditBottomSheetDialogFragment(postId, postDomainDto)
                 findNavController().navigate(action)

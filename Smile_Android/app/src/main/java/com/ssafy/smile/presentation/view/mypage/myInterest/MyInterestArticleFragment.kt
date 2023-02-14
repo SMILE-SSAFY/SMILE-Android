@@ -98,7 +98,7 @@ class MyInterestArticleFragment : BaseFragment<FragmentMyInterestArticleBinding>
     }
 
     private fun moveToPortfolioGraph(articleDto : CustomPostDomainDto){
-        val action = MyInterestFragmentDirections.actionMyInterestFragmentToPortfolioGraph(-1L, articleDto.articleId)
+        val action = MyInterestFragmentDirections.actionMyInterestFragmentToPortfolioGraph(photographerId = articleDto.photographerId, postId = articleDto.articleId, goToDetail = true)
         findNavController().navigate(action)
     }
 

@@ -57,7 +57,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/cv_photographer_profile"
                     app:layout_constraintEnd_toEndOf="@+id/cv_photographer_profile" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            x<LinearLayout
+            <LinearLayout
                 android:id="@+id/layout_photographer_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
