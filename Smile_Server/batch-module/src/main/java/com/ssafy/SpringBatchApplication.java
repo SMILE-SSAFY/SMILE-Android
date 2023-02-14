@@ -19,7 +19,7 @@ public class SpringBatchApplication {
 
     public static void main(String[] args) {
         System.setProperty("spring.config.name",
-                "application,application-real,application-aws,application-coolsms,application-kakao,application-pay");
+                "application,application-real,application-aws,application-coolsms,application-login,application-pay");
         SpringApplication.run(SpringBatchApplication.class, args);
     }
 
