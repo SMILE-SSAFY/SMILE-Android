@@ -254,20 +254,27 @@ public class PhotographerService {
      * @throws PHOTOGRAPHER_NOT_FOUND 사진작가를 찾을 수 없을 때 에러
      */
     public List<PhotographerForListDto> getPhotographerListByCategory(String categoryName) {
-        Long userId = UserService.getLogInUser().getId();
+        User user = UserService.getLogInUser();
         List<Long> categoryIdList = categoriesRepository.findAllIdByNameContaining(categoryName);
         if (categoryIdList.isEmpty()) {
             throw new CustomException(ErrorCode.CATEGORY_NOT_FOUND);
         }
         log.info("해당 카테고리 존재");
 
-        List<PhotographerQdslDto> photographerList =
-                photographerNCategoriesRepository.findByCategoryId(userId, categoryIdList);
+        List<Photographer> photographerList =
+                photographerNCategoriesRepository.findByCategoryId(categoryIdList);
         log.info("카테고리로 작가 조회");
 
         List<PhotographerForListDto> photographerForList = new ArrayList<>();
-        for (PhotographerQdslDto photographerQuerydsl : photographerList) {
-            photographerForList.add(new PhotographerForListDto().of(photographerQuerydsl));
+        for (Photographer photographer : photographerList) {
+            PhotographerQdslDto dto = new PhotographerQdslDto();
+            dto.setPhotographer(photographer);      // 사진작가
+            dto.setHeart(photographerHeartRepository.countByPhotographer(photographer));    // 작가의 좋아요 수
+            ReviewQdslDto review = reviewRepository.findByPhotographerId(photographer.getId());
+            dto.setAvgScore(review.getAvgScore());      // 작가의 평점
+            dto.setReviewCount(review.getReviewCount());    // 작가의 리뷰 수
+            dto.setHasHeart(photographerHeartRepository.findByUserAndPhotographer(user, photographer).isPresent()); // 유저의 좋아요 여부
+            photographerForList.add(new PhotographerForListDto().of(dto));
         }
 
         return photographerForList;
