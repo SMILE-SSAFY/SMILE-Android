@@ -33,7 +33,7 @@ spring:
     open-in-view: false
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:mysql://i8d102.p.ssafy.io:3306/smile?serverTimeZone=Asia/Seoul&useLegacyDatetimeCode=false
+    url: jdbc:mysql://localhost:3306/smile?serverTimeZone=Asia/Seoul&useLegacyDatetimeCode=false
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ssafy
     password: S0706
@@ -45,7 +45,7 @@ spring:
       mode: always
       continue-on-error: true
   redis:
-    host: i8d102.p.ssafy.io
+    host: localhost
     port: 6379
 server:
   port: 80
