@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.CategoriesQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.QCategories;
-import com.ssafy.core.entity.QPhotographer;
 import com.ssafy.core.entity.QPhotographerNCategories;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +32,9 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
     @Override
     public List<Photographer> findByCategoryId(List<Long> categoryIdList) {
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
-        QPhotographer photographer = QPhotographer.photographer;
 
         return jpaQueryFactory
-                .select(photographer)
+                .selectDistinct(photographerNCategories.photographer)
                 .from(photographerNCategories)
                 .where(photographerNCategories.category.id.in(categoryIdList))
                 .fetch();
