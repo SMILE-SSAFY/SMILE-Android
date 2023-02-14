@@ -1,19 +1,18 @@
 package com.ssafy.core.repository.article;
 
 import com.ssafy.core.entity.ArticleCluster;
-import com.ssafy.core.entity.User;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Optional;
+import java.util.List;
 
-/***
- * 클러스터링을 위한 repo
- * redis에 저장
+/**
+ * Redis에 클러스터링 저장과 필터링 별 저장 및 조회를 위한 Repository
  *
  * @author 신민철
  */
 public interface ArticleClusterRepository extends CrudRepository<ArticleCluster, Long> {
-    Optional<ArticleCluster> findById(Long Id);
-    Optional<ArticleCluster> findByUserId(Long Id);
-    void deleteByUser(User user);
+    List<ArticleCluster> findAllByClusterIdAndUserIdOrderByIdDesc(Long clusterId, Long userId);
+    List<ArticleCluster> findAllByClusterIdAndUserIdOrderByHeartsDesc(Long clusterId, Long userId);
+    List<ArticleCluster> findAllByClusterIdAndUserIdOrderByDistanceAsc(Long clusterId, Long userId);
+    void deleteAllByUserId(Long userId);
 }
