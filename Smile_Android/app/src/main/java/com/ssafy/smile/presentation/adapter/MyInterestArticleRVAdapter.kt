@@ -26,6 +26,7 @@ class MyInterestArticleRVAdapter() : RecyclerView.Adapter<MyInterestArticleRVAda
                 customPost.setAttrs(
                     CustomPostDomainDto(
                         articleDto.articleId,
+                        articleDto.photographerId,
                         articleDto.img,
                         articleDto.category,
                         articleDto.name,

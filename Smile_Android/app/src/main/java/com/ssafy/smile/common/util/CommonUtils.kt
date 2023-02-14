@@ -18,20 +18,6 @@ object CommonUtils {
         return comma.format(num)
     }
 
-    fun getAddress(context: Context, latitude: Float, longitude: Float): String {
-        val geoCoder = Geocoder(context, Locale.KOREA)
-        val position = LatLng(latitude.toDouble(), longitude.toDouble())
-        var addr = "주소 오류"
-
-        try {
-            val loc = geoCoder.getFromLocation(position.latitude, position.longitude, 1)!!.first()
-            addr = "${loc.adminArea} ${loc.locality}"
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return addr
-    }
-
     fun getDiffDistance(meter: Double): String {
         return if (meter < 1000) meter.toInt().toString() + "m"
         else (meter / 1000).toInt().toString() + "km"
@@ -58,11 +44,6 @@ object CommonUtils {
         try { date = dateFormat.parse(dateStr) }
         catch (e: ParseException) { e.printStackTrace() }
         return date
-    }
-
-    fun dateToString(date: Date): String{
-        val format = SimpleDateFormat("yyyy-MM-dd")
-        return format.format(date)
     }
 
     fun getCategoryName(category: ArrayList<String>): String {

@@ -8,6 +8,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.kakao.sdk.user.model.User
 import com.ssafy.smile.Application
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.NetworkUtils
@@ -35,10 +36,10 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
         // 토근이 발급된 경우
         else if (token != null) {
             UserApiClient.instance.me { user, error ->
-                if (user != null) {
-                    loginViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken))
-                } else {
-                    Log.d(TAG,"카카오 로그인 실패 - $error")
+                if (error != null) {
+                    Log.d(TAG, "사용자 정보 요청 실패 : $error")
+                } else if (user != null) {
+                    loginViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken, fcmToken))
                 }
             }
         }
@@ -162,7 +163,7 @@ class LogInFragment : BaseFragment<FragmentLogInBinding>(FragmentLogInBinding::b
                     // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
                     UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                 } else if (token != null) {
-                    loginViewModel.kakaoLogin(KakaoLoginRequestDto(token.accessToken, fcmToken))
+                    UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
                 }
             }
         } else {
