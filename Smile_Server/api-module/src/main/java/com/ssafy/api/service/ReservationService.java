@@ -396,11 +396,11 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
 
-            // FCM 전송
+        // FCM 전송
         notificationService.sendDataMessageTo(NotificationDTO.builder()
                 .requestId(userId)
                 .registrationToken(token)
-                .content(reservation.getReservedAt() + "의 예약이 확정되었습니다.")
+                .content(reservation.getReservedAt() + "의 예약이 취소되었습니다.")
                 .build());
     }
 
