@@ -78,10 +78,8 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
             getUpdateHeartResponse.observe(viewLifecycleOwner){
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> {}
-                    is NetworkUtils.NetworkResponse.Success -> {
-                        // getPostPostSearchList(searchType, clusterPostRvAdapter.page)
-                    }
-                    is NetworkUtils.NetworkResponse.Failure -> {}
+                    is NetworkUtils.NetworkResponse.Success -> clusterPostRvAdapter.changeDataHearts(it.data)
+                    is NetworkUtils.NetworkResponse.Failure -> showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "좋아요 과정 중"), Types.ToastType.ERROR)
                 }
             }
         }
@@ -147,7 +145,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         clusterPostRvAdapter = ClusterPostRVAdapter().apply {
             setItemClickListener(object : ClusterPostRVAdapter.ItemClickListener{
                 override fun onClickHeart(tvView: TextView, checkedView: CheckedTextView, position: Int, postSearchDto: PostSearchDomainDto) {
-                    // TODO : Redis 좋아요 해결
+//                    // TODO : Redis 좋아요 해결
 //                    if (checkedView.isChecked){
 //                        postSearchDto.hearts -= 1
 //                        tvView.text = postSearchDto.hearts.toString()

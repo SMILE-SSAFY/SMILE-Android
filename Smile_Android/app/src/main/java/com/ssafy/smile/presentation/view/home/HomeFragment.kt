@@ -154,16 +154,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
             }
         }
-    }
+            }
 
-    private fun getAddressObserver() {
-        homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
-            if (it==null) {
-                curAddress = getString(R.string.tv_address_unselected)
-                binding.tvToolbarAddress.text = curAddress
-            } else{
-                curAddress = it.address
-                binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
+            private fun getAddressObserver() {
+                homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
+                    if (it==null) {
+                        curAddress = getString(R.string.tv_address_unselected)
+                        binding.tvToolbarAddress.text = curAddress
+                    } else{
+                        curAddress = it.address
+                        binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
                 setObserverAfterSetAddress()
                 if (!(Application.isRecommendRefused)) recommendDialogInit(requireContext())
