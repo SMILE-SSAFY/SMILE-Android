@@ -62,14 +62,21 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @ToString.Exclude
     @Column(length = 1023, nullable = false)
     private String fcmToken;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ArticleHeart> articleHearts;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<PhotographerHeart> photographerHearts;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -177,15 +184,6 @@ public class User implements UserDetails {
      */
     public void updateFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
-    }
-
-    /**
-     * 유저 휴대폰 번호 변경
-     * 
-     * @param phoneNumber
-     */
-    public void updatePhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
 }
