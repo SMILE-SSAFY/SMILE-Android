@@ -20,6 +20,8 @@ public class ArticleRedis {
     private Long id;
     @Indexed
     private Long clusterId;
+    @Indexed
+    private Long userId;
 
     private Long photographerId;
 
