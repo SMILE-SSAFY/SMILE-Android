@@ -1,6 +1,7 @@
 package com.ssafy.smile.presentation.view.map
 
 import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.widget.CheckedTextView
 import android.widget.TextView
@@ -63,6 +64,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        Log.d("스마일", "setObserver: ${it.data}")
                          if (it.data.articleRedisList.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
@@ -148,9 +150,6 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         clusterPostRvAdapter = ClusterPostRVAdapter().apply {
             setItemClickListener(object : ClusterPostRVAdapter.ItemClickListener{
                 override fun onClickHeart(tvView: TextView, checkedView: CheckedTextView, position: Int, postSearchDto: PostSearchDomainDto) {
-                    checkedView.isChecked = !(checkedView.isChecked)
-                    postSearchDto.isHeart = checkedView.isChecked
-                    notifyDataSetChanged()
                     viewModel.updatePostHeart(postSearchDto.id)
                 }
                 override fun onClickItem(view: View, position: Int, postSearchDto: PostSearchDomainDto) {
