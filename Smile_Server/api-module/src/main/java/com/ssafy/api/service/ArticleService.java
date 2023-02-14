@@ -210,6 +210,14 @@ public class ArticleService {
 
         Long hearts = articleHeartRepository.countByArticle(article);
 
+        // 좋아요 눌렀을 때
+        ArticleRedis articleRedis = articleRedisRepository.findById(articleId).orElse(null);
+        if (articleRedis != null){
+            articleRedis.setHearts(hearts);
+            articleRedis.setIsHeart(!isHeart);
+            articleRedisRepository.save(articleRedis);
+        }
+
         return new ArticleHeartDto().of(articleId, !isHeart, hearts);
     }
 
