@@ -1,16 +1,12 @@
 package com.ssafy.core.repository.photographer;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.CategoriesQdslDto;
-import com.ssafy.core.dto.PhotographerQdslDto;
+import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.QCategories;
 import com.ssafy.core.entity.QPhotographer;
-import com.ssafy.core.entity.QPhotographerHeart;
 import com.ssafy.core.entity.QPhotographerNCategories;
-import com.ssafy.core.entity.QReview;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,40 +25,20 @@ public class PhotographerNCategoriesRepositoryImpl implements PhotographerNCateg
     private final JPAQueryFactory jpaQueryFactory;
 
     /**
-     * categoryId로 사진 작가 및 사진 작가의 좋아요 상태 조회
+     * categoryId로 사진 작가 조회
      *
-     * @param userId
      * @param categoryIdList
      * @return List<PhotographerQuerydslDto>
      */
     @Override
-    public List<PhotographerQdslDto> findByCategoryId(Long userId, List<Long> categoryIdList) {
+    public List<Photographer> findByCategoryId(List<Long> categoryIdList) {
         QPhotographerNCategories photographerNCategories = QPhotographerNCategories.photographerNCategories;
         QPhotographer photographer = QPhotographer.photographer;
-        QPhotographerHeart photographerHeart = QPhotographerHeart.photographerHeart;
-        QReview review = QReview.review;
 
         return jpaQueryFactory
-                .select(Projections.constructor(PhotographerQdslDto.class,
-                        photographer,
-                        review.score.avg().as("score"),
-                        photographerHeart.id.count(),
-                        review.id.count(),
-                        new CaseBuilder()
-                                .when(photographer.id.in(
-                                        JPAExpressions
-                                                .select(photographerHeart.photographer.id)
-                                                .from(photographerHeart)
-                                                .where(photographerHeart.user.id.eq(userId))
-                                )).then(true)
-                                .otherwise(false)
-                ))
-                .from(photographer)
-                .leftJoin(photographerHeart).on(photographer.eq(photographerHeart.photographer))
-                .leftJoin(review).on(photographer.eq(review.photographer))
-                .join(photographerNCategories).on(photographer.eq(photographerNCategories.photographer))
+                .select(photographer)
+                .from(photographerNCategories)
                 .where(photographerNCategories.category.id.in(categoryIdList))
-                .groupBy(photographer.id)
                 .fetch();
     }
 
