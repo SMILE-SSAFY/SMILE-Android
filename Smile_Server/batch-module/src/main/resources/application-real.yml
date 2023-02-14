@@ -14,7 +14,7 @@ spring:
     include:
       - aws
       - coolsms
-      - kakao
+      - login
       - pay
   batch:
     job:
@@ -22,9 +22,6 @@ spring:
       enabled: false
     jdbc:
       initialize-schema: always
-  # Random Key
-  jwt:
-    secret: DvqcGn8mnFjqSL4a
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     generate-ddl: true
