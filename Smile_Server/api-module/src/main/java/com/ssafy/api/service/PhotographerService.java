@@ -23,7 +23,7 @@ import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
-import com.ssafy.core.repository.ReviewRepository;
+import com.ssafy.core.repository.review.ReviewRepository;
 import com.ssafy.core.repository.UserRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;

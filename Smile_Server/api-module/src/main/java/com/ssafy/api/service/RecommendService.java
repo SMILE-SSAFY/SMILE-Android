@@ -10,9 +10,7 @@ import com.ssafy.core.dto.ReviewQdslDto;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.PhotographerHeart;
 import com.ssafy.core.entity.User;
-import com.ssafy.core.exception.CustomException;
-import com.ssafy.core.exception.ErrorCode;
-import com.ssafy.core.repository.ReviewRepository;
+import com.ssafy.core.repository.review.ReviewRepository;
 import com.ssafy.core.repository.photographer.PhotographerHeartRepository;
 import com.ssafy.core.repository.photographer.PhotographerNPlacesRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
@@ -26,7 +24,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 추천 관련 Service
