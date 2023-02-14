@@ -26,6 +26,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 추천 관련 Service
@@ -154,27 +155,28 @@ public class RecommendService {
     private RecommendResponseDto getPhotographerListByPhotographerId(Integer[] photographerIdList) {
 
         log.info(Arrays.toString(photographerIdList));
+
         List<PhotographerForListDto> result = new ArrayList<>();
 
         for (Integer photographerId : photographerIdList){
 
             Long id = Long.valueOf(photographerId);
 
-            Photographer photographer = photographerRepository.findById(id).orElseThrow(()->
-                new CustomException(ErrorCode.PHOTOGRAPHER_NOT_FOUND)
-            );
+            Photographer photographer = photographerRepository.findById(id).orElse(null);
 
             ReviewQdslDto review = reviewRepository.findByPhotographerId(id);
 
-            PhotographerQdslDto photographerQdslDto = PhotographerQdslDto.builder()
-                    .photographer(photographer)
-                    .heart(photographerHeartRepository.countByPhotographer(photographer))
-                    .hasHeart(false)
-                    .avgScore(review.getAvgScore())
-                    .reviewCount(review.getReviewCount())
-                    .build();
+            if (photographer != null){
+                PhotographerQdslDto photographerQdslDto = PhotographerQdslDto.builder()
+                        .photographer(photographer)
+                        .heart(photographerHeartRepository.countByPhotographer(photographer))
+                        .hasHeart(false)
+                        .avgScore(review.getAvgScore())
+                        .reviewCount(review.getReviewCount())
+                        .build();
+                result.add(new PhotographerForListDto().of(photographerQdslDto));
+            }
 
-            result.add(new PhotographerForListDto().of(photographerQdslDto));
         }
 
         return RecommendResponseDto.builder()
