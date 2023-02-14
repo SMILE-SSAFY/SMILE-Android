@@ -425,6 +425,7 @@ public class ArticleService {
 
             ArticleSearchDto articleSearchDto = ArticleSearchDto.builder()
                     .articleId(article.getId())
+                    .photographerId(articleAuthor.getId())
                     .photographerName(articleAuthor.getName())
                     .latitude(article.getLatitude())
                     .longitude(article.getLongitude())
