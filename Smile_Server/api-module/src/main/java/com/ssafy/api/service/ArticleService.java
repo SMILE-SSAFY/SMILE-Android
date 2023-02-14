@@ -291,7 +291,7 @@ public class ArticleService {
         log.info(Arrays.toString(clusters.y));
         log.info(Arrays.toString(clusters.size));
 
-        articleRedisRepository.deleteAll();
+        articleRedisRepository.deleteAllByUserId(logInUser.getId());
 
         int listIdx = 0;
         double y = (y1 + y2) / 2;

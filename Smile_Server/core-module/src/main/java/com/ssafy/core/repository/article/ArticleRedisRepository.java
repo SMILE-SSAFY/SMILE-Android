@@ -16,4 +16,5 @@ public interface ArticleRedisRepository extends CrudRepository<ArticleRedis, Lon
     List<ArticleRedis> findAllByClusterIdAndUserIdOrderByHeartsDesc(Long clusterId, Long userId);
     List<ArticleRedis> findAllByClusterIdAndUserIdOrderByDistanceAsc(Long clusterId, Long userId);
     Optional<ArticleRedis> findByIdAndUserId(Long id, Long userId);
+    void deleteAllByUserId(Long userId);
 }
