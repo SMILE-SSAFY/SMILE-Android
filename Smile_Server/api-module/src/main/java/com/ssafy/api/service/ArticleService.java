@@ -211,7 +211,7 @@ public class ArticleService {
         Long hearts = articleHeartRepository.countByArticle(article);
 
         // 좋아요 눌렀을 때
-        ArticleRedis articleRedis = articleRedisRepository.findByIdAndUserId(articleId, user.getId()).orElse(null);
+        ArticleRedis articleRedis = articleRedisRepository.findById(articleId).orElse(null);
         if (articleRedis != null){
             articleRedis.setHearts(hearts);
             articleRedis.setIsHeart(!isHeart);
@@ -291,7 +291,7 @@ public class ArticleService {
         log.info(Arrays.toString(clusters.y));
         log.info(Arrays.toString(clusters.size));
 
-        articleRedisRepository.deleteAllByUserId(logInUser.getId());
+        articleRedisRepository.deleteAll();
 
         int listIdx = 0;
         double y = (y1 + y2) / 2;
@@ -320,7 +320,6 @@ public class ArticleService {
                 ArticleRedis articleRedis = ArticleRedis.builder()
                         .id(article.getId())
                         .clusterId(clusterId)
-                        .userId(UserService.getLogInUser().getId())
                         .photographerId(article.getUser().getId())
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
@@ -367,19 +366,19 @@ public class ArticleService {
         // 최신순 조회
         switch (condition) {
             case "time": {
-                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdAndUserIdOrderByIdDesc(clusterId, userId);
+                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId, userId);
                 articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
                 // 좋아요순 조회
             }
             case "heart": {
-                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdAndUserIdOrderByHeartsDesc(clusterId, userId);
+                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId, userId);
                 articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
             }
             // 거리순 조회
             case "distance": {
-                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdAndUserIdOrderByDistanceAsc(clusterId, userId);
+                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId, userId);
                 articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
                 break;
             }
