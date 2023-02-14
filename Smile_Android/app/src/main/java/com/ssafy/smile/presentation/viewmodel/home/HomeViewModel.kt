@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeViewModel: BaseViewModel() {
+    var filter = "heart"
     private val photographerRepository = Application.repositoryInstances.getPhotographerRepository()
     private val heartRepository = Application.repositoryInstances.getHeartRepository()
     private val addressRepository = Application.repositoryInstances.getAddressRepository()

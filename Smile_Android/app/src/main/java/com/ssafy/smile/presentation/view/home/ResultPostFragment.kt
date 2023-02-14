@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.CommonUtils
@@ -19,7 +20,7 @@ import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResultPostBinding::bind, R.layout.fragment_result_post) {
 
-    private val searchViewModel: SearchViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by navGraphViewModels(R.id.searchGraph)
     private lateinit var resultPostRecyclerAdapter: ResultPostRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPostDomainDto>()
     private var recyclerViewState: Parcelable? = null

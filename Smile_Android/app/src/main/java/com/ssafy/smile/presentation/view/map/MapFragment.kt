@@ -87,6 +87,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(FragmentMapBinding::bind, R
                     is NetworkUtils.NetworkResponse.Loading -> {
                     }
                     is NetworkUtils.NetworkResponse.Success -> {
+                        Log.d("스마일", "setObserver: ${it.data}")
                         if (isInitialized && it.data.isEmpty()) binding.tvFindNoMarker.visibility = View.VISIBLE
                         else {
                             binding.tvFindNoMarker.visibility = View.GONE
