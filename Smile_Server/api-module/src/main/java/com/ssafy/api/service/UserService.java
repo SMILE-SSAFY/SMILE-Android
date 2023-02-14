@@ -112,7 +112,8 @@ public class UserService {
         }
 
         // 이메일이 존재하면 등록 제외하고 로그인 진행
-        if (!userRepository.existsByEmail(registerFormDto.getEmail())) {
+        Optional<User> findUser = userRepository.findByEmail(registerFormDto.getEmail());
+        if (findUser.isEmpty()) {
             User user = User.builder()
                     .email(registerFormDto.getEmail())
                     .password(passwordEncoder.encode(registerFormDto.getPassword()))
@@ -124,6 +125,11 @@ public class UserService {
 
             userRepository.save(user);
             log.info("[registerUser] 회원등록 완료");
+        }
+
+        if (findUser.isPresent() && findUser.get().getPhoneNumber().equals("11112345678")) {
+            findUser.get().updatePhoneNumber(registerFormDto.getPhoneNumber());
+            userRepository.save(findUser.get());
         }
 
         return login(new LoginUserDto().of(registerFormDto));
@@ -141,7 +147,9 @@ public class UserService {
         user = userRepository.findByEmail(loginUserDto.getEmail()).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         log.info("user 객체 반환");
 
-        if (!passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
+        // 카카오 유저는 통과, 일반 유저는 비밀번호 체크
+        if (!user.getPhoneNumber().equals("11112345678")
+                && !passwordEncoder.matches(loginUserDto.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
         log.info("유저 존재 및 비밀번호 일치");
