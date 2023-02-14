@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 data class SearchPostResponseDto(
     val articleId: Long = 0,
     val photographerName: String = "",
+    val photographerId: Long = 0,
     val latitude: Float = 0.0f,
     val longitude: Float = 0.0f,
     val isHeart: Boolean = false,
@@ -18,6 +19,7 @@ data class SearchPostResponseDto(
     fun toCustomPostDomainDto(): CustomPostDomainDto {
         return CustomPostDomainDto(
             articleId,
+            photographerId,
             photoUrl,
             category,
             photographerName,

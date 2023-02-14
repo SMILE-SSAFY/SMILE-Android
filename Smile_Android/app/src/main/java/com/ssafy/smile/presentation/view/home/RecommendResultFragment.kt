@@ -52,10 +52,10 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
                 is NetworkUtils.NetworkResponse.Success -> {
                     dismissLoadingDialog()
                     if (it.data.isHeartEmpty) {
-                        setIsEmptyView(View.VISIBLE, View.GONE, "추천 결과가 존재하지 않습니다")
+                        setIsEmptyView(View.VISIBLE, View.GONE, "작가 추천을 위한 데이터가 충분하지 않습니다.\n좋아하는 작가에게 하트를 눌러주세요:)")
                     } else {
                         if (it.data.photographerInfoList.size == 0) {
-                            setIsEmptyView(View.VISIBLE, View.GONE, "작가 추천을 위한 데이터가 충분하지 않습니다.\n좋아하는 작가에게 하트를 눌러주세요:)")
+                            setIsEmptyView(View.VISIBLE, View.GONE, "추천 결과가 존재하지 않습니다")
                         } else {
                             recyclerData.clear()
                             for (i in 0 until it.data.photographerInfoList.size) {
@@ -83,7 +83,7 @@ class RecommendResultFragment : BaseFragment<FragmentRecommendResultBinding>(Fra
             setItemClickListener(object : RecommendResultAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
                     recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvRecommend)
-                    val action = RecommendResultFragmentDirections.actionRecommendResultFragmentToPortfolioGraph(photographerId = recyclerData[position].photographerId, postId = -1L)
+                    val action = RecommendResultFragmentDirections.actionRecommendResultFragmentToPortfolioGraph(photographerId = recyclerData[position].photographerId, postId = -1L, goToDetail = false)
                     findNavController().navigate(action)
                 }
 

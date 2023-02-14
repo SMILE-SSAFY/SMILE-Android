@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_profile_default"> <!-- TODO : 이미지 변경 -->
+            android:src="@drawable/img_profile_default">
         </ImageView>
     </androidx.cardview.widget.CardView>
     <LinearLayout

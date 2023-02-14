@@ -4,6 +4,7 @@ data class PostSearchDomainDto(
     val clusterId : Long,
     val id : Long,
     val photographerName : String,
+    val photographerId: Long,
     val latitude : Double,
     val longitude : Double,
     val distance : Double,
