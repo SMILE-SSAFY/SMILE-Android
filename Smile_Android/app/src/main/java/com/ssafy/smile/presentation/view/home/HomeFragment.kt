@@ -217,29 +217,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         binding.apply {
             chipPopular.setOnClickListener {
                 setChipsEnabled(popular = false, avg = true, cnt = true)
-                homeViewModel.filter = if (chipPopular.isChecked) {
-                    "heart"
-                } else {
-                    ""
-                }
+                homeViewModel.filter = "heart"
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
             }
             chipReviewAvg.setOnClickListener {
                 setChipsEnabled(popular = true, avg = false, cnt = true)
-                homeViewModel.filter = if (chipReviewAvg.isChecked) {
-                    "score"
-                } else {
-                    ""
-                }
+                homeViewModel.filter = "score"
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
             }
             chipReviewCnt.setOnClickListener {
                 setChipsEnabled(popular = true, avg = true, cnt = false)
-                homeViewModel.filter = if (chipReviewCnt.isChecked) {
-                    "review"
-                } else {
-                    ""
-                }
+                homeViewModel.filter = "review"
                 homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
             }
         }
@@ -333,6 +321,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 override fun onOkButtonClick() {
                     val action = MainFragmentDirections.actionMainFragmentToRecommendResultFragment(curAddress)
                     findNavController().navigate(action)
+                    Application.isRecommendRefused = true
                 }
 
                 override fun onCancelButtonClick() { Application.isRecommendRefused = true }
