@@ -11,7 +11,7 @@ import java.util.List;
  * @author 신민철
  */
 public interface ArticleClusterRepository extends CrudRepository<ArticleCluster, Long> {
-    List<ArticleCluster> findAllByClusterIdAndUserIdOrderByIdDesc(Long clusterId, Long userId);
+    List<ArticleCluster> findAllByClusterIdAndUserIdOrderByArticleIdDesc(Long clusterId, Long userId);
     List<ArticleCluster> findAllByClusterIdAndUserIdOrderByHeartsDesc(Long clusterId, Long userId);
     List<ArticleCluster> findAllByClusterIdAndUserIdOrderByDistanceAsc(Long clusterId, Long userId);
     void deleteAllByUserId(Long userId);
