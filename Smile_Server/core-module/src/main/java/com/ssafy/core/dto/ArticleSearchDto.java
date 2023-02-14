@@ -22,6 +22,8 @@ import java.util.List;
 public class ArticleSearchDto {
     private Long articleId;
 
+    private Long photographerId;
+
     private String photographerName;
 
     private Double latitude;
@@ -47,6 +49,7 @@ public class ArticleSearchDto {
 
         return ArticleSearchDto.builder()
                 .articleId(articleQuerydsl.getArticle().getId())
+                .photographerId(articleQuerydsl.getArticle().getUser().getId())
                 .photographerName(articleQuerydsl.getArticle().getUser().getName())
                 .latitude(articleQuerydsl.getArticle().getLatitude())
                 .longitude(articleQuerydsl.getArticle().getLongitude())
