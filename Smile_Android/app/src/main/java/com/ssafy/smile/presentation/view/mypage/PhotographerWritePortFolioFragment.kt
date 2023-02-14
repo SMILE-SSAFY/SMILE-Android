@@ -1,7 +1,6 @@
 package com.ssafy.smile.presentation.view.mypage
 
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doAfterTextChanged
@@ -151,7 +150,7 @@ class PhotographerWritePortFolioFragment : BaseFragment<FragmentWritePhotographe
             lifecycleScope.launch(Dispatchers.IO) {
                 val profileImg = BitmapFactory.decodeStream(URL(Constants.IMAGE_BASE_URL +photographerResponseDto.profileImg).openConnection().getInputStream()).convertBitmapToFile(context = requireContext())!!
                 viewModel.uploadProfileImage(profileImg)
-                viewModel.uploadData(profileImg, photographerResponseDto.introduction, photographerResponseDto.categories.map { it.toCategoryDto() }, photographerResponseDto.places.map { it.toPlaceDto() }, AccountDomainDto(false,photographerResponseDto.bank, photographerResponseDto.account))
+                viewModel.uploadData(profileImg, photographerResponseDto.introduction, photographerResponseDto.categories.map { it.toCategoryDto() }, photographerResponseDto.places.map { it.toPlaceDomainDto() }, AccountDomainDto(false,photographerResponseDto.bank, photographerResponseDto.account))
             }
         }
     }
