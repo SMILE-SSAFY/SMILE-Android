@@ -1,5 +1,6 @@
 package com.ssafy.smile.presentation.view.map
 
+import android.os.Parcelable
 import android.view.View
 import android.widget.CheckedTextView
 import android.widget.TextView
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.ssafy.smile.R
+import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentMapListBinding
 import com.ssafy.smile.domain.model.PostSearchDomainDto
@@ -80,6 +82,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                     is NetworkUtils.NetworkResponse.Loading -> {}
                     is NetworkUtils.NetworkResponse.Success -> clusterPostRvAdapter.changeDataHearts(it.data)
                     is NetworkUtils.NetworkResponse.Failure -> showToast(requireContext(), requireContext().getString(R.string.msg_common_error, "좋아요 과정 중"), Types.ToastType.ERROR)
+
                 }
             }
         }
@@ -145,21 +148,13 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         clusterPostRvAdapter = ClusterPostRVAdapter().apply {
             setItemClickListener(object : ClusterPostRVAdapter.ItemClickListener{
                 override fun onClickHeart(tvView: TextView, checkedView: CheckedTextView, position: Int, postSearchDto: PostSearchDomainDto) {
-//                    // TODO : Redis 좋아요 해결
-//                    if (checkedView.isChecked){
-//                        postSearchDto.hearts -= 1
-//                        tvView.text = postSearchDto.hearts.toString()
-//                    }else{
-//                        postSearchDto.hearts += 1
-//                        tvView.text = postSearchDto.hearts.toString()
-//                    }
-//                    checkedView.isChecked = !(checkedView.isChecked)
-//                    postSearchDto.isHeart = checkedView.isChecked
-//                    notifyDataSetChanged()
+                    checkedView.isChecked = !(checkedView.isChecked)
+                    postSearchDto.isHeart = checkedView.isChecked
+                    notifyDataSetChanged()
                     viewModel.updatePostHeart(postSearchDto.id)
                 }
                 override fun onClickItem(view: View, position: Int, postSearchDto: PostSearchDomainDto) {
-                    val action = MapListFragmentDirections.actionMapListFragmentToPortfolioGraph(postSearchDto.id)
+                    val action = MapListFragmentDirections.actionMapListFragmentToPortfolioGraph(postId = postSearchDto.id, photographerId = postSearchDto.photographerId, goToDetail = true)
                     findNavController().navigate(action)
                 }
             })
@@ -195,7 +190,7 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         if (isSet) {
             binding.layoutRvPost.visibility = View.VISIBLE
             clusterPostRvAdapter.setListData(searchType, isEnd, itemList)
-            // if (latestScrolledPosition!=0) binding.rvPost.scrollToPosition(latestScrolledPosition)
+//            if (latestScrolledPosition!=0) binding.rvPost.scrollToPosition(latestScrolledPosition)
         } else binding.layoutRvPost.visibility = View.GONE
     }
 

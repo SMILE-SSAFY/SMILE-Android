@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.view.portfolio.PostViewPagerFragment">
+    tools:context=".presentation.view.portfolio.ReviewViewPagerFragment">
     <include
         android:id="@+id/layout_empty_view"
         layout="@layout/layout_empty_view"
@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:paddingHorizontal="20dp"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_rv_review"/>

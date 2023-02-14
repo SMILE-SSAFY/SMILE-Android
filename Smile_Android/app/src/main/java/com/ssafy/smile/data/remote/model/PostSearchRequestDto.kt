@@ -12,6 +12,7 @@ data class PostSearchDto(
     val clusterId : Long,
     val id : Long,
     val photographerName : String,
+    val photographerId: Long,
     val latitude : Double,
     val longitude : Double,
     val distance : Double,
@@ -22,7 +23,7 @@ data class PostSearchDto(
     val category : String,
     val photoUrl : String
 ){
-    fun makeToDomainDto() : PostSearchDomainDto = PostSearchDomainDto(clusterId, id, photographerName, latitude, longitude, distance, isHeart, hearts, detailAddress, createdAt, category, photoUrl)
+    fun makeToDomainDto() : PostSearchDomainDto = PostSearchDomainDto(clusterId, id, photographerName, photographerId, latitude, longitude, distance, isHeart, hearts, detailAddress, createdAt, category, photoUrl)
 }
 
 

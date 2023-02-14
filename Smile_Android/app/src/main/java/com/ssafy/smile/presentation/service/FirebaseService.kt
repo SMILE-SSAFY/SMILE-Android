@@ -13,8 +13,8 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ssafy.smile.Application
-import com.ssafy.smile.MainActivity
 import com.ssafy.smile.R
+import com.ssafy.smile.MainActivity
 import kotlin.random.Random
 
 private const val TAG = "FirebaseService_싸피"

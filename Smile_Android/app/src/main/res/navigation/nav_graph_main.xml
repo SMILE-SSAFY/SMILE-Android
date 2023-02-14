@@ -57,8 +57,7 @@
             android:name="photographerResponseDto"
             app:argType="com.ssafy.smile.data.remote.model.PhotographerResponseDto"
             app:nullable="true"
-            android:defaultValue="@null" />
-        <!-- TODO : animation 추가 : 주소 검색 클릭했을 때 뜨는 화면 -->
+        android:defaultValue="@null" />
         <action
             android:id="@+id/action_mainFragment_to_addressGraph"
             app:destination="@id/addressGraph" >
@@ -104,10 +103,16 @@
             app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
             <argument
                 android:name="postId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
+            <argument
+                android:name="goToDetail"
+                app:argType="boolean"
+                android:defaultValue="false"/>
         </action>
         <action
             android:id="@+id/action_mainFragment_to_registerPortFolioGraph"
@@ -122,7 +127,6 @@
                 app:nullable="true"
                 android:defaultValue="@null" />
         </action>
-        <!--TODO : animation 추가 : 맵 마커 클릭했을 때 뜨는 화면-->
         <action
             android:id="@+id/action_mainFragment_to_mapListFragment"
             app:enterAnim="@anim/up_enter"
@@ -133,7 +137,6 @@
                 app:argType="long"
                 android:defaultValue="-1L"/>
         </action>
-        <!--TODO : animation 추가 : 추천 결과로 넘어가는 화면-->
         <action
             android:id="@+id/action_mainFragment_to_recommendResultFragment"
             app:destination="@id/recommendResultFragment">
@@ -142,7 +145,6 @@
                 app:argType="string" />
         </action>
     </fragment>
-    <!-- TODO : 얘 필요한건가? 지워보기 -->
     <fragment
         android:id="@+id/findAddressFragment"
         android:name="com.ssafy.smile.presentation.view.home.AddressSearchFragment"
@@ -176,6 +178,10 @@
                 android:name="photographerId"
                 app:argType="long"
                 android:defaultValue="-1L"/>
+            <argument
+                android:name="goToDetail"
+                app:argType="boolean"
+                android:defaultValue="false"/>
         </action>
         <action
             android:id="@+id/action_searchFragment_pop"
@@ -243,10 +249,16 @@
             app:popExitAnim="@anim/slide_left_exit">
             <argument
                 android:name="photographerId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
             <argument
                 android:name="postId"
-                app:argType="long" />
+                app:argType="long"
+                android:defaultValue="-1L"/>
+            <argument
+                android:name="goToDetail"
+                app:argType="boolean"
+                android:defaultValue="false"/>
         </action>
     </fragment>
     <fragment
@@ -343,6 +355,10 @@
                 android:name="postId"
                 app:argType="long"
                 android:defaultValue="-1L"/>
+            <argument
+                android:name="goToDetail"
+                app:argType="boolean"
+                android:defaultValue="false"/>
             <action
                 android:id="@+id/action_portfolioFragment_to_reservationFragment"
                 app:destination="@id/reservationFragment"
@@ -362,7 +378,6 @@
                 app:exitAnim="@anim/slide_right_exit"
                 app:popEnterAnim="@anim/slide_left_enter"
                 app:popExitAnim="@anim/slide_left_exit"/>
-            <!-- TODO : 포트폴리오에서 게시물 상세 갈 때 인스타그램처럼 갈 수 있나 찾아보기 -->
             <action
                 android:id="@+id/action_portfolioFragment_to_postDetailFragment"
                 app:destination="@id/postDetailFragment"
@@ -404,6 +419,10 @@
                     android:name="postId"
                     app:argType="long"
                     android:defaultValue="-1L"/>
+                <argument
+                    android:name="photographerId"
+                    app:argType="long"
+                    android:defaultValue="-1L"/>
             </action>
         </fragment>
         <fragment
@@ -415,14 +434,10 @@
                 android:name="postId"
                 app:argType="long"
                 android:defaultValue="-1L"/>
-            <action
-                android:id="@+id/action_postDetailFragment_to_portfolioGraph"
-                app:destination="@id/portfolioGraph"
-                app:enterAnim="@anim/slide_right_enter"
-                app:exitAnim="@anim/slide_right_exit"
-                app:popEnterAnim="@anim/slide_left_enter"
-                app:popExitAnim="@anim/slide_left_exit"/>
-            <!-- TODO : 게시물 상세에서 편집 바텀 시트 애니메이션 적용하기 -->
+            <argument
+                android:name="photographerId"
+                app:argType="long"
+                android:defaultValue="-1L"/>
             <action
                 android:id="@+id/action_postDetailFragment_to_postEditBottomSheetDialogFragment"
                 app:destination="@id/postEditBottomSheetDialogFragment">
@@ -444,6 +459,26 @@
                 app:exitAnim="@anim/slide_right_exit"
                 app:popEnterAnim="@anim/slide_left_enter"
                 app:popExitAnim="@anim/slide_left_exit"/>
+            <action
+                android:id="@+id/action_postDetailFragment_to_portfolioGraph"
+                app:destination="@id/portfolioFragment"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
+                <argument
+                    android:name="photographerId"
+                    app:argType="long"
+                    android:defaultValue="-1L"/>
+                <argument
+                    android:name="postId"
+                    app:argType="long"
+                    android:defaultValue="-1L"/>
+                <argument
+                    android:name="goToDetail"
+                    app:argType="boolean"
+                    android:defaultValue="false"/>
+            </action>
         </fragment>
         <dialog
             android:id="@+id/postEditBottomSheetDialogFragment"
@@ -459,7 +494,6 @@
                 app:argType="com.ssafy.smile.domain.model.PostDomainDto"
                 app:nullable="true"
                 android:defaultValue="@null"/>
-            <!-- TODO : 게시물 상세 바텀 시트 pop 애니메이션 -->
             <action
                 android:id="@+id/action_postEditBottomSheetDialogFragment_pop"
                 app:popUpTo="@id/portfolioFragment" />
@@ -547,7 +581,6 @@
                 app:argType="com.ssafy.smile.domain.model.PostDomainDto"
                 app:nullable="true"
                 android:defaultValue="@null"/>
-            <!-- TODO : 게시물 상세에서 주소 찾는거 애니메이션 -->
             <action
                 android:id="@+id/action_writePostFragment_to_findAddressFragment"
                 app:destination="@id/findAddressFragment" />
@@ -559,7 +592,6 @@
                 app:exitAnim="@anim/slide_right_exit"
                 app:popEnterAnim="@anim/slide_left_enter"
                 app:popExitAnim="@anim/slide_left_exit"/>
-            <!-- TODO : 게시물 상세에서 주소 찾는거 애니메이션 -->
             <action
                 android:id="@+id/action_writePostFragment_to_addressGraph"
                 app:destination="@id/addressGraph">
@@ -599,7 +631,6 @@
                 app:popEnterAnim="@anim/slide_left_enter"
                 app:popExitAnim="@anim/slide_left_exit"/>
         </fragment>
-        <!-- TODO : 작가 프로필 사진 다이얼로그 애니메이션 -->
         <dialog
             android:id="@+id/photographerProfileFragment"
             android:name="com.ssafy.smile.presentation.view.mypage.PhotographerProfileFragment"
@@ -642,7 +673,6 @@
     <navigation
         android:id="@+id/addressGraph"
         app:startDestination="@id/addressFragment">
-        <!-- TODO : 주소 관련 dialog 애니메이션 -->
         <dialog
             android:id="@+id/addressFragment"
             android:name="com.ssafy.smile.presentation.view.home.AddressFragment"
@@ -759,6 +789,14 @@
                 android:name="postId"
                 app:argType="long"
                 android:defaultValue="-1L"/>
+            <argument
+                android:name="photographerId"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+            <argument
+                android:name="goToDetail"
+                app:argType="boolean"
+                android:defaultValue="false"/>
         </action>
         <action
             android:id="@+id/action_mapListFragment_pop"
@@ -802,6 +840,10 @@
             <argument
                 android:name="postId"
                 app:argType="long" />
+            <argument
+                android:name="goToDetail"
+                app:argType="boolean"
+                android:defaultValue="false"/>
         </action>
     </fragment>
 

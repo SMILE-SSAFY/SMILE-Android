@@ -17,6 +17,7 @@ import com.ssafy.smile.presentation.adapter.ResultPhotographerRecyclerAdapter
 import com.ssafy.smile.presentation.base.BaseFragment
 import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
+private const val TAG = "ResultPhotographerFragm_스마일"
 class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBinding>(FragmentResultPhotographerBinding::bind, R.layout.fragment_result_photographer) {
 
     private val searchViewModel: SearchViewModel by viewModels()
@@ -65,7 +66,11 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    if (it.errorCode != 404) {
+                    if (it.errorCode == 404) {
+                        recyclerData.clear()
+                        resultPhotographerRecyclerAdapter.notifyDataSetChanged()
+                        showToast(requireContext(), "정확한 검색어를 입력해주세요.", Types.ToastType.INFO)
+                    } else {
                         showToast(requireContext(), "작가 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
@@ -113,7 +118,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
             setItemClickListener(object : ResultPhotographerRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
                     recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvPhotographerResult)
-                    val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(recyclerData[position].photographerId)
+                    val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(photographerId = recyclerData[position].photographerId, postId = -1L, goToDetail = false)
                     findNavController().navigate(action)
                 }
 

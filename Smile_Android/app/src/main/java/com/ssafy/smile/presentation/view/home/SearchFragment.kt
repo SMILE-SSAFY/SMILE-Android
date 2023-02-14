@@ -38,6 +38,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 selected = results[pos]
             }
             .setPositiveButton("확인") { _, _ ->
+                binding.etSearch.setText(selected)
                 searchCategory(selected)
             }
             .setNegativeButton("취소") { _, _ ->
@@ -83,7 +84,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun searchCategory(category: String) {
         searchViewModel.searchCategory = category
-        Log.d(TAG, "searchCategory1111111111111111111: ${searchViewModel.searchCategory}")
         searchViewModel.searchPhotographer(category)
         searchViewModel.searchPost(category)
     }

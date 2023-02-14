@@ -68,7 +68,11 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     dismissLoadingDialog()
-                    if (it.errorCode != 404) {
+                    if (it.errorCode == 404) {
+                        recyclerData.clear()
+                        resultPostRecyclerAdapter.notifyDataSetChanged()
+                        showToast(requireContext(), "정확한 검색어를 입력해주세요.", Types.ToastType.INFO)
+                    } else {
                         showToast(requireContext(), "게시물 검색 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                     }
                 }
@@ -113,7 +117,7 @@ class ResultPostFragment : BaseFragment<FragmentResultPostBinding>(FragmentResul
             setItemClickListener(object: ResultPostRecyclerAdapter.OnItemClickListener{
                 override fun onClick(view: View, position: Int) {
                     recyclerViewState = CommonUtils.saveRecyclerViewState(binding.rvPostResult)
-                    val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(photographerId = -1L, postId = recyclerData[position].articleId)
+                    val action = SearchFragmentDirections.actionSearchFragmentToPortfolioGraph(photographerId = recyclerData[position].photographerId, postId = recyclerData[position].articleId, goToDetail = true)
                     findNavController().navigate(action)
                 }
             })
