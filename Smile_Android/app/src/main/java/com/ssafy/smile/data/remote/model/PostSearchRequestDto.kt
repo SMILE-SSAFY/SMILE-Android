@@ -5,7 +5,7 @@ import com.ssafy.smile.domain.model.PostSearchDomainDto
 
 data class PostSearchRequestDto(
     val isEndPage : Boolean,
-    val articleRedisList : List<PostSearchDto>
+    val articleClusterList : List<PostSearchDto>
 )
 
 data class PostSearchDto(

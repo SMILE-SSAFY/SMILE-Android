@@ -165,6 +165,7 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # app key ignore
-/app/src/main/res/values/appkey.xml
+Smile_Android/app/src/main/res/values/appkey.xml
+Smile_Android/app/google-services.json
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudiod

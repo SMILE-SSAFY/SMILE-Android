@@ -1,6 +1,5 @@
 package com.ssafy.smile.presentation.view.map
 
-import android.os.Parcelable
 import android.util.Log
 import android.view.View
 import android.widget.CheckedTextView
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentMapListBinding
 import com.ssafy.smile.domain.model.PostSearchDomainDto
@@ -65,12 +63,12 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
                         Log.d("스마일", "setObserver: ${it.data}")
-                         if (it.data.articleRedisList.isEmpty()){
+                         if (it.data.articleClusterList.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
                         }else{
                             setEmptyView(false)
-                            val list = it.data.articleRedisList.map { postSearchDto -> (postSearchDto.makeToDomainDto()).makeToRVDto() }
+                            val list = it.data.articleClusterList.map { postSearchDto -> (postSearchDto.makeToDomainDto()).makeToRVDto() }
                             setRVView(true, it.data.isEndPage, list as ArrayList<PostSearchRVDomainDto>)
                         }
                     }
