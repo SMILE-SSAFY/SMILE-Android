@@ -1,6 +1,11 @@
 package com.ssafy.api.config.security.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.core.exception.ErrorCode;
+import com.ssafy.core.exception.ErrorResponseEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -41,12 +46,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String token = jwtTokenProvider.resolveToken(request);
-        log.info("[doFilter] token: {}", token);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-            log.info("------------------ SecurityContextHolder auth 등록");
+        try {
+            String token = jwtTokenProvider.resolveToken(request);
+            log.info("[doFilter] token: {}", token);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                log.info("------------------ SecurityContextHolder auth 등록");
+            }
+        } catch (Exception e) {
+            log.info("[Filter] error");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(response.getWriter(), ErrorResponseEntity.toResponseEntity(ErrorCode.INTER_SERVER_ERROR).getBody());
         }
         chain.doFilter(request, response);
     }
