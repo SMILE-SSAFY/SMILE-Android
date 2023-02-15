@@ -8,12 +8,16 @@ import com.ssafy.api.dto.article.ArticleListDto;
 import com.ssafy.api.dto.article.ArticlePostDto;
 import com.ssafy.core.dto.ArticleQdslDto;
 import com.ssafy.core.dto.ArticleSearchDto;
-import com.ssafy.core.entity.*;
+import com.ssafy.core.entity.Article;
+import com.ssafy.core.entity.ArticleCluster;
+import com.ssafy.core.entity.ArticleHeart;
+import com.ssafy.core.entity.Photographer;
+import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
-import com.ssafy.core.repository.article.ArticleHeartRepository;
 import com.ssafy.core.repository.article.ArticleClusterRepository;
+import com.ssafy.core.repository.article.ArticleHeartRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
@@ -343,7 +347,7 @@ public class ArticleService {
         // 최신순 조회
         switch (condition) {
             case "time": {
-                List<ArticleCluster> articleClusterPage = articleClusterRepository.findAllByClusterIdAndUserIdOrderByIdDesc(clusterId, userId);
+                List<ArticleCluster> articleClusterPage = articleClusterRepository.findAllByClusterIdAndUserIdOrderByArticleIdDesc(clusterId, userId);
                 articleClusterListDto = doCluster(articleClusterPage, pageId, isEndPage);
                 break;
             }
