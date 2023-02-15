@@ -1,27 +1,14 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.dto.Photographer.PhotographerForListDto;
-import com.ssafy.api.dto.Photographer.PhotographerResDto;
-import com.ssafy.api.dto.recommend.RecommendRequestDto;
 import com.ssafy.api.dto.recommend.RecommendResponseDto;
-import com.ssafy.api.service.PhotographerService;
 import com.ssafy.api.service.RecommendService;
-
-import com.ssafy.core.dto.PhotographerIdQdslDto;
-import com.ssafy.core.entity.PhotographerHeart;
-import com.ssafy.core.entity.User;
-import io.lettuce.core.dynamic.annotation.Param;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 추천 관련 Controller

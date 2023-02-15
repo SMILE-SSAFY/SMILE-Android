@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /***
+ * 클러스터에 대한 정보를 저장
  * @author 신민철
- * redis에 cache로 article 정보를 저장
  */
 @Entity
 @NoArgsConstructor
