@@ -11,7 +11,6 @@ import com.ssafy.core.dto.ArticleSearchDto;
 import com.ssafy.core.entity.Article;
 import com.ssafy.core.entity.ArticleCluster;
 import com.ssafy.core.entity.ArticleHeart;
-import com.ssafy.core.entity.ArticleRedis;
 import com.ssafy.core.entity.Photographer;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomException;
@@ -19,7 +18,6 @@ import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.repository.CategoriesRepository;
 import com.ssafy.core.repository.article.ArticleClusterRepository;
 import com.ssafy.core.repository.article.ArticleHeartRepository;
-import com.ssafy.core.repository.article.ArticleRedisRepository;
 import com.ssafy.core.repository.article.ArticleRepository;
 import com.ssafy.core.repository.photographer.PhotographerRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +49,6 @@ public class ArticleService {
     private final ArticleHeartRepository articleHeartRepository;
     private final CategoriesRepository categoriesRepository;
     private final ArticleClusterRepository articleClusterRepository;
-    private final ArticleRedisRepository articleRedisRepository;
     private final PhotographerRepository photographerRepository;
 
     /***
@@ -211,11 +208,11 @@ public class ArticleService {
         Long hearts = articleHeartRepository.countByArticle(article);
 
         // 좋아요 눌렀을 때
-        ArticleRedis articleRedis = articleRedisRepository.findById(articleId).orElse(null);
-        if (articleRedis != null){
-            articleRedis.setHearts(hearts);
-            articleRedis.setIsHeart(!isHeart);
-            articleRedisRepository.save(articleRedis);
+        ArticleCluster articleCluster = articleClusterRepository.findByArticleIdAndUserId(article.getId(), user.getId()).orElse(null);
+        if (articleCluster != null){
+            articleCluster.setHearts(hearts);
+            articleCluster.setIsHeart(!isHeart);
+            articleClusterRepository.save(articleCluster);
         }
 
         return new ArticleHeartDto().of(articleId, !isHeart, hearts);
@@ -254,29 +251,34 @@ public class ArticleService {
      * @return 마커, 마커의 위치, 마커에 포함된 게시글의 개수
      */
 
+    @Transactional
     public List<ArticleClusterDto> clusterTest(Double y1, Double x1, Double y2, Double x2) {
 
-        // User를 조회하고 user가 이전에 clustering한 데이터를 cache로 가지고 있을 경우 삭제
+        // User를 조회하고 user가 이전에 clustering한 데이터를 가지고 있을 경우 삭제
         User logInUser = UserService.getLogInUser();
-        articleClusterRepository.findByUserId(logInUser.getId())
-                .ifPresent(base -> articleClusterRepository.deleteByUser(logInUser));
-
+        articleClusterRepository.deleteAllByUserId(logInUser.getId());
         // 지도 범위 내의 모든 게시글을 조회
         List<Article> articleList = articleRepository
                 .findAllByLatitudeBetweenAndLongitudeBetweenOrderByIdDesc(y2, y1, x1, x2);
         if (articleList.isEmpty()) {
             return new ArrayList<>();
         }
-        // k값 최적화 필요, 클러스터링 라이브러리 이용
+        // 클러스터링 라이브러리 이용, 게시글 25개 이상 일때 2개 이상으로 분리
         XMeans clusters = XMeans.fit(getGeoPointArray(articleList), 20);
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
         // 클러스터링한 데이터 내에서 마커찍기 + 마커마다 게시글 개수 return
+        int listIdx = 0;
+        double y = (y1 + y2) / 2;
+        double x = (x1 + x2) / 2;
+        // 마커별 게시글을 저장
         for (int i = 0; i < clusters.size.length - 1; i++) {
+            Long clusterId = (long) i;
             double[] centroids = clusters.centroids[i];
             double centroidX = centroids[0];
             double centroidY = centroids[1];
+            // 마커를 돌면서 마커가 존재 하면
             if (!Double.isNaN(centroidX) && !Double.isNaN(centroidY)) {
                 ArticleClusterDto clusterDto = ArticleClusterDto.builder()
                         .clusterId((long) i)
@@ -285,30 +287,16 @@ public class ArticleService {
                         .centroidLng(centroids[1])
                         .build();
                 clusterResults.add(clusterDto);
-            }
-        }
 
-        log.info(Arrays.toString(clusters.y));
-        log.info(Arrays.toString(clusters.size));
+                // 마커안 게시물을 각각의 마커에 나눠서 저장
+                for (int j = 0; j < clusters.size[i]; j++) {
+                    Article article = articleList.get(listIdx);
+                    listIdx++;
 
-        articleRedisRepository.deleteAll();
-
-        int listIdx = 0;
-        double y = (y1 + y2) / 2;
-        double x = (x1 + x2) / 2;
-        // 마커별 게시글을 cache로 저장
-        for (int i = 0; i < clusters.size.length - 1; i++) {
-            Long clusterId = (long) i;
-            List<ArticleRedis> articleRedisList = new ArrayList<>();
-            for (int j = 0; j < clusters.size[i]; j++) {
-
-                Article article = articleList.get(listIdx);
-
-                listIdx++;
                 User articleAuthor = article.getUser();
-
                 boolean isHearted = isHearted(logInUser, article);
                 Long hearts = articleHeartRepository.countByArticle(article);
+
                 // 위도, 경도 기반 중심좌표와 게시글의 거리 계산
                 double baseLength = 111000;
                 double distance = Math.sqrt(Math.pow((article.getLatitude() - y) * baseLength, 2)
@@ -316,10 +304,11 @@ public class ArticleService {
 
                 String photoUrls = article.getPhotoUrls().replace("[", "").replace("]", "");
                 List<String> photoUrlList = new ArrayList<>(Arrays.asList(photoUrls.split(",")));
-
-                ArticleRedis articleRedis = ArticleRedis.builder()
-                        .id(article.getId())
+                // 각각의 정보를 저장
+                ArticleCluster articleCluster = ArticleCluster.builder()
+                        .articleId(article.getId())
                         .clusterId(clusterId)
+                        .userId(logInUser.getId())
                         .photographerId(article.getUser().getId())
                         .photographerName(articleAuthor.getName())
                         .latitude(article.getLatitude())
@@ -332,17 +321,9 @@ public class ArticleService {
                         .category(article.getCategory())
                         .photoUrl(photoUrlList.get(0).trim())
                         .build();
-                articleRedisList.add(articleRedis);
-
-                articleRedisRepository.save(articleRedis);
-                log.info(articleRedisList.toString());
+                articleClusterRepository.save(articleCluster);
+                }
             }
-            // 해당 유저가 만든 클러스터를 cache로 저장
-            ArticleCluster articleCluster = ArticleCluster.builder()
-                    .id(clusterId)
-                    .userId(logInUser.getId())
-                    .build();
-            articleClusterRepository.save(articleCluster);
         }
 
         log.info(Arrays.deepToString((clusters.centroids)));
@@ -358,7 +339,7 @@ public class ArticleService {
      * @param pageId 늘어날 수록 조회하는 게시글 증가
      * @return 마커별 게시글 리스트
      */
-
+    @Transactional
     public ArticleClusterListDto getArticleListByMarkerId(Long clusterId, String condition, Long pageId) {
         Boolean isEndPage = false;
         ArticleClusterListDto articleClusterListDto = new ArticleClusterListDto();
@@ -366,20 +347,21 @@ public class ArticleService {
         // 최신순 조회
         switch (condition) {
             case "time": {
-                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByIdDesc(clusterId, userId);
-                articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
+                List<ArticleCluster> articleClusterPage = articleClusterRepository.findAllByClusterIdAndUserIdOrderByArticleIdDesc(clusterId, userId);
+                articleClusterListDto = doCluster(articleClusterPage, pageId, isEndPage);
                 break;
-                // 좋아요순 조회
             }
+            // 좋아요순 조회
             case "heart": {
-                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByHeartsDesc(clusterId, userId);
-                articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
+                List<ArticleCluster> articleClusterPage = articleClusterRepository.findAllByClusterIdAndUserIdOrderByHeartsDesc(clusterId, userId);
+                log.info(articleClusterPage.toString());
+                articleClusterListDto = doCluster(articleClusterPage, pageId, isEndPage);
                 break;
             }
             // 거리순 조회
             case "distance": {
-                List<ArticleRedis> articleRedisPage = articleRedisRepository.findAllByClusterIdOrderByDistanceAsc(clusterId, userId);
-                articleClusterListDto = doCluster(articleRedisPage, pageId, isEndPage);
+                List<ArticleCluster> articleClusterPage = articleClusterRepository.findAllByClusterIdAndUserIdOrderByDistanceAsc(clusterId, userId);
+                articleClusterListDto = doCluster(articleClusterPage, pageId, isEndPage);
                 break;
             }
         }
@@ -388,29 +370,29 @@ public class ArticleService {
 
     /***
      * 클러스터를 마커 별로 paging
-     * @param articleRedisPage
+     * @param articleClusterPage
      * @param pageId
      * @param isEndPage
      * @return
      */
-    private ArticleClusterListDto doCluster(List<ArticleRedis> articleRedisPage, Long pageId, Boolean isEndPage) {
+
+    private ArticleClusterListDto doCluster(List<ArticleCluster> articleClusterPage, Long pageId, Boolean isEndPage) {
         Integer size = (int) ((pageId + 1) * 9);
-        log.info(String.valueOf(size));
 
         // cache를 paging
-        if (size > articleRedisPage.size()) {
-            size = articleRedisPage.size();
+        if (size > articleClusterPage.size()) {
+            size = articleClusterPage.size();
             isEndPage = true;
         }
         if (size < 9) {
             return ArticleClusterListDto.builder()
                     .isEndPage(isEndPage)
-                    .articleRedisList(articleRedisPage)
+                    .articleClusterList(articleClusterPage)
                     .build();
         }
         return ArticleClusterListDto.builder()
                 .isEndPage(isEndPage)
-                .articleRedisList(articleRedisPage.subList(size - 9, size))
+                .articleClusterList(articleClusterPage.subList(size - 9, size))
                 .build();
     }
 
