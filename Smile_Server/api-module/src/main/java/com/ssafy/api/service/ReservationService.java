@@ -79,7 +79,7 @@ public class ReservationService {
      * @param reservation
      */
     @Transactional
-    public ReservationResDto reserve(ReservationReqDto reservation){
+    public ReservationResDto reserve(ReservationReqDto reservation) throws IOException {
         Long userId = UserService.getLogInUser().getId();
         reservation.setUserId(userId);
         if(!photographerRepository.existsById(reservation.getPhotographerId())){
@@ -107,6 +107,12 @@ public class ReservationService {
         Reservation entity = reservationRepository.save(savedReservation);
 
         User photographer = userRepository.findById(reservation.getPhotographerId()).get();
+        notificationService.sendDataMessageTo(NotificationDTO.builder()
+                .requestId(userId)
+                .registrationToken(photographer.getFcmToken())
+                .content(entity.getReservedAt() + "에 예약되었습니다.")
+                .build());
+
         return new ReservationResDto().of(entity, photographer.getName(), photographer.getPhoneNumber());
     }
 
