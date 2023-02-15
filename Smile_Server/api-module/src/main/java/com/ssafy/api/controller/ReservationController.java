@@ -43,7 +43,7 @@ public class ReservationController {
      * @return ReservationReqDto
      */
     @PostMapping
-    public ResponseEntity<?> registerReservation(@RequestBody ReservationReqDto reservation){
+    public ResponseEntity<?> registerReservation(@RequestBody ReservationReqDto reservation) throws IOException {
         return ResponseEntity.ok(reservationService.reserve(reservation));
     }
 
