@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 object OkhttpClientInstances {
     private var interceptor = Interceptor { chain ->
-        val accessToken = Application.authToken
+        val accessToken = Application().getAuthToken()
         val request = if (accessToken != null && accessToken != "") {
             chain.request().newBuilder()
               .addHeader("Authorization", accessToken)

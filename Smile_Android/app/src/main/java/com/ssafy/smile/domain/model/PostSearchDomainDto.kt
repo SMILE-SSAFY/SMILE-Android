@@ -2,7 +2,7 @@ package com.ssafy.smile.domain.model
 
 data class PostSearchDomainDto(
     val clusterId : Long,
-    val id : Long,
+    val articleId: Long,
     val photographerName : String,
     val photographerId: Long,
     val latitude : Double,

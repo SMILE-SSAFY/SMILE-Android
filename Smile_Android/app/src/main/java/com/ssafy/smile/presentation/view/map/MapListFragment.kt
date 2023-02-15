@@ -1,6 +1,6 @@
 package com.ssafy.smile.presentation.view.map
 
-import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.widget.CheckedTextView
 import android.widget.TextView
@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.ssafy.smile.R
-import com.ssafy.smile.common.util.CommonUtils
 import com.ssafy.smile.common.util.NetworkUtils
 import com.ssafy.smile.databinding.FragmentMapListBinding
 import com.ssafy.smile.domain.model.PostSearchDomainDto
@@ -63,12 +62,13 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
                 when(it){
                     is NetworkUtils.NetworkResponse.Loading -> { }
                     is NetworkUtils.NetworkResponse.Success -> {
-                         if (it.data.articleRedisList.isEmpty()){
+                        Log.d("스마일", "setObserver: ${it.data}")
+                         if (it.data.articleClusterList.isEmpty()){
                             setEmptyView(true)
                             setRVView(false)
                         }else{
                             setEmptyView(false)
-                            val list = it.data.articleRedisList.map { postSearchDto -> (postSearchDto.makeToDomainDto()).makeToRVDto() }
+                            val list = it.data.articleClusterList.map { postSearchDto -> (postSearchDto.makeToDomainDto()).makeToRVDto() }
                             setRVView(true, it.data.isEndPage, list as ArrayList<PostSearchRVDomainDto>)
                         }
                     }
@@ -148,13 +148,10 @@ class MapListFragment : BaseBottomSheetDialogFragment<FragmentMapListBinding>(Fr
         clusterPostRvAdapter = ClusterPostRVAdapter().apply {
             setItemClickListener(object : ClusterPostRVAdapter.ItemClickListener{
                 override fun onClickHeart(tvView: TextView, checkedView: CheckedTextView, position: Int, postSearchDto: PostSearchDomainDto) {
-                    checkedView.isChecked = !(checkedView.isChecked)
-                    postSearchDto.isHeart = checkedView.isChecked
-                    notifyDataSetChanged()
-                    viewModel.updatePostHeart(postSearchDto.id)
+                    viewModel.updatePostHeart(postSearchDto.articleId)
                 }
                 override fun onClickItem(view: View, position: Int, postSearchDto: PostSearchDomainDto) {
-                    val action = MapListFragmentDirections.actionMapListFragmentToPortfolioGraph(postId = postSearchDto.id, photographerId = postSearchDto.photographerId, goToDetail = true)
+                    val action = MapListFragmentDirections.actionMapListFragmentToPortfolioGraph(postId = postSearchDto.articleId, photographerId = postSearchDto.photographerId, goToDetail = true)
                     findNavController().navigate(action)
                 }
             })

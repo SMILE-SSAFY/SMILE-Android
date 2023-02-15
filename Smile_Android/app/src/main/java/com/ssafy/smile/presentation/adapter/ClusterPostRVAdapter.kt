@@ -31,7 +31,7 @@ class ClusterPostRVAdapter() : RecyclerView.Adapter<ViewHolder>() {
     var page : Int = 0
 
     fun changeDataHearts(heartDto : PostHeartDto){
-        val item = itemList.find{ it.postSearchDto?.id == heartDto.articleId }
+        val item = itemList.find{ it.postSearchDto?.articleId == heartDto.articleId }
         val itemIndex = itemList.indexOf(item)
         item?.postSearchDto?.let {
             it.hearts = heartDto.hearts

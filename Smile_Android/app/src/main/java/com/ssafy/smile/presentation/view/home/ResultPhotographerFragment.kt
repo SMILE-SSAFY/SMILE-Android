@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.smile.R
@@ -20,7 +21,7 @@ import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 private const val TAG = "ResultPhotographerFragm_스마일"
 class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBinding>(FragmentResultPhotographerBinding::bind, R.layout.fragment_result_photographer) {
 
-    private val searchViewModel: SearchViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by navGraphViewModels(R.id.searchGraph)
     private lateinit var resultPhotographerRecyclerAdapter: ResultPhotographerRecyclerAdapter
     private val recyclerData = mutableListOf<CustomPhotographerDomainDto>()
     private var recyclerViewState: Parcelable? = null
@@ -95,6 +96,7 @@ class ResultPhotographerFragment : BaseFragment<FragmentResultPhotographerBindin
                 is NetworkUtils.NetworkResponse.Loading -> {
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
+                    Log.d(TAG, "photographerHeartResponseObserver: ${searchViewModel.searchCategory}")
                     searchViewModel.searchPhotographer(searchViewModel.searchCategory)
                     resultPhotographerRecyclerAdapter.notifyDataSetChanged()
                 }

@@ -68,7 +68,7 @@
         </action>
         <action
             android:id="@+id/action_mainFragment_to_searchResultFragment"
-            app:destination="@id/searchFragment"
+            app:destination="@id/searchGraph"
             app:enterAnim="@anim/slide_right_enter"
             app:exitAnim="@anim/slide_right_exit"
             app:popEnterAnim="@anim/slide_left_enter"
@@ -153,40 +153,6 @@
         <action
             android:id="@+id/action_findAddressFragment_to_setAddressFragment"
             app:destination="@id/setAddressFragment"
-            app:enterAnim="@anim/slide_right_enter"
-            app:exitAnim="@anim/slide_right_exit"
-            app:popEnterAnim="@anim/slide_left_enter"
-            app:popExitAnim="@anim/slide_left_exit"/>
-    </fragment>
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.ssafy.smile.presentation.view.home.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_portfolioGraph"
-            app:destination="@id/portfolioGraph"
-            app:enterAnim="@anim/slide_right_enter"
-            app:exitAnim="@anim/slide_right_exit"
-            app:popEnterAnim="@anim/slide_left_enter"
-            app:popExitAnim="@anim/slide_left_exit">
-            <argument
-                android:name="postId"
-                app:argType="long"
-                android:defaultValue="-1L"/>
-            <argument
-                android:name="photographerId"
-                app:argType="long"
-                android:defaultValue="-1L"/>
-            <argument
-                android:name="goToDetail"
-                app:argType="boolean"
-                android:defaultValue="false"/>
-        </action>
-        <action
-            android:id="@+id/action_searchFragment_pop"
-            app:popUpTo="@id/searchFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_right_enter"
             app:exitAnim="@anim/slide_right_exit"
             app:popEnterAnim="@anim/slide_left_enter"
@@ -741,6 +707,54 @@
                 app:popUpTo="@id/addressGraph"
                 app:popUpToInclusive="true" />
         </dialog>
+    </navigation>
+    <navigation
+        android:id="@+id/searchGraph"
+        app:startDestination="@id/searchFragment">
+        <fragment
+            android:id="@+id/searchFragment"
+            android:name="com.ssafy.smile.presentation.view.home.SearchFragment"
+            android:label="fragment_search"
+            tools:layout="@layout/fragment_search" >
+            <action
+                android:id="@+id/action_searchFragment_to_portfolioGraph"
+                app:destination="@id/portfolioGraph"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit">
+                <argument
+                    android:name="postId"
+                    app:argType="long"
+                    android:defaultValue="-1L"/>
+                <argument
+                    android:name="photographerId"
+                    app:argType="long"
+                    android:defaultValue="-1L"/>
+                <argument
+                    android:name="goToDetail"
+                    app:argType="boolean"
+                    android:defaultValue="false"/>
+            </action>
+            <action
+                android:id="@+id/action_searchFragment_pop"
+                app:popUpTo="@id/searchFragment"
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/slide_right_enter"
+                app:exitAnim="@anim/slide_right_exit"
+                app:popEnterAnim="@anim/slide_left_enter"
+                app:popExitAnim="@anim/slide_left_exit"/>
+        </fragment>
+        <fragment
+            android:id="@+id/resultPhotographerFragment"
+            android:name="com.ssafy.smile.presentation.view.home.ResultPhotographerFragment"
+            android:label="fragment_result_photographer"
+            tools:layout="@layout/fragment_result_photographer"/>
+        <fragment
+            android:id="@+id/resultPostFragment"
+            android:name="com.ssafy.smile.presentation.view.home.ResultPostFragment"
+            android:label="fragment_result_post"
+            tools:layout="@layout/fragment_result_post"/>
     </navigation>
     <fragment
         android:id="@+id/reviewDetailFragment"

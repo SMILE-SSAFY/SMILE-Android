@@ -2,15 +2,215 @@
     <!-- Base application theme. -->
     <style name="Theme.Smile_Android" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/blue400</item>
+        <item name="colorPrimaryVariant">@color/blue400</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/blue400</item>
+        <item name="colorSecondaryVariant">@color/blue400</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/statusbar_color</item>
         <!-- Customize your theme here. -->
+        <!-- switch/toggle -->
+        <item name="switchStyle">@style/Widget.App.Switch</item>
+    </style>
+
+    <!-- button -->
+    <style name="BtnLargeRectangleCommon" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="BtnLargeRectangleBlue400Radius8" parent="BtnLargeRectangleCommon">
+        <item name="android:background">@drawable/rectangle_blue400_radius_8</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="BtnLargeRectangleBlue100Radius8" parent="BtnLargeRectangleCommon">
+        <item name="android:background">@drawable/rectangle_blue100_radius_8</item>
+        <item name="android:textColor">@color/dark400</item>
+    </style>
+
+    <style name="BtnLargeRectangleGray400Radius8" parent="BtnLargeRectangleCommon">
+        <item name="android:background">@drawable/rectangle_gray400_radius_8</item>
+        <item name="android:textColor">@color/gray200</item>
+    </style>
+
+    <style name="BtnLargeRectangleDark400Radius4" parent="BtnLargeRectangleCommon">
+        <item name="android:background">@drawable/rectangle_dark400_radius_4</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="BtnMediumRectangleBlue400" parent="BtnLargeRectangleCommon">
+        <item name="android:background">@drawable/rectangle_blue400</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="BtnMediumRectangleBlue100" parent="BtnLargeRectangleCommon">
+        <item name="android:background">@drawable/rectangle_blue100</item>
+        <item name="android:textColor">@color/dark400</item>
+    </style>
+
+    <style name="BtnMediumRectangleBlue400Radius8" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/rectangle_blue400_radius_8</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="BtnSmallRectangleRadius2" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">11sp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="iconSize">14dp</item>
+    </style>
+
+    <style name="BtnSmallRectangleBlue400Radius8" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/rectangle_blue400_stroke_radius_8</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/blue400</item>
+    </style>
+
+    <!-- chip -->
+    <style name="ChipMediumRectangleBlueRadius8" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/filter_chip_bg_color</item>
+        <item name="android:textColor">@color/filter_chip_text_color</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:checkable">true</item>
+        <item name="chipStartPadding">8dp</item>
+        <item name="chipIconVisible">true</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="rippleColor">@color/transparent</item>
+        <item name="chipCornerRadius">8dp</item>
+    </style>
+
+    <!-- EditText -->
+    <style name="Et4DirOutlined.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/edittext_outlined_box_color</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="hintEnabled">false</item>
+    </style>
+    <style name="Et4DirOutlined.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textColorHint">@color/gray500</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="Et1DirOutlined" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/et_underline_blue400</item>
+        <item name="android:textColorHint">@color/gray500</item>
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <!-- TextView -->
+    <style name="TvH1" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_bold</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="TvH2" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TvH3" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="TvH4" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TvH5" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TvH6" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="TvT1" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TvT2" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TvT3" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>s
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TvT4" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TvT5" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="TvT6" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/ibm_plex_sans_regular</item>
+        <item name="android:textSize">9sp</item>
+    </style>
+
+
+    <!-- bottomSheet -->
+    <style name="CustomBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="ModalBottomSheetDialog" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/white</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <!-- dialog -->
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">1</item>
+    </style>
+
+    <!-- spinner -->
+    <style name="CustomSpinnerTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/edittext_outlined_box_color</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+    </style>
+    <!-- switch/toggle -->
+    <style name="Widget.App.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorOnSurface">@color/blue100</item>
+        <item name="colorSecondary">@color/blue400</item>
     </style>
 </resources>
