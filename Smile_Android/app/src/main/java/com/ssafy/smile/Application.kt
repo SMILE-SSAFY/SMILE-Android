@@ -61,4 +61,8 @@ class Application : Application()  {
     private fun bootPayInit() {
         BootpayAnalytics.init(this, getString(R.string.bootpay_key))
     }
+
+    fun getAuthToken(): String? {
+        return sharedPreferences.getAuthToken()
+    }
 }

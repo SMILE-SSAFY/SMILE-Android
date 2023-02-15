@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssafy.smile.R
 import com.ssafy.smile.common.util.hideKeyboard
@@ -22,7 +23,7 @@ import com.ssafy.smile.presentation.viewmodel.home.SearchViewModel
 
 private const val TAG = "SearchFragment_스마일"
 class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::bind, R.layout.fragment_search) {
-    private val searchViewModel: SearchViewModel by viewModels()
+    private val searchViewModel: SearchViewModel by navGraphViewModels(R.id.searchGraph)
 
     private lateinit var selected: String
 
@@ -86,6 +87,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         searchViewModel.searchCategory = category
         searchViewModel.searchPhotographer(category)
         searchViewModel.searchPost(category)
+
+        Log.d(TAG, "searchCategory: ${searchViewModel.searchCategory}")
     }
 
     private fun setViewPager() {

@@ -36,12 +36,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private var isPhotographer = true
     private var curAddress = ""
     private var userId = -1L
-    private var filter = "heart"
 
     override fun onResume() {
         super.onResume()
         setObserverBeforeSetAddress()
         homeViewModel.getCurrentAddress()
+
+        when(homeViewModel.filter) {
+            "heart" -> setChipsEnabled(popular = false, avg = true, cnt = true)
+            "score" -> setChipsEnabled(popular = true, avg = false, cnt = true)
+            "review" -> setChipsEnabled(popular = true, avg = true, cnt = false)
+        }
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<String>("Role")?.observe(viewLifecycleOwner){
             homeViewModel.changeRole(requireContext(), Types.Role.getRoleType(it))
@@ -147,24 +152,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 }
                 is NetworkUtils.NetworkResponse.Success -> {
                     homeRecyclerAdapter.notifyDataSetChanged()
-                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+                    homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
                 }
                 is NetworkUtils.NetworkResponse.Failure -> {
                     showToast(requireContext(), "작가 좋아요 요청에 실패했습니다. 다시 시도해주세요.", Types.ToastType.ERROR)
                 }
             }
         }
-            }
+    }
 
-            private fun getAddressObserver() {
-                homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
-                    if (it==null) {
-                        curAddress = getString(R.string.tv_address_unselected)
-                        binding.tvToolbarAddress.text = curAddress
-                    } else{
-                        curAddress = it.address
-                        binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+    private fun getAddressObserver() {
+        homeViewModel.getCurrentAddressResponse.observe(viewLifecycleOwner) {
+            if (it==null) {
+                curAddress = getString(R.string.tv_address_unselected)
+                binding.tvToolbarAddress.text = curAddress
+            } else{
+                curAddress = it.address
+                binding.tvToolbarAddress.text = AddressUtils.getRepresentAddress(curAddress)
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
                 setObserverAfterSetAddress()
                 if (!(Application.isRecommendRefused)) recommendDialogInit(requireContext())
             }
@@ -180,10 +185,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
     private fun setRefreshLayoutEvent() {
         binding.apply {
             refreshLayout.setOnRefreshListener {
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
                 refreshLayout.isRefreshing = false
 
-                when(filter) {
+                when(homeViewModel.filter) {
                     "heart" -> {
                         binding.chipPopular.apply {
                             isChecked = true
@@ -212,30 +217,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
         binding.apply {
             chipPopular.setOnClickListener {
                 setChipsEnabled(popular = false, avg = true, cnt = true)
-                filter = if (chipPopular.isChecked) {
-                    "heart"
-                } else {
-                    ""
-                }
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+                homeViewModel.filter = "heart"
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
             }
             chipReviewAvg.setOnClickListener {
                 setChipsEnabled(popular = true, avg = false, cnt = true)
-                filter = if (chipReviewAvg.isChecked) {
-                    "score"
-                } else {
-                    ""
-                }
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+                homeViewModel.filter = "score"
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
             }
             chipReviewCnt.setOnClickListener {
                 setChipsEnabled(popular = true, avg = true, cnt = false)
-                filter = if (chipReviewCnt.isChecked) {
-                    "review"
-                } else {
-                    ""
-                }
-                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, filter)
+                homeViewModel.filter = "review"
+                homeViewModel.getPhotographerInfoByAddressInfo(curAddress, homeViewModel.filter)
             }
         }
     }
@@ -328,6 +321,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::bind
                 override fun onOkButtonClick() {
                     val action = MainFragmentDirections.actionMainFragmentToRecommendResultFragment(curAddress)
                     findNavController().navigate(action)
+                    Application.isRecommendRefused = true
                 }
 
                 override fun onCancelButtonClick() { Application.isRecommendRefused = true }
