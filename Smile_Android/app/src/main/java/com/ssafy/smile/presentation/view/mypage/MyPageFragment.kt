@@ -131,6 +131,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
                     }
                     is NetworkUtils.NetworkResponse.Loading -> {}
                     is NetworkUtils.NetworkResponse.Success -> {
+                        removeLocalInfo()
                         Intent(context, MainActivity::class.java).apply {
                             requireActivity().finish()
                             startActivity(this)
@@ -190,7 +191,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(FragmentMyPageBinding
     }
     private fun logout() {
         viewModel.logout(LogoutRequestDto(SharedPreferencesUtil(requireContext()).getFCMToken()!!))
-        removeLocalInfo()
     }
     private fun removeLocalInfo(){
         try {
