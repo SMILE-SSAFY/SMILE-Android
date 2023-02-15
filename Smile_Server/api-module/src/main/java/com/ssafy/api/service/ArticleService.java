@@ -208,7 +208,7 @@ public class ArticleService {
         Long hearts = articleHeartRepository.countByArticle(article);
 
         // 좋아요 눌렀을 때
-        ArticleCluster articleCluster = articleClusterRepository.findById(articleId).orElse(null);
+        ArticleCluster articleCluster = articleClusterRepository.findByArticleIdAndUserId(article.getId(), user.getId()).orElse(null);
         if (articleCluster != null){
             articleCluster.setHearts(hearts);
             articleCluster.setIsHeart(!isHeart);
