@@ -67,7 +67,6 @@ public class NotificationService {
      * 전송될 데이터 타입 만들기
      *
      * @param targetToken
-     * @param title
      * @param body
      * @return
      * @throws JsonProcessingException
