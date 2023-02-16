@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import smile.clustering.GMeans;
 import smile.clustering.XMeans;
 
 import javax.transaction.Transactional;
@@ -264,7 +265,7 @@ public class ArticleService {
             return new ArrayList<>();
         }
         // 클러스터링 라이브러리 이용, 게시글 25개 이상 일때 2개 이상으로 분리
-        XMeans clusters = XMeans.fit(getGeoPointArray(articleList), 20);
+        GMeans clusters = GMeans.fit(getGeoPointArray(articleList), 20);
 
         List<ArticleClusterDto> clusterResults = new ArrayList<>();
 
