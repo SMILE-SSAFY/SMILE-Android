@@ -71,7 +71,7 @@
 
 ## :three: ERD
 
-![img](./wiki/image/erd.png)
+![img](../wiki/image/erd.png)
 
 ## :four: Server Architecture
 
@@ -155,13 +155,13 @@
     </tr>
     <tr>
         <td><a href="https://github.com/kjjee99">@kjjee99</a></td>
-        <td><a href="https://github.com/marsm4rs">@marsm4rs</a></td>
+        <td><a href="https://github.com/ringcho">@ringcho</a></td>
         <td><a href="https://github.com/sjk1052005">@sjk1052005</a></td>
     </tr>
     <tr>
-        <td><img src="/wiki/contributor/profile-img" width="300px"/></td>
-        <td><img src="/wiki/contributor/profile-img" width="300px"/></td>
-        <td><img src="/wiki/contributor/profile-img" width="300px"/></td>
+        <td><img src="../wiki/contributor/profile_jungeun.jpg" width="300px"/></td>
+        <td><img src="../wiki/contributor/profile_ppitibbaticuttie_minchul.jpg" width="300px"/></td>
+        <td><img src="../wiki/contributor/profile_jaegun.jpg" width="300px"/></td>
     </tr>
     <tr>
         <td>Server Dev</td>
