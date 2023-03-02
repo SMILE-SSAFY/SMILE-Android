@@ -107,33 +107,33 @@
 👉 WIKI에 핵심 기능 구현 코드 및 방법 정리
 ```
 
-[0. 구조 설계](./4.4.0-구조%20설계)
+[0. 구조 설계](https://github.com/SMILE-SSAFY/.github/wiki/4.4.0-구조%20설계)
 
-[1. 스플래시](./4.4.1-스플래시)
+[1. 스플래시](https://github.com/SMILE-SSAFY/.github/wiki/4.4.1-스플래시)
 
-[2. 로그인](./4.4.2-로그인)
+[2. 로그인](https://github.com/SMILE-SSAFY/.github/wiki/4.4.2-로그인)
 
-[3. 회원가입](./4.4.3-회원가입)
+[3. 회원가입](https://github.com/SMILE-SSAFY/.github/wiki/4.4.3-회원가입)
 
-[4. 주소록](./4.4.4-주소록)
+[4. 주소록](https://github.com/SMILE-SSAFY/.github/wiki/4.4.4-주소록)
 
-[5. 작가 포트폴리오](./4.4.5-작가%20포트폴리오)
+[5. 작가 포트폴리오](https://github.com/SMILE-SSAFY/.github/wiki/4.4.5-작가%20포트폴리오)
 
-[6. 게시글 및 지도](./4.4.6-게시글%20및%20지도)
+[6. 게시글 및 지도](https://github.com/SMILE-SSAFY/.github/wiki/4.4.6-게시글%20및%20지도)
 
-[7. 검색](./4.4.7-검색)
+[7. 검색](https://github.com/SMILE-SSAFY/.github/wiki/4.4.7-검색)
 
-[8. 예약 및 결제](./4.4.8-예약%20및%20결제)
+[8. 예약 및 결제](https://github.com/SMILE-SSAFY/.github/wiki/4.4.8-예약%20및%20결제)
 
-[9. 나의 관심 내역](./4.4.9-나의%20관심%20내역)
+[9. 나의 관심 내역](https://github.com/SMILE-SSAFY/.github/wiki/4.4.9-나의%20관심%20내역)
 
-[10. 작가 추천](./4.4.10-작가추천)
+[10. 작가 추천](https://github.com/SMILE-SSAFY/.github/wiki/4.4.10-작가추천)
 
-[11. 작가 리뷰](./4.4.11-작가%20리뷰)
+[11. 작가 리뷰](https://github.com/SMILE-SSAFY/.github/wiki/4.4.11-작가%20리뷰)
 
-[12. 이미지 유틸](./4.4.12-이미지%20유틸)
+[12. 이미지 유틸](https://github.com/SMILE-SSAFY/.github/wiki/4.4.12-이미지%20유틸)
 
-[13. 권한 처리](./4.4.13-권한%20처리)
+[13. 권한 처리](https://github.com/SMILE-SSAFY/.github/wiki/4.4.13-권한%20처리)
         
 
 <br>
@@ -163,15 +163,15 @@
         <td>Android Dev</td>
     </tr>
     <tr>
-        <td><a href="./4.4.0-구조%20설계">구조 설계</a><br>
-        <a href="./4.4.4-주소록">주소록</a><br>
-        <a href="./4.4.5-작가%20포트폴리오">작가 포트폴리오 등록/수정</a><br>
-        <a href="./4.4.6-게시글%20및%20지도">주변 게시글 목록(지도)</a><br>
-        <a href="./4.4.6-게시글%20및%20지도">게시글 등록/수정</a><br>
-        <a href="./4.4.9-나의%20관심%20내역">나의 관심 내역</a><br>
-        <a href="./4.4.11-작가%20리뷰">작가 리뷰 등록/수정/조회</a><br>
-        <a href="./4.4.12-이미지%20유틸">이미지 유틸(ImageUtils)</a><br>
-        <a href="./4.4.13-권한%20처리">권한 처리(PermissionUtils)</a><br></td>
+        <td><a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.0-구조%20설계">구조 설계</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.4-주소록">주소록</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.5-작가%20포트폴리오">작가 포트폴리오 등록/수정</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.6-게시글%20및%20지도">주변 게시글 목록(지도)</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.6-게시글%20및%20지도">게시글 등록/수정</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.9-나의%20관심%20내역">나의 관심 내역</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.11-작가%20리뷰">작가 리뷰 등록/수정/조회</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.12-이미지%20유틸">이미지 유틸(ImageUtils)</a><br>
+        <a href="https://github.com/SMILE-SSAFY/.github/wiki/4.4.13-권한%20처리">권한 처리(PermissionUtils)</a><br></td>
         <td>스플래시<br>
         회원가입<br>
         로그인<br>
